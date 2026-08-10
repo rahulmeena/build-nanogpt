@@ -2,6 +2,7 @@ import os
 import math
 import time
 import inspect
+import json
 from dataclasses import dataclass
 import torch
 import torch.nn as nn
@@ -346,6 +347,19 @@ if ddp:
     model = DDP(model, device_ids=[ddp_local_rank])
 raw_model = model.module if ddp else model # always contains the "raw" unwrapped model
 
+if master_process:
+    total_params = sum(p.numel() for p in raw_model.parameters())
+    trainable_params = sum(p.numel() for p in raw_model.parameters() if p.requires_grad)
+    param_dtypes = sorted({str(p.dtype) for p in raw_model.parameters()})
+    print(f"total parameters: {total_params:,}")
+    print(f"trainable parameters: {trainable_params:,}")
+    print(f"parameter dtypes: {param_dtypes}")
+    if device_type == "cuda":
+        allocated_mb = torch.cuda.memory_allocated() / 1024**2
+        reserved_mb = torch.cuda.memory_reserved() / 1024**2
+        peak_mb = torch.cuda.max_memory_allocated() / 1024**2
+        print(f"model VRAM before first forward: allocated={allocated_mb:.2f}MB reserved={reserved_mb:.2f}MB peak={peak_mb:.2f}MB")
+
 max_lr = 6e-4
 min_lr = max_lr * 0.1
 warmup_steps = 715
@@ -367,11 +381,50 @@ def get_lr(it):
 optimizer = raw_model.configure_optimizers(weight_decay=0.1, learning_rate=6e-4, device_type=device_type)
 
 # create the log directory we will write checkpoints to and log to
-log_dir = "log"
+log_dir = os.environ.get("NANOGPT_LOG_DIR", "log")
+checkpoint_dir = os.environ.get("NANOGPT_CHECKPOINT_DIR", log_dir)
+metrics_file = os.environ.get("NANOGPT_METRICS_FILE")
 os.makedirs(log_dir, exist_ok=True)
+os.makedirs(checkpoint_dir, exist_ok=True)
 log_file = os.path.join(log_dir, f"log.txt")
 with open(log_file, "w") as f: # open for writing to clear the file
     pass
+if metrics_file is not None and master_process:
+    metrics_dir = os.path.dirname(metrics_file)
+    if metrics_dir:
+        os.makedirs(metrics_dir, exist_ok=True)
+    with open(metrics_file, "w") as f:
+        pass
+
+def get_gpu_memory_mb():
+    if device_type != "cuda":
+        return None, None, None
+    allocated_mb = torch.cuda.memory_allocated() / 1024**2
+    reserved_mb = torch.cuda.memory_reserved() / 1024**2
+    peak_mb = torch.cuda.max_memory_allocated() / 1024**2
+    return allocated_mb, reserved_mb, peak_mb
+
+def write_metrics(kind, step, tokens, train_loss=None, val_loss=None, hellaswag_accuracy=None, lr=None, grad_norm=None, step_time_ms=None, tokens_per_second=None):
+    if metrics_file is None or not master_process:
+        return
+    allocated_mb, reserved_mb, peak_mb = get_gpu_memory_mb()
+    row = {
+        "kind": kind,
+        "step": step,
+        "tokens": tokens,
+        "train_loss": train_loss,
+        "val_loss": val_loss,
+        "hellaswag_accuracy": hellaswag_accuracy,
+        "lr": lr,
+        "grad_norm": grad_norm,
+        "step_time_ms": step_time_ms,
+        "tokens_per_second": tokens_per_second,
+        "gpu_allocated_mb": allocated_mb,
+        "gpu_reserved_mb": reserved_mb,
+        "gpu_peak_mb": peak_mb,
+    }
+    with open(metrics_file, "a") as f:
+        f.write(json.dumps(row) + "\n")
 
 for step in range(max_steps):
     t0 = time.time()
@@ -397,9 +450,10 @@ for step in range(max_steps):
             print(f"validation loss: {val_loss_accum.item():.4f}")
             with open(log_file, "a") as f:
                 f.write(f"{step} val {val_loss_accum.item():.4f}\n")
+            write_metrics("val", step, step * total_batch_size, val_loss=val_loss_accum.item())
             if step > 0 and (step % 5000 == 0 or last_step):
                 # optionally write model checkpoints
-                checkpoint_path = os.path.join(log_dir, f"model_{step:05d}.pt")
+                checkpoint_path = os.path.join(checkpoint_dir, f"model_{step:05d}.pt")
                 checkpoint = {
                     'model': raw_model.state_dict(),
                     'config': raw_model.config,
@@ -442,6 +496,7 @@ for step in range(max_steps):
             print(f"HellaSwag accuracy: {num_correct_norm}/{num_total}={acc_norm:.4f}")
             with open(log_file, "a") as f:
                 f.write(f"{step} hella {acc_norm:.4f}\n")
+            write_metrics("hellaswag", step, step * total_batch_size, hellaswag_accuracy=acc_norm)
 
     # once in a while generate from the model (except step 0, which is noise)
     if ((step > 0 and step % 250 == 0) or last_step) and (not use_compile):
@@ -513,9 +568,22 @@ for step in range(max_steps):
     tokens_processed = train_loader.B * train_loader.T * grad_accum_steps * ddp_world_size
     tokens_per_sec = tokens_processed / dt
     if master_process:
+        if device_type == "cuda" and step == 0:
+            allocated_mb, reserved_mb, peak_mb = get_gpu_memory_mb()
+            print(f"peak VRAM after first backward: allocated={allocated_mb:.2f}MB reserved={reserved_mb:.2f}MB peak={peak_mb:.2f}MB")
         print(f"step {step:5d} | loss: {loss_accum.item():.6f} | lr {lr:.4e} | norm: {norm:.4f} | dt: {dt*1000:.2f}ms | tok/sec: {tokens_per_sec:.2f}")
         with open(log_file, "a") as f:
             f.write(f"{step} train {loss_accum.item():.6f}\n")
+        write_metrics(
+            "train",
+            step,
+            (step + 1) * total_batch_size,
+            train_loss=loss_accum.item(),
+            lr=lr,
+            grad_norm=float(norm),
+            step_time_ms=dt * 1000,
+            tokens_per_second=tokens_per_sec,
+        )
 
 if ddp:
     destroy_process_group()
