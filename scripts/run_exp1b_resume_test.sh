@@ -37,6 +37,14 @@ python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experime
   --stop-after-completed-updates 5 \
   "${common_args[@]}"
 
+python scripts/compare_exp1b_resume.py \
+  --path-a-run "$base_dir/standard_path_a" \
+  --path-b-run "$base_dir/standard_path_b" \
+  --path-a-checkpoint "$base_dir/standard_path_a/checkpoints/checkpoint_tokens_000002621440.pt" \
+  --path-b-checkpoint "$base_dir/standard_path_b/checkpoints/checkpoint_tokens_000002621440.pt" \
+  --expected-completed-updates 5 \
+  --out "$base_dir/standard_boundary_exact.json"
+
 python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --config configs/exp1b_resume_path_b.json \
   --residual-mode standard \
@@ -65,6 +73,14 @@ python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experime
   --expected-data-order "$base_dir/standard_path_a/data_order.json" \
   --stop-after-completed-updates 5 \
   "${common_args[@]}"
+
+python scripts/compare_exp1b_resume.py \
+  --path-a-run "$base_dir/attnres_path_a" \
+  --path-b-run "$base_dir/attnres_path_b" \
+  --path-a-checkpoint "$base_dir/attnres_path_a/checkpoints/checkpoint_tokens_000002621440.pt" \
+  --path-b-checkpoint "$base_dir/attnres_path_b/checkpoints/checkpoint_tokens_000002621440.pt" \
+  --expected-completed-updates 5 \
+  --out "$base_dir/attnres_boundary_exact.json"
 
 python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --config configs/exp1b_resume_path_b.json \

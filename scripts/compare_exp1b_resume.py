@@ -86,6 +86,7 @@ def main():
     parser.add_argument("--path-b-run", required=True)
     parser.add_argument("--path-a-checkpoint", required=True)
     parser.add_argument("--path-b-checkpoint", required=True)
+    parser.add_argument("--expected-completed-updates", type=int, default=10)
     parser.add_argument("--out", required=True)
     args = parser.parse_args()
 
@@ -96,8 +97,16 @@ def main():
         optimizer_tensor_mapping(left), optimizer_tensor_mapping(right)
     )
 
-    left_rows = {row["step"]: row for row in read_metrics(Path(args.path_a_run) / "metrics.jsonl") if row["kind"] == "train"}
-    right_rows = {row["step"]: row for row in read_metrics(Path(args.path_b_run) / "metrics.jsonl") if row["kind"] == "train"}
+    left_rows = {
+        row["step"]: row
+        for row in read_metrics(Path(args.path_a_run) / "metrics.jsonl")
+        if row["kind"] == "train" and row["step"] < args.expected_completed_updates
+    }
+    right_rows = {
+        row["step"]: row
+        for row in read_metrics(Path(args.path_b_run) / "metrics.jsonl")
+        if row["kind"] == "train" and row["step"] < args.expected_completed_updates
+    }
     trajectory = []
     for step in sorted(set(left_rows) | set(right_rows)):
         a = left_rows.get(step)
@@ -145,8 +154,8 @@ def main():
         "trajectory_bit_exact": trajectory_exact,
     }
     report["passed"] = all([
-        left["training_state"]["completed_updates"] == 10,
-        right["training_state"]["completed_updates"] == 10,
+        left["training_state"]["completed_updates"] == args.expected_completed_updates,
+        right["training_state"]["completed_updates"] == args.expected_completed_updates,
         model["bit_exact"],
         optimizer["bit_exact"],
         optimizer_groups_equal,

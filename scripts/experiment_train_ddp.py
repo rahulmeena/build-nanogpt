@@ -534,6 +534,11 @@ def checkpoint_metadata(args, config, dataset_report, environment_report, runtim
             "eps": 1e-8,
             "weight_decay": 0.1,
         },
+        "ddp": {
+            "static_graph": True,
+            "broadcast_buffers": False,
+            "gradient_as_bucket_view": True,
+        },
         "lr_schedule": {
             "max_lr": support.MAX_LR,
             "min_lr": support.MIN_LR,
@@ -667,7 +672,7 @@ def validate_resume_checkpoint(checkpoint, metadata, residual_mode):
         "git_sha", "baseline_init_sha256", "dataset_manifest_sha256", "world_size", "B_per_gpu",
         "T", "gradient_accumulation", "global_batch_tokens", "precision", "optimizer", "lr_schedule",
         "seed", "pytorch", "cuda",
-        "determinism",
+        "determinism", "ddp",
     ):
         if checkpoint["metadata"].get(key) != metadata.get(key):
             raise SystemExit(
@@ -771,6 +776,7 @@ def main():
             output_device=runtime.local_rank,
             broadcast_buffers=False,
             gradient_as_bucket_view=True,
+            static_graph=True,
         )
 
         DataLoaderLite = symbols["DataLoaderLite"]
