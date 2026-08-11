@@ -790,10 +790,13 @@ def main():
         start_update = 0
         completed_evaluations = set()
         completed_hellaswag = set()
+        run_dir_existence = all_gather_objects(run_dir.is_dir(), runtime)
 
         if args.resume_checkpoint:
-            if not run_dir.is_dir():
-                raise SystemExit("resume run directory does not exist")
+            if not all(run_dir_existence):
+                raise SystemExit(
+                    f"resume run directory is not visible to every rank: {run_dir_existence}"
+                )
             try:
                 checkpoint = torch.load(
                     args.resume_checkpoint, map_location="cpu", weights_only=False, mmap=True
@@ -842,8 +845,11 @@ def main():
             restore_rng_state(checkpoint["rng_states"][runtime.rank], runtime)
             del checkpoint
         else:
-            if run_dir.exists():
-                raise SystemExit(f"refusing to overwrite existing run: {run_dir}")
+            if any(run_dir_existence):
+                raise SystemExit(
+                    f"refusing to overwrite existing run: {run_dir}; "
+                    f"rank visibility={run_dir_existence}"
+                )
             if runtime.master:
                 run_dir.mkdir(parents=True)
                 checkpoint_dir.mkdir()
