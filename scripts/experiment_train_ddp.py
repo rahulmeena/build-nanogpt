@@ -59,22 +59,19 @@ class Runtime:
         self.device = torch.device("cuda", self.local_rank)
         torch.cuda.set_device(self.device)
         dist.init_process_group(backend="nccl", device_id=self.device)
-        self.object_group = dist.new_group(backend="gloo")
+        exchange_id = f"{os.getppid()}_{os.environ.get('MASTER_PORT', 'unknown')}"
+        self.exchange_dir = Path("/tmp") / f"exp1b_rank_exchange_{exchange_id}"
+        self.exchange_dir.mkdir(parents=True, exist_ok=True)
+        self.exchange_counter = 0
         self.master = self.rank == 0
 
     def barrier(self):
-        # Bare NCCL and Gloo barrier primitives have both stalled
-        # intermittently on this provider fabric. A verified all-rank marker
-        # exchange supplies the same control synchronization without either
-        # barrier path. Gradient synchronization and reductions remain NCCL.
-        markers = [None for _ in range(self.world_size)]
-        dist.all_gather_object(markers, self.rank, group=self.object_group)
+        markers = all_gather_objects(self.rank, self)
         if markers != list(range(self.world_size)):
             raise RuntimeError(f"control synchronization rank mismatch: {markers}")
 
     def close(self):
         if dist.is_initialized():
-            dist.destroy_process_group(self.object_group)
             dist.destroy_process_group()
 
 
@@ -114,15 +111,30 @@ def wait_for_file(path, timeout_seconds=1800):
 
 
 def all_gather_objects(value, runtime):
-    values = [None for _ in range(runtime.world_size)]
-    dist.all_gather_object(values, value, group=runtime.object_group)
-    return values
+    exchange_index = runtime.exchange_counter
+    runtime.exchange_counter += 1
+    prefix = runtime.exchange_dir / f"gather_{exchange_index:06d}"
+    destination = Path(f"{prefix}_rank_{runtime.rank:02d}.pt")
+    temporary = Path(f"{destination}.{os.getpid()}.tmp")
+    torch.save(value, temporary)
+    os.replace(temporary, destination)
+    paths = [Path(f"{prefix}_rank_{rank:02d}.pt") for rank in range(runtime.world_size)]
+    for path in paths:
+        wait_for_file(path)
+    return [torch.load(path, map_location="cpu", weights_only=False) for path in paths]
 
 
 def broadcast_object(value, runtime):
-    values = [value]
-    dist.broadcast_object_list(values, src=0, group=runtime.object_group)
-    return values[0]
+    exchange_index = runtime.exchange_counter
+    runtime.exchange_counter += 1
+    destination = runtime.exchange_dir / f"broadcast_{exchange_index:06d}.pt"
+    if runtime.master:
+        temporary = Path(f"{destination}.{os.getpid()}.tmp")
+        torch.save(value, temporary)
+        os.replace(temporary, destination)
+    else:
+        wait_for_file(destination)
+    return torch.load(destination, map_location="cpu", weights_only=False)
 
 
 def validate_config(config):
