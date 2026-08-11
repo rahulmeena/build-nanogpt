@@ -94,6 +94,13 @@ def smooth(values, window):
     return out
 
 
+def save_figure(fig, out_dir, stem):
+    fig.tight_layout()
+    fig.savefig(out_dir / f"{stem}.png", dpi=240)
+    fig.savefig(out_dir / f"{stem}.pdf")
+    plt.close(fig)
+
+
 def save_loss_plot(rows, out_dir, smoothing_window):
     train_x, train_y = billion_tokens(rows, "train_loss")
     val_x, val_y = billion_tokens(rows, "val_loss")
@@ -102,41 +109,35 @@ def save_loss_plot(rows, out_dir, smoothing_window):
         ax.plot(train_x, train_y, alpha=0.35, linewidth=0.8, label="train loss raw")
         ax.plot(train_x, smooth(train_y, smoothing_window), linewidth=1.6, label=f"train loss smoothed ({smoothing_window})")
     if val_x:
-        ax.plot(val_x, val_y, marker="o", linewidth=1.6, label="validation loss")
+        ax.plot(val_x, val_y, linewidth=1.6, label="validation loss")
     ax.set_xlabel("training tokens processed (billions)")
     ax.set_ylabel("cross-entropy loss")
     ax.set_title("Training and validation loss")
     ax.grid(True, alpha=0.25)
     ax.legend()
-    fig.tight_layout()
-    fig.savefig(out_dir / "plot_a_train_val_loss.png", dpi=180)
-    plt.close(fig)
+    save_figure(fig, out_dir, "plot_a_train_val_loss")
 
 
 def save_val_plot(rows, out_dir):
     val_x, val_y = billion_tokens(rows, "val_loss")
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(val_x, val_y, marker="o", linewidth=1.8)
+    ax.plot(val_x, val_y, linewidth=1.8)
     ax.set_xlabel("training tokens processed (billions)")
     ax.set_ylabel("validation cross-entropy loss")
     ax.set_title("Validation loss")
     ax.grid(True, alpha=0.25)
-    fig.tight_layout()
-    fig.savefig(out_dir / "plot_b_val_loss.png", dpi=180)
-    plt.close(fig)
+    save_figure(fig, out_dir, "plot_b_val_loss")
 
 
 def save_hellaswag_plot(rows, out_dir):
     xs, ys = billion_tokens(rows, "hellaswag_accuracy")
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(xs, ys, marker="o", linewidth=1.8)
+    ax.plot(xs, ys, linewidth=1.8)
     ax.set_xlabel("training tokens processed (billions)")
     ax.set_ylabel("HellaSwag normalized accuracy")
     ax.set_title("HellaSwag accuracy")
     ax.grid(True, alpha=0.25)
-    fig.tight_layout()
-    fig.savefig(out_dir / "plot_c_hellaswag_accuracy.png", dpi=180)
-    plt.close(fig)
+    save_figure(fig, out_dir, "plot_c_hellaswag_accuracy")
 
 
 def save_throughput_plot(rows, out_dir):
@@ -144,17 +145,15 @@ def save_throughput_plot(rows, out_dir):
     for row in rows:
         value = row.get("tokens_per_second")
         if value is not None:
-            xs.append(row["step"])
+            xs.append(row["tokens"] / 1e9)
             ys.append(value)
     fig, ax = plt.subplots(figsize=(8, 5))
     ax.plot(xs, ys, linewidth=1.2)
-    ax.set_xlabel("optimizer step")
+    ax.set_xlabel("training tokens processed (billions)")
     ax.set_ylabel("tokens/sec")
     ax.set_title("Training throughput")
     ax.grid(True, alpha=0.25)
-    fig.tight_layout()
-    fig.savefig(out_dir / "plot_d_throughput.png", dpi=180)
-    plt.close(fig)
+    save_figure(fig, out_dir, "plot_d_throughput")
 
 
 def main():
@@ -187,4 +186,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

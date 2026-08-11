@@ -264,9 +264,22 @@ Outputs:
 
 ```text
 plot_a_train_val_loss.png
+plot_a_train_val_loss.pdf
 plot_b_val_loss.png
+plot_b_val_loss.pdf
 plot_c_hellaswag_accuracy.png
+plot_c_hellaswag_accuracy.pdf
 plot_d_throughput.png
+plot_d_throughput.pdf
+```
+
+All plot x axes use billions of processed training tokens. Generate the compact
+evaluation-point table and machine-readable final summary with:
+
+```bash
+python scripts/summarize_baseline.py runs/<run_name>/metrics.jsonl \
+  --csv results/baseline_learning_curve.csv \
+  --summary results/baseline_metrics_summary.json
 ```
 
 ## Results
@@ -324,4 +337,3 @@ Documentation and safety:
 - `results/.gitkeep`
 
 No intentional training-semantic deviations from upstream.
-
