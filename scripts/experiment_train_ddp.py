@@ -145,6 +145,9 @@ def seed_rank(rank):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
+    torch.use_deterministic_algorithms(True)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
 
 
 def capture_rng_state(runtime):
@@ -512,6 +515,12 @@ def checkpoint_metadata(args, config, dataset_report, environment_report, runtim
             "max_schedule_horizon": support.MAX_STEPS,
         },
         "seed": SEED,
+        "determinism": {
+            "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
+            "cudnn_benchmark": torch.backends.cudnn.benchmark,
+            "cudnn_deterministic": torch.backends.cudnn.deterministic,
+            "cublas_workspace_config": os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
+        },
         "pytorch": torch.__version__,
         "cuda": torch.version.cuda,
         "cudnn": torch.backends.cudnn.version(),
@@ -629,6 +638,7 @@ def validate_resume_checkpoint(checkpoint, metadata, residual_mode):
         "git_sha", "baseline_init_sha256", "dataset_manifest_sha256", "world_size", "B_per_gpu",
         "T", "gradient_accumulation", "global_batch_tokens", "precision", "optimizer", "lr_schedule",
         "seed", "pytorch", "cuda",
+        "determinism",
     ):
         if checkpoint["metadata"].get(key) != metadata.get(key):
             raise SystemExit(

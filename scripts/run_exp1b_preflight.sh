@@ -6,6 +6,7 @@ source /workspace/venvs/exp1b/bin/activate
 
 export OMP_NUM_THREADS=1
 export PYTHONUNBUFFERED=1
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
 
 python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/verify_exp1b_validation_ddp.py \
   --residual-mode standard \

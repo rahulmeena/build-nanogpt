@@ -8,6 +8,7 @@ export OMP_NUM_THREADS=1
 export PYTHONUNBUFFERED=1
 export TORCH_NCCL_ASYNC_ERROR_HANDLING=1
 export NCCL_DEBUG=WARN
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
 
 base_dir="${1:-runs/exp1b_500m}"
 if [[ -e "$base_dir" ]]; then
