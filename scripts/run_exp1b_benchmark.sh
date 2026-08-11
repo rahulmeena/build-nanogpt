@@ -38,7 +38,7 @@ nvidia-smi \
   --query-gpu=timestamp,index,utilization.gpu,memory.used,power.draw \
   --format=csv -l 1 > "$base_dir/standard_gpu.csv" &
 monitor_pid=$!
-torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
+python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --residual-mode standard \
   --run-dir "$base_dir/standard" \
   "${common_args[@]}" 2>&1 | tee "$base_dir/standard_console.log"
@@ -48,7 +48,7 @@ nvidia-smi \
   --query-gpu=timestamp,index,utilization.gpu,memory.used,power.draw \
   --format=csv -l 1 > "$base_dir/attnres_gpu.csv" &
 monitor_pid=$!
-torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
+python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --residual-mode full_attnres \
   --run-dir "$base_dir/full_attnres" \
   --expected-data-order "$base_dir/standard/data_order.json" \

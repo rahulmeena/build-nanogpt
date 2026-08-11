@@ -22,13 +22,13 @@ common_args=(
   --dataset-manifest experiment_artifacts/edu_fineweb10B_sha256_manifest.txt
 )
 
-torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
+python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --config configs/exp1b_resume_path_a.json \
   --residual-mode standard \
   --run-dir "$base_dir/standard_path_a" \
   "${common_args[@]}"
 
-torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
+python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --config configs/exp1b_resume_path_b.json \
   --residual-mode standard \
   --run-dir "$base_dir/standard_path_b" \
@@ -36,7 +36,7 @@ torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --stop-after-completed-updates 5 \
   "${common_args[@]}"
 
-torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
+python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --config configs/exp1b_resume_path_b.json \
   --residual-mode standard \
   --run-dir "$base_dir/standard_path_b" \
@@ -50,14 +50,14 @@ python scripts/compare_exp1b_resume.py \
   --path-b-checkpoint "$base_dir/standard_path_b/checkpoints/checkpoint_tokens_000005242880.pt" \
   --out "$base_dir/standard_exact_resume.json"
 
-torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
+python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --config configs/exp1b_resume_path_a.json \
   --residual-mode full_attnres \
   --run-dir "$base_dir/attnres_path_a" \
   --expected-data-order "$base_dir/standard_path_a/data_order.json" \
   "${common_args[@]}"
 
-torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
+python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --config configs/exp1b_resume_path_b.json \
   --residual-mode full_attnres \
   --run-dir "$base_dir/attnres_path_b" \
@@ -65,7 +65,7 @@ torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --stop-after-completed-updates 5 \
   "${common_args[@]}"
 
-torchrun --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
+python -m torch.distributed.run --standalone --nproc_per_node=4 scripts/experiment_train_ddp.py \
   --config configs/exp1b_resume_path_b.json \
   --residual-mode full_attnres \
   --run-dir "$base_dir/attnres_path_b" \
