@@ -1,0 +1,24 @@
+Captured before Experiment 1 changes
+
+$ git branch
+* gpt2-124m-10b-reproduction
+  master
+
+$ git status --short --branch
+## gpt2-124m-10b-reproduction...origin/gpt2-124m-10b-reproduction
+
+$ git rev-parse HEAD
+a834ca88b7b6c4e81c2a71eef0edde29b2ee2ccb
+
+$ git log -5 --oneline
+a834ca8 Finalize GPT-2 124M baseline results
+0f7766f Add GPT-2 reproduction harness
+6104ab1 fix guard of torch.cuda based on device type
+136b65e Merge pull request #28 from WilsonCWu/patch_ylim
+41b7539 Merge pull request #30 from WilsonCWu/fix_model.require_backward_grad_sync
+
+Baseline tag created and pushed:
+baseline-gpt2-124m-10b -> a834ca88b7b6c4e81c2a71eef0edde29b2ee2ccb
+
+Experiment branch created from that tag:
+experiment-1-full-attnres

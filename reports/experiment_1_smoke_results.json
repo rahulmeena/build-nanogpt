@@ -1,0 +1,115 @@
+{
+  "a100": {
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "precision": "BF16 autocast with FP32 parameters and residual accumulator",
+    "B": 64,
+    "T": 1024,
+    "gradient_accumulation": 8,
+    "global_batch_tokens": 524288
+  },
+  "initialization": {
+    "checkpoint_sha256": "39de351efe080de4e2409355c572095f17dcbaea76154a2f55e375acfdafc3b6",
+    "shared_tensors": 149,
+    "exact_matches": 149,
+    "mismatches": 0,
+    "maximum_absolute_difference": 0.0
+  },
+  "parameters": {
+    "standard": 124475904,
+    "full_attnres": 124514304,
+    "added": 38400,
+    "percentage_increase": 0.030849344142943522
+  },
+  "phase_b_single_microbatch": {
+    "standard": {
+      "forward_time_ms": 383.1135559082031,
+      "backward_time_ms": 287.69146728515625,
+      "peak_allocated_after_forward_mib": 47341.7041015625,
+      "peak_allocated_after_backward_mib": 59530.54638671875
+    },
+    "full_attnres": {
+      "forward_time_ms": 1210.3837890625,
+      "backward_time_ms": 2190.214111328125,
+      "peak_allocated_after_forward_mib": 49962.2255859375,
+      "peak_allocated_after_backward_mib": 62151.06787109375
+    }
+  },
+  "complete_update": {
+    "standard_first": {
+      "total_time_ms": 4285.197028890252,
+      "forward_time_ms_8_microsteps": 2179.5701904296875,
+      "backward_time_ms_8_microsteps": 2011.9957275390625,
+      "optimizer_kernel_time_ms": 11.177568435668945,
+      "tokens_per_second": 122348.6333219493,
+      "peak_allocated_mib": 60014.134765625,
+      "peak_reserved_mib": 72564.0
+    },
+    "full_attnres_first": {
+      "total_time_ms": 25489.02365937829,
+      "forward_time_ms_8_microsteps": 8043.508239746094,
+      "backward_time_ms_8_microsteps": 17357.41015625,
+      "optimizer_kernel_time_ms": 11.892255783081055,
+      "tokens_per_second": 20569.1676152961,
+      "peak_allocated_mib": 62637.927734375,
+      "peak_reserved_mib": 75470.0
+    },
+    "full_attnres_steady_updates_1_to_11": {
+      "mean_total_time_ms": 24665.181783281943,
+      "mean_forward_time_ms_8_microsteps": 7287.936162775213,
+      "mean_backward_time_ms_8_microsteps": 17340.418590198864,
+      "mean_optimizer_kernel_time_ms": 2.2979927496476606,
+      "mean_tokens_per_second": 21256.199090244496,
+      "run_peak_allocated_mib": 63585.0556640625,
+      "run_peak_reserved_mib": 75472.0
+    }
+  },
+  "full_attnres_smoke": {
+    "optimizer_steps": 12,
+    "processed_tokens": 6291456,
+    "train_losses": [
+      10.944195628166199,
+      10.894192814826965,
+      10.799817562103271,
+      10.663531422615051,
+      10.524563193321228,
+      10.385510563850403,
+      10.267160892486572,
+      10.157256364822388,
+      10.046497702598572,
+      9.971875071525574,
+      9.886332631111145,
+      9.838446140289307
+    ],
+    "gradient_norms": [
+      14.710123062133789,
+      14.247820854187012,
+      13.896689414978027,
+      12.520129203796387,
+      10.348258972167969,
+      8.746472358703613,
+      7.515246868133545,
+      6.455465793609619,
+      5.5773186683654785,
+      4.711302757263184,
+      4.058721542358398,
+      3.5482261180877686
+    ],
+    "validation_loss_two_batches": 9.770628929138184,
+    "hellaswag_smoke": {
+      "correct": 5,
+      "examples": 32,
+      "accuracy": 0.15625,
+      "interpretation": "pipeline check only; sample is too small for model comparison"
+    },
+    "all_losses_finite": true,
+    "all_gradient_norms_finite": true,
+    "query_max_abs_after_smoke": 0.00006595443846890703,
+    "rmsnorm_max_abs_deviation_from_one": 0.000047326087951660156
+  },
+  "remote_artifacts": {
+    "standard": "/workspace/build-nanogpt/runs/exp1_standard_smoke_seed1337_phaseb_v2",
+    "full_attnres": "/workspace/build-nanogpt/runs/exp1_full_attnres_smoke_seed1337_12steps",
+    "canonical_initialization": "/workspace/build-nanogpt/experiment_artifacts/baseline_init_seed1337.pt"
+  },
+  "larger_ab_runs_launched": false
+}

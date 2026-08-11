@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+from torch.utils.checkpoint import checkpoint
 from hellaswag import render_example, iterate_examples
 # -----------------------------------------------------------------------------
 
@@ -55,6 +56,86 @@ class MLP(nn.Module):
         x = self.c_proj(x)
         return x
 
+class RMSNorm(nn.Module):
+
+    def __init__(self, n_embd, eps=1e-5):
+        super().__init__()
+        self.weight = nn.Parameter(torch.ones(n_embd))
+        self.eps = eps
+
+    def forward(self, x):
+        input_dtype = x.dtype
+        variance = x.float().pow(2).mean(dim=-1, keepdim=True)
+        normalized = x.float() * torch.rsqrt(variance + self.eps)
+        return (normalized * self.weight.float()).to(input_dtype)
+
+class FullAttnRes(nn.Module):
+    """Paper-exact, single-query softmax attention over residual depth."""
+
+    def __init__(self, n_embd, eps=1e-5, destination=""):
+        super().__init__()
+        # Attention Residuals, Section 5: all pseudo-queries must start at zero.
+        self.query = nn.Parameter(torch.zeros(n_embd))
+        self.norm = RMSNorm(n_embd, eps=eps)
+        self.destination = destination
+        self.instrumentation_enabled = False
+        self.last_stats = None
+        self.masked_source = None
+
+    def _score(self, value):
+        key = self.norm(value)
+        # Equation (2) has no 1/sqrt(d) factor. F.linear avoids materializing
+        # a B x T x C float32 product while autocast uses the training dtype.
+        return F.linear(key, self.query.unsqueeze(0)).squeeze(-1)
+
+    def forward(self, values, return_weights=False):
+        if not values:
+            raise ValueError("FullAttnRes requires at least one residual value")
+
+        score_rows = []
+        use_checkpoint = self.training and torch.is_grad_enabled()
+        for value in values:
+            if use_checkpoint:
+                score = checkpoint(
+                    self._score,
+                    value,
+                    use_reentrant=False,
+                    preserve_rng_state=False,
+                )
+            else:
+                score = self._score(value)
+            score_rows.append(score.float())
+        logits = torch.stack(score_rows, dim=0)  # depth x B x T
+
+        if self.masked_source is not None and self.masked_source < len(values):
+            if len(values) == 1:
+                raise ValueError("cannot mask the only FullAttnRes source")
+            logits = logits.clone()
+            logits[self.masked_source] = -torch.inf
+
+        weights = F.softmax(logits, dim=0)
+        output = torch.zeros_like(values[0])
+        for source_weight, value in zip(weights.unbind(dim=0), values):
+            # The GPT-2 residual stream is FP32 under BF16 autocast. Preserve
+            # each source dtype for the multiply, then accumulate into FP32.
+            contribution = source_weight.to(value.dtype).unsqueeze(-1) * value
+            output = output + contribution.to(output.dtype)
+
+        if self.instrumentation_enabled:
+            with torch.no_grad():
+                safe_weights = weights.clamp_min(torch.finfo(weights.dtype).tiny)
+                entropy = -(weights * safe_weights.log()).sum(dim=0)
+                self.last_stats = {
+                    "destination": self.destination,
+                    "source_depths": list(range(len(values))),
+                    "mean_weights": weights.mean(dim=(1, 2)).detach().cpu().tolist(),
+                    "mean_entropy": entropy.mean().detach().cpu().item(),
+                }
+
+        if return_weights:
+            return output, weights
+        return output
+
 class Block(nn.Module):
 
     def __init__(self, config):
@@ -76,19 +157,40 @@ class GPTConfig:
     n_layer: int = 12 # number of layers
     n_head: int = 12 # number of heads
     n_embd: int = 768 # embedding dimension
+    residual_mode: str = "standard"
+    attnres_rms_eps: float = 1e-5
 
 class GPT(nn.Module):
 
     def __init__(self, config):
         super().__init__()
+        if config.residual_mode not in {"standard", "full_attnres"}:
+            raise ValueError(f"unknown residual mode: {config.residual_mode}")
         self.config = config
 
-        self.transformer = nn.ModuleDict(dict(
+        transformer = dict(
             wte = nn.Embedding(config.vocab_size, config.n_embd),
             wpe = nn.Embedding(config.block_size, config.n_embd),
             h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]),
             ln_f = nn.LayerNorm(config.n_embd),
-        ))
+        )
+        if config.residual_mode == "full_attnres":
+            destinations = []
+            for block_index in range(config.n_layer):
+                destinations.extend([
+                    f"block_{block_index + 1:02d}_attention",
+                    f"block_{block_index + 1:02d}_mlp",
+                ])
+            destinations.append("ln_f_input")
+            transformer["attnres"] = nn.ModuleList([
+                FullAttnRes(
+                    config.n_embd,
+                    eps=config.attnres_rms_eps,
+                    destination=destination,
+                )
+                for destination in destinations
+            ])
+        self.transformer = nn.ModuleDict(transformer)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
         # weight sharing scheme
@@ -117,9 +219,24 @@ class GPT(nn.Module):
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (T, n_embd)
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (B, T, n_embd)
         x = tok_emb + pos_emb
-        # forward the blocks of the transformer
-        for block in self.transformer.h:
-            x = block(x)
+        if self.config.residual_mode == "standard":
+            # Frozen baseline path: deliberately unchanged.
+            for block in self.transformer.h:
+                x = block(x)
+        else:
+            # v0 is the combined token + learned-position embedding. Every
+            # Attention and MLP output is then a distinct residual value.
+            values = [x]
+            destination_index = 0
+            for block in self.transformer.h:
+                h = self.transformer.attnres[destination_index](values)
+                values.append(block.attn(block.ln_1(h)))
+                destination_index += 1
+                h = self.transformer.attnres[destination_index](values)
+                values.append(block.mlp(block.ln_2(h)))
+                destination_index += 1
+            # The paper's output layer performs one final depth aggregation.
+            x = self.transformer.attnres[destination_index](values)
         # forward the final layernorm and the classifier
         x = self.transformer.ln_f(x)
         logits = self.lm_head(x) # (B, T, vocab_size)
@@ -127,6 +244,52 @@ class GPT(nn.Module):
         if targets is not None:
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
         return logits, loss
+
+    def set_attnres_instrumentation(self, enabled=True):
+        if self.config.residual_mode != "full_attnres":
+            return
+        for router in self.transformer.attnres:
+            router.instrumentation_enabled = enabled
+            if enabled:
+                router.last_stats = None
+
+    def get_attnres_stats(self):
+        if self.config.residual_mode != "full_attnres":
+            return []
+        return [
+            router.last_stats
+            for router in self.transformer.attnres
+            if router.last_stats is not None
+        ]
+
+    def set_attnres_source_mask(self, source_depth=None):
+        if self.config.residual_mode != "full_attnres":
+            raise ValueError("source ablation requires residual_mode='full_attnres'")
+        if source_depth is not None and source_depth < 0:
+            raise ValueError("source depth must be non-negative")
+        for router in self.transformer.attnres:
+            # Source 0 is the only input to the first sublayer and cannot be
+            # removed there. Mask it from every later destination instead.
+            router.masked_source = source_depth if source_depth != 0 or router is not self.transformer.attnres[0] else None
+
+    def load_shared_baseline_state(self, baseline_state):
+        """Load every GPT-2 tensor and leave only AttnRes tensors initialized."""
+        current = self.state_dict()
+        unexpected = sorted(set(baseline_state) - set(current))
+        shape_mismatches = sorted(
+            key for key in baseline_state
+            if key in current and current[key].shape != baseline_state[key].shape
+        )
+        if unexpected or shape_mismatches:
+            raise ValueError(
+                f"baseline state mismatch: unexpected={unexpected}, shape_mismatches={shape_mismatches}"
+            )
+        merged = dict(current)
+        for key, value in baseline_state.items():
+            merged[key] = value
+        missing, unexpected_after = self.load_state_dict(merged, strict=True)
+        if missing or unexpected_after:
+            raise RuntimeError(f"failed to load shared baseline state: missing={missing}, unexpected={unexpected_after}")
 
     @classmethod
     def from_pretrained(cls, model_type):
