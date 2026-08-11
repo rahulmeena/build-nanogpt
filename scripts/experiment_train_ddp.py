@@ -63,9 +63,14 @@ class Runtime:
         self.master = self.rank == 0
 
     def barrier(self):
-        # Control-only barriers are more robust on this RunPod fabric through
-        # Gloo. Gradient synchronization and numeric reductions remain NCCL.
-        dist.barrier(group=self.object_group)
+        # Bare NCCL and Gloo barrier primitives have both stalled
+        # intermittently on this provider fabric. A verified all-rank marker
+        # exchange supplies the same control synchronization without either
+        # barrier path. Gradient synchronization and reductions remain NCCL.
+        markers = [None for _ in range(self.world_size)]
+        dist.all_gather_object(markers, self.rank, group=self.object_group)
+        if markers != list(range(self.world_size)):
+            raise RuntimeError(f"control synchronization rank mismatch: {markers}")
 
     def close(self):
         if dist.is_initialized():
