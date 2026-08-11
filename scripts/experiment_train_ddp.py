@@ -63,7 +63,9 @@ class Runtime:
         self.master = self.rank == 0
 
     def barrier(self):
-        dist.barrier()
+        # Control-only barriers are more robust on this RunPod fabric through
+        # Gloo. Gradient synchronization and numeric reductions remain NCCL.
+        dist.barrier(group=self.object_group)
 
     def close(self):
         if dist.is_initialized():
