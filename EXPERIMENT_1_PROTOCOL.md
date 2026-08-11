@@ -28,7 +28,10 @@ clipping at 1.0. The primary metric is validation cross-entropy at equal
 processed tokens. Validation loss at equal wall-clock time and HellaSwag are
 secondary metrics.
 
-The 100M configuration evaluates at the first update at or beyond 10M, 25M,
-50M, and 100M processed tokens. The 250M configuration additionally evaluates
-at 150M, 200M, and 250M. The validation and HellaSwag computations are unchanged;
-only cadence differs from the upstream every-250-update schedule.
+Experiment 1A performs exactly 191 updates and evaluates after steps 0, 19, 48,
+95, 143, and 190, at exact processed-token counts 524,288; 10,485,760;
+25,690,112; 50,331,648; 75,497,472; and 100,139,008. Every milestone uses the
+unchanged 20-batch validation computation and the complete 10,042-example
+upstream HellaSwag evaluation. Only cadence differs from the upstream
+every-250-update schedule. The prepared 250M configuration is not part of
+Experiment 1A and is not launched without separate approval.

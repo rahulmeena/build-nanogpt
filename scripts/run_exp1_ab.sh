@@ -24,6 +24,21 @@ if [[ ! -f "$INIT_CHECKPOINT" ]]; then
   exit 1
 fi
 EXPERIMENT="$($PYTHON_BIN -c 'import json,sys; print(json.load(open(sys.argv[1]))["experiment"])' "$CONFIG")"
+STANDARD_RUN="runs/${EXPERIMENT/exp1_/exp1_standard_}"
+FULL_RUN="runs/${EXPERIMENT/exp1_/exp1_full_attnres_}"
+for RUN_DIR in "$STANDARD_RUN" "$FULL_RUN"; do
+  if [[ -e "$RUN_DIR" ]]; then
+    echo "refusing to overwrite existing run: $RUN_DIR" >&2
+    exit 1
+  fi
+done
+
+PREFLIGHT_REPORT="runs/${EXPERIMENT}_preflight.json"
+"$PYTHON_BIN" scripts/preflight_exp1a.py \
+  --init-checkpoint "$INIT_CHECKPOINT" \
+  --out "$PREFLIGHT_REPORT"
+
+EXPECTED_DATA_SHA=""
 
 for MODE in standard full_attnres; do
   RUN_DIR="runs/${EXPERIMENT/exp1_/exp1_${MODE}_}"
@@ -33,13 +48,22 @@ for MODE in standard full_attnres; do
   "$PYTHON_BIN" scripts/verify_dataset.py \
     --strict --min-total-tokens 9900000000 --max-total-tokens 10200000000 \
     --out /tmp/exp1_dataset.json
-  PYTHONUNBUFFERED=1 "$PYTHON_BIN" scripts/experiment_train.py \
-    --config "$CONFIG" --residual-mode "$MODE" \
-    --init-checkpoint "$INIT_CHECKPOINT" --run-dir "$RUN_DIR" \
-    --environment-report /tmp/exp1_environment.json \
-    --dataset-report /tmp/exp1_dataset.json \
+  TRAIN_ARGS=(
+    --config "$CONFIG" --residual-mode "$MODE"
+    --init-checkpoint "$INIT_CHECKPOINT" --run-dir "$RUN_DIR"
+    --environment-report /tmp/exp1_environment.json
+    --dataset-report /tmp/exp1_dataset.json
+  )
+  if [[ "$MODE" == "full_attnres" ]]; then
+    TRAIN_ARGS+=(--expected-data-sha256 "$EXPECTED_DATA_SHA")
+  fi
+  PYTHONUNBUFFERED=1 "$PYTHON_BIN" scripts/experiment_train.py "${TRAIN_ARGS[@]}" \
     2>&1 | tee "/tmp/${EXPERIMENT}_${MODE}.console.log"
   cp "/tmp/${EXPERIMENT}_${MODE}.console.log" "$RUN_DIR/console.log"
+  cp "$PREFLIGHT_REPORT" "$RUN_DIR/preflight.json"
+  if [[ "$MODE" == "standard" ]]; then
+    EXPECTED_DATA_SHA="$($PYTHON_BIN -c 'import json,sys; print(json.load(open(sys.argv[1]))["combined_sha256"])' "$RUN_DIR/data_order.json")"
+  fi
 done
 
 "$PYTHON_BIN" scripts/plot_exp1.py \
