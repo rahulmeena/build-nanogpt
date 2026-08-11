@@ -59,6 +59,7 @@ class Runtime:
         self.device = torch.device("cuda", self.local_rank)
         torch.cuda.set_device(self.device)
         dist.init_process_group(backend="nccl", device_id=self.device)
+        self.object_group = dist.new_group(backend="gloo")
         self.master = self.rank == 0
 
     def barrier(self):
@@ -66,6 +67,7 @@ class Runtime:
 
     def close(self):
         if dist.is_initialized():
+            dist.destroy_process_group(self.object_group)
             dist.destroy_process_group()
 
 
@@ -97,8 +99,14 @@ def write_jsonl(path, value):
 
 def all_gather_objects(value, runtime):
     values = [None for _ in range(runtime.world_size)]
-    dist.all_gather_object(values, value)
+    dist.all_gather_object(values, value, group=runtime.object_group)
     return values
+
+
+def broadcast_object(value, runtime):
+    values = [value]
+    dist.broadcast_object_list(values, src=0, group=runtime.object_group)
+    return values[0]
 
 
 def validate_config(config):
@@ -209,9 +217,8 @@ def combine_global_batch_hashes(per_rank_hashes):
 
 def probe_global_batches(loader, symbols, runtime, count):
     snapshot = loader_state(loader)
-    global_hashes = []
-    first_tokens = []
-    last_targets = []
+    local_batch_hashes = []
+    local_batch_edges = []
     for _ in range(count):
         local_hashes = []
         local_edges = []
@@ -219,16 +226,23 @@ def probe_global_batches(loader, symbols, runtime, count):
             x, y = loader.next_batch()
             local_hashes.append(batch_payload_hash(x, y))
             local_edges.append((int(x.view(-1)[0]), int(y.view(-1)[-1])))
-        gathered_hashes = all_gather_objects(local_hashes, runtime)
-        gathered_edges = all_gather_objects(local_edges, runtime)
-        if runtime.master:
-            global_hashes.append(combine_global_batch_hashes(gathered_hashes))
-            first_tokens.append(gathered_edges[0][0][0])
-            last_targets.append(gathered_edges[-1][-1][1])
+        local_batch_hashes.append(local_hashes)
+        local_batch_edges.append(local_edges)
+    gathered_hashes = all_gather_objects(local_batch_hashes, runtime)
+    gathered_edges = all_gather_objects(local_batch_edges, runtime)
     restore_loader_state(loader, snapshot, symbols)
     runtime.barrier()
     if not runtime.master:
         return None
+    global_hashes = []
+    first_tokens = []
+    last_targets = []
+    for batch_index in range(count):
+        per_rank_hashes = [rank_hashes[batch_index] for rank_hashes in gathered_hashes]
+        per_rank_edges = [rank_edges[batch_index] for rank_edges in gathered_edges]
+        global_hashes.append(combine_global_batch_hashes(per_rank_hashes))
+        first_tokens.append(per_rank_edges[0][0][0])
+        last_targets.append(per_rank_edges[-1][-1][1])
     combined = hashlib.sha256()
     for digest in global_hashes:
         combined.update(bytes.fromhex(digest))
@@ -655,9 +669,15 @@ def main():
             raise SystemExit("working tree must be clean before Experiment 1B")
         if git_output("rev-parse", "baseline-gpt2-124m-10b^{commit}") != BASELINE_COMMIT:
             raise SystemExit("frozen baseline tag mismatch")
-        if file_sha256(args.init_checkpoint) != EXPECTED_INIT_SHA256:
+        observed_init_sha256 = broadcast_object(
+            file_sha256(args.init_checkpoint) if runtime.master else None, runtime
+        )
+        if observed_init_sha256 != EXPECTED_INIT_SHA256:
             raise SystemExit("canonical initialization SHA256 mismatch")
-        if file_sha256(args.dataset_manifest) != EXPECTED_DATASET_MANIFEST_SHA256:
+        observed_manifest_sha256 = broadcast_object(
+            file_sha256(args.dataset_manifest) if runtime.master else None, runtime
+        )
+        if observed_manifest_sha256 != EXPECTED_DATASET_MANIFEST_SHA256:
             raise SystemExit("dataset manifest SHA256 mismatch")
 
         dataset_report = json.loads(Path(args.dataset_report).read_text())
@@ -797,6 +817,7 @@ def main():
                 write_json(run_dir / "initialization_verification.json", initialization)
                 write_json(run_dir / "metadata.json", metadata)
             runtime.barrier()
+            master_print(runtime, "probing matched global training-data order", flush=True)
             data_order = probe_global_batches(
                 train_loader, symbols, runtime, config["data_probe_global_batches"]
             )
@@ -809,6 +830,7 @@ def main():
                         raise SystemExit("Standard/AttnRes global training-data hashes differ")
                 write_json(run_dir / "data_order.json", data_order)
             runtime.barrier()
+            master_print(runtime, "training-data order probe complete", flush=True)
 
         end_update = config["max_updates"]
         if args.stop_after_completed_updates is not None:
@@ -820,6 +842,11 @@ def main():
 
         run_start = time.perf_counter()
         torch.cuda.reset_peak_memory_stats(runtime.device)
+        master_print(
+            runtime,
+            f"starting optimizer updates {start_update}..{end_update - 1} on world_size={WORLD_SIZE}",
+            flush=True,
+        )
 
         def evaluate_milestone(completed_updates):
             tokens = completed_updates * GLOBAL_BATCH_TOKENS
