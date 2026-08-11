@@ -1,0 +1,90 @@
+{
+  "cwd": "/workspace/build-nanogpt",
+  "dependencies": {
+    "datasets": {
+      "installed": true,
+      "version": "5.0.1"
+    },
+    "matplotlib": {
+      "installed": true,
+      "version": "3.11.1"
+    },
+    "numpy": {
+      "installed": true,
+      "version": "2.1.2"
+    },
+    "requests": {
+      "installed": true,
+      "version": "2.32.5"
+    },
+    "tiktoken": {
+      "installed": true,
+      "version": "0.13.0"
+    },
+    "torch": {
+      "installed": true,
+      "version": "2.8.0+cu128"
+    },
+    "tqdm": {
+      "installed": true,
+      "version": "4.70.0"
+    },
+    "transformers": {
+      "installed": true,
+      "version": "5.15.0"
+    }
+  },
+  "executable": "/workspace/venvs/gpt2-attnres/bin/python",
+  "failures": [],
+  "git": {
+    "branch": "experiment-1-full-attnres",
+    "commit_sha": "29cd1a74e48517da25fcaa561f6d00212c92b5d1",
+    "status": "## experiment-1-full-attnres"
+  },
+  "hellaswag_render": {
+    "ctx_token_count": 6,
+    "label": 0,
+    "mask_shape": [
+      4,
+      12
+    ],
+    "ok": true,
+    "tokens_shape": [
+      4,
+      12
+    ]
+  },
+  "linux_kernel": "6.8.0-59-generic",
+  "nvidia_smi": {
+    "available": true,
+    "full_output": "Tue Aug 11 13:53:15 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 12.8     |\n|-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:89:00.0 Off |                    0 |\n| N/A   24C    P0             69W /  400W |       4MiB /  81920MiB |      0%      Default |\n|                                         |                        |             Disabled |\n+-----------------------------------------+------------------------+----------------------+\n                                                                                         \n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+",
+    "query_output": "NVIDIA A100-SXM4-80GB, 81920 MiB, 570.195.03"
+  },
+  "os": "Linux-6.8.0-59-generic-x86_64-with-glibc2.39",
+  "python_version": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+  "repo_root": "/workspace/build-nanogpt",
+  "system": "Linux",
+  "torch": {
+    "bf16_supported": true,
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "cudnn_version": 91002,
+    "fused_adamw_available": true,
+    "gpu_count": 1,
+    "gpus": [
+      {
+        "index": 0,
+        "major": 8,
+        "minor": 0,
+        "name": "NVIDIA A100-SXM4-80GB",
+        "total_memory_bytes": 85095874560,
+        "total_memory_gib": 79.251708984375
+      }
+    ],
+    "installed": true,
+    "matmul_precision": "highest",
+    "sdpa_available": true,
+    "tf32_matmul_allowed": false,
+    "version": "2.8.0+cu128"
+  }
+}

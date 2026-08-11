@@ -1,0 +1,146 @@
+{
+  "B": 64,
+  "T": 1024,
+  "baseline_commit": "a834ca88b7b6c4e81c2a71eef0edde29b2ee2ccb",
+  "baseline_tag": "baseline-gpt2-124m-10b",
+  "data_order": {
+    "combined_sha256": "3052dfed888d246de05607fa77df2c3d08bb4c1c5ec654c9e217d27371f74d1e",
+    "microbatch_hashes": [
+      {
+        "first_input_token": 2982,
+        "last_target_token": 718,
+        "microbatch": 0,
+        "sha256": "6277d611876586cf52b4233de06eb3d3d2aa50450af99afda9427ed987f71d11"
+      },
+      {
+        "first_input_token": 718,
+        "last_target_token": 273,
+        "microbatch": 1,
+        "sha256": "eddc491cdeded4fbdee412444fe8f9656f8020c4f16820a928d4ba10e3abf81a"
+      },
+      {
+        "first_input_token": 273,
+        "last_target_token": 584,
+        "microbatch": 2,
+        "sha256": "89756ecc055631e2ad7c5ef386b0f99ce1e102bea2a8a7dc0235c1e50d80da79"
+      },
+      {
+        "first_input_token": 584,
+        "last_target_token": 290,
+        "microbatch": 3,
+        "sha256": "187b997c4d9a49e852a34252bc6aa6a574cbdb1e7a53330665c6911e1030ddb3"
+      },
+      {
+        "first_input_token": 290,
+        "last_target_token": 318,
+        "microbatch": 4,
+        "sha256": "a343209ae8955bf40f3b05060fc64e3204e23298fe3ab568d53358c7b0441aad"
+      },
+      {
+        "first_input_token": 318,
+        "last_target_token": 25891,
+        "microbatch": 5,
+        "sha256": "f75053d099598d80947c43a804332257de54ba4721bf5c22bbc27c9d492094b8"
+      },
+      {
+        "first_input_token": 25891,
+        "last_target_token": 428,
+        "microbatch": 6,
+        "sha256": "707aa91b024018b2a6302dc1caf1123a814f74e672349f65eec2d9d8712fb75f"
+      },
+      {
+        "first_input_token": 428,
+        "last_target_token": 6974,
+        "microbatch": 7,
+        "sha256": "c1aa0616aaae73bd3429f914e29998fc6523a1b4f5b537f69d5d65d8fa08c8d1"
+      }
+    ],
+    "microbatches_hashed": 8,
+    "reset": {
+      "position": 0,
+      "shard_index": 0,
+      "shard_path": "edu_fineweb10B/edufineweb_train_000001.npy"
+    },
+    "start": {
+      "position": 0,
+      "shard_index": 0,
+      "shard_path": "edu_fineweb10B/edufineweb_train_000001.npy"
+    }
+  },
+  "data_order_match": true,
+  "experiment": "Experiment 1A matched 100M-token A/B",
+  "experiment_commit": "29cd1a74e48517da25fcaa561f6d00212c92b5d1",
+  "global_batch_tokens": 524288,
+  "gradient_accumulation": 8,
+  "independent_data_loader_hashes": [
+    "3052dfed888d246de05607fa77df2c3d08bb4c1c5ec654c9e217d27371f74d1e",
+    "3052dfed888d246de05607fa77df2c3d08bb4c1c5ec654c9e217d27371f74d1e"
+  ],
+  "init_checkpoint": "/workspace/build-nanogpt/experiment_artifacts/baseline_init_seed1337.pt",
+  "init_checkpoint_sha256": "39de351efe080de4e2409355c572095f17dcbaea76154a2f55e375acfdafc3b6",
+  "initial_uniform_entropies": [
+    0.0,
+    0.6931471805599453,
+    1.0986122886681098,
+    1.3862943611198906,
+    1.6094379124341003,
+    1.791759469228055,
+    1.9459101490553132,
+    2.0794415416798357,
+    2.1972245773362196,
+    2.302585092994046,
+    2.3978952727983707,
+    2.4849066497880004,
+    2.5649493574615367,
+    2.6390573296152584,
+    2.70805020110221,
+    2.772588722239781,
+    2.833213344056216,
+    2.8903717578961645,
+    2.9444389791664403,
+    2.995732273553991,
+    3.044522437723423,
+    3.091042453358316,
+    3.1354942159291497,
+    3.1780538303479458,
+    3.2188758248682006
+  ],
+  "maximum_shared_tensor_difference": 0.0,
+  "models": {
+    "full_attnres": {
+      "parameters": 124514304,
+      "verification": {
+        "attnres_queries_exactly_zero": true,
+        "attnres_query_tensors": 25,
+        "attnres_rmsnorm_tensors": 25,
+        "attnres_rmsnorms_exactly_one": true,
+        "exact_matches": 149,
+        "maximum_absolute_difference": 0.0,
+        "mismatch_keys": [],
+        "mismatches": 0,
+        "missing_keys": [],
+        "shape_mismatches": [],
+        "shared_tensors": 149
+      }
+    },
+    "standard": {
+      "parameters": 124475904,
+      "verification": {
+        "attnres_queries_exactly_zero": true,
+        "attnres_query_tensors": 0,
+        "attnres_rmsnorm_tensors": 0,
+        "attnres_rmsnorms_exactly_one": true,
+        "exact_matches": 149,
+        "maximum_absolute_difference": 0.0,
+        "mismatch_keys": [],
+        "mismatches": 0,
+        "missing_keys": [],
+        "shape_mismatches": [],
+        "shared_tensors": 149
+      }
+    }
+  },
+  "optimizer_updates": 191,
+  "processed_tokens": 100139008,
+  "shared_tensor_mismatches": 0
+}

@@ -136,7 +136,7 @@ def routing_rows(full_dir):
 
 def save_source_data(standard, full, routing, matched, out_dir):
     with (out_dir / "matched_evaluations.csv").open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(matched[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(matched[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(matched)
 
@@ -146,7 +146,7 @@ def save_source_data(standard, full, routing, matched, out_dir):
         "gpu_reserved_mb", "gpu_peak_mb", "gpu_peak_reserved_mb",
     ]
     with (out_dir / "training_metrics.csv").open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=training_fields)
+        writer = csv.DictWriter(handle, fieldnames=training_fields, lineterminator="\n")
         writer.writeheader()
         for model_name, records in (("standard", standard), ("full_attnres", full)):
             for row in records:
@@ -156,7 +156,7 @@ def save_source_data(standard, full, routing, matched, out_dir):
     final_routing = routing[-1]
     with (out_dir / "routing_100m.csv").open("w", newline="") as handle:
         fields = ["step", "tokens", "destination", "source_depth", "mean_weight", "mean_entropy"]
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for destination in final_routing["destinations"]:
             for source_depth, weight in zip(destination["source_depths"], destination["mean_weights"]):

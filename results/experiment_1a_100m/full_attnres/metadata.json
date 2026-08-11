@@ -1,0 +1,74 @@
+{
+  "B": 64,
+  "T": 1024,
+  "attnres_config": {
+    "key_normalization": "RMSNorm",
+    "mode": "full_attnres",
+    "query_initialization": "zeros",
+    "rmsnorm_epsilon": 1e-05,
+    "softmax_dimension": "residual_depth"
+  },
+  "baseline_init_checkpoint": "/workspace/build-nanogpt/experiment_artifacts/baseline_init_seed1337.pt",
+  "baseline_init_sha256": "39de351efe080de4e2409355c572095f17dcbaea76154a2f55e375acfdafc3b6",
+  "baseline_parent_commit": "a834ca88b7b6c4e81c2a71eef0edde29b2ee2ccb",
+  "baseline_tag": "baseline-gpt2-124m-10b",
+  "cuda": "12.8",
+  "data_order_verification": "data_order.json",
+  "dataset_summary": {
+    "dtype": [
+      "uint16"
+    ],
+    "number_of_shard_files": 100,
+    "total_token_count": 9953989344,
+    "training_shard_count": 99,
+    "validation_shards": [
+      "edufineweb_val_000000.npy"
+    ]
+  },
+  "dataset_verification": "dataset.json",
+  "dataset_verification_sha256": "8391b5ed36569fb3c2f4210f79b27ce9c352f5942e68de2f3719d630946f4078",
+  "environment_verification": "environment.json",
+  "environment_verification_sha256": "3bc4ba9730f52796196c1390997cb80b5dc0a05b99f418cd01b257b85cce7b87",
+  "experiment_config": {
+    "actual_tokens": 100139008,
+    "eval_token_targets": [
+      524288,
+      10485760,
+      25690112,
+      50331648,
+      75497472,
+      100139008
+    ],
+    "expected_hellaswag_examples": 10042,
+    "experiment": "exp1_100m_seed1337",
+    "hellaswag_examples": null,
+    "lr_schedule": "preserve_original_10b_recipe",
+    "max_updates": 191,
+    "target_tokens": 100000000,
+    "validation_steps": 20
+  },
+  "git_commit": "29cd1a74e48517da25fcaa561f6d00212c92b5d1",
+  "git_status": "## experiment-1-full-attnres",
+  "global_batch_tokens": 524288,
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "gradient_accumulation": 8,
+  "initialization_verification": "initialization_verification.json",
+  "lr_schedule": "original 10B: 715-step warmup then cosine through 19073 updates",
+  "model_config": {
+    "attnres_rms_eps": 1e-05,
+    "block_size": 1024,
+    "n_embd": 768,
+    "n_head": 12,
+    "n_layer": 12,
+    "residual_mode": "full_attnres",
+    "vocab_size": 50304
+  },
+  "optimizer": "fused AdamW, betas=(0.9,0.95), eps=1e-8, weight_decay=0.1",
+  "parameter_count": 124514304,
+  "planned_updates": 191,
+  "precision": "BF16 autocast, FP32 parameters/residual accumulator",
+  "pytorch": "2.8.0+cu128",
+  "seed": 1337,
+  "training_data_sha256": "3052dfed888d246de05607fa77df2c3d08bb4c1c5ec654c9e217d27371f74d1e",
+  "training_token_budget": 100000000
+}
