@@ -342,6 +342,28 @@ def memory_stats(runtime):
     }
 
 
+def warm_ddp_reducer(model, raw_model, loader, symbols, runtime):
+    """Recreate DDP's post-first-iteration bucket layout without an update."""
+    snapshot = loader_state(loader)
+    model.train()
+    raw_model.zero_grad(set_to_none=True)
+    for microstep in range(GRAD_ACCUM_STEPS):
+        x, y = loader.next_batch()
+        x = x.to(runtime.device, non_blocking=True)
+        y = y.to(runtime.device, non_blocking=True)
+        sync_context = model.no_sync() if microstep < GRAD_ACCUM_STEPS - 1 else contextlib.nullcontext()
+        with sync_context:
+            with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+                _, loss = model(x, y)
+            (loss / GRAD_ACCUM_STEPS).backward()
+    finite = torch.tensor(int(finite_gradients(raw_model)), device=runtime.device)
+    dist.all_reduce(finite, op=dist.ReduceOp.MIN)
+    if finite.item() != 1:
+        raise SystemExit("non-finite gradient in DDP reducer warmup")
+    raw_model.zero_grad(set_to_none=True)
+    restore_loader_state(loader, snapshot, symbols)
+
+
 def timed_optimizer_update(model, raw_model, optimizer, loader, symbols, runtime, step, hash_batch):
     model.train()
     optimizer.zero_grad(set_to_none=True)
@@ -535,9 +557,10 @@ def checkpoint_metadata(args, config, dataset_report, environment_report, runtim
             "weight_decay": 0.1,
         },
         "ddp": {
-            "static_graph": True,
+            "static_graph": False,
             "broadcast_buffers": False,
             "gradient_as_bucket_view": True,
+            "resume_reducer_warmup": True,
         },
         "lr_schedule": {
             "max_lr": support.MAX_LR,
@@ -776,7 +799,6 @@ def main():
             output_device=runtime.local_rank,
             broadcast_buffers=False,
             gradient_as_bucket_view=True,
-            static_graph=True,
         )
 
         DataLoaderLite = symbols["DataLoaderLite"]
@@ -847,7 +869,9 @@ def main():
                     "world_size": runtime.world_size,
                     "gradient_accumulation": GRAD_ACCUM_STEPS,
                     "global_batch_tokens": GLOBAL_BATCH_TOKENS,
+                    "ddp_reducer_warmup": True,
                 })
+            warm_ddp_reducer(model, raw_model, train_loader, symbols, runtime)
             restore_rng_state(checkpoint["rng_states"][runtime.rank], runtime)
             del checkpoint
         else:
