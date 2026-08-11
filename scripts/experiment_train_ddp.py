@@ -56,9 +56,9 @@ class Runtime:
             raise SystemExit(
                 f"Experiment 1B requires exactly {WORLD_SIZE} visible GPUs, got {torch.cuda.device_count()}"
             )
-        torch.cuda.set_device(self.local_rank)
-        dist.init_process_group(backend="nccl")
         self.device = torch.device("cuda", self.local_rank)
+        torch.cuda.set_device(self.device)
+        dist.init_process_group(backend="nccl", device_id=self.device)
         self.master = self.rank == 0
 
     def barrier(self):
