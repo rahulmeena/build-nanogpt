@@ -104,6 +104,15 @@ def write_jsonl(path, value):
         handle.write(json.dumps(value) + "\n")
 
 
+def wait_for_file(path, timeout_seconds=1800):
+    path = Path(path)
+    deadline = time.monotonic() + timeout_seconds
+    while not path.is_file():
+        if time.monotonic() >= deadline:
+            raise TimeoutError(f"timed out waiting for completion marker: {path}")
+        time.sleep(0.1)
+
+
 def all_gather_objects(value, runtime):
     values = [None for _ in range(runtime.world_size)]
     dist.all_gather_object(values, value, group=runtime.object_group)
@@ -241,7 +250,6 @@ def probe_global_batches(loader, symbols, runtime, count):
     gathered_hashes = all_gather_objects(local_batch_hashes, runtime)
     gathered_edges = all_gather_objects(local_batch_edges, runtime)
     restore_loader_state(loader, snapshot, symbols)
-    runtime.barrier()
     if not runtime.master:
         return None
     global_hashes = []
@@ -438,7 +446,6 @@ def validation_loss_ddp(raw_model, val_loader, runtime, global_batches, collect_
                 "mean_entropy": (accumulator["entropy_sum"] / global_batches).item(),
             })
     val_loader.reset()
-    runtime.barrier()
     return loss_value, routing
 
 
@@ -595,13 +602,12 @@ def save_checkpoint(
     path, raw_model, optimizer, train_loader, symbols, runtime, metadata, completed_updates,
     residual_mode, completed_evaluations, completed_hellaswag,
 ):
-    runtime.barrier()
+    path = Path(path)
     data_states = all_gather_objects(loader_state(train_loader), runtime)
     rng_states = all_gather_objects(capture_rng_state(runtime), runtime)
     next_probe = probe_global_batches(train_loader, symbols, runtime, 1)
     next_hash = next_probe["global_batch_hashes"][0] if runtime.master else None
     if runtime.master:
-        path = Path(path)
         temporary = path.with_suffix(path.suffix + ".tmp")
         payload = {
             "schema": CHECKPOINT_SCHEMA,
@@ -627,12 +633,16 @@ def save_checkpoint(
         }
         torch.save(payload, temporary)
         os.replace(temporary, path)
-    runtime.barrier()
     report = verify_checkpoint_file(path, completed_updates) if runtime.master else None
+    complete_marker = Path(str(path) + ".complete")
     if runtime.master:
         write_json(Path(path).with_suffix(".verification.json"), report)
         Path(str(path) + ".sha256").write_text(f"{report['sha256']}  {Path(path).name}\n")
-    runtime.barrier()
+        complete_marker.write_text(
+            json.dumps({"completed_updates": completed_updates, "sha256": report["sha256"]}) + "\n"
+        )
+    else:
+        wait_for_file(complete_marker)
     return report
 
 
@@ -819,7 +829,6 @@ def main():
                 })
             restore_rng_state(checkpoint["rng_states"][runtime.rank], runtime)
             del checkpoint
-            runtime.barrier()
         else:
             if run_dir.exists():
                 raise SystemExit(f"refusing to overwrite existing run: {run_dir}")
@@ -833,7 +842,6 @@ def main():
                 shutil.copy2(args.environment_report, run_dir / "environment.json")
                 write_json(run_dir / "initialization_verification.json", initialization)
                 write_json(run_dir / "metadata.json", metadata)
-            runtime.barrier()
             master_print(runtime, "probing matched global training-data order", flush=True)
             data_order = probe_global_batches(
                 train_loader, symbols, runtime, config["data_probe_global_batches"]
@@ -846,7 +854,6 @@ def main():
                     if data_order["global_batch_hashes"] != expected["global_batch_hashes"]:
                         raise SystemExit("Standard/AttnRes global training-data hashes differ")
                 write_json(run_dir / "data_order.json", data_order)
-            runtime.barrier()
             master_print(runtime, "training-data order probe complete", flush=True)
 
         end_update = config["max_updates"]
@@ -914,7 +921,6 @@ def main():
                     flush=True,
                 )
             completed_evaluations.add(completed_updates)
-            runtime.barrier()
 
         if start_update == 0 and 0 in config["eval_completed_updates"]:
             evaluate_milestone(0)
@@ -948,7 +954,6 @@ def main():
                         flush=True,
                     )
 
-        runtime.barrier()
         if runtime.master:
             rows = read_metrics(metrics_file)
             train_rows = [row for row in rows if row["kind"] == "train"]
@@ -997,7 +1002,9 @@ def main():
             }
             write_json(run_dir / "run_summary.json", summary)
             print(json.dumps(summary, indent=2, sort_keys=True), flush=True)
-        runtime.barrier()
+            (run_dir / f"session_complete_{end_update:04d}.marker").write_text("complete\n")
+        else:
+            wait_for_file(run_dir / f"session_complete_{end_update:04d}.marker")
     finally:
         runtime.close()
 
