@@ -30,6 +30,7 @@ from experiment_train import routing_parameter_stats, verify_shared_initializati
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BASELINE_COMMIT = "a834ca88b7b6c4e81c2a71eef0edde29b2ee2ccb"
+LEGACY_EXACT_RESUME_COMMIT = "d03cfb52eeb2b3c87ab0fef9ef0f35ae11a133d0"
 EXPECTED_INIT_SHA256 = "39de351efe080de4e2409355c572095f17dcbaea76154a2f55e375acfdafc3b6"
 EXPECTED_DATASET_MANIFEST_SHA256 = "be14a17c21682a018aef68ce02847cced77e921374c01f806deccfba72870f54"
 CHECKPOINT_SCHEMA = "exp1b_exact_resume_v1"
@@ -90,6 +91,45 @@ def file_sha256(path):
         for chunk in iter(lambda: handle.read(4 * 1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def fsync_file(path):
+    """Force a completed checkpoint staging file through the local page cache."""
+    descriptor = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def fsync_directory(path):
+    """Persist an atomic rename before advertising a checkpoint as complete."""
+    descriptor = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def publish_checkpoint(local_stage, destination, expected_sha256, attempts=3):
+    """Copy a locally verified archive onto the network volume without partial publication."""
+    destination = Path(destination)
+    temporary = destination.with_suffix(destination.suffix + ".tmp")
+    last_observed = None
+    for _ in range(attempts):
+        with Path(local_stage).open("rb") as source, temporary.open("wb") as target:
+            shutil.copyfileobj(source, target, length=16 * 1024 * 1024)
+            target.flush()
+            os.fsync(target.fileno())
+        os.replace(temporary, destination)
+        fsync_directory(destination.parent)
+        last_observed = file_sha256(destination)
+        if last_observed == expected_sha256:
+            return
+    raise RuntimeError(
+        f"network-volume checkpoint checksum mismatch after {attempts} attempts: "
+        f"expected={expected_sha256}, observed={last_observed}"
+    )
 
 
 def write_json(path, value):
@@ -579,15 +619,15 @@ def checkpoint_metadata(args, config, dataset_report, environment_report, runtim
         "cuda": torch.version.cuda,
         "cudnn": torch.backends.cudnn.version(),
         "environment_report_sha256": file_sha256(args.environment_report),
+        "trainer_source_sha256": file_sha256(Path(__file__)),
         "experiment": config["experiment"],
     }
 
 
 def verify_checkpoint_file(path, expected_completed_updates):
-    try:
-        checkpoint = torch.load(path, map_location="cpu", weights_only=False, mmap=True)
-    except (TypeError, RuntimeError):
-        checkpoint = torch.load(path, map_location="cpu", weights_only=False)
+    # Do not mmap network-volume checkpoints: a stale or incomplete remote page
+    # must not be mistaken for a fully durable archive.
+    checkpoint = torch.load(path, map_location="cpu", weights_only=False)
     required = {
         "schema", "model", "model_config", "residual_mode", "optimizer", "training_state",
         "dataloader_states", "rng_states", "metadata", "next_global_batch_sha256",
@@ -648,7 +688,6 @@ def save_checkpoint(
     next_probe = probe_global_batches(train_loader, symbols, runtime, 1)
     next_hash = next_probe["global_batch_hashes"][0] if runtime.master else None
     if runtime.master:
-        temporary = path.with_suffix(path.suffix + ".tmp")
         payload = {
             "schema": CHECKPOINT_SCHEMA,
             "model": raw_model.state_dict(),
@@ -671,8 +710,20 @@ def save_checkpoint(
             "metadata": metadata,
             "next_global_batch_sha256": next_hash,
         }
-        torch.save(payload, temporary)
-        os.replace(temporary, path)
+        live_optimizer_report = optimizer_verification(payload["optimizer"])
+        if not live_optimizer_report["valid"]:
+            raise SystemExit(
+                f"live optimizer verification failed before checkpoint serialization: "
+                f"{live_optimizer_report}"
+            )
+        local_stage = Path("/tmp") / f"exp1b_checkpoint_{os.getpid()}_{path.name}"
+        try:
+            torch.save(payload, local_stage)
+            fsync_file(local_stage)
+            local_report = verify_checkpoint_file(local_stage, completed_updates)
+            publish_checkpoint(local_stage, path, local_report["sha256"])
+        finally:
+            local_stage.unlink(missing_ok=True)
     report = verify_checkpoint_file(path, completed_updates) if runtime.master else None
     complete_marker = Path(str(path) + ".complete")
     if runtime.master:
@@ -691,8 +742,20 @@ def validate_resume_checkpoint(checkpoint, metadata, residual_mode):
         raise SystemExit("resume checkpoint schema mismatch")
     if checkpoint.get("residual_mode") != residual_mode:
         raise SystemExit("resume checkpoint residual mode mismatch")
+    checkpoint_metadata = checkpoint["metadata"]
+    checkpoint_trainer_sha = checkpoint_metadata.get("trainer_source_sha256")
+    if checkpoint_trainer_sha is None:
+        if checkpoint_metadata.get("git_sha") != LEGACY_EXACT_RESUME_COMMIT:
+            raise SystemExit(
+                "legacy resume checkpoint has neither a trainer source hash nor the reviewed migration commit"
+            )
+    elif checkpoint_trainer_sha != metadata["trainer_source_sha256"]:
+        raise SystemExit(
+            "resume trainer source mismatch: "
+            f"checkpoint={checkpoint_trainer_sha}, runtime={metadata['trainer_source_sha256']}"
+        )
     for key in (
-        "git_sha", "baseline_init_sha256", "dataset_manifest_sha256", "world_size", "B_per_gpu",
+        "baseline_init_sha256", "dataset_manifest_sha256", "world_size", "B_per_gpu",
         "T", "gradient_accumulation", "global_batch_tokens", "precision", "optimizer", "lr_schedule",
         "seed", "pytorch", "cuda",
         "determinism", "ddp",
@@ -912,7 +975,18 @@ def main():
                 f"invalid stop point: start={start_update}, stop={end_update}, max={config['max_updates']}"
             )
 
+        wall_clock_offset = 0.0
+        if runtime.master and args.resume_checkpoint:
+            prior_rows = read_metrics(metrics_file)
+            wall_clock_offset = max(
+                (float(row.get("wall_clock_seconds", 0.0)) for row in prior_rows),
+                default=0.0,
+            )
         run_start = time.perf_counter()
+
+        def wall_clock_seconds():
+            return wall_clock_offset + time.perf_counter() - run_start
+
         torch.cuda.reset_peak_memory_stats(runtime.device)
         master_print(
             runtime,
@@ -949,7 +1023,7 @@ def main():
                     "tokens": tokens,
                     "val_loss": val_loss,
                     "validation_global_batches": config["validation_global_batches"],
-                    "wall_clock_seconds": time.perf_counter() - run_start,
+                    "wall_clock_seconds": wall_clock_seconds(),
                 })
                 if hella is not None:
                     write_jsonl(metrics_file, {
@@ -960,7 +1034,7 @@ def main():
                         "hellaswag_accuracy": hella["accuracy_norm"],
                         "hellaswag_correct": hella["correct_norm"],
                         "hellaswag_examples": hella["examples"],
-                        "wall_clock_seconds": time.perf_counter() - run_start,
+                        "wall_clock_seconds": wall_clock_seconds(),
                     })
                 master_print(
                     runtime,
@@ -979,7 +1053,7 @@ def main():
                 hash_batch=step < config["data_probe_global_batches"],
             )
             if runtime.master:
-                row["wall_clock_seconds"] = time.perf_counter() - run_start
+                row["wall_clock_seconds"] = wall_clock_seconds()
                 write_jsonl(metrics_file, row)
                 print(
                     f"step {step:4d} | updates {step + 1:4d} | tokens {row['tokens']:,} | "
@@ -1035,7 +1109,7 @@ def main():
                 "final_gradient_norm": train_rows[-1]["grad_norm"],
                 "final_validation_loss": val_rows[-1]["val_loss"] if val_rows else None,
                 "final_hellaswag": hella_rows[-1] if hella_rows else None,
-                "session_wall_clock_seconds": time.perf_counter() - run_start,
+                "session_wall_clock_seconds": wall_clock_seconds(),
                 "training_update_seconds": sum(row["step_time_ms"] for row in train_rows) / 1000,
                 "mean_seconds_per_update": statistics.mean(row["step_time_ms"] for row in train_rows) / 1000,
                 "mean_tokens_per_second": statistics.mean(row["tokens_per_second"] for row in train_rows),
