@@ -1,0 +1,65 @@
+{
+  "config": {
+    "checkpoint_after_updates": 5,
+    "data_start": "continue exact four-rank Experiment 1B stream from parent checkpoint loader states",
+    "global_batch_tokens": 524288,
+    "legacy_gradient_accumulation": 2,
+    "legacy_micro_batch_sequences_per_rank": 64,
+    "legacy_world_size": 4,
+    "lr_schedule": "continue original 10B schedule from completed update 954",
+    "mode": "masked_l1_topdown_teacher",
+    "optimizer": "AdamW betas=(0.9,0.95) eps=1e-8 no weight decay",
+    "optimizer_updates": 10,
+    "processed_student_tokens": 5242880,
+    "protocol": "exp2a0_teacher_topdown_5m_v1",
+    "seed": 1337,
+    "sequence_length": 1024,
+    "sequential_microbatches_per_update": 8,
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "validation_batch_sequences": 64,
+    "validation_batches": 20
+  },
+  "cuda": "12.8",
+  "dataset": {
+    "manifest": "/workspace/build-nanogpt/experiment_artifacts/edu_fineweb10B_sha256_manifest.txt",
+    "manifest_sha256": "be14a17c21682a018aef68ce02847cced77e921374c01f806deccfba72870f54",
+    "shards_verified": false
+  },
+  "destination": "Block 1 Attention input",
+  "determinism": {
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "torch_deterministic_algorithms": true
+  },
+  "experiment": "Experiment 2A0",
+  "gate": "scalar tanh, initialized exactly zero",
+  "git_commit": "2eaa26f3a3c1d32c5172a522a2fa96bed4a3b70f",
+  "git_status": "## experiment-2a0-topdown-l1",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "kind": "5M-token single-GPU learning test",
+  "optimizer": "AdamW betas=(0.9,0.95), eps=1e-8, weight_decay=0",
+  "parent_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+  "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "parent_commit": "abecd3e91e89e1259f7198d72d15664943ad48bf",
+  "pytorch": "2.8.0+cu128",
+  "schedule_start_completed_update": 954,
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "source_file_sha256": {
+    "configs/exp2a0_5m.json": "8b5bdfd6f3be948ddb198ed80e09b7bdfd359f955fe60d34d32fb6d5c3b477fc",
+    "configs/exp2a0_smoke.json": "8b375fe806709dd068306cd18ebe95c47ab0a7669019bc155c4c1ae0d2935e23",
+    "scripts/experiment_2a0.py": "cded96f565ac7c02745cf5a35161c8e49e26f2cabb479bf150c3a9fa0439b261",
+    "train_gpt2.py": "204a99117c2cde351d6d7fa00c82b39335a983cd301e54c79e625a7f03e1af4d"
+  },
+  "student_base": "frozen",
+  "teacher": "frozen eval/no_grad; raw residual sources shifted one token and detached"
+}
