@@ -278,6 +278,23 @@ def optimizer_steps(optimizer_or_state):
     return [int(values["step"].item()) for values in state["state"].values()]
 
 
+def model_state_sha256(model, include_topdown):
+    """Hash model tensors, including zero-dimensional scalar parameters."""
+    digest = hashlib.sha256()
+    for name, value in sorted(model.state_dict().items()):
+        is_topdown = name.startswith("transformer.topdown_attnres.")
+        if is_topdown != include_topdown:
+            continue
+        tensor = value.detach().contiguous()
+        digest.update(name.encode())
+        digest.update(str(tensor.dtype).encode())
+        digest.update(str(tuple(tensor.shape)).encode())
+        digest.update(
+            tensor.reshape(-1).view(torch.uint8).cpu().numpy().tobytes()
+        )
+    return digest.hexdigest()
+
+
 def assert_optimizer_state(optimizer, completed_updates):
     report = a0.optimizer_state_report(optimizer.state_dict(), completed_updates)
     steps = optimizer_steps(optimizer)
@@ -514,8 +531,8 @@ def assert_runtime_contract(student, teacher, optimizer, completed_updates):
 
 
 def assert_frozen_hashes(student, teacher, expected_base, expected_teacher):
-    base = a0.state_tensor_sha256(student, include_topdown=False)
-    teacher_hash = a0.state_tensor_sha256(teacher, include_topdown=False)
+    base = model_state_sha256(student, include_topdown=False)
+    teacher_hash = model_state_sha256(teacher, include_topdown=False)
     if base != expected_base:
         raise SystemExit(f"frozen student base changed: {base} != {expected_base}")
     if teacher_hash != expected_teacher:
@@ -526,9 +543,9 @@ def assert_frozen_hashes(student, teacher, expected_base, expected_teacher):
 def snapshot_training_boundary(student, teacher, optimizer, loaders):
     router = student.transformer.topdown_attnres
     return {
-        "student_base_sha256": a0.state_tensor_sha256(student, include_topdown=False),
-        "student_topdown_sha256": a0.state_tensor_sha256(student, include_topdown=True),
-        "teacher_sha256": a0.state_tensor_sha256(teacher, include_topdown=False),
+        "student_base_sha256": model_state_sha256(student, include_topdown=False),
+        "student_topdown_sha256": model_state_sha256(student, include_topdown=True),
+        "teacher_sha256": model_state_sha256(teacher, include_topdown=False),
         "optimizer": copy.deepcopy(optimizer.state_dict()),
         "loaders": copy.deepcopy(a0.snapshot_loaders(loaders)),
         "rng": copy.deepcopy(a0.capture_rng_state()),
@@ -542,11 +559,11 @@ def snapshot_training_boundary(student, teacher, optimizer, loaders):
 def assert_training_boundary_unchanged(before, student, teacher, optimizer, loaders):
     checks = {
         "student_base": before["student_base_sha256"]
-        == a0.state_tensor_sha256(student, include_topdown=False),
+        == model_state_sha256(student, include_topdown=False),
         "student_topdown": before["student_topdown_sha256"]
-        == a0.state_tensor_sha256(student, include_topdown=True),
+        == model_state_sha256(student, include_topdown=True),
         "teacher": before["teacher_sha256"]
-        == a0.state_tensor_sha256(teacher, include_topdown=False),
+        == model_state_sha256(teacher, include_topdown=False),
         "optimizer": a0.nested_equal(before["optimizer"], optimizer.state_dict()),
         "loaders": a0.nested_equal(before["loaders"], a0.snapshot_loaders(loaders)),
         "rng": a0.nested_equal(before["rng"], a0.capture_rng_state()),
@@ -1692,11 +1709,11 @@ def fresh_restart_at_milestone(
     )
     checks = {
         "student_base": old_boundary["student_base_sha256"]
-        == a0.state_tensor_sha256(student2, include_topdown=False),
+        == model_state_sha256(student2, include_topdown=False),
         "student_topdown": old_boundary["student_topdown_sha256"]
-        == a0.state_tensor_sha256(student2, include_topdown=True),
+        == model_state_sha256(student2, include_topdown=True),
         "teacher": old_boundary["teacher_sha256"]
-        == a0.state_tensor_sha256(teacher2, include_topdown=False),
+        == model_state_sha256(teacher2, include_topdown=False),
         "optimizer": a0.nested_equal(
             old_boundary["optimizer"], optimizer2.state_dict()
         ),
@@ -2265,7 +2282,7 @@ def run_continuation(args, device):
         )
 
     assert_runtime_contract(student, teacher, optimizer, completed)
-    expected_teacher_hash = a0.state_tensor_sha256(teacher, include_topdown=False)
+    expected_teacher_hash = model_state_sha256(teacher, include_topdown=False)
     assert_frozen_hashes(
         student,
         teacher,

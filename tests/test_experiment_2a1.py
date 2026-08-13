@@ -526,6 +526,27 @@ class MetricsReconciliationTests(unittest.TestCase):
             self.assertEqual(result["rows_truncated"], 0)
 
 
+class ModelHashTests(unittest.TestCase):
+    def test_topdown_hash_supports_scalar_gate(self):
+        torch = RUNNER.torch
+
+        class Toy(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.transformer = torch.nn.Module()
+                self.transformer.topdown_attnres = torch.nn.Module()
+                self.transformer.topdown_attnres.gate = torch.nn.Parameter(
+                    torch.zeros(())
+                )
+
+        model = Toy()
+        initial = RUNNER.model_state_sha256(model, include_topdown=True)
+        self.assertEqual(initial, RUNNER.model_state_sha256(model, True))
+        with torch.no_grad():
+            model.transformer.topdown_attnres.gate.fill_(0.25)
+        self.assertNotEqual(initial, RUNNER.model_state_sha256(model, True))
+
+
 class TrainingRowValidationTests(unittest.TestCase):
     def test_training_rows_bind_cumulative_schedule_and_hashes(self):
         rows = training_rows()
