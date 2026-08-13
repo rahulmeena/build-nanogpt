@@ -4,11 +4,11 @@ import time
 import inspect
 import json
 from dataclasses import dataclass
+import numpy as np
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from torch.utils.checkpoint import checkpoint
-from hellaswag import render_example, iterate_examples
 # -----------------------------------------------------------------------------
 
 class CausalSelfAttention(nn.Module):
@@ -25,18 +25,29 @@ class CausalSelfAttention(nn.Module):
         self.n_head = config.n_head
         self.n_embd = config.n_embd
 
-    def forward(self, x):
+    def forward(self, x, self_only=False):
         B, T, C = x.size() # batch size, sequence length, embedding dimensionality (n_embd)
         # calculate query, key, values for all heads in batch and move head forward to be the batch dim
         # nh is "number of heads", hs is "head size", and C (number of channels) = nh * hs
         # e.g. in GPT-2 (124M), n_head=12, hs=64, so nh*hs=C=768 channels in the Transformer
-        qkv = self.c_attn(x)
-        q, k, v = qkv.split(self.n_embd, dim=2)
-        k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
-        q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
-        v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
-        y = F.scaled_dot_product_attention(q, k, v, is_causal=True) # flash attention
-        y = y.transpose(1, 2).contiguous().view(B, T, C) # re-assemble all head outputs side by side
+        if self_only:
+            # A diagonal-only attention row has one allowed key, so its softmax
+            # is exactly one and the result is the current position's value.
+            # Slice the trained fused QKV projection so no historical K/V—or
+            # unnecessary Q/K activation—is materialized in this mode.
+            y = F.linear(
+                x,
+                self.c_attn.weight[2 * self.n_embd:],
+                self.c_attn.bias[2 * self.n_embd:],
+            )
+        else:
+            qkv = self.c_attn(x)
+            q, k, v = qkv.split(self.n_embd, dim=2)
+            k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+            q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+            v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+            y = F.scaled_dot_product_attention(q, k, v, is_causal=True) # flash attention
+            y = y.transpose(1, 2).contiguous().view(B, T, C) # re-assemble all head outputs side by side
         # output projection
         y = self.c_proj(y)
         return y
@@ -136,6 +147,81 @@ class FullAttnRes(nn.Module):
             return output, weights
         return output
 
+class TopDownAttnRes(nn.Module):
+    """Independent depth router for detached previous-token teacher states."""
+
+    def __init__(self, n_embd, source_depths, eps=1e-5):
+        super().__init__()
+        self.query = nn.Parameter(torch.zeros(n_embd))
+        self.norm = RMSNorm(n_embd, eps=eps)
+        self.gate = nn.Parameter(torch.zeros(()))
+        self.source_depths = tuple(source_depths)
+        self.instrumentation_enabled = False
+        self.last_stats = None
+        self.masked_source = None
+
+    def _score(self, value):
+        key = self.norm(value)
+        return F.linear(key, self.query.unsqueeze(0)).squeeze(-1)
+
+    def forward(self, values, return_weights=False):
+        if len(values) != len(self.source_depths):
+            raise ValueError(
+                f"expected {len(self.source_depths)} top-down sources, got {len(values)}"
+            )
+        score_rows = [self._score(value) for value in values]
+        logits = torch.stack([score.float() for score in score_rows], dim=0)
+        if self.masked_source is not None:
+            logits = logits.clone()
+            logits[self.masked_source] = -torch.inf
+        weights = F.softmax(logits, dim=0)
+        output = torch.zeros_like(values[0])
+        for source_weight, value in zip(weights.unbind(dim=0), values):
+            contribution = source_weight.to(value.dtype).unsqueeze(-1) * value
+            output = output + contribution.to(output.dtype)
+
+        if self.instrumentation_enabled:
+            with torch.no_grad():
+                safe_weights = weights.clamp_min(torch.finfo(weights.dtype).tiny)
+                entropy = -(weights * safe_weights.log()).sum(dim=0)
+                self.last_stats = {
+                    "source_depths": list(self.source_depths),
+                    "mean_weights": weights.mean(dim=(1, 2)).detach().cpu().tolist(),
+                    "mean_entropy": entropy.mean().detach().cpu().item(),
+                    "query_norm": self.query.detach().float().norm().cpu().item(),
+                    "gate": self.gate.detach().float().cpu().item(),
+                    "gate_coefficient": self.gate.detach().float().tanh().cpu().item(),
+                }
+
+        if return_weights:
+            return output, weights
+        return output
+
+
+EXPERIMENT_2A0_SOURCE_DEPTHS = (16, 17, 20, 24)
+EXPERIMENT_2A0_MODES = {
+    "full_context",
+    "masked_l1_no_feedback",
+    "masked_l1_topdown_teacher",
+    "masked_l1_shuffled_feedback",
+}
+
+
+def shift_teacher_sources(source_values):
+    """Detach and shift a [source, batch, time, channel] teacher bank by one."""
+    if not isinstance(source_values, torch.Tensor) or source_values.ndim != 4:
+        raise ValueError("teacher source bank must have shape [source, batch, time, channel]")
+    shifted = torch.zeros_like(source_values)
+    shifted[:, :, 1:, :] = source_values[:, :, :-1, :]
+    return shifted.detach()
+
+
+def fixed_derangement(batch_size, device=None):
+    """Deterministic fixed-point-free batch permutation for shuffled controls."""
+    if batch_size < 2:
+        raise ValueError("shuffled feedback requires batch_size > 1")
+    return torch.arange(batch_size, device=device).roll(1)
+
 class Block(nn.Module):
 
     def __init__(self, config):
@@ -159,6 +245,7 @@ class GPTConfig:
     n_embd: int = 768 # embedding dimension
     residual_mode: str = "standard"
     attnres_rms_eps: float = 1e-5
+    enable_topdown_feedback: bool = False
 
 class GPT(nn.Module):
 
@@ -166,6 +253,8 @@ class GPT(nn.Module):
         super().__init__()
         if config.residual_mode not in {"standard", "full_attnres"}:
             raise ValueError(f"unknown residual mode: {config.residual_mode}")
+        if config.enable_topdown_feedback and config.residual_mode != "full_attnres":
+            raise ValueError("top-down feedback requires residual_mode='full_attnres'")
         self.config = config
 
         transformer = dict(
@@ -190,6 +279,12 @@ class GPT(nn.Module):
                 )
                 for destination in destinations
             ])
+            if config.enable_topdown_feedback:
+                transformer["topdown_attnres"] = TopDownAttnRes(
+                    config.n_embd,
+                    EXPERIMENT_2A0_SOURCE_DEPTHS,
+                    eps=config.attnres_rms_eps,
+                )
         self.transformer = nn.ModuleDict(transformer)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
@@ -210,10 +305,40 @@ class GPT(nn.Module):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx, targets=None):
+    def forward(
+        self,
+        idx,
+        targets=None,
+        mode="full_context",
+        feedback_sources=None,
+        feedback_permutation=None,
+        feedback_gate_override=None,
+        return_source_depths=None,
+    ):
         # idx is of shape (B, T)
         B, T = idx.size()
         assert T <= self.config.block_size, f"Cannot forward sequence of length {T}, block size is only {self.config.block_size}"
+        if mode not in EXPERIMENT_2A0_MODES:
+            raise ValueError(f"unknown Experiment 2A0 mode: {mode}")
+        if self.config.residual_mode == "standard" and mode != "full_context":
+            raise ValueError("masked/top-down modes require residual_mode='full_attnres'")
+        if return_source_depths is not None and self.config.residual_mode != "full_attnres":
+            raise ValueError("residual source capture requires residual_mode='full_attnres'")
+        masked_l1 = mode != "full_context"
+        uses_feedback = mode in {
+            "masked_l1_topdown_teacher",
+            "masked_l1_shuffled_feedback",
+        }
+        if uses_feedback and not self.config.enable_topdown_feedback:
+            raise ValueError("this model was constructed without top-down feedback")
+        if uses_feedback and feedback_sources is None:
+            raise ValueError(f"{mode} requires shifted teacher feedback sources")
+        if not uses_feedback and feedback_sources is not None:
+            raise ValueError(f"{mode} does not accept feedback sources")
+        if mode != "masked_l1_shuffled_feedback" and feedback_permutation is not None:
+            raise ValueError("a feedback permutation is valid only in shuffled-feedback mode")
+        if not uses_feedback and feedback_gate_override is not None:
+            raise ValueError("a gate override is valid only in a feedback mode")
         # forward the token and posisition embeddings
         pos = torch.arange(0, T, dtype=torch.long, device=idx.device) # shape (T)
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (T, n_embd)
@@ -228,22 +353,98 @@ class GPT(nn.Module):
             # Attention and MLP output is then a distinct residual value.
             values = [x]
             destination_index = 0
-            for block in self.transformer.h:
+            for block_index, block in enumerate(self.transformer.h):
                 h = self.transformer.attnres[destination_index](values)
-                values.append(block.attn(block.ln_1(h)))
+                if block_index == 0 and masked_l1:
+                    if uses_feedback:
+                        if not isinstance(feedback_sources, torch.Tensor) or feedback_sources.ndim != 4:
+                            raise ValueError(
+                                "feedback sources must have shape [source, batch, time, channel]"
+                            )
+                        expected_shape = (
+                            len(EXPERIMENT_2A0_SOURCE_DEPTHS), B, T, self.config.n_embd
+                        )
+                        if tuple(feedback_sources.shape) != expected_shape:
+                            raise ValueError(
+                                f"feedback source shape {tuple(feedback_sources.shape)} != {expected_shape}"
+                            )
+                        memory_bank = feedback_sources.detach()
+                        if mode == "masked_l1_shuffled_feedback":
+                            if feedback_permutation is None:
+                                feedback_permutation = fixed_derangement(B, idx.device)
+                            if tuple(feedback_permutation.shape) != (B,):
+                                raise ValueError("feedback permutation must have shape [batch]")
+                            expected_indices = torch.arange(B, device=feedback_permutation.device)
+                            if torch.any(feedback_permutation == expected_indices):
+                                raise ValueError("feedback permutation must be fixed-point-free")
+                            if not torch.equal(
+                                torch.sort(feedback_permutation).values, expected_indices
+                            ):
+                                raise ValueError("feedback permutation must contain every batch index once")
+                            memory_bank = memory_bank[:, feedback_permutation]
+                        topdown = self.transformer.topdown_attnres(
+                            list(memory_bank.unbind(dim=0))
+                        )
+                        if feedback_gate_override is None:
+                            gate = self.transformer.topdown_attnres.gate.tanh()
+                        else:
+                            gate = h.new_tensor(float(feedback_gate_override))
+                        h = h + gate * topdown
+                    values.append(block.attn(block.ln_1(h), self_only=True))
+                else:
+                    values.append(block.attn(block.ln_1(h)))
                 destination_index += 1
                 h = self.transformer.attnres[destination_index](values)
                 values.append(block.mlp(block.ln_2(h)))
                 destination_index += 1
             # The paper's output layer performs one final depth aggregation.
             x = self.transformer.attnres[destination_index](values)
+            captured_sources = None
+            if return_source_depths is not None:
+                source_depths = tuple(return_source_depths)
+                invalid = [depth for depth in source_depths if depth < 0 or depth >= len(values)]
+                if invalid:
+                    raise ValueError(f"invalid residual source depths: {invalid}")
+                captured_sources = torch.stack([values[depth] for depth in source_depths], dim=0)
         # forward the final layernorm and the classifier
         x = self.transformer.ln_f(x)
         logits = self.lm_head(x) # (B, T, vocab_size)
         loss = None
         if targets is not None:
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
+        if return_source_depths is not None:
+            return logits, loss, captured_sources
         return logits, loss
+
+    def capture_residual_sources(
+        self,
+        idx,
+        source_depths=EXPERIMENT_2A0_SOURCE_DEPTHS,
+    ):
+        """Run the original full-context stack and return selected raw values."""
+        if self.config.residual_mode != "full_attnres":
+            raise ValueError("residual source capture requires residual_mode='full_attnres'")
+        _, T = idx.size()
+        assert T <= self.config.block_size, (
+            f"Cannot forward sequence of length {T}, block size is only {self.config.block_size}"
+        )
+        source_depths = tuple(source_depths)
+        invalid = [depth for depth in source_depths if depth < 0 or depth > 2 * self.config.n_layer]
+        if invalid:
+            raise ValueError(f"invalid residual source depths: {invalid}")
+
+        pos = torch.arange(0, T, dtype=torch.long, device=idx.device)
+        x = self.transformer.wte(idx) + self.transformer.wpe(pos)
+        values = [x]
+        destination_index = 0
+        for block in self.transformer.h:
+            h = self.transformer.attnres[destination_index](values)
+            values.append(block.attn(block.ln_1(h)))
+            destination_index += 1
+            h = self.transformer.attnres[destination_index](values)
+            values.append(block.mlp(block.ln_2(h)))
+            destination_index += 1
+        return torch.stack([values[depth] for depth in source_depths], dim=0)
 
     def set_attnres_instrumentation(self, enabled=True):
         if self.config.residual_mode != "full_attnres":
@@ -271,6 +472,62 @@ class GPT(nn.Module):
             # Source 0 is the only input to the first sublayer and cannot be
             # removed there. Mask it from every later destination instead.
             router.masked_source = source_depth if source_depth != 0 or router is not self.transformer.attnres[0] else None
+
+    def set_topdown_instrumentation(self, enabled=True):
+        if not self.config.enable_topdown_feedback:
+            raise ValueError("this model has no top-down router")
+        router = self.transformer.topdown_attnres
+        router.instrumentation_enabled = enabled
+        if enabled:
+            router.last_stats = None
+
+    def get_topdown_stats(self):
+        if not self.config.enable_topdown_feedback:
+            return None
+        return self.transformer.topdown_attnres.last_stats
+
+    def set_topdown_source_mask(self, source_depth=None):
+        if not self.config.enable_topdown_feedback:
+            raise ValueError("this model has no top-down router")
+        router = self.transformer.topdown_attnres
+        if source_depth is None:
+            router.masked_source = None
+            return
+        if source_depth not in router.source_depths:
+            raise ValueError(
+                f"top-down source must be one of {router.source_depths}, got {source_depth}"
+            )
+        router.masked_source = router.source_depths.index(source_depth)
+
+    def load_experiment1_full_attnres_state(self, experiment1_state):
+        """Load an Experiment 1 state while preserving only new 2A0 tensors."""
+        if not self.config.enable_topdown_feedback:
+            raise ValueError("use strict load_state_dict for a model without top-down feedback")
+        missing, unexpected = self.load_state_dict(experiment1_state, strict=False)
+        expected_missing = {
+            "transformer.topdown_attnres.query",
+            "transformer.topdown_attnres.norm.weight",
+            "transformer.topdown_attnres.gate",
+        }
+        if set(missing) != expected_missing or unexpected:
+            raise ValueError(
+                f"Experiment 1 state mismatch: missing={missing}, unexpected={unexpected}"
+            )
+        router = self.transformer.topdown_attnres
+        if (
+            torch.count_nonzero(router.query).item() != 0
+            or not torch.equal(router.norm.weight, torch.ones_like(router.norm.weight))
+            or torch.count_nonzero(router.gate).item() != 0
+        ):
+            raise RuntimeError("top-down parameters lost their exact zero/one initialization")
+
+    def freeze_for_topdown_training(self):
+        if not self.config.enable_topdown_feedback:
+            raise ValueError("this model has no top-down feedback parameters")
+        for parameter in self.parameters():
+            parameter.requires_grad_(False)
+        for parameter in self.transformer.topdown_attnres.parameters():
+            parameter.requires_grad_(True)
 
     def load_shared_baseline_state(self, baseline_state):
         """Load every GPT-2 tensor and leave only AttnRes tensors initialized."""
@@ -366,8 +623,15 @@ class GPT(nn.Module):
         return optimizer
 
 # -----------------------------------------------------------------------------
-import tiktoken
-import numpy as np
+
+def render_example(*args, **kwargs):
+    from hellaswag import render_example as implementation
+    return implementation(*args, **kwargs)
+
+
+def iterate_examples(*args, **kwargs):
+    from hellaswag import iterate_examples as implementation
+    return implementation(*args, **kwargs)
 
 def load_tokens(filename):
     npt = np.load(filename)
@@ -445,6 +709,7 @@ def get_most_likely_row(tokens, mask, logits):
 # torchrun --standalone --nproc_per_node=8 train_gpt2.py
 
 # run the training loop
+import tiktoken
 from torch.distributed import init_process_group, destroy_process_group
 from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist

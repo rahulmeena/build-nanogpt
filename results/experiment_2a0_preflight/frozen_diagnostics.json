@@ -1,0 +1,46 @@
+{
+  "causality": {
+    "B": 2,
+    "T": 1024,
+    "passed": true,
+    "per_source_memory_bit_exact": {
+      "v16": true,
+      "v17": true,
+      "v20": true,
+      "v24": true
+    },
+    "position_zero_memory_exactly_zero": true,
+    "suffix_difference_starts_at": 512,
+    "tested_position": 512
+  },
+  "damage": 1.8948173522949219,
+  "elapsed_seconds": 81.35395503602922,
+  "experiment": "Experiment 2A0 frozen diagnostics",
+  "gate": 0.0,
+  "git_commit": "abecd3e91e89e1259f7198d72d15664943ad48bf",
+  "git_status": "## experiment-2a0-topdown-l1\n M .gitignore\n M train_gpt2.py\n?? EXPERIMENT_2A0_DESIGN.md\n?? configs/exp2a0_5m.json\n?? configs/exp2a0_smoke.json\n?? results/experiment_2a0_preflight/\n?? scripts/experiment_2a0.py\n?? tests/test_experiment_2a0.py",
+  "losses": {
+    "full_context": 4.078654408454895,
+    "masked_l1_no_feedback": 5.973471760749817,
+    "zero_gate_feedback": 5.973471760749817
+  },
+  "new_parameter_count": 1537,
+  "parent_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+  "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "passed": true,
+  "peak_allocated_mb": 29691.234375,
+  "query_norm": 0.0,
+  "routing_entropy": 1.3862943611198906,
+  "routing_weights": {
+    "v16": 0.25,
+    "v17": 0.25,
+    "v20": 0.25,
+    "v24": 0.25
+  },
+  "validation_B": 64,
+  "validation_T": 1024,
+  "validation_batches": 20,
+  "validation_global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "validation_tokens": 1310720,
+  "zero_gate_equals_masked_each_batch": true
+}
