@@ -1,0 +1,56 @@
+{
+  "additional_optimizer_updates": 38,
+  "checkpoint_updates": [
+    20,
+    29,
+    48
+  ],
+  "data_start": "restore exact four-rank replay states from verified Experiment 2A0 update-10 checkpoint",
+  "evaluation_updates": [
+    20,
+    29,
+    48
+  ],
+  "final_controls": [
+    "full_context",
+    "masked_l1_no_feedback",
+    "real_feedback",
+    "shuffled_feedback",
+    "zero_feedback"
+  ],
+  "final_source_ablations": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "frozen_reference_full_context": 4.078654408454895,
+  "frozen_reference_masked_l1_no_feedback": 5.973674488067627,
+  "global_batch_tokens": 524288,
+  "intermediate_controls": [
+    "real_feedback",
+    "shuffled_feedback"
+  ],
+  "legacy_gradient_accumulation": 2,
+  "legacy_micro_batch_sequences_per_rank": 64,
+  "legacy_world_size": 4,
+  "lr_schedule": "continue original 10B schedule; next global schedule step is 964",
+  "mode": "masked_l1_topdown_teacher",
+  "optimizer": "AdamW betas=(0.9,0.95) eps=1e-8 no weight decay",
+  "optimizer_updates": 48,
+  "processed_student_tokens": 25165824,
+  "protocol": "exp2a1_teacher_topdown_25m_v1",
+  "seed": 1337,
+  "sequence_length": 1024,
+  "sequential_microbatches_per_update": 8,
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "start_completed_updates": 10,
+  "start_processed_student_tokens": 5242880,
+  "validation_batch_sequences": 64,
+  "validation_batches": 20
+}

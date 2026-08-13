@@ -1,0 +1,777 @@
+{
+  "additional_student_tokens": 19922944,
+  "additional_updates": 38,
+  "causality": {
+    "10": {
+      "end_to_end": {
+        "B": 2,
+        "T": 1024,
+        "changed_suffix_starts_at": 512,
+        "compared_logit_positions": [
+          0,
+          511
+        ],
+        "maximum_absolute_difference": 0.0,
+        "passed": true,
+        "prefix_logits_bit_exact": true
+      },
+      "passed": true,
+      "state_isolation": {
+        "loaders": true,
+        "optimizer": true,
+        "passed": true,
+        "rng": true,
+        "router_instrumentation": true,
+        "router_source_mask": true,
+        "student_base": true,
+        "student_mode": true,
+        "student_topdown": true,
+        "teacher": true,
+        "teacher_mode": true
+      },
+      "teacher_memory": {
+        "B": 2,
+        "T": 1024,
+        "passed": true,
+        "per_source_memory_bit_exact": {
+          "v16": true,
+          "v17": true,
+          "v20": true,
+          "v24": true
+        },
+        "position_zero_memory_exactly_zero": true,
+        "suffix_difference_starts_at": 512,
+        "tested_position": 512
+      }
+    },
+    "20": {
+      "end_to_end": {
+        "B": 2,
+        "T": 1024,
+        "changed_suffix_starts_at": 512,
+        "compared_logit_positions": [
+          0,
+          511
+        ],
+        "maximum_absolute_difference": 0.0,
+        "passed": true,
+        "prefix_logits_bit_exact": true
+      },
+      "passed": true,
+      "state_isolation": {
+        "loaders": true,
+        "optimizer": true,
+        "passed": true,
+        "rng": true,
+        "router_instrumentation": true,
+        "router_source_mask": true,
+        "student_base": true,
+        "student_mode": true,
+        "student_topdown": true,
+        "teacher": true,
+        "teacher_mode": true
+      },
+      "teacher_memory": {
+        "B": 2,
+        "T": 1024,
+        "passed": true,
+        "per_source_memory_bit_exact": {
+          "v16": true,
+          "v17": true,
+          "v20": true,
+          "v24": true
+        },
+        "position_zero_memory_exactly_zero": true,
+        "suffix_difference_starts_at": 512,
+        "tested_position": 512
+      }
+    },
+    "29": {
+      "end_to_end": {
+        "B": 2,
+        "T": 1024,
+        "changed_suffix_starts_at": 512,
+        "compared_logit_positions": [
+          0,
+          511
+        ],
+        "maximum_absolute_difference": 0.0,
+        "passed": true,
+        "prefix_logits_bit_exact": true
+      },
+      "passed": true,
+      "state_isolation": {
+        "loaders": true,
+        "optimizer": true,
+        "passed": true,
+        "rng": true,
+        "router_instrumentation": true,
+        "router_source_mask": true,
+        "student_base": true,
+        "student_mode": true,
+        "student_topdown": true,
+        "teacher": true,
+        "teacher_mode": true
+      },
+      "teacher_memory": {
+        "B": 2,
+        "T": 1024,
+        "passed": true,
+        "per_source_memory_bit_exact": {
+          "v16": true,
+          "v17": true,
+          "v20": true,
+          "v24": true
+        },
+        "position_zero_memory_exactly_zero": true,
+        "suffix_difference_starts_at": 512,
+        "tested_position": 512
+      }
+    },
+    "48": {
+      "end_to_end": {
+        "B": 2,
+        "T": 1024,
+        "changed_suffix_starts_at": 512,
+        "compared_logit_positions": [
+          0,
+          511
+        ],
+        "maximum_absolute_difference": 0.0,
+        "passed": true,
+        "prefix_logits_bit_exact": true
+      },
+      "passed": true,
+      "state_isolation": {
+        "loaders": true,
+        "optimizer": true,
+        "passed": true,
+        "rng": true,
+        "router_instrumentation": true,
+        "router_source_mask": true,
+        "student_base": true,
+        "student_mode": true,
+        "student_topdown": true,
+        "teacher": true,
+        "teacher_mode": true
+      },
+      "teacher_memory": {
+        "B": 2,
+        "T": 1024,
+        "passed": true,
+        "per_source_memory_bit_exact": {
+          "v16": true,
+          "v17": true,
+          "v20": true,
+          "v24": true
+        },
+        "position_zero_memory_exactly_zero": true,
+        "suffix_difference_starts_at": 512,
+        "tested_position": 512
+      }
+    }
+  },
+  "checkpoint_records": {
+    "20": {
+      "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a1_25m/checkpoints/checkpoint_updates_000020.pt",
+      "sha256": "028a3a4126ba71090900c2d5ec2a709e631e9d1d8cf60e91cd6a83fed9fd24de",
+      "verification": "checkpoint_updates_000020.pt.verification.json"
+    },
+    "29": {
+      "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a1_25m/checkpoints/checkpoint_updates_000029.pt",
+      "sha256": "f47b23cb8b2da1a6a9b2db7eabdb550379731d22759b55694be29c63ff6c0117",
+      "verification": "checkpoint_updates_000029.pt.verification.json"
+    },
+    "48": {
+      "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a1_25m/checkpoints/checkpoint_updates_000048.pt",
+      "sha256": "d821b48a796b12bb489f5bc9bc1791c475c09a50de7d5b47c4a36cf766643ec2",
+      "verification": "checkpoint_updates_000048.pt.verification.json"
+    }
+  },
+  "completed_updates": 48,
+  "experiment": "Experiment 2A1",
+  "final_controls": {
+    "full_context": 4.078654408454895,
+    "mask_v16": 5.875669384002686,
+    "mask_v17": 5.844975471496582,
+    "mask_v20": 5.849489784240722,
+    "mask_v24": 5.849956154823303,
+    "masked_l1_no_feedback": 5.973674488067627,
+    "real_feedback": 5.835339140892029,
+    "shuffled_feedback": 5.8765912532806395,
+    "zero_feedback": 5.973674488067627
+  },
+  "final_damage": 1.8950200796127321,
+  "final_router": {
+    "effective_source_count": 2.0909274810474496,
+    "gate": 0.02878676913678646,
+    "gate_coefficient": 0.028778819367289543,
+    "mean_tokenwise_entropy": 0.7376077383756637,
+    "mean_weights": {
+      "v16": 0.40614135265350343,
+      "v17": 0.16503047570586205,
+      "v20": 0.16900914981961251,
+      "v24": 0.2598190166056156
+    },
+    "normalized_entropy": 0.532071513137947,
+    "query_norm": 0.6052711009979248,
+    "rmsnorm_displacement": 0.581372082233429
+  },
+  "final_sequence_specific_recovery": 0.041252112388610485,
+  "final_sequence_specific_recovery_fraction": 0.0217686940800336,
+  "final_source_ablation": {
+    "v16": {
+      "delta_vs_real_feedback": 0.040330243110656916,
+      "paired_ablation_minus_real": {
+        "ci95_lower": 0.03919849389532153,
+        "ci95_note": "descriptive paired t interval; fixed batches are not assumed IID",
+        "ci95_upper": 0.04146199232599194,
+        "differences": [
+          0.044011592864990234,
+          0.04105806350708008,
+          0.03801393508911133,
+          0.03737306594848633,
+          0.04387807846069336,
+          0.04003190994262695,
+          0.03910017013549805,
+          0.03994178771972656,
+          0.040683746337890625,
+          0.04382658004760742,
+          0.03990459442138672,
+          0.03933238983154297,
+          0.04305219650268555,
+          0.042554378509521484,
+          0.04146289825439453,
+          0.034290313720703125,
+          0.038910865783691406,
+          0.04027986526489258,
+          0.038625240325927734,
+          0.040273189544677734
+        ],
+        "maximum": 0.044011592864990234,
+        "mean": 0.040330243110656736,
+        "median": 0.040152549743652344,
+        "minimum": 0.034290313720703125,
+        "n": 20,
+        "negative_count": 0,
+        "positive_count": 20,
+        "sample_standard_deviation": 0.002418193115020872,
+        "standard_error": 0.0005407244187908638,
+        "tie_count": 0
+      },
+      "validation_loss": 5.875669384002686
+    },
+    "v17": {
+      "delta_vs_real_feedback": 0.009636330604553045,
+      "paired_ablation_minus_real": {
+        "ci95_lower": 0.008592907253620663,
+        "ci95_note": "descriptive paired t interval; fixed batches are not assumed IID",
+        "ci95_upper": 0.010679753955485781,
+        "differences": [
+          0.010762214660644531,
+          0.009922981262207031,
+          0.010462284088134766,
+          0.010758399963378906,
+          0.008982181549072266,
+          0.009325981140136719,
+          0.010176658630371094,
+          0.007663726806640625,
+          0.008588790893554688,
+          0.007168292999267578,
+          0.013303756713867188,
+          0.005832195281982422,
+          0.008639335632324219,
+          0.006251335144042969,
+          0.007519721984863281,
+          0.012906074523925781,
+          0.011480331420898438,
+          0.008150100708007812,
+          0.013566017150878906,
+          0.011266231536865234
+        ],
+        "maximum": 0.013566017150878906,
+        "mean": 0.009636330604553222,
+        "median": 0.009624481201171875,
+        "minimum": 0.005832195281982422,
+        "n": 20,
+        "negative_count": 0,
+        "positive_count": 20,
+        "sample_standard_deviation": 0.002229468445029839,
+        "standard_error": 0.0004985242996777473,
+        "tie_count": 0
+      },
+      "validation_loss": 5.844975471496582
+    },
+    "v20": {
+      "delta_vs_real_feedback": 0.014150643348693315,
+      "paired_ablation_minus_real": {
+        "ci95_lower": 0.013070003468979541,
+        "ci95_note": "descriptive paired t interval; fixed batches are not assumed IID",
+        "ci95_upper": 0.015231283228408153,
+        "differences": [
+          0.014760017395019531,
+          0.01348114013671875,
+          0.013390064239501953,
+          0.011263847351074219,
+          0.016161441802978516,
+          0.013957500457763672,
+          0.015456676483154297,
+          0.016585350036621094,
+          0.013436317443847656,
+          0.017273426055908203,
+          0.014925956726074219,
+          0.014033317565917969,
+          0.0133209228515625,
+          0.019118309020996094,
+          0.011924266815185547,
+          0.015285015106201172,
+          0.01430368423461914,
+          0.01129770278930664,
+          0.008748531341552734,
+          0.014289379119873047
+        ],
+        "maximum": 0.019118309020996094,
+        "mean": 0.014150643348693847,
+        "median": 0.014161348342895508,
+        "minimum": 0.008748531341552734,
+        "n": 20,
+        "negative_count": 0,
+        "positive_count": 20,
+        "sample_standard_deviation": 0.0023089884945651454,
+        "standard_error": 0.0005163055233112568,
+        "tie_count": 0
+      },
+      "validation_loss": 5.849489784240722
+    },
+    "v24": {
+      "delta_vs_real_feedback": 0.014617013931274236,
+      "paired_ablation_minus_real": {
+        "ci95_lower": 0.012780181835685888,
+        "ci95_note": "descriptive paired t interval; fixed batches are not assumed IID",
+        "ci95_upper": 0.016453846026862937,
+        "differences": [
+          0.012043952941894531,
+          0.012038707733154297,
+          0.016676902770996094,
+          0.014288902282714844,
+          0.011634349822998047,
+          0.012806892395019531,
+          0.0106048583984375,
+          0.014209747314453125,
+          0.016429424285888672,
+          0.0110015869140625,
+          0.008252143859863281,
+          0.021488189697265625,
+          0.01967620849609375,
+          0.01560831069946289,
+          0.024435043334960938,
+          0.0143585205078125,
+          0.012096405029296875,
+          0.017210006713867188,
+          0.012178421020507812,
+          0.015301704406738281
+        ],
+        "maximum": 0.024435043334960938,
+        "mean": 0.014617013931274413,
+        "median": 0.014249324798583984,
+        "minimum": 0.008252143859863281,
+        "n": 20,
+        "negative_count": 0,
+        "positive_count": 20,
+        "sample_standard_deviation": 0.003924734090216214,
+        "standard_error": 0.0008775972219334246,
+        "tie_count": 0
+      },
+      "validation_loss": 5.849956154823303
+    }
+  },
+  "final_total_recovery": 0.13833534717559814,
+  "final_total_recovery_fraction": 0.07299940969695079,
+  "no_follow_on_launched": true,
+  "passed": true,
+  "processed_student_tokens": 25165824,
+  "resources": {
+    "completion_invocation_wall_seconds": 2113.153248924762,
+    "evaluation_wall_seconds": 389.71786811202765,
+    "peak_allocated_mb": 50629.341796875,
+    "peak_allocated_mb_all_evaluations_and_training": 50629.341796875,
+    "peak_reserved_mb": 74778.0,
+    "training_backward_seconds": 606.6890862416476,
+    "training_forward_seconds": 612.2859892453998,
+    "training_update_wall_seconds": 1221.5944015793502
+  },
+  "restart_records": {
+    "20": {
+      "load_audit": {
+        "completed_updates": 20,
+        "integrity": {
+          "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a1_25m/checkpoints/checkpoint_updates_000020.pt",
+          "sha256": "028a3a4126ba71090900c2d5ec2a709e631e9d1d8cf60e91cd6a83fed9fd24de",
+          "verification": "checkpoint_updates_000020.pt.verification.json"
+        },
+        "loader_exact_reload": true,
+        "model_strict_reload": true,
+        "next_global_batch_sha256": "921abc217182d1f7596f26ac421e0ba317b0c9b8b510a3baa03bf26c604d4471",
+        "optimizer_exact_reload": true,
+        "passed": true,
+        "processed_student_tokens": 10485760,
+        "rng_exact_reload": true
+      },
+      "loaders": true,
+      "optimizer": true,
+      "passed": true,
+      "rng": true,
+      "student_base": true,
+      "student_topdown": true,
+      "teacher": true
+    },
+    "29": {
+      "load_audit": {
+        "completed_updates": 29,
+        "integrity": {
+          "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a1_25m/checkpoints/checkpoint_updates_000029.pt",
+          "sha256": "f47b23cb8b2da1a6a9b2db7eabdb550379731d22759b55694be29c63ff6c0117",
+          "verification": "checkpoint_updates_000029.pt.verification.json"
+        },
+        "loader_exact_reload": true,
+        "model_strict_reload": true,
+        "next_global_batch_sha256": "51c1a47728a9293c62481fdd1e5b4f8fe92a5eb5a98494e3a886de29dfa86674",
+        "optimizer_exact_reload": true,
+        "passed": true,
+        "processed_student_tokens": 15204352,
+        "rng_exact_reload": true
+      },
+      "loaders": true,
+      "optimizer": true,
+      "passed": true,
+      "rng": true,
+      "student_base": true,
+      "student_topdown": true,
+      "teacher": true
+    }
+  },
+  "terminal_line": "EXPERIMENT 2A1 25M COMPLETE",
+  "training_row_audit": {
+    "passed": true,
+    "updates": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+    ]
+  },
+  "trajectory": [
+    {
+      "completed_updates": 10,
+      "paired": {
+        "ci95_lower": 0.008191633839683826,
+        "ci95_note": "descriptive paired t interval; fixed batches are not assumed IID",
+        "ci95_upper": 0.00879063544742555,
+        "differences": [
+          0.008657455444335938,
+          0.009496688842773438,
+          0.008159637451171875,
+          0.009014606475830078,
+          0.009135723114013672,
+          0.009678363800048828,
+          0.008194923400878906,
+          0.008566856384277344,
+          0.00886392593383789,
+          0.00925302505493164,
+          0.007576465606689453,
+          0.008193492889404297,
+          0.008371353149414062,
+          0.00848245620727539,
+          0.007038593292236328,
+          0.008498191833496094,
+          0.008258342742919922,
+          0.008327960968017578,
+          0.007744789123535156,
+          0.00830984115600586
+        ],
+        "maximum": 0.009678363800048828,
+        "mean": 0.008491134643554688,
+        "mean_real_minus_shuffled": -0.008491134643554688,
+        "median": 0.008426904678344727,
+        "median_real_minus_shuffled": -0.008426904678344727,
+        "minimum": 0.007038593292236328,
+        "n": 20,
+        "negative_count": 0,
+        "positive_count": 20,
+        "real_beats_shuffled_count": 20,
+        "sample_standard_deviation": 0.0006399392834120258,
+        "shuffled_beats_real_count": 0,
+        "standard_error": 0.00014309477391817932,
+        "tie_count": 0
+      },
+      "real_feedback_loss": 5.953305101394653,
+      "real_minus_shuffled": -0.008491134643554688,
+      "routing": {
+        "effective_source_count": 3.6298973764835534,
+        "gate": 0.005997640546411276,
+        "gate_coefficient": 0.0059975688345730305,
+        "mean_tokenwise_entropy": 1.289204376935959,
+        "mean_weights": {
+          "v16": 0.2712061688303947,
+          "v17": 0.2516491822898388,
+          "v20": 0.2194218784570694,
+          "v24": 0.2577227719128132
+        },
+        "normalized_entropy": 0.929964380648927,
+        "query_norm": 0.12489541620016098,
+        "rmsnorm_displacement": 0.09010037779808044
+      },
+      "sequence_specific_recovery": 0.00849113464355522,
+      "sequence_specific_recovery_fraction": 0.004480762359674034,
+      "shuffled_feedback_loss": 5.961796236038208,
+      "shuffled_minus_real": 0.00849113464355522,
+      "tokens": 5242880,
+      "total_recovery_fraction": 0.010748902817503058
+    },
+    {
+      "completed_updates": 20,
+      "paired": {
+        "ci95_lower": 0.01562811132439087,
+        "ci95_note": "descriptive paired t interval; fixed batches are not assumed IID",
+        "ci95_upper": 0.01680940393439819,
+        "differences": [
+          0.015861988067626953,
+          0.018011093139648438,
+          0.01664257049560547,
+          0.016744613647460938,
+          0.016539573669433594,
+          0.018157482147216797,
+          0.015865325927734375,
+          0.017271995544433594,
+          0.017238140106201172,
+          0.018439292907714844,
+          0.014263153076171875,
+          0.01520395278930664,
+          0.015604972839355469,
+          0.016045570373535156,
+          0.013472557067871094,
+          0.016327857971191406,
+          0.015412330627441406,
+          0.015495777130126953,
+          0.015115737915039062,
+          0.01666116714477539
+        ],
+        "maximum": 0.018439292907714844,
+        "mean": 0.01621875762939453,
+        "mean_real_minus_shuffled": -0.01621875762939453,
+        "median": 0.01618671417236328,
+        "median_real_minus_shuffled": -0.01618671417236328,
+        "minimum": 0.013472557067871094,
+        "n": 20,
+        "negative_count": 0,
+        "positive_count": 20,
+        "real_beats_shuffled_count": 20,
+        "sample_standard_deviation": 0.001262025905402848,
+        "shuffled_beats_real_count": 0,
+        "standard_error": 0.00028219757138464867,
+        "tie_count": 0
+      },
+      "real_feedback_loss": 5.922935843467712,
+      "real_minus_shuffled": -0.01621875762939453,
+      "routing": {
+        "effective_source_count": 2.8214826726200597,
+        "gate": 0.011995024047791958,
+        "gate_coefficient": 0.011994448490440845,
+        "mean_tokenwise_entropy": 1.0372625172138215,
+        "mean_weights": {
+          "v16": 0.3546126469969749,
+          "v17": 0.15956050306558608,
+          "v20": 0.19818359464406968,
+          "v24": 0.2876432567834854
+        },
+        "normalized_entropy": 0.7482267448421916,
+        "query_norm": 0.2696620523929596,
+        "rmsnorm_displacement": 0.22621822357177734
+      },
+      "sequence_specific_recovery": 0.016218757629394176,
+      "sequence_specific_recovery_fraction": 0.008558620462063207,
+      "shuffled_feedback_loss": 5.939154601097107,
+      "shuffled_minus_real": 0.016218757629394176,
+      "tokens": 10485760,
+      "total_recovery_fraction": 0.026774726635236352
+    },
+    {
+      "completed_updates": 29,
+      "paired": {
+        "ci95_lower": 0.022750685220523224,
+        "ci95_note": "descriptive paired t interval; fixed batches are not assumed IID",
+        "ci95_upper": 0.024385716909603727,
+        "differences": [
+          0.023164749145507812,
+          0.025430679321289062,
+          0.02414226531982422,
+          0.024758338928222656,
+          0.024668216705322266,
+          0.026872634887695312,
+          0.02259063720703125,
+          0.025174617767333984,
+          0.02481985092163086,
+          0.025970458984375,
+          0.020574569702148438,
+          0.021648883819580078,
+          0.02278614044189453,
+          0.02351236343383789,
+          0.02039813995361328,
+          0.023836612701416016,
+          0.022174358367919922,
+          0.022861480712890625,
+          0.021744728088378906,
+          0.024234294891357422
+        ],
+        "maximum": 0.026872634887695312,
+        "mean": 0.023568201065063476,
+        "mean_real_minus_shuffled": -0.023568201065063476,
+        "median": 0.023674488067626953,
+        "median_real_minus_shuffled": -0.023674488067626953,
+        "minimum": 0.02039813995361328,
+        "n": 20,
+        "negative_count": 0,
+        "positive_count": 20,
+        "real_beats_shuffled_count": 20,
+        "sample_standard_deviation": 0.0017467749567665336,
+        "shuffled_beats_real_count": 0,
+        "standard_error": 0.00039059075447242254,
+        "tie_count": 0
+      },
+      "real_feedback_loss": 5.894420218467713,
+      "real_minus_shuffled": -0.023568201065063476,
+      "routing": {
+        "effective_source_count": 2.3401069622855117,
+        "gate": 0.01739252358675003,
+        "gate_coefficient": 0.017390770837664604,
+        "mean_tokenwise_entropy": 0.8501966387033463,
+        "mean_weights": {
+          "v16": 0.41133488416671754,
+          "v17": 0.11809190399944783,
+          "v20": 0.17955112010240554,
+          "v24": 0.29102209210395813
+        },
+        "normalized_entropy": 0.6132872372188917,
+        "query_norm": 0.39183682203292847,
+        "rmsnorm_displacement": 0.3510412573814392
+      },
+      "sequence_specific_recovery": 0.0235682010650633,
+      "sequence_specific_recovery_fraction": 0.012436913634118175,
+      "shuffled_feedback_loss": 5.917988419532776,
+      "shuffled_minus_real": 0.0235682010650633,
+      "tokens": 15204352,
+      "total_recovery_fraction": 0.04182239040765785
+    },
+    {
+      "completed_updates": 48,
+      "paired": {
+        "ci95_lower": 0.03999614642874225,
+        "ci95_note": "descriptive paired t interval; fixed batches are not assumed IID",
+        "ci95_upper": 0.042508078348479424,
+        "differences": [
+          0.04129791259765625,
+          0.044048309326171875,
+          0.041787147521972656,
+          0.042736053466796875,
+          0.043424129486083984,
+          0.04678678512573242,
+          0.039821624755859375,
+          0.04439830780029297,
+          0.04267311096191406,
+          0.043903350830078125,
+          0.037212371826171875,
+          0.038306236267089844,
+          0.040201663970947266,
+          0.041464805603027344,
+          0.03630971908569336,
+          0.041609764099121094,
+          0.03844308853149414,
+          0.04098653793334961,
+          0.03789329528808594,
+          0.041738033294677734
+        ],
+        "maximum": 0.04678678512573242,
+        "mean": 0.04125211238861084,
+        "mean_real_minus_shuffled": -0.04125211238861084,
+        "median": 0.04153728485107422,
+        "median_real_minus_shuffled": -0.04153728485107422,
+        "minimum": 0.03630971908569336,
+        "n": 20,
+        "negative_count": 0,
+        "positive_count": 20,
+        "real_beats_shuffled_count": 20,
+        "sample_standard_deviation": 0.002683605339152139,
+        "shuffled_beats_real_count": 0,
+        "standard_error": 0.000600072396312556,
+        "tie_count": 0
+      },
+      "real_feedback_loss": 5.835339140892029,
+      "real_minus_shuffled": -0.04125211238861084,
+      "routing": {
+        "effective_source_count": 2.0909274810474496,
+        "gate": 0.02878676913678646,
+        "gate_coefficient": 0.028778819367289543,
+        "mean_tokenwise_entropy": 0.7376077383756637,
+        "mean_weights": {
+          "v16": 0.40614135265350343,
+          "v17": 0.16503047570586205,
+          "v20": 0.16900914981961251,
+          "v24": 0.2598190166056156
+        },
+        "normalized_entropy": 0.532071513137947,
+        "query_norm": 0.6052711009979248,
+        "rmsnorm_displacement": 0.581372082233429
+      },
+      "sequence_specific_recovery": 0.041252112388610485,
+      "sequence_specific_recovery_fraction": 0.0217686940800336,
+      "shuffled_feedback_loss": 5.8765912532806395,
+      "shuffled_minus_real": 0.041252112388610485,
+      "tokens": 25165824,
+      "total_recovery_fraction": 0.07299940969695079
+    }
+  ],
+  "trajectory_classification": {
+    "label": "MEMORY SIGNAL STRENGTHENING",
+    "rule": "Let s be shuffled-minus-real recovery at updates 10,20,29,48. DISAPPEARING if final<=0 or final<half the positive update-10 value; STABLE if the full range is <=25% of max(abs(mean(s)),1e-12); SATURATING if final is positive and either below the prior maximum or the 29-to-48 gain is <=25% of the positive 10-to-29 gain; otherwise STRENGTHENING.",
+    "values": [
+      0.00849113464355522,
+      0.016218757629394176,
+      0.0235682010650633,
+      0.041252112388610485
+    ]
+  }
+}
