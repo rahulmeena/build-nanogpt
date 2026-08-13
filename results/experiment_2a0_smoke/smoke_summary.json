@@ -1,0 +1,471 @@
+{
+  "backward_seconds": 3.0444693099707365,
+  "causality": {
+    "B": 2,
+    "T": 1024,
+    "passed": true,
+    "per_source_memory_bit_exact": {
+      "v16": true,
+      "v17": true,
+      "v20": true,
+      "v24": true
+    },
+    "position_zero_memory_exactly_zero": true,
+    "suffix_difference_starts_at": 512,
+    "tested_position": 512
+  },
+  "checkpoint": {
+    "bytes": 498173177,
+    "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a0_smoke_10update/checkpoints/checkpoint_updates_000010.pt",
+    "sha256": "e307005252e3fe7548f4a9881b8a2eb2a107dac974547ff48f1b33f02ecda97b",
+    "verification": {
+      "completed_updates": 10,
+      "live_state_match": true,
+      "loader_states": 1,
+      "model_strict_reload": true,
+      "model_tensors": 202,
+      "next_global_batch_sha256": "7f9a08ea026d6d15535584102bc6fee79e5b232951aa3e8b3486cc9c4046e826",
+      "optimizer": {
+        "lr": 0.0005997568798486979,
+        "nonfinite_tensors": [],
+        "state_entries": 3
+      },
+      "optimizer_reload": true,
+      "optimizer_state_entries": 3,
+      "passed": true,
+      "processed_student_tokens": 20480,
+      "rng_fields": [
+        "numpy_random",
+        "python_random",
+        "torch_cpu",
+        "torch_cuda"
+      ],
+      "rng_reload_match": true,
+      "schema": "exp2a0_single_gpu_v1",
+      "serialized_loader_replay_match": true
+    }
+  },
+  "first_update_gradients": {
+    "base_tensors_with_grad": [],
+    "gate": {
+      "finite": true,
+      "l2_norm": 2.75,
+      "nonzero": true,
+      "present": true
+    },
+    "query": {
+      "finite": true,
+      "l2_norm": 0.0,
+      "nonzero": false,
+      "present": true
+    },
+    "rmsnorm": {
+      "finite": true,
+      "l2_norm": 0.0,
+      "nonzero": false,
+      "present": true
+    },
+    "teacher_tensors_with_grad": []
+  },
+  "forced_restart": {
+    "checkpoint_sha256_match": true,
+    "distinct_os_process": true,
+    "first_resumed_batch_matches_checkpoint": true,
+    "first_resumed_schedule_step": 959,
+    "metrics_reconciliation": {
+      "completed_updates": 5,
+      "rows_before": 5,
+      "rows_retained": 5,
+      "rows_truncated": 0
+    },
+    "midpoint_checkpoint_sha256": "2ed168c19c3e531f3595350fa3a69b233637adfb0d183805c0ff50aedf47f980",
+    "midpoint_training_state": {
+      "completed_updates": 5,
+      "processed_student_tokens": 10240
+    },
+    "passed": true,
+    "phase_1_process": {
+      "argv": [
+        "scripts/experiment_2a0.py",
+        "smoke",
+        "--checkpoint",
+        "runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+        "--run-dir",
+        "runs/experiment_2a0_smoke_10update",
+        "--phase",
+        "1",
+        "--allow-optimizer-steps"
+      ],
+      "parent_pid": 8455,
+      "pid": 8466,
+      "python_executable": "/usr/bin/python3.12",
+      "recorded_unix_time": 1786652604.6051333
+    },
+    "phase_1_process_id": 8466,
+    "phase_2_process": {
+      "argv": [
+        "scripts/experiment_2a0.py",
+        "smoke",
+        "--checkpoint",
+        "runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+        "--run-dir",
+        "runs/experiment_2a0_smoke_10update",
+        "--phase",
+        "2",
+        "--allow-optimizer-steps"
+      ],
+      "parent_pid": 8509,
+      "pid": 8520,
+      "python_executable": "/usr/bin/python3.12",
+      "recorded_unix_time": 1786652662.0634823
+    },
+    "phase_2_process_id": 8520,
+    "python_runtime_match": true,
+    "resume_audit": {
+      "completed_updates": 5,
+      "integrity": {
+        "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a0_smoke_10update/checkpoints/checkpoint_updates_000005.pt",
+        "sha256": "2ed168c19c3e531f3595350fa3a69b233637adfb0d183805c0ff50aedf47f980",
+        "verification": "checkpoint_updates_000005.pt.verification.json"
+      },
+      "loader_exact_reload": true,
+      "model_strict_reload": true,
+      "next_global_batch_sha256": "83c92aa0dbdce81f6976cf9bc7198244619c43804488695a7418030482eefcb5",
+      "optimizer_exact_reload": true,
+      "passed": true,
+      "processed_student_tokens": 10240,
+      "rng_exact_reload": true
+    }
+  },
+  "forward_seconds": 3.815540438517928,
+  "frozen_model_bit_exact": true,
+  "frozen_model_sha256_after": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "frozen_model_sha256_before": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "gate_trajectory": [
+    0.0005997742409817874,
+    0.0011995465029031038,
+    0.00179931684397161,
+    0.0023990850895643234,
+    0.0029988500755280256,
+    0.003598609007894993,
+    0.004198363982141018,
+    0.004798115696758032,
+    0.0053978669457137585,
+    0.005997614935040474
+  ],
+  "gradient_staging": {
+    "passed": true,
+    "rmsnorm_nonzero_from_update_3_or_later": true,
+    "update_1_gate_only": true,
+    "update_2_gate_and_query_only": true
+  },
+  "last_update_gradients": {
+    "base_tensors_with_grad": [],
+    "gate": {
+      "finite": true,
+      "l2_norm": 2.5468008518218994,
+      "nonzero": true,
+      "present": true
+    },
+    "query": {
+      "finite": true,
+      "l2_norm": 0.0605144239962101,
+      "nonzero": true,
+      "present": true
+    },
+    "rmsnorm": {
+      "finite": true,
+      "l2_norm": 0.0002148752537323162,
+      "nonzero": true,
+      "present": true
+    },
+    "teacher_tensors_with_grad": []
+  },
+  "loss_trajectory": [
+    6.179938316345215,
+    6.399370193481445,
+    5.98085355758667,
+    6.180397033691406,
+    5.854655742645264,
+    6.204763889312744,
+    6.025514125823975,
+    5.905416011810303,
+    6.228633403778076,
+    5.997730731964111
+  ],
+  "midpoint_checkpoint": {
+    "bytes": 498173177,
+    "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a0_smoke_10update/checkpoints/checkpoint_updates_000005.pt",
+    "sha256": "2ed168c19c3e531f3595350fa3a69b233637adfb0d183805c0ff50aedf47f980",
+    "verification": {
+      "completed_updates": 5,
+      "live_state_match": true,
+      "loader_states": 1,
+      "model_strict_reload": true,
+      "model_tensors": 202,
+      "next_global_batch_sha256": "83c92aa0dbdce81f6976cf9bc7198244619c43804488695a7418030482eefcb5",
+      "optimizer": {
+        "lr": 0.0005997665828591997,
+        "nonfinite_tensors": [],
+        "state_entries": 3
+      },
+      "optimizer_reload": true,
+      "optimizer_state_entries": 3,
+      "passed": true,
+      "processed_student_tokens": 10240,
+      "rng_fields": [
+        "numpy_random",
+        "python_random",
+        "torch_cpu",
+        "torch_cuda"
+      ],
+      "rng_reload_match": true,
+      "schema": "exp2a0_single_gpu_v1",
+      "serialized_loader_replay_match": true
+    }
+  },
+  "model_contract": {
+    "frozen_student_parameters_requiring_grad": [],
+    "only_expected_topdown_parameters_trainable": true,
+    "passed": true,
+    "teacher_eval": true,
+    "teacher_memory_function_no_grad": true,
+    "teacher_parameters_requiring_grad": [],
+    "trainable_parameter_count": 1537,
+    "trainable_parameters": {
+      "transformer.topdown_attnres.gate": 1,
+      "transformer.topdown_attnres.norm.weight": 768,
+      "transformer.topdown_attnres.query": 768
+    }
+  },
+  "nonzero_gradient_seen": {
+    "gate": true,
+    "query": true,
+    "rmsnorm": true
+  },
+  "passed": true,
+  "peak_allocated_mb": 2802.57177734375,
+  "peak_allocated_mb_trajectory": [
+    2773.05712890625,
+    2799.38427734375,
+    2799.38427734375,
+    2799.38427734375,
+    2799.38427734375,
+    2772.5712890625,
+    2802.57177734375,
+    2802.57177734375,
+    2802.57177734375,
+    2802.57177734375
+  ],
+  "peak_reserved_mb": 3512.0,
+  "peak_reserved_mb_trajectory": [
+    3106.0,
+    3500.0,
+    3500.0,
+    3500.0,
+    3500.0,
+    3118.0,
+    3512.0,
+    3512.0,
+    3512.0,
+    3512.0
+  ],
+  "phase_update_split": [
+    5,
+    5
+  ],
+  "process_restart": {
+    "checkpoint_sha256_match": true,
+    "distinct_os_process": true,
+    "first_resumed_batch_matches_checkpoint": true,
+    "first_resumed_schedule_step": 959,
+    "metrics_reconciliation": {
+      "completed_updates": 5,
+      "rows_before": 5,
+      "rows_retained": 5,
+      "rows_truncated": 0
+    },
+    "midpoint_checkpoint_sha256": "2ed168c19c3e531f3595350fa3a69b233637adfb0d183805c0ff50aedf47f980",
+    "midpoint_training_state": {
+      "completed_updates": 5,
+      "processed_student_tokens": 10240
+    },
+    "passed": true,
+    "phase_1_process": {
+      "argv": [
+        "scripts/experiment_2a0.py",
+        "smoke",
+        "--checkpoint",
+        "runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+        "--run-dir",
+        "runs/experiment_2a0_smoke_10update",
+        "--phase",
+        "1",
+        "--allow-optimizer-steps"
+      ],
+      "parent_pid": 8455,
+      "pid": 8466,
+      "python_executable": "/usr/bin/python3.12",
+      "recorded_unix_time": 1786652604.6051333
+    },
+    "phase_1_process_id": 8466,
+    "phase_2_process": {
+      "argv": [
+        "scripts/experiment_2a0.py",
+        "smoke",
+        "--checkpoint",
+        "runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+        "--run-dir",
+        "runs/experiment_2a0_smoke_10update",
+        "--phase",
+        "2",
+        "--allow-optimizer-steps"
+      ],
+      "parent_pid": 8509,
+      "pid": 8520,
+      "python_executable": "/usr/bin/python3.12",
+      "recorded_unix_time": 1786652662.0634823
+    },
+    "phase_2_process_id": 8520,
+    "python_runtime_match": true,
+    "resume_audit": {
+      "completed_updates": 5,
+      "integrity": {
+        "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a0_smoke_10update/checkpoints/checkpoint_updates_000005.pt",
+        "sha256": "2ed168c19c3e531f3595350fa3a69b233637adfb0d183805c0ff50aedf47f980",
+        "verification": "checkpoint_updates_000005.pt.verification.json"
+      },
+      "loader_exact_reload": true,
+      "model_strict_reload": true,
+      "next_global_batch_sha256": "83c92aa0dbdce81f6976cf9bc7198244619c43804488695a7418030482eefcb5",
+      "optimizer_exact_reload": true,
+      "passed": true,
+      "processed_student_tokens": 10240,
+      "rng_exact_reload": true
+    }
+  },
+  "processed_student_tokens": 20480,
+  "query_norm_trajectory": [
+    0.0,
+    0.012202579528093338,
+    0.022229626774787903,
+    0.03297826275229454,
+    0.04314915090799332,
+    0.053075630217790604,
+    0.06356257200241089,
+    0.07469722628593445,
+    0.08616770058870316,
+    0.0974154844880104
+  ],
+  "rmsnorm_displacement_trajectory": [
+    0.0,
+    0.0,
+    0.007707583252340555,
+    0.016242211684584618,
+    0.02437940053641796,
+    0.03258903697133064,
+    0.04158006235957146,
+    0.05128289386630058,
+    0.06152530759572983,
+    0.07163238525390625
+  ],
+  "routing_weight_trajectory": [
+    {
+      "v16": 0.25,
+      "v17": 0.25,
+      "v20": 0.25,
+      "v24": 0.25
+    },
+    {
+      "v16": 0.25,
+      "v17": 0.25,
+      "v20": 0.25,
+      "v24": 0.25
+    },
+    {
+      "v16": 0.25146299600601196,
+      "v17": 0.2511926293373108,
+      "v20": 0.24864289164543152,
+      "v24": 0.24870145320892334
+    },
+    {
+      "v16": 0.25666892528533936,
+      "v17": 0.24448339641094208,
+      "v20": 0.24706992506980896,
+      "v24": 0.2517777681350708
+    },
+    {
+      "v16": 0.25586599111557007,
+      "v17": 0.24842676520347595,
+      "v20": 0.2397935390472412,
+      "v24": 0.25591376423835754
+    },
+    {
+      "v16": 0.260600745677948,
+      "v17": 0.25107425451278687,
+      "v20": 0.2284855991601944,
+      "v24": 0.25983935594558716
+    },
+    {
+      "v16": 0.2610965967178345,
+      "v17": 0.2539867162704468,
+      "v20": 0.22714781761169434,
+      "v24": 0.2577688694000244
+    },
+    {
+      "v16": 0.2655886709690094,
+      "v17": 0.26087164878845215,
+      "v20": 0.22048144042491913,
+      "v24": 0.2530582547187805
+    },
+    {
+      "v16": 0.2675420045852661,
+      "v17": 0.25622567534446716,
+      "v20": 0.2191966325044632,
+      "v24": 0.25703567266464233
+    },
+    {
+      "v16": 0.27556124329566956,
+      "v17": 0.2373104691505432,
+      "v20": 0.23593732714653015,
+      "v24": 0.2511909604072571
+    }
+  ],
+  "row_audit": {
+    "passed": true,
+    "updates": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "teacher_model_bit_exact": true,
+  "teacher_model_sha256_after": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "teacher_model_sha256_before": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "trainable_parameters": 1537,
+  "uninterrupted_reference": {
+    "reason": "not run because it would require optimizer updates beyond the explicitly approved 10-update smoke; exact checkpoint-boundary state restoration is audited instead",
+    "run": false
+  },
+  "update_wall_seconds": 6.996275698766112,
+  "update_wall_seconds_trajectory": [
+    0.7499062474817038,
+    0.7482565399259329,
+    0.6056810207664967,
+    0.607915760949254,
+    0.6136531513184309,
+    1.10861586779356,
+    0.7244612723588943,
+    0.6263320092111826,
+    0.6135223340243101,
+    0.597931494936347
+  ],
+  "updates": 10
+}

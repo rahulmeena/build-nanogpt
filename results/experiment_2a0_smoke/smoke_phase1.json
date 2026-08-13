@@ -1,0 +1,101 @@
+{
+  "causality": {
+    "B": 2,
+    "T": 1024,
+    "passed": true,
+    "per_source_memory_bit_exact": {
+      "v16": true,
+      "v17": true,
+      "v20": true,
+      "v24": true
+    },
+    "position_zero_memory_exactly_zero": true,
+    "suffix_difference_starts_at": 512,
+    "tested_position": 512
+  },
+  "frozen_model_sha256": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "gradient_staging": {
+    "passed": true,
+    "rmsnorm_nonzero_from_update_3_or_later": true,
+    "update_1_gate_only": true,
+    "update_2_gate_and_query_only": true
+  },
+  "midpoint_checkpoint": {
+    "bytes": 498173177,
+    "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a0_smoke_10update/checkpoints/checkpoint_updates_000005.pt",
+    "sha256": "2ed168c19c3e531f3595350fa3a69b233637adfb0d183805c0ff50aedf47f980",
+    "verification": {
+      "completed_updates": 5,
+      "live_state_match": true,
+      "loader_states": 1,
+      "model_strict_reload": true,
+      "model_tensors": 202,
+      "next_global_batch_sha256": "83c92aa0dbdce81f6976cf9bc7198244619c43804488695a7418030482eefcb5",
+      "optimizer": {
+        "lr": 0.0005997665828591997,
+        "nonfinite_tensors": [],
+        "state_entries": 3
+      },
+      "optimizer_reload": true,
+      "optimizer_state_entries": 3,
+      "passed": true,
+      "processed_student_tokens": 10240,
+      "rng_fields": [
+        "numpy_random",
+        "python_random",
+        "torch_cpu",
+        "torch_cuda"
+      ],
+      "rng_reload_match": true,
+      "schema": "exp2a0_single_gpu_v1",
+      "serialized_loader_replay_match": true
+    }
+  },
+  "model_contract": {
+    "frozen_student_parameters_requiring_grad": [],
+    "only_expected_topdown_parameters_trainable": true,
+    "passed": true,
+    "teacher_eval": true,
+    "teacher_memory_function_no_grad": true,
+    "teacher_parameters_requiring_grad": [],
+    "trainable_parameter_count": 1537,
+    "trainable_parameters": {
+      "transformer.topdown_attnres.gate": 1,
+      "transformer.topdown_attnres.norm.weight": 768,
+      "transformer.topdown_attnres.query": 768
+    }
+  },
+  "next_global_batch_sha256": "83c92aa0dbdce81f6976cf9bc7198244619c43804488695a7418030482eefcb5",
+  "nonzero_gradient_seen": {
+    "gate": true,
+    "query": true,
+    "rmsnorm": true
+  },
+  "passed": true,
+  "phase": 1,
+  "process": {
+    "argv": [
+      "scripts/experiment_2a0.py",
+      "smoke",
+      "--checkpoint",
+      "runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+      "--run-dir",
+      "runs/experiment_2a0_smoke_10update",
+      "--phase",
+      "1",
+      "--allow-optimizer-steps"
+    ],
+    "parent_pid": 8455,
+    "pid": 8466,
+    "python_executable": "/usr/bin/python3.12",
+    "recorded_unix_time": 1786652604.6051333
+  },
+  "process_exit_required_before_phase_2": true,
+  "process_id": 8466,
+  "teacher_model_sha256": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "training_state": {
+    "completed_updates": 5,
+    "processed_student_tokens": 10240
+  },
+  "updates": 5
+}
