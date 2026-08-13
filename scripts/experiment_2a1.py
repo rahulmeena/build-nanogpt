@@ -334,7 +334,9 @@ def require_clean_tree():
 
 def require_pinned_runtime():
     actual = Path(sys.executable).resolve()
-    if PINNED_PYTHON.exists() and actual != PINNED_PYTHON.resolve():
+    if not PINNED_PYTHON.exists():
+        raise SystemExit(f"pinned 2A1 Python is missing: {PINNED_PYTHON}")
+    if actual != PINNED_PYTHON.resolve():
         raise SystemExit(
             f"2A1 requires pinned Python {PINNED_PYTHON.resolve()}, got {actual}"
         )
@@ -1996,8 +1998,7 @@ def validate_prior_chain(run_dir, completed, metadata, symbols, parent_aux):
     source_audit = json.loads(source_audit_path.read_text())
     if (
         set(source_audit) != {"integrity", "restore", "passed"}
-        or
-        source_audit.get("passed") is not True
+        or source_audit.get("passed") is not True
         or source_audit.get("integrity", {}).get("sha256")
         != EXPECTED_CONTINUATION_SHA256
         or not validate_source_restore_audit(source_audit.get("restore", {}))
