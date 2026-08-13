@@ -114,7 +114,9 @@ class ArchitectureModeTests(unittest.TestCase):
             _, _, value = qkv.split(config.n_embd, dim=2)
             expected = attention.c_proj(value)
             actual = attention(x, self_only=True)
-        torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+        # The sliced V-only GEMM and the V slice of the fused QKV GEMM are
+        # mathematically identical but may select different CPU kernels.
+        torch.testing.assert_close(actual, expected, rtol=1e-5, atol=1e-6)
 
     def test_full_context_is_exact_experiment1_regression(self):
         reference_source = subprocess.check_output(

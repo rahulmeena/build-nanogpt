@@ -1079,6 +1079,103 @@ def gradient_staging_report(rows):
     return report
 
 
+def smoke_model_contract(student, teacher):
+    trainable = {
+        name: parameter.numel()
+        for name, parameter in student.named_parameters()
+        if parameter.requires_grad
+    }
+    expected = {
+        "transformer.topdown_attnres.query": 768,
+        "transformer.topdown_attnres.norm.weight": 768,
+        "transformer.topdown_attnres.gate": 1,
+    }
+    frozen_student_trainable = [
+        name
+        for name, parameter in student.named_parameters()
+        if not name.startswith("transformer.topdown_attnres.") and parameter.requires_grad
+    ]
+    teacher_trainable = [
+        name for name, parameter in teacher.named_parameters() if parameter.requires_grad
+    ]
+    report = {
+        "trainable_parameters": trainable,
+        "trainable_parameter_count": sum(trainable.values()),
+        "only_expected_topdown_parameters_trainable": trainable == expected,
+        "frozen_student_parameters_requiring_grad": frozen_student_trainable,
+        "teacher_eval": not teacher.training,
+        "teacher_parameters_requiring_grad": teacher_trainable,
+        "teacher_memory_function_no_grad": bool(
+            getattr(teacher_memory, "__wrapped__", None) is not None
+        ),
+    }
+    report["passed"] = (
+        report["only_expected_topdown_parameters_trainable"]
+        and not frozen_student_trainable
+        and report["teacher_eval"]
+        and not teacher_trainable
+        and report["teacher_memory_function_no_grad"]
+    )
+    if not report["passed"]:
+        raise SystemExit(f"smoke model contract failed: {report}")
+    return report
+
+
+def process_identity():
+    return {
+        "pid": os.getpid(),
+        "parent_pid": os.getppid(),
+        "python_executable": str(Path(sys.executable).resolve()),
+        "argv": list(sys.argv),
+        "recorded_unix_time": time.time(),
+    }
+
+
+def validate_smoke_rows(rows, config):
+    expected_updates = list(range(config["optimizer_updates"]))
+    if [row["update"] for row in rows] != expected_updates:
+        raise SystemExit("smoke metrics do not contain exactly updates 0 through 9")
+    failures = []
+    for row in rows:
+        update = row["update"]
+        expected = {
+            "completed_updates": update + 1,
+            "processed_student_tokens": (
+                (update + 1)
+                * config["micro_batch_sequences"]
+                * config["sequence_length"]
+            ),
+            "global_schedule_step": EXPECTED_PARENT_UPDATES + update,
+            "lr": get_lr(EXPECTED_PARENT_UPDATES + update),
+        }
+        for key, value in expected.items():
+            if row[key] != value:
+                failures.append(f"update {update} {key}: {row[key]} != {value}")
+        for name in ("gate", "query", "rmsnorm"):
+            gradient = row["gradients"][name]
+            if not gradient["present"] or not gradient["finite"]:
+                failures.append(f"update {update} invalid {name} gradient")
+        if row["gradients"]["base_tensors_with_grad"]:
+            failures.append(f"update {update} has frozen student gradients")
+        if row["gradients"]["teacher_tensors_with_grad"]:
+            failures.append(f"update {update} has teacher gradients")
+        if not row["teacher_eval_no_grad"]:
+            failures.append(f"update {update} teacher contract failed")
+        if not row["trainable_parameters_finite"]:
+            failures.append(f"update {update} has non-finite trainable parameters")
+        for name in ("loss", "grad_norm", "gate", "query_norm", "routing_entropy"):
+            if not math.isfinite(row[name]):
+                failures.append(f"update {update} non-finite {name}")
+        weights = row["routing_weights"]
+        if set(weights) != {f"v{depth}" for depth in SOURCE_DEPTHS}:
+            failures.append(f"update {update} routing source set mismatch")
+        if not math.isclose(sum(weights.values()), 1.0, rel_tol=0.0, abs_tol=1e-6):
+            failures.append(f"update {update} routing weights do not sum to one")
+    if failures:
+        raise SystemExit(f"smoke row validation failed: {failures}")
+    return {"updates": expected_updates, "passed": True}
+
+
 def reconcile_metrics(path, completed_updates):
     path = Path(path)
     rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
@@ -1131,6 +1228,10 @@ def train_updates(
             torch.cuda.synchronize()
             forward_start = time.perf_counter()
             memory = teacher_memory(teacher, x, symbols)
+            if teacher.training or memory.requires_grad or memory.grad_fn is not None:
+                raise SystemExit(
+                    f"teacher eval/no-grad contract failed at update {update}"
+                )
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
                 logits, loss = student(
                     x,
@@ -1168,12 +1269,23 @@ def train_updates(
         grad_norm = torch.nn.utils.clip_grad_norm_(
             [parameter for parameter in student.parameters() if parameter.requires_grad], 1.0
         )
+        if not torch.isfinite(grad_norm):
+            raise SystemExit(f"non-finite gradient norm at update {update}")
         lr = get_lr(EXPECTED_PARENT_UPDATES + update)
         for group in optimizer.param_groups:
             group["lr"] = lr
         optimizer.step()
         torch.cuda.synchronize()
         router = student.transformer.topdown_attnres
+        nonfinite_trainable = [
+            name
+            for name, parameter in student.named_parameters()
+            if parameter.requires_grad and not torch.isfinite(parameter).all()
+        ]
+        if nonfinite_trainable:
+            raise SystemExit(
+                f"non-finite trainable parameters at update {update}: {nonfinite_trainable}"
+            )
         row = {
             "kind": "train",
             "update": update,
@@ -1195,6 +1307,8 @@ def train_updates(
                 for depth, value in zip(SOURCE_DEPTHS, (routing_sums / microbatches).tolist())
             },
             "routing_entropy": entropy_sum / microbatches,
+            "teacher_eval_no_grad": True,
+            "trainable_parameters_finite": True,
             "global_batch_sha256": update_hash.hexdigest(),
             "forward_seconds": forward_seconds,
             "backward_seconds": backward_seconds,
@@ -1233,10 +1347,48 @@ def run_smoke(args, device):
     config = validate_config(json.loads(config_path.read_text()), "smoke")
     symbols, teacher, student, parent_aux = load_models(args.checkpoint, device, include_teacher=True)
     metadata = training_metadata("10-update architecture smoke", config, parent_aux)
-    run_dir, _ = prepare_run_dir(args.run_dir, config_path, metadata)
+    run_dir = Path(args.run_dir)
+    if args.phase == 1:
+        return run_smoke_phase1(
+            run_dir,
+            config_path,
+            config,
+            metadata,
+            symbols,
+            teacher,
+            student,
+            parent_aux,
+        )
+    return run_smoke_phase2(
+        run_dir,
+        config,
+        metadata,
+        symbols,
+        teacher,
+        student,
+        parent_aux,
+    )
+
+
+def run_smoke_phase1(
+    run_dir,
+    config_path,
+    config,
+    metadata,
+    symbols,
+    teacher,
+    student,
+    parent_aux,
+):
+    run_dir, _ = prepare_run_dir(run_dir, config_path, metadata)
     loaders = initial_training_loaders(symbols, config, False, parent_aux)
     optimizer = feedback_optimizer(student)
     frozen_before = state_tensor_sha256(student, include_topdown=False)
+    teacher_before = state_tensor_sha256(teacher, include_topdown=False)
+    model_contract = smoke_model_contract(student, teacher)
+    causality = production_causality_test(teacher, symbols, "cuda")
+    if not causality["passed"]:
+        raise SystemExit(f"future-token leakage test failed before smoke: {causality}")
     initial = {
         "gate": student.transformer.topdown_attnres.gate.item(),
         "query_norm": student.transformer.topdown_attnres.query.float().norm().item(),
@@ -1278,8 +1430,70 @@ def run_smoke(args, device):
         parent_aux,
         metadata,
     )
-    student, optimizer, loaders, restart_state, restart_audit = force_checkpoint_restart(
-        run_dir / "checkpoints" / "checkpoint_updates_000005.pt",
+    staging = gradient_staging_report(first_rows)
+    if not staging["passed"]:
+        raise SystemExit(f"smoke phase 1 gradient staging failed: {staging}")
+    if state_tensor_sha256(teacher, include_topdown=False) != teacher_before:
+        raise SystemExit("teacher parameters changed during smoke phase 1")
+    if not all(first_nonzero.values()):
+        raise SystemExit(f"smoke phase 1 did not exercise all new gradients: {first_nonzero}")
+    report = {
+        "phase": 1,
+        "process_id": os.getpid(),
+        "process": process_identity(),
+        "updates": len(first_rows),
+        "training_state": midpoint_state,
+        "model_contract": model_contract,
+        "causality": causality,
+        "gradient_staging": staging,
+        "nonzero_gradient_seen": first_nonzero,
+        "frozen_model_sha256": frozen_before,
+        "teacher_model_sha256": teacher_before,
+        "next_global_batch_sha256": midpoint_checkpoint["verification"][
+            "next_global_batch_sha256"
+        ],
+        "midpoint_checkpoint": midpoint_checkpoint,
+        "process_exit_required_before_phase_2": True,
+        "passed": True,
+    }
+    write_json(run_dir / "smoke_phase1.json", report)
+    return report
+
+
+def run_smoke_phase2(
+    run_dir,
+    config,
+    metadata,
+    symbols,
+    teacher,
+    student,
+    parent_aux,
+):
+    if not run_dir.is_dir():
+        raise SystemExit("smoke phase 2 requires the existing phase-1 run directory")
+    stored_config = json.loads((run_dir / "config.json").read_text())
+    stored_metadata = json.loads((run_dir / "metadata.json").read_text())
+    phase1 = json.loads((run_dir / "smoke_phase1.json").read_text())
+    if stored_config != config or stored_metadata != metadata:
+        raise SystemExit("smoke phase-2 config/metadata mismatch")
+    if not phase1.get("passed") or phase1.get("phase") != 1:
+        raise SystemExit("smoke phase-1 artifact is missing or failed")
+    if phase1["process_id"] == os.getpid():
+        raise SystemExit("smoke phase 2 must run in a distinct OS process")
+    if phase1["process"]["python_executable"] != str(Path(sys.executable).resolve()):
+        raise SystemExit("smoke phases used different Python runtimes")
+    model_contract = smoke_model_contract(student, teacher)
+    frozen_before = state_tensor_sha256(student, include_topdown=False)
+    teacher_before = state_tensor_sha256(teacher, include_topdown=False)
+    if frozen_before != phase1["frozen_model_sha256"]:
+        raise SystemExit("fresh phase-2 frozen base does not match phase 1")
+    if teacher_before != phase1["teacher_model_sha256"]:
+        raise SystemExit("fresh phase-2 teacher does not match phase 1")
+    optimizer = feedback_optimizer(student)
+    loaders = initial_training_loaders(symbols, config, False, parent_aux)
+    midpoint_path = run_dir / "checkpoints" / "checkpoint_updates_000005.pt"
+    state, load_audit = load_exp2_resume(
+        midpoint_path,
         student,
         optimizer,
         loaders,
@@ -1287,10 +1501,29 @@ def run_smoke(args, device):
         False,
         parent_aux,
         metadata,
-        device,
     )
-    if restart_state != midpoint_state:
-        raise SystemExit("smoke restart training-state mismatch")
+    if state_tensor_sha256(student, include_topdown=False) != frozen_before:
+        raise SystemExit("resumed midpoint changed the frozen student base")
+    expected_midpoint = {
+        "completed_updates": config["checkpoint_after_updates"],
+        "processed_student_tokens": (
+            config["checkpoint_after_updates"]
+            * config["micro_batch_sequences"]
+            * config["sequence_length"]
+        ),
+    }
+    if state != expected_midpoint:
+        raise SystemExit(f"smoke midpoint state mismatch: {state}")
+    if (
+        load_audit["integrity"]["sha256"]
+        != phase1["midpoint_checkpoint"]["sha256"]
+    ):
+        raise SystemExit("smoke midpoint checkpoint SHA changed across processes")
+    if load_audit["next_global_batch_sha256"] != phase1["next_global_batch_sha256"]:
+        raise SystemExit("smoke midpoint next-batch hash changed across processes")
+    metrics_reconciliation = reconcile_metrics(
+        run_dir / "metrics.jsonl", config["checkpoint_after_updates"]
+    )
     second_rows, second_nonzero = train_updates(
         teacher,
         student,
@@ -1303,13 +1536,34 @@ def run_smoke(args, device):
         tokens_per_update=config["micro_batch_sequences"] * T,
         metrics_path=run_dir / "metrics.jsonl",
     )
-    rows = first_rows + second_rows
+    if second_rows[0]["global_batch_sha256"] != load_audit["next_global_batch_sha256"]:
+        raise SystemExit("first resumed batch does not match checkpoint next-batch hash")
+    if (
+        second_rows[0]["global_schedule_step"]
+        != EXPECTED_PARENT_UPDATES + config["checkpoint_after_updates"]
+    ):
+        raise SystemExit("first resumed schedule step mismatch")
+    rows = [
+        json.loads(line)
+        for line in (run_dir / "metrics.jsonl").read_text().splitlines()
+        if line.strip()
+    ]
+    row_audit = validate_smoke_rows(rows, config)
     nonzero_seen = {
-        name: first_nonzero[name] or second_nonzero[name]
-        for name in first_nonzero
+        name: any(row["gradients"][name]["nonzero"] for row in rows)
+        for name in ("gate", "query", "rmsnorm")
     }
     staging = gradient_staging_report(rows)
     frozen_after = state_tensor_sha256(student, include_topdown=False)
+    teacher_after = state_tensor_sha256(teacher, include_topdown=False)
+    if frozen_before != frozen_after:
+        raise SystemExit("frozen student base changed during smoke phase 2")
+    if teacher_before != teacher_after:
+        raise SystemExit("teacher parameters changed during smoke phase 2")
+    if not staging["passed"] or not all(nonzero_seen.values()):
+        raise SystemExit(
+            f"smoke gradient staging/coverage failed: {staging}, {nonzero_seen}"
+        )
     state = {
         "completed_updates": config["optimizer_updates"],
         "processed_student_tokens": config["processed_student_tokens"],
@@ -1325,11 +1579,31 @@ def run_smoke(args, device):
         parent_aux,
         metadata,
     )
-    passed = staging["passed"] and frozen_before == frozen_after and all(nonzero_seen.values()) and all(
-        not row["gradients"]["base_tensors_with_grad"]
-        and not row["gradients"]["teacher_tensors_with_grad"]
-        and math.isfinite(row["loss"])
-        for row in rows
+    process_restart = {
+        "phase_1_process_id": phase1["process_id"],
+        "phase_2_process_id": os.getpid(),
+        "phase_1_process": phase1["process"],
+        "phase_2_process": process_identity(),
+        "distinct_os_process": phase1["process_id"] != os.getpid(),
+        "midpoint_training_state": expected_midpoint,
+        "midpoint_checkpoint_sha256": phase1["midpoint_checkpoint"]["sha256"],
+        "resume_audit": load_audit,
+        "metrics_reconciliation": metrics_reconciliation,
+        "first_resumed_batch_matches_checkpoint": True,
+        "first_resumed_schedule_step": second_rows[0]["global_schedule_step"],
+        "checkpoint_sha256_match": True,
+        "python_runtime_match": True,
+        "passed": load_audit["passed"],
+    }
+    passed = (
+        staging["passed"]
+        and row_audit["passed"]
+        and frozen_before == frozen_after
+        and teacher_before == teacher_after
+        and all(nonzero_seen.values())
+        and process_restart["distinct_os_process"]
+        and process_restart["passed"]
+        and model_contract["passed"]
     )
     summary = {
         "updates": len(rows),
@@ -1338,19 +1612,46 @@ def run_smoke(args, device):
         "loss_trajectory": [row["loss"] for row in rows],
         "nonzero_gradient_seen": nonzero_seen,
         "gradient_staging": staging,
-        "forced_restart": restart_audit,
+        "model_contract": model_contract,
+        "causality": phase1["causality"],
+        "process_restart": process_restart,
+        "forced_restart": process_restart,
+        "phase_update_split": [phase1["updates"], len(second_rows)],
+        "row_audit": row_audit,
         "frozen_model_sha256_before": frozen_before,
         "frozen_model_sha256_after": frozen_after,
         "frozen_model_bit_exact": frozen_before == frozen_after,
+        "teacher_model_sha256_before": teacher_before,
+        "teacher_model_sha256_after": teacher_after,
+        "teacher_model_bit_exact": teacher_before == teacher_after,
         "first_update_gradients": rows[0]["gradients"],
         "last_update_gradients": rows[-1]["gradients"],
         "gate_trajectory": [row["gate"] for row in rows],
         "query_norm_trajectory": [row["query_norm"] for row in rows],
+        "rmsnorm_displacement_trajectory": [
+            row["rmsnorm_displacement"] for row in rows
+        ],
+        "routing_weight_trajectory": [row["routing_weights"] for row in rows],
+        "update_wall_seconds_trajectory": [row["wall_seconds"] for row in rows],
+        "peak_allocated_mb_trajectory": [
+            row["peak_allocated_mb"] for row in rows
+        ],
+        "peak_reserved_mb_trajectory": [row["peak_reserved_mb"] for row in rows],
         "peak_allocated_mb": max(row["peak_allocated_mb"] for row in rows),
+        "peak_reserved_mb": max(row["peak_reserved_mb"] for row in rows),
         "forward_seconds": sum(row["forward_seconds"] for row in rows),
         "backward_seconds": sum(row["backward_seconds"] for row in rows),
+        "update_wall_seconds": sum(row["wall_seconds"] for row in rows),
+        "uninterrupted_reference": {
+            "run": False,
+            "reason": (
+                "not run because it would require optimizer updates beyond the "
+                "explicitly approved 10-update smoke; exact checkpoint-boundary "
+                "state restoration is audited instead"
+            ),
+        },
         "checkpoint": checkpoint,
-        "midpoint_checkpoint": midpoint_checkpoint,
+        "midpoint_checkpoint": phase1["midpoint_checkpoint"],
         "passed": passed,
     }
     write_json(run_dir / "smoke_summary.json", summary)
@@ -1907,6 +2208,7 @@ def main():
     smoke_parser = subparsers.add_parser("smoke")
     smoke_parser.add_argument("--checkpoint", required=True)
     smoke_parser.add_argument("--run-dir", required=True)
+    smoke_parser.add_argument("--phase", type=int, choices=(1, 2), required=True)
     smoke_parser.add_argument("--allow-optimizer-steps", action="store_true")
 
     learn_parser = subparsers.add_parser("learn-5m")

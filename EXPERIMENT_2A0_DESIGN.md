@@ -214,9 +214,11 @@ consumed. Experiment 2A0 creates a fresh checkpoint schema containing:
 
 Checkpoints are written to a temporary file, reopened and verified, hashed,
 then atomically published without overwriting an existing artifact. The
-10-update smoke is deliberately interrupted at update 5: a fresh model,
-optimizer, loader, and RNG state must reload bit-exactly at the boundary before
-updates 6–10 proceed. The result-bearing run repeats this forced restart.
+10-update smoke is deliberately interrupted at update 5: phase 1 publishes the
+verified checkpoint and exits; a distinct phase-2 OS process then creates a
+fresh model, optimizer, and loader and must restore model, optimizer, loader,
+RNG, and next-batch state bit-exactly before updates 6–10 proceed. The
+result-bearing run repeats a fresh-object forced restart.
 
 ## Inference/cache semantics
 

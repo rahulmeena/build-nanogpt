@@ -57,8 +57,8 @@ position 512 remained bit-exact. Position-zero memory is exactly zero.
   gate-only, then query, then RMSNorm gradient staging and rejects any base or
   teacher gradient.
 - Checkpoints include model, fresh feedback-only optimizer, replay loaders, RNG,
-  next-batch hash, parent lineage, and configuration. Update 5 forces a real
-  save/reopen/fresh-object restart before updates 6–10.
+  next-batch hash, parent lineage, and configuration. Smoke phase 1 stops after
+  publishing update 5; a separate OS process reopens it and runs updates 6–10.
 - The 5M-token runner serializes the original four-rank `B=64`, `T=1024`,
   accumulation-2 batches into eight one-GPU microbatches per update, preserving
   data order and the original 10B-token LR schedule position.
