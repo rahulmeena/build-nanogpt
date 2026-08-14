@@ -286,6 +286,18 @@ def load_source_runtime(
     return symbols, teacher, student, source
 
 
+def source_report(source):
+    """Return the JSON-safe source lineage; raw loader/RNG state stays in checkpoints."""
+    return {
+        name: value
+        for name, value in source.items()
+        if name not in {"dataloader_states", "rng_state"}
+    } | {
+        "dataloader_state_count": len(source["dataloader_states"]),
+        "rng_fields": sorted(source["rng_state"]),
+    }
+
+
 def fresh_optimizer(student, device_type="cuda"):
     parameters = [p for p in student.parameters() if p.requires_grad]
     if sum(p.numel() for p in parameters) != 1537:
@@ -1136,7 +1148,7 @@ def run_preflight(args, device):
         "stage": "preflight",
         "git_commit": git_output("rev-parse", "HEAD"),
         "git_branch": BRANCH,
-        "source": source,
+        "source": source_report(source),
         "checkpoint_sha256_exact": file_sha256(args.reader_checkpoint)
         == SOURCE_CHECKPOINT_SHA256,
         "initial_reader": reader_values(student),
@@ -1301,7 +1313,7 @@ def run_baseline(args, device):
     report = {
         "experiment": "2B1",
         "stage": "pre_training_canonical_regression",
-        "source": source,
+        "source": source_report(source),
         "validation_batches": a0.VALIDATION_BATCHES,
         "B": a0.VALIDATION_B,
         "T": a0.T,
@@ -1976,7 +1988,7 @@ def run_canonical_evaluation(args, device):
     report = {
         "experiment": "2B1",
         "stage": "canonical_validation",
-        "source": source,
+        "source": source_report(source),
         "trained_checkpoint": trained,
         "validation_batches": a0.VALIDATION_BATCHES,
         "B": a0.VALIDATION_B,
