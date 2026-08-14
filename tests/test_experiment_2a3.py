@@ -147,6 +147,20 @@ class StatisticsTests(unittest.TestCase):
 
 
 class HellaSwagTests(unittest.TestCase):
+    def test_local_hellaswag_renderer_preserves_candidate_isolation(self):
+        example = {
+            "ctx": "A person walks",
+            "endings": ["home.", "away.", "inside.", "outside."],
+            "label": 2,
+        }
+        tokens, mask, label = x.render_hellaswag_example(example)
+        self.assertEqual(tokens.shape[0], 4)
+        self.assertEqual(mask.shape, tokens.shape)
+        self.assertEqual(label, 2)
+        self.assertTrue((mask.sum(dim=1) > 0).all())
+        prefix_lengths = (mask == 0).sum(dim=1)
+        self.assertTrue(torch.equal(prefix_lengths, prefix_lengths[0].expand_as(prefix_lengths)))
+
     def test_candidate_score_matches_completion_average(self):
         tokens = torch.tensor([[1, 2, 3], [1, 4, 5]])
         mask = torch.tensor([[0, 1, 1], [0, 0, 1]])

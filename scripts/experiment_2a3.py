@@ -1367,12 +1367,15 @@ def end_to_end_future_invariance_test(
 
 
 def hellaswag_dataset_report(download=False):
-    sys.path.insert(0, str(REPO_ROOT))
-    import hellaswag
-
     path = REPO_ROOT / "hellaswag" / "hellaswag_val.jsonl"
-    if download:
-        hellaswag.download("val")
+    if download and not path.is_file():
+        import urllib.request
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        urllib.request.urlretrieve(
+            "https://raw.githubusercontent.com/rowanz/hellaswag/master/data/hellaswag_val.jsonl",
+            path,
+        )
     if not path.is_file():
         raise SystemExit(
             "full HellaSwag validation data is missing; run the optimizer-free preflight"
@@ -1390,6 +1393,35 @@ def hellaswag_dataset_report(download=False):
     if not report["passed"]:
         raise SystemExit(f"HellaSwag validation dataset mismatch: {report}")
     return report
+
+
+def iterate_hellaswag_examples():
+    path = Path(hellaswag_dataset_report(download=False)["path"])
+    with path.open() as handle:
+        for line in handle:
+            if line.strip():
+                yield json.loads(line)
+
+
+def render_hellaswag_example(example):
+    """Exact local copy of the upstream completion-scoring tensorization."""
+    import tiktoken
+
+    encoder = tiktoken.get_encoding("gpt2")
+    context = encoder.encode(example["ctx"])
+    token_rows = []
+    mask_rows = []
+    for ending in example["endings"]:
+        ending_tokens = encoder.encode(" " + ending)
+        token_rows.append(context + ending_tokens)
+        mask_rows.append([0] * len(context) + [1] * len(ending_tokens))
+    width = max(len(row) for row in token_rows)
+    tokens = torch.zeros((4, width), dtype=torch.long)
+    mask = torch.zeros((4, width), dtype=torch.long)
+    for index, (token_row, mask_row) in enumerate(zip(token_rows, mask_rows)):
+        tokens[index, : len(token_row)] = torch.tensor(token_row)
+        mask[index, : len(mask_row)] = torch.tensor(mask_row)
+    return tokens, mask, int(example["label"])
 
 
 def hellaswag_candidate_scores(tokens, mask, logits):
@@ -1442,11 +1474,8 @@ def hellaswag_candidate_isolation_test(student, teacher, symbols, device):
         changed_memory, changed_logits = real_forward(changed)
         real_forward(other)
         repeated_memory, repeated_logits = real_forward(first)
-        sys.path.insert(0, str(REPO_ROOT))
-        import hellaswag
-
-        example = next(hellaswag.iterate_examples("val"))
-        _, example_tokens_cpu, example_mask_cpu, _ = hellaswag.render_example(example)
+        example = next(iterate_hellaswag_examples())
+        example_tokens_cpu, example_mask_cpu, _ = render_hellaswag_example(example)
         example_tokens = example_tokens_cpu.to(device)
         example_mask = example_mask_cpu.to(device)
         with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
@@ -1527,9 +1556,6 @@ def hellaswag_candidate_isolation_test(student, teacher, symbols, device):
 
 @torch.no_grad()
 def evaluate_hellaswag(student, teacher, symbols, device):
-    sys.path.insert(0, str(REPO_ROOT))
-    import hellaswag
-
     dataset = hellaswag_dataset_report(download=False)
     modes = (
         "full_context",
@@ -1549,8 +1575,8 @@ def evaluate_hellaswag(student, teacher, symbols, device):
     torch.cuda.reset_peak_memory_stats()
     started = time.perf_counter()
     try:
-        for index, example in enumerate(hellaswag.iterate_examples("val")):
-            _, tokens_cpu, mask_cpu, label = hellaswag.render_example(example)
+        for index, example in enumerate(iterate_hellaswag_examples()):
+            tokens_cpu, mask_cpu, label = render_hellaswag_example(example)
             if tokens_cpu.shape[0] != 4 or tokens_cpu.shape[1] > 1024:
                 raise SystemExit(
                     f"invalid HellaSwag candidate tensor at example {index}: "
