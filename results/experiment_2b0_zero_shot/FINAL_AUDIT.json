@@ -1,0 +1,42 @@
+{
+  "experiment": "2B0",
+  "passed": true,
+  "classification": "SELF-RECURRENT MEMORY TRANSFERS PARTIALLY",
+  "checks": {
+    "frozen_2a3_tag_created_and_pushed": true,
+    "reader_checkpoint_sha256_exact": true,
+    "reader_weights_loaded_without_reinitialization": true,
+    "optimizer_not_constructed": true,
+    "optimizer_steps_executed_zero": true,
+    "model_state_bit_identical_before_after": true,
+    "checkpoint_file_unchanged": true,
+    "block_1_historical_kv_absent": true,
+    "blocks_2_through_12_kv_present": true,
+    "full_attnres_preserved": true,
+    "incremental_full_context_equivalence": true,
+    "incremental_masked_l1_equivalence": true,
+    "future_suffix_invariance": true,
+    "sequence_isolation": true,
+    "fresh_sequence_reset": true,
+    "recurrent_state_serialize_resume_exact": true,
+    "short_horizon_stability": true,
+    "canonical_validation_hash_exact": true,
+    "canonical_self_feedback_finite": true,
+    "self_feedback_improves_all_20_batches_vs_masked": true,
+    "shuffled_self_control_sequence_isolated": true,
+    "self_gate_zero_matches_masked_within_bf16_equivalence": true,
+    "reset_horizon_validation_hash_exact": true,
+    "reset_horizon_losses_monotonic": true,
+    "hellaswag_not_run_without_separate_approval": true
+  },
+  "canonical_losses": {
+    "full_context": 4.078654408454895,
+    "masked_l1_no_feedback": 5.973674488067627,
+    "teacher_feedback_250m": 5.570033884048462,
+    "self_feedback_zero_shot": 5.707420682907104,
+    "shuffled_self_feedback": 5.728916811943054,
+    "self_feedback_gate_zero": 5.9736480712890625
+  },
+  "next_experiment_train_same_1537_parameters": "YES",
+  "terminal_line": "# EXPERIMENT 2B0 ZERO-SHOT COMPLETE"
+}

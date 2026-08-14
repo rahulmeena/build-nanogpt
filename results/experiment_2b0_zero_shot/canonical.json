@@ -1,0 +1,305 @@
+{
+  "B": 64,
+  "T": 1024,
+  "batch_losses": {
+    "self_feedback_gate_zero": [
+      5.963638782501221,
+      5.915982246398926,
+      6.006518363952637,
+      5.940553665161133,
+      5.9225687980651855,
+      5.9449968338012695,
+      5.913665294647217,
+      5.899282932281494,
+      5.971682548522949,
+      5.978236198425293,
+      5.988921165466309,
+      6.096393585205078,
+      5.959188461303711,
+      5.97887659072876,
+      6.159842014312744,
+      5.982872009277344,
+      6.039412021636963,
+      6.009172439575195,
+      5.859407901763916,
+      5.941749572753906
+    ],
+    "self_feedback_zero_shot": [
+      5.710450172424316,
+      5.655515193939209,
+      5.726384162902832,
+      5.694652557373047,
+      5.637893199920654,
+      5.671651840209961,
+      5.702635288238525,
+      5.6067304611206055,
+      5.709499835968018,
+      5.70792818069458,
+      5.732248783111572,
+      5.795013427734375,
+      5.659465789794922,
+      5.6665472984313965,
+      5.881215572357178,
+      5.7383809089660645,
+      5.748133659362793,
+      5.752767562866211,
+      5.671884059906006,
+      5.679415702819824
+    ],
+    "shuffled_self_feedback": [
+      5.716856956481934,
+      5.680422782897949,
+      5.750802993774414,
+      5.708986282348633,
+      5.673686504364014,
+      5.7047576904296875,
+      5.717501163482666,
+      5.6461591720581055,
+      5.738884925842285,
+      5.725074768066406,
+      5.756191730499268,
+      5.811234474182129,
+      5.695697784423828,
+      5.7032270431518555,
+      5.878828525543213,
+      5.75166130065918,
+      5.775679588317871,
+      5.762567520141602,
+      5.671882152557373,
+      5.708232879638672
+    ]
+  },
+  "checkpoint_sha256_after": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+  "classification": "SELF-RECURRENT MEMORY TRANSFERS PARTIALLY",
+  "controls_reused_from_audited_2a3": {
+    "artifact": "/workspace/build-nanogpt-exp2a0/results/experiment_2a3_250m/evaluations/evaluation_updates_000477.json",
+    "checkpoint_sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "full_context": true,
+    "masked_l1_no_feedback": true,
+    "teacher_feedback_250m": true
+  },
+  "experiment": "2B0",
+  "finite": true,
+  "losses": {
+    "full_context": 4.078654408454895,
+    "masked_l1_no_feedback": 5.973674488067627,
+    "self_feedback_gate_zero": 5.9736480712890625,
+    "self_feedback_zero_shot": 5.707420682907104,
+    "shuffled_self_feedback": 5.728916811943054,
+    "teacher_feedback_250m": 5.570033884048462
+  },
+  "model_state_sha256_after": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+  "model_state_sha256_before": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+  "model_state_unchanged": true,
+  "optimizer_constructed": false,
+  "optimizer_steps_executed": 0,
+  "passed": true,
+  "real_minus_shuffled_self_gap": 0.021496129035949885,
+  "self_gate_zero_minus_masked": -2.641677856463076e-05,
+  "self_memory_routing": {
+    "feedback_rms": 0.025382824148982762,
+    "routing_entropy": 0.5160012662410736,
+    "routing_weights": {
+      "v16": 0.6033400535583496,
+      "v17": 0.02958129541948438,
+      "v20": 0.14627862125635147,
+      "v24": 0.22079993262887002
+    },
+    "topdown_rms": 0.16044771447777748
+  },
+  "self_recovery": 0.266253805160523,
+  "self_teacher_recovery_ratio": 0.6596308758567827,
+  "stage": "canonical_validation",
+  "starting_checkpoint": {
+    "gate": 0.1595292091369629,
+    "gate_coefficient": 0.1581895351409912,
+    "optimizer_constructed": false,
+    "optimizer_state_steps_in_checkpoint": [
+      477,
+      477,
+      477
+    ],
+    "optimizer_steps_executed": 0,
+    "parent_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+    "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a3_250m/checkpoints/checkpoint_updates_000477.pt",
+    "query_norm": 1.9564993381500244,
+    "reader_parameters": 1537,
+    "rmsnorm_displacement": 1.9469332695007324,
+    "sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "training_state": {
+      "completed_updates": 477,
+      "processed_student_tokens": 250085376
+    }
+  },
+  "teacher_memory_routing": {
+    "feedback_rms": 0.028338925912976265,
+    "routing_entropy": 0.6079314619302749,
+    "routing_weights": {
+      "v16": 0.4271553918719292,
+      "v17": 0.12882713861763478,
+      "v20": 0.22011153921484947,
+      "v24": 0.22390592619776725
+    },
+    "topdown_rms": 0.17913347706198693
+  },
+  "teacher_recovery": 0.40364060401916557,
+  "teacher_student_drift": {
+    "1-16": {
+      "v16": {
+        "cosine_similarity": 0.754076573252678,
+        "norm_ratio": 1.0105362951755523,
+        "rms_difference": 0.13808416947722435
+      },
+      "v17": {
+        "cosine_similarity": 0.7619361221790314,
+        "norm_ratio": 1.0450270295143127,
+        "rms_difference": 0.1480960614979267
+      },
+      "v20": {
+        "cosine_similarity": 0.7732420206069947,
+        "norm_ratio": 0.9568241655826568,
+        "rms_difference": 0.13545841202139855
+      },
+      "v24": {
+        "cosine_similarity": 0.7405401468276978,
+        "norm_ratio": 0.9066252738237381,
+        "rms_difference": 0.14365516901016234
+      }
+    },
+    "129-256": {
+      "v16": {
+        "cosine_similarity": 0.53866066634655,
+        "norm_ratio": 0.9352538228034973,
+        "rms_difference": 0.1920020803809166
+      },
+      "v17": {
+        "cosine_similarity": 0.736800092458725,
+        "norm_ratio": 0.8434500843286514,
+        "rms_difference": 0.16373489871621133
+      },
+      "v20": {
+        "cosine_similarity": 0.5647207051515579,
+        "norm_ratio": 0.8802081227302552,
+        "rms_difference": 0.19147702008485795
+      },
+      "v24": {
+        "cosine_similarity": 0.49907877296209335,
+        "norm_ratio": 0.8670794904232025,
+        "rms_difference": 0.19945161119103433
+      }
+    },
+    "17-32": {
+      "v16": {
+        "cosine_similarity": 0.5726204484701156,
+        "norm_ratio": 0.982281944155693,
+        "rms_difference": 0.18902439698576928
+      },
+      "v17": {
+        "cosine_similarity": 0.6620080977678299,
+        "norm_ratio": 1.0048571407794953,
+        "rms_difference": 0.18252406194806098
+      },
+      "v20": {
+        "cosine_similarity": 0.5991284817457199,
+        "norm_ratio": 0.9121970951557159,
+        "rms_difference": 0.18585807532072068
+      },
+      "v24": {
+        "cosine_similarity": 0.5424406677484512,
+        "norm_ratio": 0.8816391974687576,
+        "rms_difference": 0.19184974133968352
+      }
+    },
+    "257-512": {
+      "v16": {
+        "cosine_similarity": 0.5576937317848205,
+        "norm_ratio": 0.9340481251478195,
+        "rms_difference": 0.18764902651309967
+      },
+      "v17": {
+        "cosine_similarity": 0.7601469814777374,
+        "norm_ratio": 0.809089970588684,
+        "rms_difference": 0.15587877705693245
+      },
+      "v20": {
+        "cosine_similarity": 0.5853649467229843,
+        "norm_ratio": 0.8833568453788757,
+        "rms_difference": 0.1868775211274624
+      },
+      "v24": {
+        "cosine_similarity": 0.5218177944421768,
+        "norm_ratio": 0.8810358971357346,
+        "rms_difference": 0.197281863540411
+      }
+    },
+    "33-64": {
+      "v16": {
+        "cosine_similarity": 0.5306138813495636,
+        "norm_ratio": 0.9651200473308563,
+        "rms_difference": 0.19738465994596482
+      },
+      "v17": {
+        "cosine_similarity": 0.6679658949375152,
+        "norm_ratio": 0.9669617801904679,
+        "rms_difference": 0.18281130790710448
+      },
+      "v20": {
+        "cosine_similarity": 0.5594898670911789,
+        "norm_ratio": 0.8937373995780945,
+        "rms_difference": 0.1937722347676754
+      },
+      "v24": {
+        "cosine_similarity": 0.49840315729379653,
+        "norm_ratio": 0.8781787514686584,
+        "rms_difference": 0.19997912794351577
+      }
+    },
+    "513-1023": {
+      "v16": {
+        "cosine_similarity": 0.56799998423358,
+        "norm_ratio": 0.9035422278477021,
+        "rms_difference": 0.18744750498792198
+      },
+      "v17": {
+        "cosine_similarity": 0.7744877854438676,
+        "norm_ratio": 0.8051805768694196,
+        "rms_difference": 0.1458584802258038
+      },
+      "v20": {
+        "cosine_similarity": 0.6089357021503485,
+        "norm_ratio": 0.8827988088947454,
+        "rms_difference": 0.18532073810375832
+      },
+      "v24": {
+        "cosine_similarity": 0.5545198205399187,
+        "norm_ratio": 0.9065351960243777,
+        "rms_difference": 0.1922642157269084
+      }
+    },
+    "65-128": {
+      "v16": {
+        "cosine_similarity": 0.5228085368871689,
+        "norm_ratio": 0.9408983319997788,
+        "rms_difference": 0.19723810255527496
+      },
+      "v17": {
+        "cosine_similarity": 0.7018363237380981,
+        "norm_ratio": 0.9003864407539368,
+        "rms_difference": 0.1738932691514492
+      },
+      "v20": {
+        "cosine_similarity": 0.5505731672048568,
+        "norm_ratio": 0.881886538863182,
+        "rms_difference": 0.19512913152575492
+      },
+      "v24": {
+        "cosine_similarity": 0.48512204736471176,
+        "norm_ratio": 0.8700735300779343,
+        "rms_difference": 0.2015707738697529
+      }
+    }
+  },
+  "validation_batches": 20,
+  "validation_global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb"
+}

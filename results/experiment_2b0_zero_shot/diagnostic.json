@@ -1,0 +1,665 @@
+{
+  "B": 64,
+  "T": 1024,
+  "batches": [
+    {
+      "batch_index": 0,
+      "masked_l1_no_feedback": 5.963436126708984,
+      "payload_sha256": "d568fd86f39280d12a642ea2c82ec120801dfed82d981df3ab621c1f004e5bd8",
+      "self_feedback": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "finite": true
+        },
+        "elapsed_seconds": 120.72138183377683,
+        "feedback_rms": 0.025418037548661232,
+        "finite": true,
+        "loss": 5.710450172424316,
+        "memory_rms_max": {
+          "v16": 0.3504042327404022,
+          "v17": 0.3718658983707428,
+          "v20": 0.5210739374160767,
+          "v24": 0.4848206043243408
+        },
+        "memory_rms_mean": {
+          "v16": 0.1941019892692566,
+          "v17": 0.19169703125953674,
+          "v20": 0.19349266588687897,
+          "v24": 0.18497908115386963
+        },
+        "routing_entropy": 0.51908278465271,
+        "routing_weights": {
+          "v16": 0.6019731163978577,
+          "v17": 0.03486175835132599,
+          "v20": 0.14323966205120087,
+          "v24": 0.2199251502752304
+        },
+        "state_position": 1024,
+        "teacher_student_drift": {
+          "1-16": {
+            "v16": {
+              "cosine_similarity": 0.7571401596069336,
+              "norm_ratio": 1.0195164680480957,
+              "rms_difference": 0.13754285871982574
+            },
+            "v17": {
+              "cosine_similarity": 0.7664027214050293,
+              "norm_ratio": 1.0368467569351196,
+              "rms_difference": 0.14956921339035034
+            },
+            "v20": {
+              "cosine_similarity": 0.7754485607147217,
+              "norm_ratio": 0.9660607576370239,
+              "rms_difference": 0.1334478259086609
+            },
+            "v24": {
+              "cosine_similarity": 0.7443151473999023,
+              "norm_ratio": 0.9136888384819031,
+              "rms_difference": 0.1437494456768036
+            }
+          },
+          "129-256": {
+            "v16": {
+              "cosine_similarity": 0.5377615094184875,
+              "norm_ratio": 0.9363362193107605,
+              "rms_difference": 0.19313417375087738
+            },
+            "v17": {
+              "cosine_similarity": 0.7365715503692627,
+              "norm_ratio": 0.8466065526008606,
+              "rms_difference": 0.16457222402095795
+            },
+            "v20": {
+              "cosine_similarity": 0.5629705190658569,
+              "norm_ratio": 0.8803165555000305,
+              "rms_difference": 0.1926354318857193
+            },
+            "v24": {
+              "cosine_similarity": 0.49664267897605896,
+              "norm_ratio": 0.8631089329719543,
+              "rms_difference": 0.20134979486465454
+            }
+          },
+          "17-32": {
+            "v16": {
+              "cosine_similarity": 0.5672658085823059,
+              "norm_ratio": 0.975763738155365,
+              "rms_difference": 0.1902696192264557
+            },
+            "v17": {
+              "cosine_similarity": 0.6521590948104858,
+              "norm_ratio": 1.0129753351211548,
+              "rms_difference": 0.1869920939207077
+            },
+            "v20": {
+              "cosine_similarity": 0.5922269225120544,
+              "norm_ratio": 0.9137362241744995,
+              "rms_difference": 0.1856905072927475
+            },
+            "v24": {
+              "cosine_similarity": 0.5330629348754883,
+              "norm_ratio": 0.8841321468353271,
+              "rms_difference": 0.19021999835968018
+            }
+          },
+          "257-512": {
+            "v16": {
+              "cosine_similarity": 0.55510413646698,
+              "norm_ratio": 0.9359057545661926,
+              "rms_difference": 0.18917380273342133
+            },
+            "v17": {
+              "cosine_similarity": 0.7526931762695312,
+              "norm_ratio": 0.8108290433883667,
+              "rms_difference": 0.1585855931043625
+            },
+            "v20": {
+              "cosine_similarity": 0.5811911225318909,
+              "norm_ratio": 0.8849838376045227,
+              "rms_difference": 0.1878877431154251
+            },
+            "v24": {
+              "cosine_similarity": 0.51618492603302,
+              "norm_ratio": 0.8782094717025757,
+              "rms_difference": 0.19855578243732452
+            }
+          },
+          "33-64": {
+            "v16": {
+              "cosine_similarity": 0.5283833146095276,
+              "norm_ratio": 0.9594982266426086,
+              "rms_difference": 0.19961732625961304
+            },
+            "v17": {
+              "cosine_similarity": 0.6643322706222534,
+              "norm_ratio": 0.9661373496055603,
+              "rms_difference": 0.18568170070648193
+            },
+            "v20": {
+              "cosine_similarity": 0.5605901479721069,
+              "norm_ratio": 0.8933424949645996,
+              "rms_difference": 0.1936841905117035
+            },
+            "v24": {
+              "cosine_similarity": 0.49568480253219604,
+              "norm_ratio": 0.8774659037590027,
+              "rms_difference": 0.20083095133304596
+            }
+          },
+          "513-1023": {
+            "v16": {
+              "cosine_similarity": 0.5674959843406006,
+              "norm_ratio": 0.9086948103634112,
+              "rms_difference": 0.18742166060057638
+            },
+            "v17": {
+              "cosine_similarity": 0.7683842429442882,
+              "norm_ratio": 0.810588679901541,
+              "rms_difference": 0.14563180882403529
+            },
+            "v20": {
+              "cosine_similarity": 0.6060844167571245,
+              "norm_ratio": 0.8810334028329868,
+              "rms_difference": 0.18606583806166677
+            },
+            "v24": {
+              "cosine_similarity": 0.550323486328125,
+              "norm_ratio": 0.9099432241660041,
+              "rms_difference": 0.19252406827624297
+            }
+          },
+          "65-128": {
+            "v16": {
+              "cosine_similarity": 0.5262328386306763,
+              "norm_ratio": 0.9385145306587219,
+              "rms_difference": 0.19706007838249207
+            },
+            "v17": {
+              "cosine_similarity": 0.7026056051254272,
+              "norm_ratio": 0.8997029066085815,
+              "rms_difference": 0.17488645017147064
+            },
+            "v20": {
+              "cosine_similarity": 0.5558319687843323,
+              "norm_ratio": 0.8841712474822998,
+              "rms_difference": 0.19373518228530884
+            },
+            "v24": {
+              "cosine_similarity": 0.4870694875717163,
+              "norm_ratio": 0.8707395792007446,
+              "rms_difference": 0.20016400516033173
+            }
+          }
+        },
+        "tokens_per_second": 542.8698628569175,
+        "topdown_rms": 0.16067026555538177
+      },
+      "teacher_feedback": 5.5579118728637695,
+      "teacher_routing": {
+        "feedback_rms": 0.028295468538999557,
+        "routing_entropy": 0.6056777238845825,
+        "routing_weights": {
+          "v16": 0.4332088232040405,
+          "v17": 0.13695858418941498,
+          "v20": 0.2177022099494934,
+          "v24": 0.21213039755821228
+        },
+        "topdown_rms": 0.17885878682136536
+      }
+    },
+    {
+      "batch_index": 1,
+      "masked_l1_no_feedback": 5.916080951690674,
+      "payload_sha256": "aee1d37289084111b5692ca859f10bd24eb9092a150a632ea1f2b481638f4814",
+      "self_feedback": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "finite": true
+        },
+        "elapsed_seconds": 120.6481056008488,
+        "feedback_rms": 0.02535909414291382,
+        "finite": true,
+        "loss": 5.655515193939209,
+        "memory_rms_max": {
+          "v16": 0.3586631417274475,
+          "v17": 0.3730054795742035,
+          "v20": 0.4283970892429352,
+          "v24": 0.47422245144844055
+        },
+        "memory_rms_mean": {
+          "v16": 0.1929856240749359,
+          "v17": 0.19166363775730133,
+          "v20": 0.1934148371219635,
+          "v24": 0.1840190291404724
+        },
+        "routing_entropy": 0.5168227553367615,
+        "routing_weights": {
+          "v16": 0.6104452013969421,
+          "v17": 0.03315713629126549,
+          "v20": 0.14590045809745789,
+          "v24": 0.21049748361110687
+        },
+        "state_position": 1024,
+        "teacher_student_drift": {
+          "1-16": {
+            "v16": {
+              "cosine_similarity": 0.7477366924285889,
+              "norm_ratio": 1.0081406831741333,
+              "rms_difference": 0.13850285112857819
+            },
+            "v17": {
+              "cosine_similarity": 0.7597938179969788,
+              "norm_ratio": 1.0568839311599731,
+              "rms_difference": 0.14775148034095764
+            },
+            "v20": {
+              "cosine_similarity": 0.7700108289718628,
+              "norm_ratio": 0.9626066088676453,
+              "rms_difference": 0.1362757384777069
+            },
+            "v24": {
+              "cosine_similarity": 0.7347975969314575,
+              "norm_ratio": 0.9068288207054138,
+              "rms_difference": 0.14355303347110748
+            }
+          },
+          "129-256": {
+            "v16": {
+              "cosine_similarity": 0.5407920479774475,
+              "norm_ratio": 0.9357376098632812,
+              "rms_difference": 0.1912575662136078
+            },
+            "v17": {
+              "cosine_similarity": 0.7372543215751648,
+              "norm_ratio": 0.8489106297492981,
+              "rms_difference": 0.16412578523159027
+            },
+            "v20": {
+              "cosine_similarity": 0.5673678517341614,
+              "norm_ratio": 0.8832851648330688,
+              "rms_difference": 0.19094021618366241
+            },
+            "v24": {
+              "cosine_similarity": 0.4999029338359833,
+              "norm_ratio": 0.8726312518119812,
+              "rms_difference": 0.19862817227840424
+            }
+          },
+          "17-32": {
+            "v16": {
+              "cosine_similarity": 0.5711936950683594,
+              "norm_ratio": 0.9908991456031799,
+              "rms_difference": 0.18938374519348145
+            },
+            "v17": {
+              "cosine_similarity": 0.6627621650695801,
+              "norm_ratio": 1.009825348854065,
+              "rms_difference": 0.1835993528366089
+            },
+            "v20": {
+              "cosine_similarity": 0.5990726947784424,
+              "norm_ratio": 0.9190331697463989,
+              "rms_difference": 0.18527677655220032
+            },
+            "v24": {
+              "cosine_similarity": 0.5441725254058838,
+              "norm_ratio": 0.8773933053016663,
+              "rms_difference": 0.19188500940799713
+            }
+          },
+          "257-512": {
+            "v16": {
+              "cosine_similarity": 0.5580580830574036,
+              "norm_ratio": 0.9387327432632446,
+              "rms_difference": 0.1866060346364975
+            },
+            "v17": {
+              "cosine_similarity": 0.7534178495407104,
+              "norm_ratio": 0.8173290491104126,
+              "rms_difference": 0.15674951672554016
+            },
+            "v20": {
+              "cosine_similarity": 0.5887783765792847,
+              "norm_ratio": 0.8902781009674072,
+              "rms_difference": 0.1850765198469162
+            },
+            "v24": {
+              "cosine_similarity": 0.5252655148506165,
+              "norm_ratio": 0.8810822367668152,
+              "rms_difference": 0.1956712007522583
+            }
+          },
+          "33-64": {
+            "v16": {
+              "cosine_similarity": 0.5380634665489197,
+              "norm_ratio": 0.9661257266998291,
+              "rms_difference": 0.19421452283859253
+            },
+            "v17": {
+              "cosine_similarity": 0.6722602248191833,
+              "norm_ratio": 0.9694092273712158,
+              "rms_difference": 0.1823819875717163
+            },
+            "v20": {
+              "cosine_similarity": 0.5706579089164734,
+              "norm_ratio": 0.8997576832771301,
+              "rms_difference": 0.19039377570152283
+            },
+            "v24": {
+              "cosine_similarity": 0.5066456198692322,
+              "norm_ratio": 0.8891663551330566,
+              "rms_difference": 0.19483135640621185
+            }
+          },
+          "513-1023": {
+            "v16": {
+              "cosine_similarity": 0.5665919234841303,
+              "norm_ratio": 0.9070248239894203,
+              "rms_difference": 0.18697003329103473
+            },
+            "v17": {
+              "cosine_similarity": 0.7665249998088919,
+              "norm_ratio": 0.8160204504800636,
+              "rms_difference": 0.14550455768980858
+            },
+            "v20": {
+              "cosine_similarity": 0.6100445353588246,
+              "norm_ratio": 0.8862977746414812,
+              "rms_difference": 0.1841697468916264
+            },
+            "v24": {
+              "cosine_similarity": 0.5565926090845157,
+              "norm_ratio": 0.9063397013744496,
+              "rms_difference": 0.1894341784214087
+            }
+          },
+          "65-128": {
+            "v16": {
+              "cosine_similarity": 0.5282250046730042,
+              "norm_ratio": 0.9464046359062195,
+              "rms_difference": 0.19484853744506836
+            },
+            "v17": {
+              "cosine_similarity": 0.707021176815033,
+              "norm_ratio": 0.9073327779769897,
+              "rms_difference": 0.17338652908802032
+            },
+            "v20": {
+              "cosine_similarity": 0.5535188913345337,
+              "norm_ratio": 0.8808252811431885,
+              "rms_difference": 0.19425712525844574
+            },
+            "v24": {
+              "cosine_similarity": 0.4918667674064636,
+              "norm_ratio": 0.8709240555763245,
+              "rms_difference": 0.20005559921264648
+            }
+          }
+        },
+        "tokens_per_second": 543.1995775948507,
+        "topdown_rms": 0.1602976769208908
+      },
+      "teacher_feedback": 5.509702682495117,
+      "teacher_routing": {
+        "feedback_rms": 0.028065798804163933,
+        "routing_entropy": 0.6113773584365845,
+        "routing_weights": {
+          "v16": 0.43303343653678894,
+          "v17": 0.14008629322052002,
+          "v20": 0.21799315512180328,
+          "v24": 0.20888711512088776
+        },
+        "topdown_rms": 0.17740696668624878
+      }
+    }
+  ],
+  "canonical_gate_passed": true,
+  "canonical_gate_rule": "finite self-feedback and two-batch self loss <= masked loss",
+  "checkpoint_sha256_after": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+  "classification": "SELF-RECURRENT MEMORY TRANSFERS PARTIALLY",
+  "experiment": "2B0",
+  "losses": {
+    "masked_l1_no_feedback": 5.939758539199829,
+    "self_feedback": 5.682982683181763,
+    "teacher_feedback": 5.533807277679443
+  },
+  "model_state_sha256_after": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+  "model_state_sha256_before": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+  "model_state_unchanged": true,
+  "optimizer_constructed": false,
+  "optimizer_steps_executed": 0,
+  "passed": true,
+  "self_memory_routing": {
+    "feedback_rms": 0.025388565845787525,
+    "routing_entropy": 0.5179527699947357,
+    "routing_weights": {
+      "v16": 0.6062091588973999,
+      "v17": 0.03400944732129574,
+      "v20": 0.14457006007432938,
+      "v24": 0.21521131694316864
+    },
+    "topdown_rms": 0.1604839712381363
+  },
+  "self_recovery": 0.2567758560180664,
+  "self_teacher_recovery_ratio": 0.6325287795790526,
+  "stage": "two_batch_zero_shot_diagnostic",
+  "starting_checkpoint": {
+    "gate": 0.1595292091369629,
+    "gate_coefficient": 0.1581895351409912,
+    "optimizer_constructed": false,
+    "optimizer_state_steps_in_checkpoint": [
+      477,
+      477,
+      477
+    ],
+    "optimizer_steps_executed": 0,
+    "parent_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+    "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a3_250m/checkpoints/checkpoint_updates_000477.pt",
+    "query_norm": 1.9564993381500244,
+    "reader_parameters": 1537,
+    "rmsnorm_displacement": 1.9469332695007324,
+    "sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "training_state": {
+      "completed_updates": 477,
+      "processed_student_tokens": 250085376
+    }
+  },
+  "teacher_memory_routing": {
+    "feedback_rms": 0.028180633671581745,
+    "routing_entropy": 0.6085275411605835,
+    "routing_weights": {
+      "v16": 0.43312112987041473,
+      "v17": 0.1385224387049675,
+      "v20": 0.21784768253564835,
+      "v24": 0.21050875633955002
+    },
+    "topdown_rms": 0.17813287675380707
+  },
+  "teacher_recovery": 0.40595126152038574,
+  "teacher_student_drift": {
+    "1-16": {
+      "v16": {
+        "cosine_similarity": 0.7524384260177612,
+        "norm_ratio": 1.0138285756111145,
+        "rms_difference": 0.13802285492420197
+      },
+      "v17": {
+        "cosine_similarity": 0.763098269701004,
+        "norm_ratio": 1.0468653440475464,
+        "rms_difference": 0.148660346865654
+      },
+      "v20": {
+        "cosine_similarity": 0.7727296948432922,
+        "norm_ratio": 0.9643336832523346,
+        "rms_difference": 0.1348617821931839
+      },
+      "v24": {
+        "cosine_similarity": 0.7395563721656799,
+        "norm_ratio": 0.9102588295936584,
+        "rms_difference": 0.14365123957395554
+      }
+    },
+    "129-256": {
+      "v16": {
+        "cosine_similarity": 0.5392767786979675,
+        "norm_ratio": 0.9360369145870209,
+        "rms_difference": 0.19219586998224258
+      },
+      "v17": {
+        "cosine_similarity": 0.7369129359722137,
+        "norm_ratio": 0.8477585911750793,
+        "rms_difference": 0.1643490046262741
+      },
+      "v20": {
+        "cosine_similarity": 0.5651691854000092,
+        "norm_ratio": 0.8818008601665497,
+        "rms_difference": 0.19178782403469086
+      },
+      "v24": {
+        "cosine_similarity": 0.4982728064060211,
+        "norm_ratio": 0.8678700923919678,
+        "rms_difference": 0.1999889835715294
+      }
+    },
+    "17-32": {
+      "v16": {
+        "cosine_similarity": 0.5692297518253326,
+        "norm_ratio": 0.9833314418792725,
+        "rms_difference": 0.18982668220996857
+      },
+      "v17": {
+        "cosine_similarity": 0.657460629940033,
+        "norm_ratio": 1.0114003419876099,
+        "rms_difference": 0.1852957233786583
+      },
+      "v20": {
+        "cosine_similarity": 0.5956498086452484,
+        "norm_ratio": 0.9163846969604492,
+        "rms_difference": 0.1854836419224739
+      },
+      "v24": {
+        "cosine_similarity": 0.538617730140686,
+        "norm_ratio": 0.8807627260684967,
+        "rms_difference": 0.19105250388383865
+      }
+    },
+    "257-512": {
+      "v16": {
+        "cosine_similarity": 0.5565811097621918,
+        "norm_ratio": 0.9373192489147186,
+        "rms_difference": 0.1878899186849594
+      },
+      "v17": {
+        "cosine_similarity": 0.7530555129051208,
+        "norm_ratio": 0.8140790462493896,
+        "rms_difference": 0.15766755491495132
+      },
+      "v20": {
+        "cosine_similarity": 0.5849847495555878,
+        "norm_ratio": 0.887630969285965,
+        "rms_difference": 0.18648213148117065
+      },
+      "v24": {
+        "cosine_similarity": 0.5207252204418182,
+        "norm_ratio": 0.8796458542346954,
+        "rms_difference": 0.1971134915947914
+      }
+    },
+    "33-64": {
+      "v16": {
+        "cosine_similarity": 0.5332233905792236,
+        "norm_ratio": 0.9628119766712189,
+        "rms_difference": 0.19691592454910278
+      },
+      "v17": {
+        "cosine_similarity": 0.6682962477207184,
+        "norm_ratio": 0.9677732884883881,
+        "rms_difference": 0.18403184413909912
+      },
+      "v20": {
+        "cosine_similarity": 0.5656240284442902,
+        "norm_ratio": 0.8965500891208649,
+        "rms_difference": 0.19203898310661316
+      },
+      "v24": {
+        "cosine_similarity": 0.5011652112007141,
+        "norm_ratio": 0.8833161294460297,
+        "rms_difference": 0.1978311538696289
+      }
+    },
+    "513-1023": {
+      "v16": {
+        "cosine_similarity": 0.5670439539123655,
+        "norm_ratio": 0.9078598171764157,
+        "rms_difference": 0.18719584694580554
+      },
+      "v17": {
+        "cosine_similarity": 0.76745462137659,
+        "norm_ratio": 0.8133045651908023,
+        "rms_difference": 0.14556818325692195
+      },
+      "v20": {
+        "cosine_similarity": 0.6080644760579745,
+        "norm_ratio": 0.883665588737234,
+        "rms_difference": 0.1851177924766466
+      },
+      "v24": {
+        "cosine_similarity": 0.5534580477063203,
+        "norm_ratio": 0.9081414627702269,
+        "rms_difference": 0.19097912334882583
+      }
+    },
+    "65-128": {
+      "v16": {
+        "cosine_similarity": 0.5272289216518402,
+        "norm_ratio": 0.9424595832824707,
+        "rms_difference": 0.1959543079137802
+      },
+      "v17": {
+        "cosine_similarity": 0.7048133909702301,
+        "norm_ratio": 0.9035178422927856,
+        "rms_difference": 0.17413648962974548
+      },
+      "v20": {
+        "cosine_similarity": 0.554675430059433,
+        "norm_ratio": 0.8824982643127441,
+        "rms_difference": 0.1939961537718773
+      },
+      "v24": {
+        "cosine_similarity": 0.48946812748908997,
+        "norm_ratio": 0.8708318173885345,
+        "rms_difference": 0.2001098021864891
+      }
+    }
+  },
+  "validation_batches": 2
+}

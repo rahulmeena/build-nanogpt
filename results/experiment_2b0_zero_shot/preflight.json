@@ -1,0 +1,339 @@
+{
+  "causality": {
+    "checkpoint_resume": {
+      "continuation_logits_bit_exact": true,
+      "final_memory_and_kv_bit_exact": true,
+      "passed": true,
+      "serialized_schema": "full_attnres_recurrent_state_v1"
+    },
+    "future_suffix_invariance": {
+      "maximum_absolute_logit_difference": 0.0,
+      "passed": true,
+      "prefix_logits_bit_exact": true,
+      "prefix_memory_and_kv_bit_exact": true
+    },
+    "passed": true,
+    "sequence_isolation": {
+      "passed": true,
+      "unchanged_row_logits_bit_exact": true,
+      "unchanged_row_memory_and_kv_bit_exact": true
+    },
+    "sequence_reset": {
+      "block_1_cache_absent": true,
+      "fresh_logits_bit_exact": true,
+      "fresh_state_bit_exact": true,
+      "initial_memory_exactly_zero": true,
+      "initial_position_zero": true,
+      "other_caches_empty": true,
+      "passed": true
+    }
+  },
+  "config": {
+    "block_1_kv_cache": false,
+    "blocks_2_through_12_kv_cache": true,
+    "canonical_gate": "finite short runs and two-batch self loss <= masked loss",
+    "destination": "Block 1 Attention input",
+    "hellaswag": "not run without separate approval",
+    "initial_diagnostic_batches": 2,
+    "optimizer_steps": 0,
+    "protocol": "exp2b0_self_recurrent_zero_shot_v1",
+    "reader_checkpoint_sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "reader_training_tokens": 250085376,
+    "reader_training_updates": 477,
+    "recurrent_gradient_semantics": "detached inference only",
+    "reset_horizons": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      "never"
+    ],
+    "seed": 1337,
+    "sequence_length": 1024,
+    "short_horizons": [
+      8,
+      16,
+      32,
+      64
+    ],
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "validation_batch_sequences": 64,
+    "validation_batches": 20
+  },
+  "equivalence": {
+    "full_context": {
+      "absolute_loss_difference": 0.001434326171875,
+      "argmax_agreement_fraction": 0.9921875,
+      "incremental_loss": 4.93072509765625,
+      "maximum_absolute_logit_difference": 0.140625,
+      "mean_absolute_logit_difference": 0.009397327899932861,
+      "mean_absolute_parallel_logit": 3.5180585384368896,
+      "parallel_loss": 4.932159423828125,
+      "relative_mean_absolute_logit_difference": 0.002671168651431799,
+      "root_mean_square_logit_difference": 0.015402757562696934
+    },
+    "masked_l1_no_feedback": {
+      "absolute_loss_difference": 0.0006313323974609375,
+      "argmax_agreement_fraction": 0.9921875,
+      "incremental_loss": 6.297947883605957,
+      "maximum_absolute_logit_difference": 0.25,
+      "mean_absolute_logit_difference": 0.010805174708366394,
+      "mean_absolute_parallel_logit": 3.566751003265381,
+      "parallel_loss": 6.298579216003418,
+      "relative_mean_absolute_logit_difference": 0.003029416548088193,
+      "root_mean_square_logit_difference": 0.017429614439606667
+    },
+    "passed": true,
+    "thresholds": {
+      "absolute_loss_difference": 0.005,
+      "maximum_absolute_logit_difference": 0.25,
+      "mean_absolute_logit_difference": 0.015
+    }
+  },
+  "experiment": "2B0",
+  "git": {
+    "branch": "experiment-2b0-self-feedback-l1",
+    "commit": "75bb4e571e4356cacce76c89f352123a40254b5b",
+    "status": "## experiment-2b0-self-feedback-l1\n M train_gpt2.py\n?? EXPERIMENT_2B0_DESIGN.md\n?? configs/exp2b0_zero_shot.json\n?? scripts/experiment_2b0.py\n?? tests/test_experiment_2b0.py"
+  },
+  "integrity": {
+    "checkpoint_file_unchanged": true,
+    "checkpoint_sha256_after": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "checkpoint_sha256_before": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "model_state_sha256_after": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+    "model_state_sha256_before": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+    "model_state_unchanged": true,
+    "optimizer_constructed": false,
+    "optimizer_steps_executed": 0,
+    "passed": true
+  },
+  "passed": true,
+  "runtime": {
+    "cuda": "12.8",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "python": "/usr/bin/python3.12",
+    "pytorch": "2.8.0+cu128"
+  },
+  "short_horizon_stability": {
+    "16": {
+      "cache_health": {
+        "all_expected_lengths": true,
+        "block_1_cache_absent": true,
+        "blocks_2_through_12_lengths": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16
+        ],
+        "finite": true
+      },
+      "elapsed_seconds": 1.840082073584199,
+      "feedback_rms": 0.025370050221681595,
+      "finite": true,
+      "loss": 6.2151336669921875,
+      "memory_rms_max": {
+        "v16": 0.31695955991744995,
+        "v17": 0.3410627841949463,
+        "v20": 0.3778085708618164,
+        "v24": 0.39116355776786804
+      },
+      "memory_rms_mean": {
+        "v16": 0.21478478610515594,
+        "v17": 0.22670292854309082,
+        "v20": 0.20775969326496124,
+        "v24": 0.20142272114753723
+      },
+      "passed": true,
+      "routing_entropy": 0.6783518195152283,
+      "routing_weights": {
+        "v16": 0.4984126687049866,
+        "v17": 0.13770204782485962,
+        "v20": 0.14249584078788757,
+        "v24": 0.22138941287994385
+      },
+      "state_position": 16,
+      "tokens_per_second": 34.781057279329815,
+      "topdown_rms": 0.16036847233772278
+    },
+    "32": {
+      "cache_health": {
+        "all_expected_lengths": true,
+        "block_1_cache_absent": true,
+        "blocks_2_through_12_lengths": [
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32
+        ],
+        "finite": true
+      },
+      "elapsed_seconds": 3.6814933512359858,
+      "feedback_rms": 0.0255841426551342,
+      "finite": true,
+      "loss": 6.023488998413086,
+      "memory_rms_max": {
+        "v16": 0.31695955991744995,
+        "v17": 0.3440895974636078,
+        "v20": 0.3778085708618164,
+        "v24": 0.39116355776786804
+      },
+      "memory_rms_mean": {
+        "v16": 0.20661284029483795,
+        "v17": 0.2271682322025299,
+        "v20": 0.20324493944644928,
+        "v24": 0.19168247282505035
+      },
+      "passed": true,
+      "routing_entropy": 0.621407151222229,
+      "routing_weights": {
+        "v16": 0.5404959917068481,
+        "v17": 0.12140422314405441,
+        "v20": 0.12279544770717621,
+        "v24": 0.21530431509017944
+      },
+      "state_position": 32,
+      "tokens_per_second": 34.76849957016128,
+      "topdown_rms": 0.1617196649312973
+    },
+    "64": {
+      "cache_health": {
+        "all_expected_lengths": true,
+        "block_1_cache_absent": true,
+        "blocks_2_through_12_lengths": [
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64
+        ],
+        "finite": true
+      },
+      "elapsed_seconds": 7.352973924949765,
+      "feedback_rms": 0.025455588474869728,
+      "finite": true,
+      "loss": 6.027048587799072,
+      "memory_rms_max": {
+        "v16": 0.31695955991744995,
+        "v17": 0.3440895974636078,
+        "v20": 0.3778085708618164,
+        "v24": 0.39116355776786804
+      },
+      "memory_rms_mean": {
+        "v16": 0.19961896538734436,
+        "v17": 0.22130009531974792,
+        "v20": 0.1976841539144516,
+        "v24": 0.18172259628772736
+      },
+      "passed": true,
+      "routing_entropy": 0.5778865814208984,
+      "routing_weights": {
+        "v16": 0.6097038984298706,
+        "v17": 0.08934906870126724,
+        "v20": 0.1296459585428238,
+        "v24": 0.171301007270813
+      },
+      "state_position": 64,
+      "tokens_per_second": 34.81584493742768,
+      "topdown_rms": 0.16090714931488037
+    },
+    "8": {
+      "cache_health": {
+        "all_expected_lengths": true,
+        "block_1_cache_absent": true,
+        "blocks_2_through_12_lengths": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "finite": true
+      },
+      "elapsed_seconds": 0.9588456712663174,
+      "feedback_rms": 0.024192186072468758,
+      "finite": true,
+      "loss": 6.679046630859375,
+      "memory_rms_max": {
+        "v16": 0.31695955991744995,
+        "v17": 0.3410627841949463,
+        "v20": 0.28298863768577576,
+        "v24": 0.39116355776786804
+      },
+      "memory_rms_mean": {
+        "v16": 0.22072750329971313,
+        "v17": 0.23264683783054352,
+        "v20": 0.21380695700645447,
+        "v24": 0.21163684129714966
+      },
+      "passed": true,
+      "routing_entropy": 0.7619357109069824,
+      "routing_weights": {
+        "v16": 0.33271726965904236,
+        "v17": 0.1775195300579071,
+        "v20": 0.21145620942115784,
+        "v24": 0.2783069610595703
+      },
+      "state_position": 8,
+      "tokens_per_second": 33.37346244441883,
+      "topdown_rms": 0.15292255580425262
+    }
+  },
+  "stage": "incremental_preflight",
+  "starting_checkpoint": {
+    "gate": 0.1595292091369629,
+    "gate_coefficient": 0.1581895351409912,
+    "optimizer_constructed": false,
+    "optimizer_state_steps_in_checkpoint": [
+      477,
+      477,
+      477
+    ],
+    "optimizer_steps_executed": 0,
+    "parent_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+    "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a3_250m/checkpoints/checkpoint_updates_000477.pt",
+    "query_norm": 1.9564993381500244,
+    "reader_parameters": 1537,
+    "rmsnorm_displacement": 1.9469332695007324,
+    "sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "training_state": {
+      "completed_updates": 477,
+      "processed_student_tokens": 250085376
+    }
+  }
+}

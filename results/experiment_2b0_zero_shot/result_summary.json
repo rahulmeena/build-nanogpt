@@ -1,0 +1,128 @@
+{
+  "experiment": "2B0",
+  "protocol": "exp2b0_self_recurrent_zero_shot_v1",
+  "implementation_commit": "ff552a2d662e92b417b0d4cdae295c3a17180ca7",
+  "parent_commit": "75bb4e571e4356cacce76c89f352123a40254b5b",
+  "branch": "experiment-2b0-self-feedback-l1",
+  "checkpoint": {
+    "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a3_250m/checkpoints/checkpoint_updates_000477.pt",
+    "sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "reader_training_updates": 477,
+    "reader_training_tokens": 250085376,
+    "gate": 0.1595292091369629,
+    "gate_coefficient": 0.1581895351409912,
+    "query_norm": 1.9564993381500244,
+    "reader_parameters": 1537
+  },
+  "incremental_equivalence": {
+    "full_context": {
+      "maximum_absolute_logit_difference": 0.140625,
+      "mean_absolute_logit_difference": 0.009397327899932861,
+      "relative_mean_absolute_logit_difference": 0.002671168651431799,
+      "argmax_agreement_fraction": 0.9921875,
+      "absolute_loss_difference": 0.001434326171875
+    },
+    "masked_l1_no_feedback": {
+      "maximum_absolute_logit_difference": 0.25,
+      "mean_absolute_logit_difference": 0.010805174708366394,
+      "relative_mean_absolute_logit_difference": 0.003029416548088193,
+      "argmax_agreement_fraction": 0.9921875,
+      "absolute_loss_difference": 0.0006313323974609375
+    },
+    "passed": true
+  },
+  "causality": {
+    "future_suffix_invariance": true,
+    "sequence_isolation": true,
+    "sequence_reset": true,
+    "checkpoint_resume_bit_exact": true,
+    "passed": true
+  },
+  "canonical": {
+    "validation_batches": 20,
+    "batch_sequences": 64,
+    "sequence_length": 1024,
+    "validation_global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "losses": {
+      "full_context": 4.078654408454895,
+      "masked_l1_no_feedback": 5.973674488067627,
+      "teacher_feedback_250m": 5.570033884048462,
+      "self_feedback_zero_shot": 5.707420682907104,
+      "self_feedback_gate_zero": 5.9736480712890625,
+      "shuffled_self_feedback": 5.728916811943054
+    },
+    "damage": 1.8950200796127321,
+    "teacher_recovery": 0.40364060401916557,
+    "self_recovery": 0.266253805160523,
+    "self_recovery_fraction_of_damage": 0.14050183848971926,
+    "self_teacher_recovery_ratio": 0.6596308758567827,
+    "sequence_specific_recovery": 0.021496129035949708,
+    "sequence_specific_fraction_of_damage": 0.011343483516197187,
+    "sequence_specific_share_of_self_recovery": 0.08073548103092763,
+    "paired_shuffled_minus_real": {
+      "real_wins": 18,
+      "shuffled_wins": 2,
+      "ties": 0,
+      "mean": 0.021496129035949708,
+      "median": 0.024180889129638672,
+      "sample_standard_deviation": 0.01234082872998399,
+      "minimum": -0.0023870468139648438,
+      "maximum": 0.0394287109375,
+      "descriptive_ci95": [
+        0.015720443403156488,
+        0.027271814668742927
+      ]
+    }
+  },
+  "routing": {
+    "teacher_memory": {
+      "weights": {
+        "v16": 0.4271553918719292,
+        "v17": 0.12882713861763478,
+        "v20": 0.22011153921484947,
+        "v24": 0.22390592619776725
+      },
+      "entropy": 0.6079314619302749,
+      "topdown_rms": 0.17913347706198693,
+      "feedback_rms": 0.028338925912976265
+    },
+    "self_memory": {
+      "weights": {
+        "v16": 0.6033400535583496,
+        "v17": 0.02958129541948438,
+        "v20": 0.14627862125635147,
+        "v24": 0.22079993262887002
+      },
+      "entropy": 0.5160012662410736,
+      "topdown_rms": 0.16044771447777748,
+      "feedback_rms": 0.025382824148982762
+    }
+  },
+  "reset_interval_losses": {
+    "1": 5.973710632324218,
+    "2": 5.826129722595215,
+    "4": 5.7516333818435665,
+    "8": 5.72546420097351,
+    "16": 5.715140295028687,
+    "32": 5.711330509185791,
+    "64": 5.709325909614563,
+    "128": 5.708307838439941,
+    "never": 5.707643985748291
+  },
+  "integrity": {
+    "model_state_sha256_before": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+    "model_state_sha256_after": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+    "model_state_unchanged": true,
+    "checkpoint_sha256_after": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "optimizer_constructed": false,
+    "optimizer_steps_executed": 0,
+    "all_values_finite": true,
+    "cache_health": true
+  },
+  "hellaswag_run": false,
+  "hellaswag_skip_reason": "The frozen protocol requires separate approval after a meaningful positive FineWeb result.",
+  "classification": "SELF-RECURRENT MEMORY TRANSFERS PARTIALLY",
+  "train_same_1537_parameters_next": "YES",
+  "passed": true,
+  "terminal_line": "# EXPERIMENT 2B0 ZERO-SHOT COMPLETE"
+}
