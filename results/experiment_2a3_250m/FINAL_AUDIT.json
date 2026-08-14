@@ -1,0 +1,32 @@
+{
+  "experiment": "2A3",
+  "passed": true,
+  "audited_completed_updates": 477,
+  "audited_processed_student_tokens": 250085376,
+  "source_checkpoint_sha256": "6c206a89422470061d7997764fbd9a5708be3d9043f8fab930dd4b800bd5cb95",
+  "final_checkpoint_sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+  "checks": {
+    "source_exact_restore": true,
+    "training_rows_exactly_191_through_476": true,
+    "schedule_steps_exactly_1145_through_1430": true,
+    "global_replay_hashes_exact": true,
+    "trainable_parameter_count_1537": true,
+    "frozen_base_bit_identical": true,
+    "teacher_eval_no_grad": true,
+    "base_and_teacher_gradients_absent": true,
+    "losses_gradients_parameters_and_optimizer_moments_finite": true,
+    "milestone_checkpoints_strict_reload_verified": true,
+    "restart_at_286_verified": true,
+    "restart_at_381_verified": true,
+    "future_token_leakage_absent": true,
+    "canonical_validation_hash_exact": true,
+    "zero_equals_masked_each_batch": true,
+    "hellaswag_candidate_and_example_isolation": true,
+    "hard_stop_at_477": true,
+    "follow_on_optimizer_steps_absent": true
+  },
+  "classification": "MEMORY SIGNAL SATURATING",
+  "continue_to_500m_under_separate_approval": "YES",
+  "begin_self_generated_recurrence": "NO",
+  "terminal_line": "# EXPERIMENT 2A3 250M COMPLETE"
+}

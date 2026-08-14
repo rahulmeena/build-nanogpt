@@ -1,0 +1,42 @@
+{
+  "end_to_end": {
+    "B": 2,
+    "T": 1024,
+    "changed_suffix_starts_at": 512,
+    "compared_logit_positions": [
+      0,
+      511
+    ],
+    "maximum_absolute_difference": 0.0,
+    "passed": true,
+    "prefix_logits_bit_exact": true
+  },
+  "passed": true,
+  "state_isolation": {
+    "loaders": true,
+    "optimizer": true,
+    "passed": true,
+    "rng": true,
+    "router_instrumentation": true,
+    "router_source_mask": true,
+    "student_base": true,
+    "student_mode": true,
+    "student_topdown": true,
+    "teacher": true,
+    "teacher_mode": true
+  },
+  "teacher_memory": {
+    "B": 2,
+    "T": 1024,
+    "passed": true,
+    "per_source_memory_bit_exact": {
+      "v16": true,
+      "v17": true,
+      "v20": true,
+      "v24": true
+    },
+    "position_zero_memory_exactly_zero": true,
+    "suffix_difference_starts_at": 512,
+    "tested_position": 512
+  }
+}

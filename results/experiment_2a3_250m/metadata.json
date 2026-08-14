@@ -1,0 +1,132 @@
+{
+  "begin_self_generated_recurrence_rule": "YES only if all invariants pass, q250>0, q250>=q200, real wins at least 15/20 paired batches, sequence-specific recovery reaches at least 10% of the original damage, every final leave-one-source-out delta is positive, and real-feedback HellaSwag is at least masked/no-feedback; otherwise NO.",
+  "config": {
+    "additional_optimizer_updates": 286,
+    "checkpoint_updates": [
+      286,
+      381,
+      477
+    ],
+    "data_start": "restore exact four-rank replay states from verified Experiment 2A2 update-191 checkpoint",
+    "evaluation_updates": [
+      286,
+      381,
+      477
+    ],
+    "final_controls": [
+      "full_context",
+      "masked_l1_no_feedback",
+      "real_feedback",
+      "shuffled_feedback",
+      "zero_feedback"
+    ],
+    "final_source_ablations": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "frozen_reference_full_context": 4.078654408454895,
+    "frozen_reference_masked_l1_no_feedback": 5.973674488067627,
+    "global_batch_tokens": 524288,
+    "hellaswag_controls": [
+      "full_context",
+      "masked_l1_no_feedback",
+      "real_feedback",
+      "zero_feedback"
+    ],
+    "hellaswag_examples": 10042,
+    "hellaswag_shuffled_feedback": "skipped: candidate-row shuffling would violate alternative isolation",
+    "hellaswag_split": "val",
+    "hellaswag_val_sha256": "0aa3b88843990f3f10a97b9575c94d7b71fb2205240ba04ae4884d9e9c992588",
+    "historical_full_attnres_500m_hellaswag": 0.252141007767377,
+    "historical_standard_500m_hellaswag": 0.2557259510057757,
+    "intermediate_controls": [
+      "real_feedback",
+      "shuffled_feedback"
+    ],
+    "legacy_gradient_accumulation": 2,
+    "legacy_micro_batch_sequences_per_rank": 64,
+    "legacy_world_size": 4,
+    "lr_schedule": "continue original 10B schedule; next global schedule step is 1145",
+    "mode": "masked_l1_topdown_teacher",
+    "optimizer": "AdamW betas=(0.9,0.95) eps=1e-8 no weight decay",
+    "optimizer_updates": 477,
+    "processed_student_tokens": 250085376,
+    "protocol": "exp2a3_teacher_topdown_250m_v1",
+    "seed": 1337,
+    "sequence_length": 1024,
+    "sequential_microbatches_per_update": 8,
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "start_completed_updates": 191,
+    "start_processed_student_tokens": 100139008,
+    "validation_batch_sequences": 64,
+    "validation_batches": 20
+  },
+  "continuation_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a2_100m/checkpoints/checkpoint_updates_000191.pt",
+  "continuation_checkpoint_sha256": "6c206a89422470061d7997764fbd9a5708be3d9043f8fab930dd4b800bd5cb95",
+  "continuation_metadata_sha256": "7621086937bc99c505abb5d911c5898588d1cb87b281c72a37d2e5a59786cdd4",
+  "continuation_next_global_batch_sha256": "9f39510b105f068966ef6c052edc015d695827c422da37495fa7c244b965af0b",
+  "continuation_training_state": {
+    "completed_updates": 191,
+    "processed_student_tokens": 100139008
+  },
+  "continue_to_500m_rule": "YES only if q250>0, real beats shuffled on at least 15 of 20 batches, q250>=q200, total recovery remains positive, all controls and invariants pass, and HellaSwag real feedback is not more than 1.0 percentage point below both masked/no-feedback and gate-zero; otherwise NO.",
+  "cuda": "12.8",
+  "dataset": {
+    "manifest": "/workspace/build-nanogpt/experiment_artifacts/edu_fineweb10B_sha256_manifest.txt",
+    "manifest_sha256": "be14a17c21682a018aef68ce02847cced77e921374c01f806deccfba72870f54",
+    "shards_verified": false
+  },
+  "destination": "Block 1 Attention input",
+  "determinism": {
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "torch_deterministic_algorithms": true
+  },
+  "experiment": "Experiment 2A3",
+  "git_commit": "1455ad502c82dac94e3212429d7fa1c38e5082c1",
+  "git_status": "## codex/experiment-2a3-250m",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "kind": "exact update-191 to update-477 continuation",
+  "lineage_artifact_sha256": {
+    "results/experiment_2a2_100m/config.json": "c28512d0117c659a2f8497952e91598f8df7b408a3c4b5dbfb579bd072093993",
+    "results/experiment_2a2_100m/evaluations/evaluation_updates_000191.json": "f9aa30d14ae0f6db26684f3060dbe83c7bded25f4694190bd1b429f7265e3bad",
+    "results/experiment_2a2_100m/metadata.json": "72bf30eb8008241cfb64579649a8d6116236f3313d73f6db036b5b82bda14eec",
+    "results/experiment_2a2_100m/result_summary.json": "c437c93f9fd5aa32bfa7ef8f71ab2c6402297864dff3bfa85dcddc61ddd333bd"
+  },
+  "parent_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+  "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "parent_commit": "abecd3e91e89e1259f7198d72d15664943ad48bf",
+  "python_executable": "/usr/bin/python3.12",
+  "pytorch": "2.8.0+cu128",
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "source_file_sha256": {
+    "configs/exp2a0_5m.json": "8b5bdfd6f3be948ddb198ed80e09b7bdfd359f955fe60d34d32fb6d5c3b477fc",
+    "configs/exp2a1_25m.json": "23c93d22f7c2a0687ad4176d5620d651ab74749ff3b581b839cb4c3aaabfa299",
+    "configs/exp2a2_100m.json": "fe8fc25c611c0f046e8b3ccfd3902cc5044c854e3c85d0290f2440a2013e96df",
+    "configs/exp2a3_250m.json": "4bb1c8e28c135e3bc704e54bbc48413ba1fdc800f38fddebefe8dba002d148ae",
+    "hellaswag.py": "fd701264133b223077cc0117bfd56cb9ad41cc603d5bddfc869ea35921476e53",
+    "scripts/experiment_2a0.py": "cded96f565ac7c02745cf5a35161c8e49e26f2cabb479bf150c3a9fa0439b261",
+    "scripts/experiment_2a1.py": "97d93c223498abe4e5e2cc875a90c075fefb57132382cd0844c802919b5e36a9",
+    "scripts/experiment_2a2.py": "9057c3d7644ecf69ee411f0dd5941b238b979a400d03445adc5e82ddfbf77ed6",
+    "scripts/experiment_2a3.py": "21252e192241b41fb8acd1597cf859a805f00ff8e74b7fbff85ecf19ac36bd1f",
+    "scripts/plot_experiment_2a2.py": "41973c689820585c5716e76e13e5f6e91324940b1fe03c392b065cdfb539154a",
+    "scripts/plot_experiment_2a3.py": "10dcfe9fb4383ca23bc1e10199d344458b6184c35beb08e484cd99f1a349a7a7",
+    "train_gpt2.py": "204a99117c2cde351d6d7fa00c82b39335a983cd301e54c79e625a7f03e1af4d"
+  },
+  "student_base": "frozen",
+  "teacher": "immutable Experiment 1B parent; frozen eval/no_grad/detached",
+  "trainable_parameters": 1537,
+  "trajectory_classification_rule": "Let q100,q150,q200,q250 be shuffled-minus-real recovery. REVERSING if q250<=0 or q250-q200<0; SATURATING if q250>0, q250-q200>=0, and the last gain is <=25% of max(q150-q100,q200-q150,1e-12); STILL ACCELERATING if q250>q200>q150>q100 and successive gains strictly increase; otherwise STRENGTHENING."
+}
