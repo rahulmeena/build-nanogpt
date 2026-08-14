@@ -86,6 +86,14 @@ class CausalSelfAttention(nn.Module):
         new_length = cache.length + 1
         keys = cache.key[:, :, :new_length]
         values = cache.value[:, :, :new_length]
+        # Detached historical caches are mutated as later tokens arrive. During
+        # reader-only training, preserve the exact prefix consumed by this
+        # token so several independent token graphs can be backwarded together
+        # without an in-place version change. Inference keeps the zero-copy
+        # Experiment-2B0 path.
+        if torch.is_grad_enabled() and q.requires_grad:
+            keys = keys.clone()
+            values = values.clone()
         y = F.scaled_dot_product_attention(q, keys, values, is_causal=False)
         y = y.transpose(1, 2).contiguous().view(B, 1, C)
         updated = AttentionKVCache(cache.key, cache.value, new_length)
