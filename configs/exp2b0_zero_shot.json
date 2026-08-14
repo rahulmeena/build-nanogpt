@@ -1,0 +1,21 @@
+{
+  "protocol": "exp2b0_self_recurrent_zero_shot_v1",
+  "seed": 1337,
+  "source_depths": [16, 17, 20, 24],
+  "destination": "Block 1 Attention input",
+  "reader_checkpoint_sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+  "reader_training_updates": 477,
+  "reader_training_tokens": 250085376,
+  "sequence_length": 1024,
+  "validation_batches": 20,
+  "validation_batch_sequences": 64,
+  "initial_diagnostic_batches": 2,
+  "short_horizons": [8, 16, 32, 64],
+  "reset_horizons": [1, 2, 4, 8, 16, 32, 64, 128, "never"],
+  "recurrent_gradient_semantics": "detached inference only",
+  "block_1_kv_cache": false,
+  "blocks_2_through_12_kv_cache": true,
+  "optimizer_steps": 0,
+  "hellaswag": "not run without separate approval",
+  "canonical_gate": "finite short runs and two-batch self loss <= masked loss"
+}

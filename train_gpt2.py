@@ -52,6 +52,45 @@ class CausalSelfAttention(nn.Module):
         y = self.c_proj(y)
         return y
 
+    def forward_step(self, x, cache=None, self_only=False):
+        """Attend one token with an explicit cache and return its updated cache."""
+        B, T, C = x.size()
+        if T != 1:
+            raise ValueError("incremental attention requires exactly one token")
+        if self_only:
+            if cache is not None:
+                raise ValueError("self-only Block 1 must not have a historical KV cache")
+            y = F.linear(
+                x,
+                self.c_attn.weight[2 * self.n_embd:],
+                self.c_attn.bias[2 * self.n_embd:],
+            )
+            return self.c_proj(y), None
+        if not isinstance(cache, AttentionKVCache):
+            raise ValueError("incremental historical attention requires an explicit KV cache")
+        if cache.length >= cache.key.size(2):
+            raise ValueError("incremental KV cache capacity exceeded")
+        qkv = self.c_attn(x)
+        q, k, v = qkv.split(self.n_embd, dim=2)
+        head_size = C // self.n_head
+        q = q.view(B, 1, self.n_head, head_size).transpose(1, 2)
+        k = k.view(B, 1, self.n_head, head_size).transpose(1, 2)
+        v = v.view(B, 1, self.n_head, head_size).transpose(1, 2)
+        expected = (B, self.n_head, cache.key.size(2), head_size)
+        if tuple(cache.key.shape) != expected or tuple(cache.value.shape) != expected:
+            raise ValueError("incremental KV cache shape mismatch")
+        if cache.key.device != x.device or cache.value.device != x.device:
+            raise ValueError("incremental KV cache device mismatch")
+        cache.key[:, :, cache.length : cache.length + 1].copy_(k.detach())
+        cache.value[:, :, cache.length : cache.length + 1].copy_(v.detach())
+        new_length = cache.length + 1
+        keys = cache.key[:, :, :new_length]
+        values = cache.value[:, :, :new_length]
+        y = F.scaled_dot_product_attention(q, keys, values, is_causal=False)
+        y = y.transpose(1, 2).contiguous().view(B, 1, C)
+        updated = AttentionKVCache(cache.key, cache.value, new_length)
+        return self.c_proj(y), updated
+
 class MLP(nn.Module):
 
     def __init__(self, config):
@@ -205,6 +244,58 @@ EXPERIMENT_2A0_MODES = {
     "masked_l1_topdown_teacher",
     "masked_l1_shuffled_feedback",
 }
+
+EXPERIMENT_2B0_INCREMENTAL_MODES = {
+    "full_context",
+    "masked_l1_no_feedback",
+    "masked_l1_topdown_teacher",
+    "masked_l1_topdown_self",
+    "masked_l1_shuffled_self_feedback",
+}
+
+
+@dataclass
+class AttentionKVCache:
+    """Explicit preallocated incremental-attention cache for one block."""
+
+    key: torch.Tensor
+    value: torch.Tensor
+    length: int = 0
+
+    def prefix(self):
+        return self.key[:, :, : self.length], self.value[:, :, : self.length]
+
+
+@dataclass
+class RecurrentState:
+    """Serializable Experiment-2B0 state; modules retain no hidden history."""
+
+    position: int
+    mode: str
+    kv_caches: tuple
+    feedback_memory: torch.Tensor
+
+    def state_dict(self):
+        caches = []
+        for cache in self.kv_caches:
+            if cache is None:
+                caches.append(None)
+            else:
+                key, value = cache.prefix()
+                caches.append(
+                    {
+                        "key": key.detach().clone(),
+                        "value": value.detach().clone(),
+                        "length": cache.length,
+                    }
+                )
+        return {
+            "schema": "full_attnres_recurrent_state_v1",
+            "position": self.position,
+            "mode": self.mode,
+            "kv_caches": caches,
+            "feedback_memory": self.feedback_memory.detach().clone(),
+        }
 
 
 def shift_teacher_sources(source_values):
@@ -415,6 +506,298 @@ class GPT(nn.Module):
         if return_source_depths is not None:
             return logits, loss, captured_sources
         return logits, loss
+
+    def init_recurrent_state(self, batch_size, mode, device=None, dtype=None):
+        """Create explicit, fixed-capacity state for token-by-token inference."""
+        if self.config.residual_mode != "full_attnres":
+            raise ValueError("incremental Full-AttnRes requires residual_mode='full_attnres'")
+        if mode not in EXPERIMENT_2B0_INCREMENTAL_MODES:
+            raise ValueError(f"unknown incremental mode: {mode}")
+        if "topdown" in mode or "self_feedback" in mode:
+            if not self.config.enable_topdown_feedback:
+                raise ValueError("incremental feedback requires a top-down router")
+        if not isinstance(batch_size, int) or batch_size < 1:
+            raise ValueError("batch_size must be a positive integer")
+        reference = self.transformer.wte.weight
+        device = reference.device if device is None else torch.device(device)
+        dtype = reference.dtype if dtype is None else dtype
+        head_size = self.config.n_embd // self.config.n_head
+        cache_shape = (
+            batch_size,
+            self.config.n_head,
+            self.config.block_size,
+            head_size,
+        )
+        masked_l1 = mode != "full_context"
+        caches = []
+        for block_index in range(self.config.n_layer):
+            if block_index == 0 and masked_l1:
+                caches.append(None)
+                continue
+            caches.append(
+                AttentionKVCache(
+                    key=torch.empty(cache_shape, device=device, dtype=dtype),
+                    value=torch.empty(cache_shape, device=device, dtype=dtype),
+                    length=0,
+                )
+            )
+        memory = torch.zeros(
+            len(EXPERIMENT_2A0_SOURCE_DEPTHS),
+            batch_size,
+            1,
+            self.config.n_embd,
+            device=device,
+            dtype=dtype,
+        )
+        return RecurrentState(0, mode, tuple(caches), memory)
+
+    def load_recurrent_state(self, payload, device=None, dtype=None):
+        """Restore a compact recurrent-state payload into fresh KV buffers."""
+        if not isinstance(payload, dict) or payload.get("schema") != "full_attnres_recurrent_state_v1":
+            raise ValueError("invalid recurrent-state payload")
+        memory = payload.get("feedback_memory")
+        if not isinstance(memory, torch.Tensor) or memory.ndim != 4:
+            raise ValueError("invalid recurrent feedback memory")
+        position = payload.get("position")
+        if not isinstance(position, int) or not 0 <= position <= self.config.block_size:
+            raise ValueError("invalid recurrent position")
+        device = memory.device if device is None else torch.device(device)
+        dtype = memory.dtype if dtype is None else dtype
+        state = self.init_recurrent_state(
+            memory.size(1), payload.get("mode"), device=device, dtype=dtype
+        )
+        caches = payload.get("kv_caches")
+        if not isinstance(caches, (list, tuple)) or len(caches) != self.config.n_layer:
+            raise ValueError("invalid recurrent cache collection")
+        restored = []
+        for fresh, saved in zip(state.kv_caches, caches):
+            if fresh is None or saved is None:
+                if fresh is not None or saved is not None:
+                    raise ValueError("recurrent Block-1 cache policy mismatch")
+                restored.append(None)
+                continue
+            if set(saved) != {"key", "value", "length"} or saved["length"] != position:
+                raise ValueError("invalid serialized KV cache")
+            expected_prefix = fresh.key[:, :, :position]
+            if (
+                tuple(saved["key"].shape) != tuple(expected_prefix.shape)
+                or tuple(saved["value"].shape) != tuple(expected_prefix.shape)
+            ):
+                raise ValueError("serialized KV cache shape mismatch")
+            fresh.key[:, :, :position].copy_(saved["key"].to(device=device, dtype=dtype))
+            fresh.value[:, :, :position].copy_(saved["value"].to(device=device, dtype=dtype))
+            restored.append(AttentionKVCache(fresh.key, fresh.value, position))
+        expected_memory = (
+            len(EXPERIMENT_2A0_SOURCE_DEPTHS),
+            memory.size(1),
+            1,
+            self.config.n_embd,
+        )
+        if tuple(memory.shape) != expected_memory:
+            raise ValueError("serialized recurrent memory shape mismatch")
+        return RecurrentState(
+            position,
+            state.mode,
+            tuple(restored),
+            memory.detach().to(device=device, dtype=dtype).clone(),
+        )
+
+    def reset_recurrent_memory(self, state):
+        """Reset only high-to-low memory; preserve position and Blocks 2–12 caches."""
+        self._validate_recurrent_state(state, state.feedback_memory.size(1))
+        return RecurrentState(
+            state.position,
+            state.mode,
+            state.kv_caches,
+            torch.zeros_like(state.feedback_memory),
+        )
+
+    def _validate_recurrent_state(self, state, batch_size):
+        if not isinstance(state, RecurrentState):
+            raise ValueError("forward_step requires an explicit RecurrentState")
+        if state.mode not in EXPERIMENT_2B0_INCREMENTAL_MODES:
+            raise ValueError("recurrent state has an unknown mode")
+        if not isinstance(state.position, int) or not 0 <= state.position < self.config.block_size:
+            raise ValueError("recurrent position is outside the configured context")
+        expected_memory = (
+            len(EXPERIMENT_2A0_SOURCE_DEPTHS),
+            batch_size,
+            1,
+            self.config.n_embd,
+        )
+        if tuple(state.feedback_memory.shape) != expected_memory:
+            raise ValueError("recurrent feedback-memory shape mismatch")
+        if len(state.kv_caches) != self.config.n_layer:
+            raise ValueError("recurrent state has the wrong number of KV caches")
+        masked_l1 = state.mode != "full_context"
+        for block_index, cache in enumerate(state.kv_caches):
+            if block_index == 0 and masked_l1:
+                if cache is not None:
+                    raise ValueError("masked Block 1 must not retain a KV cache")
+            elif not isinstance(cache, AttentionKVCache) or cache.length != state.position:
+                raise ValueError("recurrent KV cache length mismatch")
+
+    def forward_step(
+        self,
+        idx,
+        state,
+        feedback_sources=None,
+        feedback_permutation=None,
+        feedback_gate_override=None,
+        reset_feedback=False,
+        return_diagnostics=False,
+    ):
+        """Process one token with explicit Full-AttnRes KV and feedback state."""
+        if idx.ndim == 1:
+            idx = idx.unsqueeze(1)
+        if idx.ndim != 2 or idx.size(1) != 1:
+            raise ValueError("forward_step token input must have shape [batch] or [batch, 1]")
+        B = idx.size(0)
+        self._validate_recurrent_state(state, B)
+        mode = state.mode
+        teacher_mode = mode == "masked_l1_topdown_teacher"
+        self_mode = mode in {
+            "masked_l1_topdown_self",
+            "masked_l1_shuffled_self_feedback",
+        }
+        uses_feedback = teacher_mode or self_mode
+        if teacher_mode != (feedback_sources is not None):
+            raise ValueError("teacher mode requires exactly one current-token feedback bank")
+        shuffled = mode == "masked_l1_shuffled_self_feedback"
+        if shuffled != (feedback_permutation is not None):
+            raise ValueError("shuffled self-feedback requires exactly one permutation")
+        if not uses_feedback and feedback_gate_override is not None:
+            raise ValueError("gate override is valid only for a feedback mode")
+        reset_mask = None
+        if isinstance(reset_feedback, torch.Tensor):
+            if (
+                reset_feedback.dtype != torch.bool
+                or tuple(reset_feedback.shape) != (B,)
+                or reset_feedback.device != idx.device
+            ):
+                raise ValueError("per-example feedback reset mask must be boolean [batch]")
+            reset_mask = reset_feedback
+        elif not isinstance(reset_feedback, bool):
+            raise ValueError("reset_feedback must be a boolean or boolean [batch] tensor")
+        if (reset_feedback is True or reset_mask is not None) and not self_mode:
+            raise ValueError("memory-only reset is valid only for self-feedback modes")
+
+        position = state.position
+        pos = torch.tensor([position], dtype=torch.long, device=idx.device)
+        x = self.transformer.wte(idx) + self.transformer.wpe(pos)
+        values = [x]
+        destination_index = 0
+        updated_caches = []
+        topdown = None
+        feedback_contribution = None
+        topdown_weights = None
+        for block_index, block in enumerate(self.transformer.h):
+            h = self.transformer.attnres[destination_index](values)
+            if block_index == 0 and mode != "full_context":
+                if uses_feedback:
+                    if teacher_mode:
+                        memory_bank = feedback_sources.detach()
+                    elif reset_mask is not None:
+                        memory_bank = torch.where(
+                            reset_mask.view(1, B, 1, 1),
+                            torch.zeros_like(state.feedback_memory),
+                            state.feedback_memory.detach(),
+                        )
+                    elif reset_feedback:
+                        memory_bank = torch.zeros_like(state.feedback_memory)
+                    else:
+                        memory_bank = state.feedback_memory.detach()
+                    expected_shape = (
+                        len(EXPERIMENT_2A0_SOURCE_DEPTHS),
+                        B,
+                        1,
+                        self.config.n_embd,
+                    )
+                    if tuple(memory_bank.shape) != expected_shape:
+                        raise ValueError("incremental feedback source shape mismatch")
+                    if memory_bank.device != idx.device:
+                        raise ValueError("incremental feedback source device mismatch")
+                    if shuffled:
+                        permutation = feedback_permutation
+                        if tuple(permutation.shape) != (B,):
+                            raise ValueError("feedback permutation must have shape [batch]")
+                        expected_indices = torch.arange(B, device=permutation.device)
+                        if (
+                            torch.any(permutation == expected_indices)
+                            or not torch.equal(torch.sort(permutation).values, expected_indices)
+                        ):
+                            raise ValueError("feedback permutation must be fixed-point-free")
+                        memory_bank = memory_bank[:, permutation]
+                    if return_diagnostics:
+                        topdown, topdown_weights = self.transformer.topdown_attnres(
+                            list(memory_bank.unbind(dim=0)), return_weights=True
+                        )
+                    else:
+                        topdown = self.transformer.topdown_attnres(
+                            list(memory_bank.unbind(dim=0))
+                        )
+                    if feedback_gate_override is None:
+                        gate = self.transformer.topdown_attnres.gate.tanh()
+                    else:
+                        gate = h.new_tensor(float(feedback_gate_override))
+                    feedback_contribution = gate * topdown
+                    h = h + feedback_contribution
+                attention_output, cache = block.attn.forward_step(
+                    block.ln_1(h), cache=None, self_only=True
+                )
+            else:
+                attention_output, cache = block.attn.forward_step(
+                    block.ln_1(h), cache=state.kv_caches[block_index]
+                )
+            values.append(attention_output)
+            updated_caches.append(cache)
+            destination_index += 1
+            h = self.transformer.attnres[destination_index](values)
+            values.append(block.mlp(block.ln_2(h)))
+            destination_index += 1
+
+        x = self.transformer.attnres[destination_index](values)
+        x = self.transformer.ln_f(x)
+        logits = self.lm_head(x)
+        memory = torch.stack(
+            [values[depth] for depth in EXPERIMENT_2A0_SOURCE_DEPTHS], dim=0
+        ).detach()
+        next_state = RecurrentState(
+            position + 1,
+            mode,
+            tuple(updated_caches),
+            memory,
+        )
+        if not return_diagnostics:
+            return logits, next_state
+        source_rms = memory.float().pow(2).mean(dim=(2, 3)).sqrt()
+        diagnostics = {
+            "position": position,
+            "source_memory": memory,
+            "source_rms": source_rms,
+            "topdown_rms": None,
+            "feedback_rms": None,
+            "routing_weights": None,
+            "routing_entropy": None,
+        }
+        if topdown is not None:
+            safe_weights = topdown_weights.float().clamp_min(
+                torch.finfo(torch.float32).tiny
+            )
+            diagnostics.update(
+                {
+                    "topdown_rms": topdown.float().pow(2).mean(dim=(1, 2)).sqrt(),
+                    "feedback_rms": feedback_contribution.float()
+                    .pow(2)
+                    .mean(dim=(1, 2))
+                    .sqrt(),
+                    "routing_weights": topdown_weights.detach(),
+                    "routing_entropy": -(
+                        safe_weights * safe_weights.log()
+                    ).sum(dim=0).squeeze(-1),
+                }
+            )
+        return logits, next_state, diagnostics
 
     def capture_residual_sources(
         self,
