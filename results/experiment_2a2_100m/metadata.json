@@ -1,0 +1,125 @@
+{
+  "config": {
+    "additional_optimizer_updates": 143,
+    "checkpoint_updates": [
+      96,
+      191
+    ],
+    "data_start": "restore exact four-rank replay states from verified Experiment 2A1 update-48 checkpoint",
+    "evaluation_updates": [
+      96,
+      191
+    ],
+    "final_controls": [
+      "full_context",
+      "masked_l1_no_feedback",
+      "real_feedback",
+      "shuffled_feedback",
+      "zero_feedback"
+    ],
+    "final_source_ablations": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "frozen_reference_full_context": 4.078654408454895,
+    "frozen_reference_masked_l1_no_feedback": 5.973674488067627,
+    "global_batch_tokens": 524288,
+    "hellaswag_controls": [
+      "full_context",
+      "masked_l1_no_feedback",
+      "real_feedback",
+      "zero_feedback"
+    ],
+    "hellaswag_examples": 10042,
+    "hellaswag_shuffled_feedback": "skipped: candidate-row shuffling would violate alternative isolation",
+    "hellaswag_split": "val",
+    "hellaswag_val_sha256": "0aa3b88843990f3f10a97b9575c94d7b71fb2205240ba04ae4884d9e9c992588",
+    "historical_full_attnres_500m_hellaswag": 0.252141007767377,
+    "historical_standard_500m_hellaswag": 0.2557259510057757,
+    "intermediate_controls": [
+      "real_feedback",
+      "shuffled_feedback"
+    ],
+    "legacy_gradient_accumulation": 2,
+    "legacy_micro_batch_sequences_per_rank": 64,
+    "legacy_world_size": 4,
+    "lr_schedule": "continue original 10B schedule; next global schedule step is 1002",
+    "mode": "masked_l1_topdown_teacher",
+    "optimizer": "AdamW betas=(0.9,0.95) eps=1e-8 no weight decay",
+    "optimizer_updates": 191,
+    "processed_student_tokens": 100139008,
+    "protocol": "exp2a2_teacher_topdown_100m_v1",
+    "seed": 1337,
+    "sequence_length": 1024,
+    "sequential_microbatches_per_update": 8,
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "start_completed_updates": 48,
+    "start_processed_student_tokens": 25165824,
+    "validation_batch_sequences": 64,
+    "validation_batches": 20
+  },
+  "continuation_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a1_25m/checkpoints/checkpoint_updates_000048.pt",
+  "continuation_checkpoint_sha256": "d821b48a796b12bb489f5bc9bc1791c475c09a50de7d5b47c4a36cf766643ec2",
+  "continuation_metadata_sha256": "3d4919dcdad5ee7d4c7c9b6baf2de8e7ede16d15b6e79f657f72b67b814463be",
+  "continuation_next_global_batch_sha256": "1c3290f72d60d356d636e57017bbc5f2cb2ec470af7860d9d95d5c95116d24a5",
+  "continuation_training_state": {
+    "completed_updates": 48,
+    "processed_student_tokens": 25165824
+  },
+  "continue_to_250m_rule": "YES only if q100>0, real beats shuffled on at least 15 of 20 batches, q100>=q50, total recovery remains positive, all controls and invariants pass, and HellaSwag real feedback is not more than 1.0 percentage point below both masked/no-feedback and gate-zero; otherwise NO.",
+  "cuda": "12.8",
+  "dataset": {
+    "manifest": "/workspace/build-nanogpt/experiment_artifacts/edu_fineweb10B_sha256_manifest.txt",
+    "manifest_sha256": "be14a17c21682a018aef68ce02847cced77e921374c01f806deccfba72870f54",
+    "shards_verified": false
+  },
+  "destination": "Block 1 Attention input",
+  "determinism": {
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "torch_deterministic_algorithms": true
+  },
+  "experiment": "Experiment 2A2",
+  "git_commit": "57b21510c311bbb96c8423bb70cb74d974d2f00b",
+  "git_status": "## codex/experiment-2a2-100m",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "kind": "exact update-48 to update-191 continuation",
+  "lineage_artifact_sha256": {
+    "results/experiment_2a1_25m/config.json": "27af7f1ca2206b03487a412747cb15a2b42fbd2612f920d57dc1f540afa27157",
+    "results/experiment_2a1_25m/metadata.json": "ba0fa6dc52266464163ba90021a30044e713dbb821bba275b9f5a4185da450fc",
+    "results/experiment_2a1_25m/result_summary.json": "3ab8cda7c28e72982d822d4a50489140c3a543d951fdea6570d401d1c5e43218"
+  },
+  "parent_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+  "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "parent_commit": "abecd3e91e89e1259f7198d72d15664943ad48bf",
+  "python_executable": "/usr/bin/python3.12",
+  "pytorch": "2.8.0+cu128",
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "source_file_sha256": {
+    "configs/exp2a0_5m.json": "8b5bdfd6f3be948ddb198ed80e09b7bdfd359f955fe60d34d32fb6d5c3b477fc",
+    "configs/exp2a1_25m.json": "23c93d22f7c2a0687ad4176d5620d651ab74749ff3b581b839cb4c3aaabfa299",
+    "configs/exp2a2_100m.json": "fe8fc25c611c0f046e8b3ccfd3902cc5044c854e3c85d0290f2440a2013e96df",
+    "hellaswag.py": "fd701264133b223077cc0117bfd56cb9ad41cc603d5bddfc869ea35921476e53",
+    "scripts/experiment_2a0.py": "cded96f565ac7c02745cf5a35161c8e49e26f2cabb479bf150c3a9fa0439b261",
+    "scripts/experiment_2a1.py": "97d93c223498abe4e5e2cc875a90c075fefb57132382cd0844c802919b5e36a9",
+    "scripts/experiment_2a2.py": "9057c3d7644ecf69ee411f0dd5941b238b979a400d03445adc5e82ddfbf77ed6",
+    "scripts/plot_experiment_2a2.py": "41973c689820585c5716e76e13e5f6e91324940b1fe03c392b065cdfb539154a",
+    "train_gpt2.py": "204a99117c2cde351d6d7fa00c82b39335a983cd301e54c79e625a7f03e1af4d"
+  },
+  "student_base": "frozen",
+  "teacher": "immutable Experiment 1B parent; frozen eval/no_grad/detached",
+  "trainable_parameters": 1537,
+  "trajectory_classification_rule": "Let q25, q50, q100 be shuffled-minus-real recovery at 25M, 50M, 100M. DISAPPEARING if q100<=0 or q100<0.5*q25; SATURATING if q100>0 and the 50M-to-100M gain is <=25% of max(q50-q25,1e-12); ACCELERATING if q100>q50>q25 and (q100-q50)>(q50-q25); otherwise STRENGTHENING."
+}
