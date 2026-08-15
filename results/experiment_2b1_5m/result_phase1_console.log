@@ -1,0 +1,61 @@
+result update 01/10 loss=5.592898 gate=0.159629 wall=4173.9s
+result update 02/10 loss=5.627865 gate=0.159579 wall=4171.0s
+result update 03/10 loss=5.608401 gate=0.159525 wall=4172.3s
+result update 04/10 loss=5.562062 gate=0.159475 wall=4180.9s
+result update 05/10 loss=5.585043 gate=0.159433 wall=4180.1s
+{
+  "checkpoint": {
+    "bytes": 498175801,
+    "checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2b1_5m/result/checkpoints/checkpoint_updates_000005.pt",
+    "sha256": "aca49ac08c607a71320a7cfa922df2db5e6936320de0f6a45f49a085516835db",
+    "verification": {
+      "implementation_git_commit": "c2f8082a7e0deff797a59e1f8b78949e7da3d246",
+      "loader_states": 4,
+      "loader_strict_reload": true,
+      "local_completed_updates": 5,
+      "model_strict_reload": true,
+      "next_global_batch_sha256": "129c40a5211020d3fe13cfb32e356651a97d6bbcc0a3da4e86ee933d89cc9132",
+      "optimizer": {
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "eps": 1e-08,
+        "lr": 0.0001,
+        "moments_finite": true,
+        "state_entries": 3,
+        "steps": [
+          5,
+          5,
+          5
+        ],
+        "weight_decay": 0.0
+      },
+      "optimizer_strict_reload": true,
+      "passed": true,
+      "processed_2b1_tokens": 2621440,
+      "rng_fields": [
+        "numpy_random",
+        "python_random",
+        "torch_cpu",
+        "torch_cuda"
+      ],
+      "rng_strict_reload": true,
+      "saved_by_pid": 26211,
+      "schema": "exp2b1_detached_self_reader_v1",
+      "serialized_loader_replay_match": true,
+      "source_2a3_checkpoint_sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+      "source_2b0_commit": "a8b271ee71ae1af77da8ddad022ce549be390682"
+    }
+  },
+  "completed_updates": 5,
+  "frozen_base_sha256_after": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "frozen_base_sha256_before": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "next_global_batch_sha256": "129c40a5211020d3fe13cfb32e356651a97d6bbcc0a3da4e86ee933d89cc9132",
+  "passed": true,
+  "process_exit_required": true,
+  "process_pid": 26211,
+  "processed_2b1_tokens": 2621440,
+  "stage": "result_phase1_complete",
+  "teacher_training_forward_calls": 0
+}

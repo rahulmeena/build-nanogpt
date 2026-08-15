@@ -1,0 +1,119 @@
+{
+  "autograd_detach_policy": {
+    "bptt": false,
+    "current_token_computation": "gradient enabled through frozen operations to reader",
+    "next_historical_keys": "detach",
+    "next_historical_values": "detach",
+    "next_recurrent_memory": "detach",
+    "tbptt": false
+  },
+  "base_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+  "base_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "config": {
+    "backward_chunk_tokens": 16,
+    "block_1_historical_kv": false,
+    "blocks_2_through_12_historical_kv": true,
+    "checkpoint_after_local_updates": 5,
+    "classification_equality_band": 0.01,
+    "destination": "Block 1 Attention input",
+    "global_batch_tokens": 524288,
+    "hellaswag": "not run without separate approval",
+    "legacy_gradient_accumulation": 2,
+    "legacy_micro_batch_sequences_per_rank": 64,
+    "legacy_world_size": 4,
+    "local_optimizer_updates": 10,
+    "optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "gradient_clip": 1.0,
+      "lr": 0.0001,
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "processed_2b1_tokens": 5242880,
+    "protocol": "exp2b1_detached_self_reader_5m_v1",
+    "reset_horizons": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      "never"
+    ],
+    "seed": 1337,
+    "sequence_length": 1024,
+    "serialized_slices_per_update": 8,
+    "smoke": {
+      "batch_sequences": 2,
+      "checkpoint_after_updates": 2,
+      "optimizer_updates": 3,
+      "sequence_length": 64
+    },
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "source_next_global_batch_sha256": "95081c5f68b7d05d6e39b68043f2714657c21ca05cc317549063ba9a4f9f6986",
+    "source_reader_checkpoint_sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "source_reader_completed_updates": 477,
+    "source_reader_processed_tokens": 250085376,
+    "teacher_training_forward_calls": 0,
+    "temporal_gradient": "none through recurrent memory or Blocks 2-12 historical KV",
+    "trainable_parameters": 1537,
+    "training_memory": "detached student-generated previous-token v16/v17/v20/v24",
+    "validation": {
+      "batch_sequences": 64,
+      "batches": 20,
+      "global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+      "sequence_length": 1024
+    }
+  },
+  "cuda": "12.8",
+  "determinism": {
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "torch_deterministic_algorithms": true
+  },
+  "experiment": "2B1",
+  "fresh_optimizer": "source 2A3 Adam moments deliberately ignored",
+  "git_branch": "experiment-2b1-self-reader-adaptation",
+  "git_commit": "c2f8082a7e0deff797a59e1f8b78949e7da3d246",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "hellaswag": "not run",
+  "kind": "result_5m",
+  "protocol": "exp2b1_detached_self_reader_5m_v1",
+  "pytorch": "2.8.0+cu128",
+  "sequence_boundary_policy": {
+    "block_1_historical_kv": false,
+    "blocks_2_through_12_historical_kv": true,
+    "each_B64_row": "position zero, zero recurrent memory, empty KV caches",
+    "in_row_endoftext": "no reset"
+  },
+  "source_2b0_commit": "a8b271ee71ae1af77da8ddad022ce549be390682",
+  "source_2b0_implementation_commit": "ff552a2d662e92b417b0d4cdae295c3a17180ca7",
+  "source_2b0_tag": "experiment-2b0-zero-shot",
+  "source_file_sha256": {
+    "EXPERIMENT_2B1_DESIGN.md": "a3791d2e62bd1e4d9eb754356c974a658ca02a59e136a7550450916894f72f42",
+    "configs/exp2b1_5m.json": "b1d90e1913148deb000a097536cf875994203f952f7ed7ac1a6c1f7f454d77fe",
+    "scripts/experiment_2b1.py": "d1a912e26893d40fe48078dc9ee5891ed6207126a54000acd36f9a2f0fbee1c2",
+    "train_gpt2.py": "3427ed35f41dedbc43899ec5f526a0504a13f506d01ce608a8e4c64f030e0f94"
+  },
+  "source_next_global_batch_sha256": "95081c5f68b7d05d6e39b68043f2714657c21ca05cc317549063ba9a4f9f6986",
+  "source_reader_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a3_250m/checkpoints/checkpoint_updates_000477.pt",
+  "source_reader_checkpoint_sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+  "source_reader_training_state": {
+    "completed_updates": 477,
+    "processed_student_tokens": 250085376
+  },
+  "teacher_constructed_for_training": false,
+  "teacher_training_forward_calls": 0,
+  "training_mode": "masked_l1_topdown_self"
+}

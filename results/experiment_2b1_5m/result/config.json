@@ -1,0 +1,67 @@
+{
+  "backward_chunk_tokens": 16,
+  "block_1_historical_kv": false,
+  "blocks_2_through_12_historical_kv": true,
+  "checkpoint_after_local_updates": 5,
+  "classification_equality_band": 0.01,
+  "destination": "Block 1 Attention input",
+  "global_batch_tokens": 524288,
+  "hellaswag": "not run without separate approval",
+  "legacy_gradient_accumulation": 2,
+  "legacy_micro_batch_sequences_per_rank": 64,
+  "legacy_world_size": 4,
+  "local_optimizer_updates": 10,
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "gradient_clip": 1.0,
+    "lr": 0.0001,
+    "name": "AdamW",
+    "weight_decay": 0.0
+  },
+  "processed_2b1_tokens": 5242880,
+  "protocol": "exp2b1_detached_self_reader_5m_v1",
+  "reset_horizons": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128,
+    "never"
+  ],
+  "seed": 1337,
+  "sequence_length": 1024,
+  "serialized_slices_per_update": 8,
+  "smoke": {
+    "batch_sequences": 2,
+    "checkpoint_after_updates": 2,
+    "optimizer_updates": 3,
+    "sequence_length": 64
+  },
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "source_next_global_batch_sha256": "95081c5f68b7d05d6e39b68043f2714657c21ca05cc317549063ba9a4f9f6986",
+  "source_reader_checkpoint_sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+  "source_reader_completed_updates": 477,
+  "source_reader_processed_tokens": 250085376,
+  "teacher_training_forward_calls": 0,
+  "temporal_gradient": "none through recurrent memory or Blocks 2-12 historical KV",
+  "trainable_parameters": 1537,
+  "training_memory": "detached student-generated previous-token v16/v17/v20/v24",
+  "validation": {
+    "batch_sequences": 64,
+    "batches": 20,
+    "global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "sequence_length": 1024
+  }
+}

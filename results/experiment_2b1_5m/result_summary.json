@@ -1,0 +1,124 @@
+{
+  "experiment": "2B1",
+  "protocol": "exp2b1_detached_self_reader_5m_v1",
+  "branch": "experiment-2b1-self-reader-adaptation",
+  "source_2b0_tag": "experiment-2b0-zero-shot",
+  "source_2b0_commit": "a8b271ee71ae1af77da8ddad022ce549be390682",
+  "implementation_commit": "c2f8082a7e0deff797a59e1f8b78949e7da3d246",
+  "source_checkpoint": {
+    "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a3_250m/checkpoints/checkpoint_updates_000477.pt",
+    "sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "next_global_batch_sha256": "95081c5f68b7d05d6e39b68043f2714657c21ca05cc317549063ba9a4f9f6986"
+  },
+  "training": {
+    "trainable_parameters": 1537,
+    "updates": 10,
+    "targets_per_update": 524288,
+    "processed_2b1_tokens": 5242880,
+    "wall_seconds": 41716.56050874479,
+    "teacher_forward_calls": 0,
+    "frozen_base_unchanged": true,
+    "midpoint_checkpoint_sha256": "aca49ac08c607a71320a7cfa922df2db5e6936320de0f6a45f49a085516835db",
+    "final_checkpoint_sha256": "5a97c36c038ad04155c7965e20a800cdd78845819671f91c6d516599bb9cd69a",
+    "forced_restart_passed": true,
+    "initial_reader": {
+      "gate": 0.1595292091369629,
+      "gate_coefficient": 0.1581895351409912,
+      "query_norm": 1.9564993381500244,
+      "rmsnorm_displacement": 1.9469332695007324
+    },
+    "final_reader": {
+      "gate": 0.1594133824110031,
+      "gate_coefficient": 0.15807659924030304,
+      "query_norm": 1.9570868015289307,
+      "rmsnorm_displacement": 1.9478669166564941
+    }
+  },
+  "canonical": {
+    "validation_batches": 20,
+    "batch_sequences": 64,
+    "sequence_length": 1024,
+    "validation_global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "losses": {
+      "full_context": 4.078654408454895,
+      "masked_l1_no_feedback": 5.973674488067627,
+      "zero_shot_self": 5.707420682907104,
+      "trained_self": 5.701308727264404,
+      "trained_shuffled_self": 5.731030297279358,
+      "trained_gate_zero": 5.9736480712890625,
+      "trained_teacher_memory": 5.572065925598144,
+      "teacher_reader_before_adaptation": 5.570033884048462
+    },
+    "derived": {
+      "zero_shot_self_recovery": 0.266253805160523,
+      "trained_self_recovery": 0.27236576080322283,
+      "adaptation_gain": 0.00611195564269984,
+      "zero_shot_specific_gap": 0.021496129035949708,
+      "trained_specific_gap": 0.02972157001495379,
+      "specific_gap_gain": 0.008225440979004083,
+      "trained_recovery_fraction": 0.14372711072216382,
+      "trained_as_fraction_of_teacher_recovery": 0.6747729492305745
+    },
+    "paired_trained_self_vs_shuffled": {
+      "real_wins": 20,
+      "shuffled_wins": 0,
+      "ties": 0,
+      "mean": 0.029721570014953614,
+      "median": 0.03176712989807129,
+      "sample_standard_deviation": 0.011861470850649949,
+      "minimum": 0.006951808929443359,
+      "maximum": 0.04623079299926758
+    }
+  },
+  "routing": {
+    "zero_shot_self": {
+      "v16": 0.6033400535583496,
+      "v17": 0.02958129541948438,
+      "v20": 0.14627862125635147,
+      "v24": 0.22079993262887002,
+      "entropy": 0.5160012662410736,
+      "topdown_rms": 0.16044771447777748,
+      "feedback_rms": 0.025382824148982762
+    },
+    "trained_self": {
+      "v16": 0.634033665060997,
+      "v17": 0.02067972468212247,
+      "v20": 0.13052373751997948,
+      "v24": 0.2147629216313362,
+      "entropy": 0.48451771438121793,
+      "topdown_rms": 0.16230937838554382,
+      "feedback_rms": 0.02567733805626631
+    }
+  },
+  "reset_interval_losses": {
+    "1": 5.973710632324218,
+    "2": 5.82619149684906,
+    "4": 5.74994924068451,
+    "8": 5.721898365020752,
+    "16": 5.710410308837891,
+    "32": 5.705980205535889,
+    "64": 5.703519678115844,
+    "128": 5.702184796333313,
+    "never": 5.701356649398804
+  },
+  "source_ablations": {
+    "v16": {"ablated_loss": 6.315204811096192, "delta": 0.6138960838317871, "positive_batches": 20},
+    "v17": {"ablated_loss": 5.699958229064942, "delta": -0.0013504981994628905, "positive_batches": 5},
+    "v20": {"ablated_loss": 5.7507675886154175, "delta": 0.049458861351013184, "positive_batches": 20},
+    "v24": {"ablated_loss": 5.819916296005249, "delta": 0.11860756874084473, "positive_batches": 20}
+  },
+  "drift": {
+    "summary": "stayed similar",
+    "zero_shot_mean_rms_difference": 0.1800561583186699,
+    "trained_mean_rms_difference": 0.17973436264048867,
+    "relative_mean_rms_difference_change": -0.0017871961791592467,
+    "zero_shot_mean_cosine_similarity": 0.6140368720778488,
+    "trained_mean_cosine_similarity": 0.6152218420166801
+  },
+  "hellaswag_run": false,
+  "classification": "SELF-ADAPTATION IS NEUTRAL",
+  "continue_same_checkpoint_to_approximately_25m": "NO",
+  "continuation_reason": "The 0.006112 adaptation gain remains inside the preregistered 0.01 neutral band despite a stronger aligned-sequence gap.",
+  "passed": true,
+  "terminal_line": "# EXPERIMENT 2B1 5M COMPLETE"
+}

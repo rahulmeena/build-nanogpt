@@ -1,0 +1,157 @@
+{
+  "B": 64,
+  "T": 1024,
+  "batch_losses": {
+    "masked_l1_no_feedback": [
+      5.963436126708984,
+      5.916080951690674,
+      6.006649017333984,
+      5.940733909606934,
+      5.922643661499023,
+      5.944792747497559,
+      5.913552284240723,
+      5.899290084838867,
+      5.97174596786499,
+      5.978191375732422,
+      5.989078998565674,
+      6.096495151519775,
+      5.959134101867676,
+      5.978822231292725,
+      6.160079479217529,
+      5.982600688934326,
+      6.039733409881592,
+      6.009128570556641,
+      5.859517574310303,
+      5.941783428192139
+    ],
+    "zero_shot_gate_zero": [
+      5.963638782501221,
+      5.915982246398926,
+      6.006518363952637,
+      5.940553665161133,
+      5.9225687980651855,
+      5.9449968338012695,
+      5.913665294647217,
+      5.899282932281494,
+      5.971682548522949,
+      5.978236198425293,
+      5.988921165466309,
+      6.096393585205078,
+      5.959188461303711,
+      5.97887659072876,
+      6.159842014312744,
+      5.982872009277344,
+      6.039412021636963,
+      6.009172439575195,
+      5.859407901763916,
+      5.941749572753906
+    ],
+    "zero_shot_self": [
+      5.710450172424316,
+      5.655515193939209,
+      5.726384162902832,
+      5.694652557373047,
+      5.637893199920654,
+      5.671651840209961,
+      5.702635288238525,
+      5.6067304611206055,
+      5.709499835968018,
+      5.70792818069458,
+      5.732248783111572,
+      5.795013427734375,
+      5.659465789794922,
+      5.6665472984313965,
+      5.881215572357178,
+      5.7383809089660645,
+      5.748133659362793,
+      5.752767562866211,
+      5.671884059906006,
+      5.679415702819824
+    ]
+  },
+  "experiment": "2B1",
+  "hellaswag_run": false,
+  "losses": {
+    "masked_l1_no_feedback": 5.973674488067627,
+    "zero_shot_gate_zero": 5.9736480712890625,
+    "zero_shot_self": 5.707420682907104
+  },
+  "model_state_sha256_after": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+  "model_state_sha256_before": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+  "model_state_unchanged": true,
+  "optimizer_constructed": false,
+  "optimizer_steps": 0,
+  "passed": true,
+  "regression": {
+    "masked_l1_no_feedback": {
+      "absolute_difference": 0.0,
+      "actual": 5.973674488067627,
+      "expected": 5.973674488067627,
+      "passed": true,
+      "tolerance": 0.0005
+    },
+    "zero_shot_gate_zero": {
+      "absolute_difference": 0.0,
+      "actual": 5.9736480712890625,
+      "expected": 5.9736480712890625,
+      "passed": true,
+      "tolerance": 0.0005
+    },
+    "zero_shot_self": {
+      "absolute_difference": 0.0,
+      "actual": 5.707420682907104,
+      "expected": 5.707420682907104,
+      "passed": true,
+      "tolerance": 0.0005
+    }
+  },
+  "source": {
+    "base_checkpoint": "/workspace/build-nanogpt-exp2a0/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+    "base_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "dataloader_state_count": 4,
+    "frozen_base_sha256": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+    "initial_reader": {
+      "gate": 0.1595292091369629,
+      "gate_coefficient": 0.1581895351409912,
+      "query_norm": 1.9564993381500244,
+      "reader_parameters": 1537,
+      "rmsnorm_displacement": 1.9469332695007324
+    },
+    "model_state_sha256": "5ad907f194217ac2b163c13f1f62c5e0c0bfc7d01ec45b0d7e76ed80e8241dbe",
+    "next_global_batch_sha256": "95081c5f68b7d05d6e39b68043f2714657c21ca05cc317549063ba9a4f9f6986",
+    "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a3_250m/checkpoints/checkpoint_updates_000477.pt",
+    "rng_fields": [
+      "numpy_random",
+      "python_random",
+      "torch_cpu",
+      "torch_cuda"
+    ],
+    "sha256": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+    "source_optimizer_steps_ignored": [
+      477,
+      477,
+      477
+    ],
+    "training_state": {
+      "completed_updates": 477,
+      "processed_student_tokens": 250085376
+    }
+  },
+  "source_checkpoint_sha256_after": "0702dc09c74b01eee8be504a7f5f89ca61fcc504cda8f34f30865d4ff9653d76",
+  "stage": "pre_training_canonical_regression",
+  "teacher_constructed": false,
+  "teacher_training_forward_calls": 0,
+  "validation_batches": 20,
+  "validation_global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "zero_shot_self_routing": {
+    "feedback_rms": 0.025382824148982762,
+    "routing_entropy": 0.5160012662410736,
+    "routing_weights": {
+      "v16": 0.6033400535583496,
+      "v17": 0.02958129541948438,
+      "v20": 0.14627862125635147,
+      "v24": 0.22079993262887002
+    },
+    "topdown_rms": 0.16044771447777748
+  }
+}
