@@ -245,6 +245,26 @@ class TopDownAttnRes(nn.Module):
         return output
 
 
+class MemoryWriterAdapter(nn.Module):
+    """Rank-limited residual writer used only for recurrent high-to-low memory."""
+
+    def __init__(self, n_embd, rank=8, eps=1e-5):
+        super().__init__()
+        self.W_down = nn.Linear(n_embd, rank, bias=False)
+        self.W_up = nn.Linear(rank, n_embd, bias=False)
+        self.eps = float(eps)
+
+    def forward(self, source):
+        # The detach is deliberately inside the adapter so no caller can
+        # accidentally grant temporal credit to the ordinary Transformer path.
+        source = source.detach()
+        normalized = source * torch.rsqrt(
+            source.float().pow(2).mean(dim=-1, keepdim=True) + self.eps
+        ).to(source.dtype)
+        delta = self.W_up(F.silu(self.W_down(normalized)))
+        return source + delta, delta
+
+
 EXPERIMENT_2A0_SOURCE_DEPTHS = (16, 17, 20, 24)
 EXPERIMENT_2A0_MODES = {
     "full_context",
@@ -345,6 +365,9 @@ class GPTConfig:
     residual_mode: str = "standard"
     attnres_rms_eps: float = 1e-5
     enable_topdown_feedback: bool = False
+    enable_memory_writers: bool = False
+    memory_writer_rank: int = 8
+    memory_writer_init_seed: int = 20260202
 
 class GPT(nn.Module):
 
@@ -354,6 +377,10 @@ class GPT(nn.Module):
             raise ValueError(f"unknown residual mode: {config.residual_mode}")
         if config.enable_topdown_feedback and config.residual_mode != "full_attnres":
             raise ValueError("top-down feedback requires residual_mode='full_attnres'")
+        if config.enable_memory_writers and not config.enable_topdown_feedback:
+            raise ValueError("memory writers require the top-down feedback reader")
+        if config.enable_memory_writers and config.memory_writer_rank != 8:
+            raise ValueError("Experiment 2B2 memory writers require rank 8")
         self.config = config
 
         transformer = dict(
@@ -384,6 +411,15 @@ class GPT(nn.Module):
                     EXPERIMENT_2A0_SOURCE_DEPTHS,
                     eps=config.attnres_rms_eps,
                 )
+            if config.enable_memory_writers:
+                transformer["memory_writers"] = nn.ModuleDict({
+                    f"writer_v{depth}": MemoryWriterAdapter(
+                        config.n_embd,
+                        rank=config.memory_writer_rank,
+                        eps=config.attnres_rms_eps,
+                    )
+                    for depth in EXPERIMENT_2A0_SOURCE_DEPTHS
+                })
         self.transformer = nn.ModuleDict(transformer)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
@@ -392,6 +428,44 @@ class GPT(nn.Module):
 
         # init params
         self.apply(self._init_weights)
+        if config.enable_memory_writers:
+            self.initialize_memory_writers(config.memory_writer_init_seed)
+
+    def initialize_memory_writers(self, seed):
+        """Deterministic down projection and exact zero-effect up projection."""
+        if not self.config.enable_memory_writers:
+            raise ValueError("this model has no memory writers")
+        with torch.random.fork_rng(devices=[]):
+            torch.manual_seed(int(seed))
+            for depth in EXPERIMENT_2A0_SOURCE_DEPTHS:
+                writer = self.transformer.memory_writers[f"writer_v{depth}"]
+                nn.init.normal_(writer.W_down.weight, mean=0.0, std=0.02)
+                nn.init.zeros_(writer.W_up.weight)
+
+    def write_recurrent_memory(self, raw_sources, disabled_writer_depths=()):
+        """Adapt detached raw states without changing their same-token consumers."""
+        if not self.config.enable_memory_writers:
+            raise ValueError("this model has no memory writers")
+        if not isinstance(raw_sources, torch.Tensor) or raw_sources.ndim != 4:
+            raise ValueError("raw writer sources must have [source,batch,time,channel]")
+        disabled = set(disabled_writer_depths or ())
+        invalid = disabled - set(EXPERIMENT_2A0_SOURCE_DEPTHS)
+        if invalid:
+            raise ValueError(f"invalid disabled writer depths: {sorted(invalid)}")
+        memories = []
+        deltas = []
+        for index, depth in enumerate(EXPERIMENT_2A0_SOURCE_DEPTHS):
+            source = raw_sources[index].detach()
+            if depth in disabled:
+                memory = source
+                delta = torch.zeros_like(source)
+            else:
+                memory, delta = self.transformer.memory_writers[
+                    f"writer_v{depth}"
+                ](source)
+            memories.append(memory)
+            deltas.append(delta)
+        return torch.stack(memories, dim=0), torch.stack(deltas, dim=0)
 
     def _init_weights(self, module):
         if isinstance(module, nn.Linear):
@@ -653,6 +727,8 @@ class GPT(nn.Module):
         feedback_permutation=None,
         feedback_gate_override=None,
         reset_feedback=False,
+        use_memory_writers=False,
+        disabled_writer_depths=(),
         return_diagnostics=False,
     ):
         """Process one token with explicit Full-AttnRes KV and feedback state."""
@@ -689,6 +765,10 @@ class GPT(nn.Module):
             raise ValueError("reset_feedback must be a boolean or boolean [batch] tensor")
         if (reset_feedback is True or reset_mask is not None) and not self_mode:
             raise ValueError("memory-only reset is valid only for self-feedback modes")
+        if use_memory_writers and not self.config.enable_memory_writers:
+            raise ValueError("writer recurrence requires configured memory writers")
+        if use_memory_writers and not self_mode:
+            raise ValueError("writer recurrence is valid only for self-feedback modes")
 
         position = state.position
         pos = torch.tensor([position], dtype=torch.long, device=idx.device)
@@ -709,12 +789,18 @@ class GPT(nn.Module):
                         memory_bank = torch.where(
                             reset_mask.view(1, B, 1, 1),
                             torch.zeros_like(state.feedback_memory),
-                            state.feedback_memory.detach(),
+                            state.feedback_memory
+                            if use_memory_writers
+                            else state.feedback_memory.detach(),
                         )
                     elif reset_feedback:
                         memory_bank = torch.zeros_like(state.feedback_memory)
                     else:
-                        memory_bank = state.feedback_memory.detach()
+                        memory_bank = (
+                            state.feedback_memory
+                            if use_memory_writers
+                            else state.feedback_memory.detach()
+                        )
                     expected_shape = (
                         len(EXPERIMENT_2A0_SOURCE_DEPTHS),
                         B,
@@ -767,9 +853,16 @@ class GPT(nn.Module):
         x = self.transformer.attnres[destination_index](values)
         x = self.transformer.ln_f(x)
         logits = self.lm_head(x)
-        memory = torch.stack(
+        raw_memory = torch.stack(
             [values[depth] for depth in EXPERIMENT_2A0_SOURCE_DEPTHS], dim=0
-        ).detach()
+        )
+        writer_delta = None
+        if use_memory_writers:
+            memory, writer_delta = self.write_recurrent_memory(
+                raw_memory, disabled_writer_depths=disabled_writer_depths
+            )
+        else:
+            memory = raw_memory.detach()
         next_state = RecurrentState(
             position + 1,
             mode,
@@ -778,11 +871,17 @@ class GPT(nn.Module):
         )
         if not return_diagnostics:
             return logits, next_state
-        source_rms = memory.float().pow(2).mean(dim=(2, 3)).sqrt()
+        raw_diagnostic = raw_memory.detach()
+        adapted_diagnostic = memory.detach()
+        source_rms = raw_diagnostic.float().pow(2).mean(dim=(2, 3)).sqrt()
+        adapted_rms = adapted_diagnostic.float().pow(2).mean(dim=(2, 3)).sqrt()
         diagnostics = {
             "position": position,
-            "source_memory": memory,
+            "source_memory": raw_diagnostic,
+            "adapted_memory": adapted_diagnostic,
+            "writer_delta": None if writer_delta is None else writer_delta.detach(),
             "source_rms": source_rms,
+            "adapted_rms": adapted_rms,
             "topdown_rms": None,
             "feedback_rms": None,
             "routing_weights": None,
@@ -918,6 +1017,14 @@ class GPT(nn.Module):
         for parameter in self.parameters():
             parameter.requires_grad_(False)
         for parameter in self.transformer.topdown_attnres.parameters():
+            parameter.requires_grad_(True)
+
+    def freeze_for_memory_writer_training(self):
+        if not self.config.enable_memory_writers:
+            raise ValueError("this model has no memory writers")
+        for parameter in self.parameters():
+            parameter.requires_grad_(False)
+        for parameter in self.transformer.memory_writers.parameters():
             parameter.requires_grad_(True)
 
     def load_shared_baseline_state(self, baseline_state):
