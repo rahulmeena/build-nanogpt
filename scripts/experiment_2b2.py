@@ -265,7 +265,7 @@ def state_subset_sha256(model, group):
         digest.update(name.encode())
         digest.update(str(tensor.dtype).encode())
         digest.update(str(tuple(tensor.shape)).encode())
-        digest.update(tensor.view(torch.uint8).cpu().numpy().tobytes())
+        digest.update(tensor.reshape(-1).view(torch.uint8).cpu().numpy().tobytes())
     return digest.hexdigest()
 
 
