@@ -110,7 +110,7 @@ def load_config():
 def require_git(clean=True):
     if git_output("branch", "--show-current") != BRANCH:
         raise SystemExit(f"requires branch {BRANCH}")
-    if git_output("rev-parse", "experiment-2b2-writers-5m") != SOURCE_RESULTS_COMMIT:
+    if git_output("rev-parse", "experiment-2b2-writers-5m^{}") != SOURCE_RESULTS_COMMIT:
         raise SystemExit("frozen 2B2 tag target mismatch")
     if clean and git_output("status", "--porcelain"):
         raise SystemExit("result-bearing execution requires a clean worktree")
