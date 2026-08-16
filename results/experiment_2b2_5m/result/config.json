@@ -1,0 +1,71 @@
+{
+  "backward_chunk_tokens": 16,
+  "block_1_historical_kv": false,
+  "blocks_2_through_12_historical_kv": true,
+  "checkpoint_after_local_updates": 5,
+  "classification_equality_band": 0.01,
+  "destination": "Block 1 Attention input",
+  "global_batch_tokens": 524288,
+  "hellaswag": "not run without separate approval",
+  "legacy_gradient_accumulation": 2,
+  "legacy_micro_batch_sequences_per_rank": 64,
+  "legacy_world_size": 4,
+  "local_optimizer_updates": 10,
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "gradient_clip": 1.0,
+    "lr": 0.0001,
+    "name": "AdamW",
+    "weight_decay": 0.0
+  },
+  "processed_2b2_tokens": 5242880,
+  "protocol": "exp2b2_memory_writers_1step_5m_v1",
+  "reset_horizons": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128,
+    "never"
+  ],
+  "seed": 1337,
+  "sequence_length": 1024,
+  "serialized_slices_per_update": 8,
+  "smoke": {
+    "batch_sequences": 2,
+    "checkpoint_after_updates": 2,
+    "optimizer_updates": 3,
+    "sequence_length": 64
+  },
+  "source_2b1_checkpoint_sha256": "5a97c36c038ad04155c7965e20a800cdd78845819671f91c6d516599bb9cd69a",
+  "source_2b1_local_completed_updates": 10,
+  "source_2b1_processed_tokens": 5242880,
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "source_next_global_batch_sha256": "3c4d0cd7905f16bfcfdd283cbc0799ff9f85c91ac3c521e886f0e403fc11ae57",
+  "teacher_training_forward_calls": 0,
+  "temporal_gradient": "exactly one token through writer memory",
+  "trainable_parameters": 49152,
+  "training_memory": "student-generated writer-adapted previous-token v16/v17/v20/v24",
+  "validation": {
+    "batch_sequences": 64,
+    "batches": 20,
+    "global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "sequence_length": 1024
+  },
+  "writer_eps": 1e-05,
+  "writer_initialization_seed": 20260202,
+  "writer_input": "detached raw student source",
+  "writer_rank": 8
+}

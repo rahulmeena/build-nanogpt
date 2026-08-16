@@ -1,0 +1,119 @@
+{
+  "experiment": "2B2",
+  "protocol": "exp2b2_memory_writers_1step_5m_v1",
+  "branch": "experiment-2b2-memory-writers-1step",
+  "source_2b1_tag": "experiment-2b1-self-reader-5m",
+  "source_2b1_commit": "ad2eb56b1fdbf20dde515693f6d2c9bd9034f444",
+  "implementation_commit": "5305709f93cee736d33b93402324a7d3fed40235",
+  "source_checkpoint": {
+    "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2b1_5m/result/checkpoints/checkpoint_updates_000010.pt",
+    "sha256": "5a97c36c038ad04155c7965e20a800cdd78845819671f91c6d516599bb9cd69a",
+    "next_global_batch_sha256": "3c4d0cd7905f16bfcfdd283cbc0799ff9f85c91ac3c521e886f0e403fc11ae57"
+  },
+  "writer": {
+    "rank": 8,
+    "parameters": 49152,
+    "initialization_seed": 20260202,
+    "initial_writer_sha256": "79c6cfdddaea66359b3b5a606b801556f1a1be6af4b3a6e1fdf3167449491aa6",
+    "final_writer_sha256": "eadff45425a595a79eea10e2ef8313050b338ab2b508c20730df652e0054eafb",
+    "zero_writer_identity_regression": true,
+    "temporal_credit_horizon_tokens": 1
+  },
+  "training": {
+    "updates": 10,
+    "targets_per_update": 524288,
+    "processed_2b2_tokens": 5242880,
+    "wall_seconds": 42414.3250530716,
+    "teacher_forward_calls": 0,
+    "frozen_base_unchanged": true,
+    "frozen_reader_unchanged": true,
+    "midpoint_checkpoint_sha256": "565195ae3b66329506daafbb5075bd1392585e64f4069c0d2fbf3b7b5e3773ca",
+    "final_checkpoint_sha256": "a125c81acb9e4ec3395bd8b38dee8fade62012c642b102a1b6c4c0e0997f0637",
+    "final_next_global_batch_sha256": "e3289bee6ed5a5b2fa1d2c05a615cd3f10f07c51b71aa091ee40380ebeedc21b",
+    "forced_restart_passed": true,
+    "peak_allocated_mb": 40879.88037109375,
+    "peak_reserved_mb": 80562.0
+  },
+  "gradient_semantics": {
+    "writer_input_detached": true,
+    "loss_t_plus_1_to_memory_t": true,
+    "loss_t_plus_2_to_memory_t": false,
+    "historical_kv_temporal_gradient": false,
+    "reader_gradient": false,
+    "base_gradient": false
+  },
+  "canonical": {
+    "validation_batches": 20,
+    "batch_sequences": 64,
+    "sequence_length": 1024,
+    "validation_global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "losses": {
+      "full_context": 4.078654408454895,
+      "masked_l1_no_feedback": 5.973674488067627,
+      "frozen_2b1_self": 5.701308727264404,
+      "trained_writer_real": 5.590033102035522,
+      "trained_writer_shuffled": 5.625972080230713,
+      "trained_writer_bypass": 5.701308727264404,
+      "trained_writer_gate_zero": 5.9736480712890625,
+      "teacher_sources_with_writers": 5.521658539772034
+    },
+    "derived": {
+      "writer_gain": 0.11127562522888201,
+      "source_2b1_specific_gap": 0.02972157001495379,
+      "writer_specific_gap": 0.03593897819519043,
+      "specific_gap_gain": 0.006217408180236639,
+      "writer_recovery": 0.38364138603210485,
+      "writer_recovery_fraction": 0.20244713507759038
+    },
+    "paired_real_vs_shuffled": {
+      "real_wins": 20,
+      "shuffled_wins": 0,
+      "ties": 0,
+      "mean": 0.03593897819519043,
+      "median": 0.03835177421569824,
+      "sample_standard_deviation": 0.010483331359201266,
+      "minimum": 0.014856815338134766,
+      "maximum": 0.050896644592285156
+    }
+  },
+  "per_source_writer_behavior": {
+    "v16": {"delta_rms": 0.0016616236185654997, "source_rms": 0.19330680519342422, "ratio": 0.008785535022616387, "cosine_source_adapted": 0.9999437630176544},
+    "v17": {"delta_rms": 0.0029298141947947443, "source_rms": 0.19181103631854057, "ratio": 0.015699967462569474, "cosine_source_adapted": 0.9998735278844834},
+    "v20": {"delta_rms": 0.0017437162925489247, "source_rms": 0.19426594004034997, "ratio": 0.009319029236212372, "cosine_source_adapted": 0.999938839673996},
+    "v24": {"delta_rms": 0.0013719426817260683, "source_rms": 0.18664160668849944, "ratio": 0.0075842429418116804, "cosine_source_adapted": 0.9999528974294662}
+  },
+  "routing": {
+    "v16": 0.626302394270897,
+    "v17": 0.017400712706148624,
+    "v20": 0.14168892353773116,
+    "v24": 0.21460781544446944,
+    "entropy": 0.4797579362988472,
+    "topdown_rms": 0.16241643503308295,
+    "feedback_rms": 0.025694272853434084
+  },
+  "reset_interval_losses": {
+    "1": 5.973710632324218,
+    "2": 5.776876783370971,
+    "4": 5.672141647338867,
+    "8": 5.628350162506104,
+    "16": 5.608282852172851,
+    "32": 5.599210906028747,
+    "64": 5.594184994697571,
+    "128": 5.591853499412537,
+    "never": 5.590046334266662
+  },
+  "writer_residual_ablations": {
+    "v16": {"ablated_loss": 5.662002348899842, "delta": 0.07196924686431885, "positive_batches": 20},
+    "v17": {"ablated_loss": 5.591281747817993, "delta": 0.001248645782470703, "positive_batches": 20},
+    "v20": {"ablated_loss": 5.604041600227356, "delta": 0.014008498191833496, "positive_batches": 20},
+    "v24": {"ablated_loss": 5.606980299949646, "delta": 0.016947197914123534, "positive_batches": 20}
+  },
+  "hellaswag_run": false,
+  "classification": "MEMORY-WRITER LEARNING IMPROVES RECURRENT MEMORY",
+  "continue_same_checkpoint_to_approximately_25m": "YES",
+  "decision_a_continue_writers_to_approximately_25m": "YES",
+  "decision_b_jointly_train_writers_and_reader": "YES",
+  "decision_c_increase_temporal_credit_horizon": "NO",
+  "passed": true,
+  "terminal_line": "# EXPERIMENT 2B2 5M COMPLETE"
+}
