@@ -62,11 +62,18 @@ def test_comparison_metrics():
     assert perturbed["relative_l2_difference"] < 1e-4
 
 
+def test_single_tensor_digest_wrapper():
+    value = torch.arange(8, dtype=torch.float32)
+    digest = candidate.tensor_digest([("gradient", value)])
+    assert isinstance(digest, str) and len(digest) == 64
+
+
 def main():
     test_config()
     test_canonical_hash_order()
     test_global_mean_gradient_scaling()
     test_comparison_metrics()
+    test_single_tensor_digest_wrapper()
     json.loads(candidate.CONFIG_PATH.read_text())
     print("Experiment 2B2A CPU contract tests: PASS")
 

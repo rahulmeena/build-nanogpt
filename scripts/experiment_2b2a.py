@@ -561,7 +561,9 @@ def migration_candidate(args):
         actual_hash = canonical_batch_hash([row["batch_hashes"] for row in gathered_metrics])
         if actual_hash != expected:
             raise SystemExit("migration candidate consumed-batch hash mismatch")
-        all_equal_across_ranks(tensor_digest(("gradient", flat)), "synchronized gradient")
+        all_equal_across_ranks(
+            tensor_digest([("gradient", flat)]), "synchronized gradient"
+        )
         reference_path = Path(args.run_dir) / "migration" / "one_gpu_reference.pt"
         reference = torch.load(reference_path, map_location="cpu", weights_only=False)
         if reference["global_batch_sha256"] != actual_hash:
