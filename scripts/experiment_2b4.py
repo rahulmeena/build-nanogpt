@@ -1436,6 +1436,34 @@ def write_csv_artifacts(output_dir, part_a, part_b):
                     row["real_wins"],
                 ]
             )
+    with (output_dir / "part_b_mask_depth.csv").open("w", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(
+            [
+                "mask_depth",
+                "zero_loss",
+                "real_loss",
+                "shuffled_loss",
+                "specific_gap",
+                "real_recovery_fraction",
+                "specific_share_of_recovery",
+                "real_wins",
+            ]
+        )
+        for depth in (1, 2, 3, 4):
+            row = part_b["depths"][str(depth)]
+            writer.writerow(
+                [
+                    depth,
+                    row["zero_loss"],
+                    row["real_loss"],
+                    row["shuffled_loss"],
+                    row["specific_gap"],
+                    row["real_recovery_fraction"],
+                    row["specific_share_of_recovery"],
+                    row["real_wins"],
+                ]
+            )
 
 
 def streaming_rows_pass(rows):
@@ -2016,32 +2044,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    with (output_dir / "part_b_mask_depth.csv").open("w", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(
-            [
-                "mask_depth",
-                "zero_loss",
-                "real_loss",
-                "shuffled_loss",
-                "specific_gap",
-                "real_recovery_fraction",
-                "specific_share_of_recovery",
-                "real_wins",
-            ]
-        )
-        for depth in (1, 2, 3, 4):
-            row = part_b["depths"][str(depth)]
-            writer.writerow(
-                [
-                    depth,
-                    row["zero_loss"],
-                    row["real_loss"],
-                    row["shuffled_loss"],
-                    row["specific_gap"],
-                    row["real_recovery_fraction"],
-                    row["specific_share_of_recovery"],
-                    row["real_wins"],
-                ]
-            )
