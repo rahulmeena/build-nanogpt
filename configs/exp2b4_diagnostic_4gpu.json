@@ -1,0 +1,33 @@
+{
+  "protocol": "exp2b4_zero_optimizer_memory_content_mask_depth_v1",
+  "world_size": 4,
+  "batch_sequences": 64,
+  "sequence_length": 1024,
+  "canonical_batches": 20,
+  "calibration_batches": 4,
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "final_2b3_checkpoint_sha256": "7797f349905e344934bd7d2475cf61b332ef9053cb0bc1a44f450fc24249c65b",
+  "writer_10m_checkpoint_sha256": "de5e04f817dcfa5dd8a4dcc6e503ec86d8545d558d837b517c7259917218dff3",
+  "diagnostic_seed": 20260817,
+  "mask_depths": [1, 2, 3, 4],
+  "part_a_controls": [
+    "zero",
+    "real",
+    "coherent_shuffle",
+    "independent_source_shuffle",
+    "batch_mean",
+    "position_template",
+    "global_template",
+    "norm_random",
+    "lag8",
+    "lag32"
+  ],
+  "lag_controls": [8, 32],
+  "strong_support_gap_gain": 0.01,
+  "strong_support_real_wins": 18,
+  "generic_recovery_material_gain": 0.01,
+  "parallelization": "independent canonical B64xT1024 condition/batch tasks across four ranks",
+  "calibration_reduction": "rank-slotted FP32 all_reduce(SUM), then fixed local rank-order sum",
+  "training": "forbidden",
+  "hellaswag": "forbidden"
+}

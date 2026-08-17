@@ -302,6 +302,7 @@ class RecurrentState:
     mode: str
     kv_caches: tuple
     feedback_memory: torch.Tensor
+    mask_depth: int = 1
 
     def state_dict(self):
         caches = []
@@ -317,13 +318,20 @@ class RecurrentState:
                         "length": cache.length,
                     }
                 )
-        return {
-            "schema": "full_attnres_recurrent_state_v1",
+        payload = {
+            "schema": (
+                "full_attnres_recurrent_state_v1"
+                if self.mask_depth == 1
+                else "full_attnres_recurrent_state_v2"
+            ),
             "position": self.position,
             "mode": self.mode,
             "kv_caches": caches,
             "feedback_memory": self.feedback_memory.detach().clone(),
         }
+        if self.mask_depth != 1:
+            payload["mask_depth"] = self.mask_depth
+        return payload
 
 
 def shift_teacher_sources(source_values):
@@ -589,7 +597,14 @@ class GPT(nn.Module):
             return logits, loss, captured_sources
         return logits, loss
 
-    def init_recurrent_state(self, batch_size, mode, device=None, dtype=None):
+    def init_recurrent_state(
+        self,
+        batch_size,
+        mode,
+        device=None,
+        dtype=None,
+        mask_depth=1,
+    ):
         """Create explicit, fixed-capacity state for token-by-token inference."""
         if self.config.residual_mode != "full_attnres":
             raise ValueError("incremental Full-AttnRes requires residual_mode='full_attnres'")
@@ -600,6 +615,17 @@ class GPT(nn.Module):
                 raise ValueError("incremental feedback requires a top-down router")
         if not isinstance(batch_size, int) or batch_size < 1:
             raise ValueError("batch_size must be a positive integer")
+        if mode == "full_context":
+            if mask_depth not in (0, 1):
+                raise ValueError("full-context recurrence does not accept mask_depth")
+            effective_mask_depth = 0
+        else:
+            if (
+                not isinstance(mask_depth, int)
+                or not 1 <= mask_depth <= self.config.n_layer
+            ):
+                raise ValueError("mask_depth must be in [1, n_layer]")
+            effective_mask_depth = mask_depth
         reference = self.transformer.wte.weight
         device = reference.device if device is None else torch.device(device)
         dtype = reference.dtype if dtype is None else dtype
@@ -610,10 +636,9 @@ class GPT(nn.Module):
             self.config.block_size,
             head_size,
         )
-        masked_l1 = mode != "full_context"
         caches = []
         for block_index in range(self.config.n_layer):
-            if block_index == 0 and masked_l1:
+            if block_index < effective_mask_depth:
                 caches.append(None)
                 continue
             caches.append(
@@ -631,11 +656,23 @@ class GPT(nn.Module):
             device=device,
             dtype=dtype,
         )
-        return RecurrentState(0, mode, tuple(caches), memory)
+        return RecurrentState(
+            0,
+            mode,
+            tuple(caches),
+            memory,
+            effective_mask_depth,
+        )
 
     def load_recurrent_state(self, payload, device=None, dtype=None):
         """Restore a compact recurrent-state payload into fresh KV buffers."""
-        if not isinstance(payload, dict) or payload.get("schema") != "full_attnres_recurrent_state_v1":
+        if (
+            not isinstance(payload, dict)
+            or payload.get("schema") not in {
+                "full_attnres_recurrent_state_v1",
+                "full_attnres_recurrent_state_v2",
+            }
+        ):
             raise ValueError("invalid recurrent-state payload")
         memory = payload.get("feedback_memory")
         if not isinstance(memory, torch.Tensor) or memory.ndim != 4:
@@ -645,8 +682,13 @@ class GPT(nn.Module):
             raise ValueError("invalid recurrent position")
         device = memory.device if device is None else torch.device(device)
         dtype = memory.dtype if dtype is None else dtype
+        mask_depth = payload.get("mask_depth", 1)
         state = self.init_recurrent_state(
-            memory.size(1), payload.get("mode"), device=device, dtype=dtype
+            memory.size(1),
+            payload.get("mode"),
+            device=device,
+            dtype=dtype,
+            mask_depth=mask_depth,
         )
         caches = payload.get("kv_caches")
         if not isinstance(caches, (list, tuple)) or len(caches) != self.config.n_layer:
@@ -682,6 +724,7 @@ class GPT(nn.Module):
             state.mode,
             tuple(restored),
             memory.detach().to(device=device, dtype=dtype).clone(),
+            state.mask_depth,
         )
 
     def reset_recurrent_memory(self, state):
@@ -692,6 +735,7 @@ class GPT(nn.Module):
             state.mode,
             state.kv_caches,
             torch.zeros_like(state.feedback_memory),
+            state.mask_depth,
         )
 
     def _validate_recurrent_state(self, state, batch_size):
@@ -711,11 +755,19 @@ class GPT(nn.Module):
             raise ValueError("recurrent feedback-memory shape mismatch")
         if len(state.kv_caches) != self.config.n_layer:
             raise ValueError("recurrent state has the wrong number of KV caches")
-        masked_l1 = state.mode != "full_context"
+        if state.mode == "full_context" and state.mask_depth != 0:
+            raise ValueError("full-context recurrent state must have mask depth zero")
+        expected_mask_depth = 0 if state.mode == "full_context" else state.mask_depth
+        if (
+            not isinstance(expected_mask_depth, int)
+            or not 0 <= expected_mask_depth <= self.config.n_layer
+            or (state.mode != "full_context" and expected_mask_depth == 0)
+        ):
+            raise ValueError("recurrent state has an invalid mask depth")
         for block_index, cache in enumerate(state.kv_caches):
-            if block_index == 0 and masked_l1:
+            if block_index < expected_mask_depth:
                 if cache is not None:
-                    raise ValueError("masked Block 1 must not retain a KV cache")
+                    raise ValueError("masked blocks must not retain KV caches")
             elif not isinstance(cache, AttentionKVCache) or cache.length != state.position:
                 raise ValueError("recurrent KV cache length mismatch")
 
@@ -781,6 +833,7 @@ class GPT(nn.Module):
         topdown_weights = None
         for block_index, block in enumerate(self.transformer.h):
             h = self.transformer.attnres[destination_index](values)
+            masked_layer = block_index < state.mask_depth
             if block_index == 0 and mode != "full_context":
                 if uses_feedback:
                     if teacher_mode:
@@ -839,6 +892,10 @@ class GPT(nn.Module):
                 attention_output, cache = block.attn.forward_step(
                     block.ln_1(h), cache=None, self_only=True
                 )
+            elif masked_layer:
+                attention_output, cache = block.attn.forward_step(
+                    block.ln_1(h), cache=None, self_only=True
+                )
             else:
                 attention_output, cache = block.attn.forward_step(
                     block.ln_1(h), cache=state.kv_caches[block_index]
@@ -868,6 +925,7 @@ class GPT(nn.Module):
             mode,
             tuple(updated_caches),
             memory,
+            state.mask_depth,
         )
         if not return_diagnostics:
             return logits, next_state
