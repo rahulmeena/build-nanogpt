@@ -100,12 +100,19 @@ def test_separate_clipping():
     assert torch.isclose(reader.grad.norm(), torch.tensor(0.5), atol=1e-6)
 
 
+def test_canonical_local_rank_sum():
+    gradients = [torch.full((8,), float(rank + 1)) for rank in range(4)]
+    result = candidate.canonical_local_rank_sum(gradients)
+    assert torch.equal(result, torch.full((8,), 10.0))
+
+
 def main():
     test_config()
     test_joint_freeze_contract()
     test_canonical_hash_order()
     test_reader_optimizer_steps()
     test_separate_clipping()
+    test_canonical_local_rank_sum()
     json.loads(candidate.CONFIG_PATH.read_text())
     print("Experiment 2B3 CPU contract tests: PASS")
 

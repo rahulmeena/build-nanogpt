@@ -273,6 +273,35 @@ def scatter_joint_gradients(model, combined, writer_elements):
     scatter_group_gradients(model, "reader", combined[writer_elements:])
 
 
+def canonical_rank_slotted_all_reduce(local_gradient, rank):
+    """Synchronize once, then sum exact per-rank slots in a fixed FP32 order."""
+    if local_gradient.dtype != torch.float32 or local_gradient.ndim != 1:
+        raise SystemExit("canonical gradient reduction requires a flat FP32 tensor")
+    slots = torch.zeros(
+        (WORLD_SIZE, local_gradient.numel()),
+        dtype=torch.float32,
+        device=local_gradient.device,
+    )
+    slots[rank].copy_(local_gradient)
+    started = time.perf_counter()
+    dist.all_reduce(slots, op=dist.ReduceOp.SUM)
+    torch.cuda.synchronize()
+    elapsed = time.perf_counter() - started
+    result = slots[0].clone()
+    for source_rank in range(1, WORLD_SIZE):
+        result.add_(slots[source_rank])
+    return result.contiguous(), elapsed
+
+
+def canonical_local_rank_sum(local_gradients):
+    if len(local_gradients) != WORLD_SIZE:
+        raise SystemExit("canonical local sum requires four rank gradients")
+    result = local_gradients[0].clone()
+    for source_rank in range(1, WORLD_SIZE):
+        result.add_(local_gradients[source_rank])
+    return result.contiguous()
+
+
 def gradient_report(model):
     named = dict(model.named_parameters())
     result = {"writer": {}, "reader": {}, "frozen_tensors_with_grad": []}
@@ -698,17 +727,33 @@ def migration_reference(args):
     device = torch.device("cuda", 0)
     checkpoint, digest = load_source_checkpoint(args.source_checkpoint)
     symbols, model, writer_optimizer, reader_optimizer = instantiate_source(checkpoint, device)
-    b2a.restore_rank_rng(checkpoint["rank_rng_states"][0], 0)
     loaders = a0.make_replay_loaders(symbols, copy.deepcopy(checkpoint["dataloader_states"]))
     expected = a0.next_update_hash(loaders, symbols, replay=True)
     if expected != SOURCE_NEXT_SHA256:
         raise SystemExit("1-GPU joint reference next-batch mismatch")
-    batches = list(a0.update_batches(loaders, replay=True))
-    metrics = b2a.process_batches(model, batches, SOURCE_WRITER_UPDATE + 1)
-    actual = a0.aggregate_batch_hash(batches)
-    if actual != expected or metrics["target_seen"] != GLOBAL_TARGETS:
+    rank_metrics = []
+    local_gradients = []
+    for simulated_rank in range(WORLD_SIZE):
+        b2a.restore_rank_rng(checkpoint["rank_rng_states"][simulated_rank], 0)
+        batches = [
+            loaders[simulated_rank].next_batch()
+            for _ in range(MICROSTEPS_PER_RANK)
+        ]
+        metrics = b2a.process_batches(model, batches, SOURCE_WRITER_UPDATE + 1)
+        local_gradient, _writer_elements = flatten_joint_gradients(model)
+        rank_metrics.append(metrics)
+        local_gradients.append(local_gradient.detach().clone())
+    actual = b2a.canonical_batch_hash(
+        [row["batch_hashes"] for row in rank_metrics]
+    )
+    if (
+        actual != expected
+        or sum(row["target_seen"] for row in rank_metrics) != GLOBAL_TARGETS
+    ):
         raise SystemExit("1-GPU joint reference batch mismatch")
-    combined, writer_elements = flatten_joint_gradients(model)
+    combined = canonical_local_rank_sum(local_gradients)
+    writer_elements = WRITER_PARAMETER_COUNT
+    scatter_joint_gradients(model, combined, writer_elements)
     gradients = {
         "writer": combined[:writer_elements].detach().cpu(),
         "reader": combined[writer_elements:].detach().cpu(),
@@ -718,11 +763,12 @@ def migration_reference(args):
     artifact = {
         "source_checkpoint_sha256": digest,
         "global_batch_sha256": actual,
-        "global_loss": metrics["raw_loss_sum"] / GLOBAL_TARGETS,
+        "global_loss": sum(row["raw_loss_sum"] for row in rank_metrics) / GLOBAL_TARGETS,
         "gradients": gradients,
         "temporary": temporary,
-        "batch_hashes": metrics["batch_hashes"],
-        "targets": metrics["target_seen"],
+        "rank_batch_hashes": [row["batch_hashes"] for row in rank_metrics],
+        "targets": sum(row["target_seen"] for row in rank_metrics),
+        "gradient_accumulation": "two local microsteps per simulated rank, then fixed rank-order FP32 sum",
     }
     output = Path(args.run_dir) / "migration" / "one_gpu_joint_reference.pt"
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -766,11 +812,10 @@ def migration_candidate(args):
             raise SystemExit("4-GPU joint candidate next-batch mismatch")
         batches = [loader.next_batch() for _ in range(MICROSTEPS_PER_RANK)]
         metrics = b2a.process_batches(model, batches, SOURCE_WRITER_UPDATE + 1)
-        combined, writer_elements = flatten_joint_gradients(model)
-        reduction_started = time.perf_counter()
-        dist.all_reduce(combined, op=dist.ReduceOp.SUM)
-        torch.cuda.synchronize()
-        reduction_seconds = time.perf_counter() - reduction_started
+        local_combined, writer_elements = flatten_joint_gradients(model)
+        combined, reduction_seconds = canonical_rank_slotted_all_reduce(
+            local_combined, rank
+        )
         scatter_joint_gradients(model, combined, writer_elements)
         validate_gradient_report(gradient_report(model))
         b2a.all_equal_across_ranks(
@@ -838,7 +883,7 @@ def migration_candidate(args):
                 "rank_to_loader_mapping": {str(value): value for value in range(WORLD_SIZE)},
                 "microsteps_per_rank": MICROSTEPS_PER_RANK,
                 "loss_scaling": "each token-loss sum / 524288; no division after SUM",
-                "gradient_reduction": "one combined flattened FP32 NCCL all_reduce(SUM)",
+                "gradient_reduction": "one combined rank-slotted flattened FP32 NCCL all_reduce(SUM), then fixed rank-order local sum",
                 "gradient_elements": combined.numel(),
                 "writer_gradient_elements": writer_elements,
                 "reader_gradient_elements": combined.numel() - writer_elements,
@@ -903,7 +948,7 @@ def load_training_runtime(args, rank, local_rank):
             "world_size": WORLD_SIZE,
             "rank_to_loader_mapping": {str(value): value for value in range(4)},
             "global_targets_per_update": GLOBAL_TARGETS,
-            "gradient_synchronization": "one combined flattened FP32 NCCL all_reduce(SUM) per update",
+            "gradient_synchronization": "one combined rank-slotted flattened FP32 NCCL all_reduce(SUM), then fixed rank-order local sum",
             "gradient_clipping": "separate synchronized writer and reader norms, each clipped to 1.0",
             "temporal_credit": "exactly one token; writer sources and historical Blocks 2-12 KV detached",
             "implementation_git_commit": git_output("rev-parse", "HEAD"),
@@ -994,7 +1039,7 @@ def aggregate_training_metrics(rows, local_update, writer_update, global_hash,
     base["reader"] = b2.reader_values(model)
     base["writer_parameter_norms"] = writer_weight_norms(model)
     base["separate_gradient_clipping"] = {"writer": 1.0, "reader": 1.0}
-    base["gradient_synchronization"] = "one combined flattened FP32 all_reduce(SUM)"
+    base["gradient_synchronization"] = "one combined rank-slotted flattened FP32 all_reduce(SUM), then fixed rank-order local sum"
     return base
 
 
@@ -1047,7 +1092,7 @@ def save_distributed_checkpoint(args, source, symbols, model, writer_optimizer,
             "world_size": WORLD_SIZE,
             "rank_to_loader_mapping": {str(value): value for value in range(WORLD_SIZE)},
             "global_targets_per_update": GLOBAL_TARGETS,
-            "gradient_synchronization": "one combined flattened FP32 NCCL all_reduce(SUM) per update",
+            "gradient_synchronization": "one combined rank-slotted flattened FP32 NCCL all_reduce(SUM), then fixed rank-order local sum",
             "gradient_clipping": "separate synchronized writer and reader norms, each clipped to 1.0",
             "loss_scaling": "token-loss sums / 524288; no post-SUM division",
             "temporal_credit": "exactly one token; writer sources and historical Blocks 2-12 KV detached",
@@ -1151,11 +1196,10 @@ def train(args):
             local = b2a.process_batches(model, batches, writer_update)
             if local["batch_hashes"] != expected_rank_hashes[rank]:
                 raise SystemExit("rank consumed batch differs from exact preview")
-            combined, writer_elements = flatten_joint_gradients(model)
-            reduction_started = time.perf_counter()
-            dist.all_reduce(combined, op=dist.ReduceOp.SUM)
-            torch.cuda.synchronize()
-            reduction_seconds = time.perf_counter() - reduction_started
+            local_combined, writer_elements = flatten_joint_gradients(model)
+            combined, reduction_seconds = canonical_rank_slotted_all_reduce(
+                local_combined, rank
+            )
             scatter_joint_gradients(model, combined, writer_elements)
             gradients = gradient_report(model)
             validate_gradient_report(gradients)

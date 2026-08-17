@@ -7,8 +7,12 @@ the reader receives a fresh AdamW state at step 0. The frozen GPT-2 / Full-AttnR
 base is never trainable.
 
 The execution uses four A100-SXM4-80GB ranks, two B64×T1024 microsteps per rank,
-and one combined FP32 `all_reduce(SUM)` per 524,288-target update. Writer and
-reader gradients are clipped separately to 1.0 after synchronization. Temporal
+and one combined FP32 `all_reduce(SUM)` per 524,288-target update. The combined
+buffer has one disjoint rank slot per local flattened gradient; after the single
+collective, every rank sums those slots in fixed rank order. This preserves the
+required single synchronization while making fresh-reader Adam-step comparisons
+reproducible instead of depending on NCCL's floating-point reduction order.
+Writer and reader gradients are clipped separately to 1.0 after synchronization. Temporal
 credit remains exactly one token because every next writer input is detached and
 Blocks 2–12 historical K/V are detached.
 

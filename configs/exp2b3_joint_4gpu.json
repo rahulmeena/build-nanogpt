@@ -17,7 +17,7 @@
   "writer_parameters": 49152,
   "reader_parameters": 1537,
   "trainable_parameters": 50689,
-  "gradient_reduction": "one combined flattened FP32 all_reduce(SUM) after local accumulation",
+  "gradient_reduction": "one combined rank-slotted flattened FP32 all_reduce(SUM), then fixed local rank-order sum",
   "loss_scaling": "each token-loss sum divided by 524288; no post-SUM division",
   "writer_gradient_clip": 1.0,
   "reader_gradient_clip": 1.0,
