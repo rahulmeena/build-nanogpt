@@ -1,0 +1,88 @@
+W0816 21:14:24.313000 2368 torch/distributed/run.py:774] 
+W0816 21:14:24.313000 2368 torch/distributed/run.py:774] *****************************************
+W0816 21:14:24.313000 2368 torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0816 21:14:24.313000 2368 torch/distributed/run.py:774] *****************************************
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 1136, in <module>
+[rank0]:     main()
+[rank0]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 1124, in main
+[rank0]:     migration_candidate(args)
+[rank0]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 564, in migration_candidate
+[rank0]:     all_equal_across_ranks(tensor_digest(("gradient", flat)), "synchronized gradient")
+[rank0]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 162, in tensor_digest
+[rank0]:     for name, tensor in rows:
+[rank0]:         ^^^^^^^^^^^^
+[rank0]: ValueError: too many values to unpack (expected 2)
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 1136, in <module>
+[rank2]:     main()
+[rank2]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 1124, in main
+[rank2]:     migration_candidate(args)
+[rank2]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 564, in migration_candidate
+[rank2]:     all_equal_across_ranks(tensor_digest(("gradient", flat)), "synchronized gradient")
+[rank2]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 162, in tensor_digest
+[rank2]:     for name, tensor in rows:
+[rank2]:         ^^^^^^^^^^^^
+[rank2]: ValueError: too many values to unpack (expected 2)
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 1136, in <module>
+[rank3]:     main()
+[rank3]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 1124, in main
+[rank3]:     migration_candidate(args)
+[rank3]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 564, in migration_candidate
+[rank3]:     all_equal_across_ranks(tensor_digest(("gradient", flat)), "synchronized gradient")
+[rank3]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 162, in tensor_digest
+[rank3]:     for name, tensor in rows:
+[rank3]:         ^^^^^^^^^^^^
+[rank3]: ValueError: too many values to unpack (expected 2)
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 1136, in <module>
+[rank1]:     main()
+[rank1]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 1124, in main
+[rank1]:     migration_candidate(args)
+[rank1]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 564, in migration_candidate
+[rank1]:     all_equal_across_ranks(tensor_digest(("gradient", flat)), "synchronized gradient")
+[rank1]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/workspace/build-nanogpt-exp2b2a/scripts/experiment_2b2a.py", line 162, in tensor_digest
+[rank1]:     for name, tensor in rows:
+[rank1]:         ^^^^^^^^^^^^
+[rank1]: ValueError: too many values to unpack (expected 2)
+W0816 21:28:10.652000 2368 torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2437 closing signal SIGTERM
+W0816 21:28:10.653000 2368 torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2438 closing signal SIGTERM
+W0816 21:28:10.653000 2368 torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2439 closing signal SIGTERM
+E0816 21:28:11.168000 2368 torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 2436) of binary: /usr/local/bin/python
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 901, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 143, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 277, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+scripts/experiment_2b2a.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-08-16_21:28:10
+  host      : 4a247dd23d9b
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 2436)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

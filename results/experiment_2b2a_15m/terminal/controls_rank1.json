@@ -1,0 +1,2964 @@
+{
+  "rows": [
+    {
+      "batch_index": 1,
+      "full_context": 4.031586170196533,
+      "gate_zero": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 69.83005476370454,
+        "feedback_rms": 0.0,
+        "finite": true,
+        "loss": 5.915982246398926,
+        "routing_entropy": 0.35129618644714355,
+        "routing_weights": {
+          "v16": 0.7194089293479919,
+          "v17": 0.006161242723464966,
+          "v20": 0.14880049228668213,
+          "v24": 0.1256294548511505
+        },
+        "state_position": 1024,
+        "tokens_per_second": 938.5070686506685,
+        "topdown_rms": 0.16535335779190063,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.18861575424671173,
+            "cosine_source_adapted": 0.9976487159729004,
+            "delta_rms": 0.011797246523201466,
+            "delta_to_source_rms_ratio": 0.06411810964345932,
+            "maximum_delta_to_source_rms_ratio": 0.15791434049606323,
+            "source_rms": 0.18791654706001282
+          },
+          "v17": {
+            "adapted_memory_rms": 0.18305818736553192,
+            "cosine_source_adapted": 0.9938769340515137,
+            "delta_rms": 0.019201869145035744,
+            "delta_to_source_rms_ratio": 0.10879691690206528,
+            "maximum_delta_to_source_rms_ratio": 0.1610041856765747,
+            "source_rms": 0.18148277699947357
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19131919741630554,
+            "cosine_source_adapted": 0.9979530572891235,
+            "delta_rms": 0.01039666123688221,
+            "delta_to_source_rms_ratio": 0.0568486750125885,
+            "maximum_delta_to_source_rms_ratio": 0.1761063188314438,
+            "source_rms": 0.1911342293024063
+          },
+          "v24": {
+            "adapted_memory_rms": 0.17872998118400574,
+            "cosine_source_adapted": 0.9989647269248962,
+            "delta_rms": 0.007002551574259996,
+            "delta_to_source_rms_ratio": 0.04044598340988159,
+            "maximum_delta_to_source_rms_ratio": 0.15264172852039337,
+            "source_rms": 0.17847171425819397
+          }
+        }
+      },
+      "masked_l1_no_feedback": 5.916080951690674,
+      "payload_sha256": "aee1d37289084111b5692ca859f10bd24eb9092a150a632ea1f2b481638f4814",
+      "real_with_representation": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 70.31993115087971,
+        "feedback_rms": 0.02591998502612114,
+        "finite": true,
+        "loss": 5.047558784484863,
+        "representation_drift": {
+          "teacher_vs_adapted_memory": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.8306782245635986,
+                "norm_ratio": 1.007829189300537,
+                "rms_difference": 0.11390651762485504
+              },
+              "v17": {
+                "cosine_similarity": 0.8353574275970459,
+                "norm_ratio": 1.0329086780548096,
+                "rms_difference": 0.11948289722204208
+              },
+              "v20": {
+                "cosine_similarity": 0.8456079363822937,
+                "norm_ratio": 0.9730525016784668,
+                "rms_difference": 0.11292185634374619
+              },
+              "v24": {
+                "cosine_similarity": 0.8196942806243896,
+                "norm_ratio": 0.938022792339325,
+                "rms_difference": 0.12076914310455322
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.6797016263008118,
+                "norm_ratio": 0.9350732564926147,
+                "rms_difference": 0.15854834020137787
+              },
+              "v17": {
+                "cosine_similarity": 0.8110427260398865,
+                "norm_ratio": 0.8894616365432739,
+                "rms_difference": 0.14020848274230957
+              },
+              "v20": {
+                "cosine_similarity": 0.6950880289077759,
+                "norm_ratio": 0.8967198133468628,
+                "rms_difference": 0.16075961291790009
+              },
+              "v24": {
+                "cosine_similarity": 0.6391903758049011,
+                "norm_ratio": 0.8970909714698792,
+                "rms_difference": 0.16989924013614655
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.7128211855888367,
+                "norm_ratio": 0.9839790463447571,
+                "rms_difference": 0.15305626392364502
+              },
+              "v17": {
+                "cosine_similarity": 0.7682119607925415,
+                "norm_ratio": 1.001399040222168,
+                "rms_difference": 0.14947225153446198
+              },
+              "v20": {
+                "cosine_similarity": 0.7325994372367859,
+                "norm_ratio": 0.9256994724273682,
+                "rms_difference": 0.15131507813930511
+              },
+              "v24": {
+                "cosine_similarity": 0.6849027276039124,
+                "norm_ratio": 0.9036898016929626,
+                "rms_difference": 0.1608550101518631
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.6943320035934448,
+                "norm_ratio": 0.9402989149093628,
+                "rms_difference": 0.15410496294498444
+              },
+              "v17": {
+                "cosine_similarity": 0.8208170533180237,
+                "norm_ratio": 0.8641411066055298,
+                "rms_difference": 0.13511593639850616
+              },
+              "v20": {
+                "cosine_similarity": 0.7147501111030579,
+                "norm_ratio": 0.9086369872093201,
+                "rms_difference": 0.15479692816734314
+              },
+              "v24": {
+                "cosine_similarity": 0.6651877164840698,
+                "norm_ratio": 0.9010534286499023,
+                "rms_difference": 0.16541576385498047
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.689480721950531,
+                "norm_ratio": 0.9647496342658997,
+                "rms_difference": 0.157904714345932
+              },
+              "v17": {
+                "cosine_similarity": 0.7743464112281799,
+                "norm_ratio": 0.9687988758087158,
+                "rms_difference": 0.14918655157089233
+              },
+              "v20": {
+                "cosine_similarity": 0.7109459042549133,
+                "norm_ratio": 0.9118878245353699,
+                "rms_difference": 0.1562626212835312
+              },
+              "v24": {
+                "cosine_similarity": 0.6542565822601318,
+                "norm_ratio": 0.9129284620285034,
+                "rms_difference": 0.1643304079771042
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.7026827638629831,
+                "norm_ratio": 0.9124383198538405,
+                "rms_difference": 0.1542430213286219
+              },
+              "v17": {
+                "cosine_similarity": 0.8327910839461534,
+                "norm_ratio": 0.8574282054565191,
+                "rms_difference": 0.12436121363929106
+              },
+              "v20": {
+                "cosine_similarity": 0.7330148476677165,
+                "norm_ratio": 0.9024499344499144,
+                "rms_difference": 0.15307193166355798
+              },
+              "v24": {
+                "cosine_similarity": 0.6910334099995413,
+                "norm_ratio": 0.9347067159215998,
+                "rms_difference": 0.15971316283463033
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.6752498745918274,
+                "norm_ratio": 0.9444320797920227,
+                "rms_difference": 0.16042381525039673
+              },
+              "v17": {
+                "cosine_similarity": 0.7928488254547119,
+                "norm_ratio": 0.928999662399292,
+                "rms_difference": 0.14565332233905792
+              },
+              "v20": {
+                "cosine_similarity": 0.6895611882209778,
+                "norm_ratio": 0.8948485851287842,
+                "rms_difference": 0.16247136890888214
+              },
+              "v24": {
+                "cosine_similarity": 0.6340941190719604,
+                "norm_ratio": 0.8961511850357056,
+                "rms_difference": 0.17126800119876862
+              }
+            }
+          },
+          "teacher_vs_raw_student": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.8313275575637817,
+                "norm_ratio": 1.005913496017456,
+                "rms_difference": 0.11352942138910294
+              },
+              "v17": {
+                "cosine_similarity": 0.835792601108551,
+                "norm_ratio": 1.0313016176223755,
+                "rms_difference": 0.1191771924495697
+              },
+              "v20": {
+                "cosine_similarity": 0.8462677597999573,
+                "norm_ratio": 0.9719803333282471,
+                "rms_difference": 0.11258018016815186
+              },
+              "v24": {
+                "cosine_similarity": 0.8203020691871643,
+                "norm_ratio": 0.9369728565216064,
+                "rms_difference": 0.1204635351896286
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.6804373860359192,
+                "norm_ratio": 0.9329261779785156,
+                "rms_difference": 0.15822090208530426
+              },
+              "v17": {
+                "cosine_similarity": 0.8153975009918213,
+                "norm_ratio": 0.8835805058479309,
+                "rms_difference": 0.13852687180042267
+              },
+              "v20": {
+                "cosine_similarity": 0.6961623430252075,
+                "norm_ratio": 0.8953887224197388,
+                "rms_difference": 0.16040374338626862
+              },
+              "v24": {
+                "cosine_similarity": 0.6401106715202332,
+                "norm_ratio": 0.89579838514328,
+                "rms_difference": 0.16960111260414124
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.71358323097229,
+                "norm_ratio": 0.9818618297576904,
+                "rms_difference": 0.1526925265789032
+              },
+              "v17": {
+                "cosine_similarity": 0.7696099877357483,
+                "norm_ratio": 0.9982382655143738,
+                "rms_difference": 0.1487688273191452
+              },
+              "v20": {
+                "cosine_similarity": 0.7335999608039856,
+                "norm_ratio": 0.9244927763938904,
+                "rms_difference": 0.15096750855445862
+              },
+              "v24": {
+                "cosine_similarity": 0.6855074167251587,
+                "norm_ratio": 0.9027005434036255,
+                "rms_difference": 0.16063858568668365
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.6950967907905579,
+                "norm_ratio": 0.9382458329200745,
+                "rms_difference": 0.15377376973628998
+              },
+              "v17": {
+                "cosine_similarity": 0.8259211182594299,
+                "norm_ratio": 0.8573211431503296,
+                "rms_difference": 0.13321636617183685
+              },
+              "v20": {
+                "cosine_similarity": 0.715668797492981,
+                "norm_ratio": 0.9074539542198181,
+                "rms_difference": 0.15448108315467834
+              },
+              "v24": {
+                "cosine_similarity": 0.666286289691925,
+                "norm_ratio": 0.8996764421463013,
+                "rms_difference": 0.16506469249725342
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.6902903914451599,
+                "norm_ratio": 0.9624130725860596,
+                "rms_difference": 0.15752296149730682
+              },
+              "v17": {
+                "cosine_similarity": 0.776640772819519,
+                "norm_ratio": 0.9647663235664368,
+                "rms_difference": 0.14818230271339417
+              },
+              "v20": {
+                "cosine_similarity": 0.7119436264038086,
+                "norm_ratio": 0.9105687737464905,
+                "rms_difference": 0.15592125058174133
+              },
+              "v24": {
+                "cosine_similarity": 0.6549868583679199,
+                "norm_ratio": 0.9118459224700928,
+                "rms_difference": 0.1640869528055191
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.7036832745994374,
+                "norm_ratio": 0.9105182207260579,
+                "rms_difference": 0.15387357051125244
+              },
+              "v17": {
+                "cosine_similarity": 0.8384994238090142,
+                "norm_ratio": 0.8493383597954378,
+                "rms_difference": 0.12234625471081519
+              },
+              "v20": {
+                "cosine_similarity": 0.73382998352648,
+                "norm_ratio": 0.9014420779950465,
+                "rms_difference": 0.1527870909808433
+              },
+              "v24": {
+                "cosine_similarity": 0.6921246970936277,
+                "norm_ratio": 0.9333511621284858,
+                "rms_difference": 0.15935234174336474
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.6761011481285095,
+                "norm_ratio": 0.9421055912971497,
+                "rms_difference": 0.16004811227321625
+              },
+              "v17": {
+                "cosine_similarity": 0.7961666584014893,
+                "norm_ratio": 0.923984706401825,
+                "rms_difference": 0.14429035782814026
+              },
+              "v20": {
+                "cosine_similarity": 0.6905555725097656,
+                "norm_ratio": 0.8934903740882874,
+                "rms_difference": 0.16213464736938477
+              },
+              "v24": {
+                "cosine_similarity": 0.6348674893379211,
+                "norm_ratio": 0.8949956893920898,
+                "rms_difference": 0.171013742685318
+              }
+            }
+          }
+        },
+        "routing_entropy": 0.4689648747444153,
+        "routing_weights": {
+          "v16": 0.5570290684700012,
+          "v17": 0.0274310614913702,
+          "v20": 0.22055472433567047,
+          "v24": 0.19498464465141296
+        },
+        "state_position": 1024,
+        "tokens_per_second": 931.9690580951335,
+        "topdown_rms": 0.16384318470954895,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19408489763736725,
+            "cosine_source_adapted": 0.9985141754150391,
+            "delta_rms": 0.009157618507742882,
+            "delta_to_source_rms_ratio": 0.04880055412650108,
+            "maximum_delta_to_source_rms_ratio": 0.15250931680202484,
+            "source_rms": 0.19368280470371246
+          },
+          "v17": {
+            "adapted_memory_rms": 0.2011447548866272,
+            "cosine_source_adapted": 0.9949748516082764,
+            "delta_rms": 0.01903720572590828,
+            "delta_to_source_rms_ratio": 0.09827776998281479,
+            "maximum_delta_to_source_rms_ratio": 0.163913294672966,
+            "source_rms": 0.19959299266338348
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19767966866493225,
+            "cosine_source_adapted": 0.9981526136398315,
+            "delta_rms": 0.009988919831812382,
+            "delta_to_source_rms_ratio": 0.05324944481253624,
+            "maximum_delta_to_source_rms_ratio": 0.1606171429157257,
+            "source_rms": 0.19745196402072906
+          },
+          "v24": {
+            "adapted_memory_rms": 0.19143350422382355,
+            "cosine_source_adapted": 0.9990022778511047,
+            "delta_rms": 0.007074812892824411,
+            "delta_to_source_rms_ratio": 0.03891701623797417,
+            "maximum_delta_to_source_rms_ratio": 0.14702154695987701,
+            "source_rms": 0.19116869568824768
+          }
+        }
+      },
+      "teacher_sources_with_writers": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 69.45797500479966,
+        "feedback_rms": 0.02795162983238697,
+        "finite": true,
+        "loss": 5.153915882110596,
+        "routing_entropy": 0.5456739664077759,
+        "routing_weights": {
+          "v16": 0.4382683038711548,
+          "v17": 0.09496627002954483,
+          "v20": 0.2599567472934723,
+          "v24": 0.206808403134346
+        },
+        "state_position": 1024,
+        "tokens_per_second": 943.5345616607934,
+        "topdown_rms": 0.17668531835079193,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.1919059008359909,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.1919059008359909
+          },
+          "v17": {
+            "adapted_memory_rms": 0.19704189896583557,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19704189896583557
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19548262655735016,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19548262655735016
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18653978407382965,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18653978407382965
+          }
+        }
+      },
+      "writer_bypass": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 69.06931697297841,
+        "feedback_rms": 0.025653058663010597,
+        "finite": true,
+        "loss": 5.6493916511535645,
+        "routing_entropy": 0.48442214727401733,
+        "routing_weights": {
+          "v16": 0.6413053274154663,
+          "v17": 0.02299460954964161,
+          "v20": 0.13036450743675232,
+          "v24": 0.20533567667007446
+        },
+        "state_position": 1024,
+        "tokens_per_second": 948.8438987407284,
+        "topdown_rms": 0.1621559113264084,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19305656850337982,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19305656850337982
+          },
+          "v17": {
+            "adapted_memory_rms": 0.19112102687358856,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19112102687358856
+          },
+          "v20": {
+            "adapted_memory_rms": 0.1934613585472107,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.1934613585472107
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18447904288768768,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18447904288768768
+          }
+        }
+      }
+    },
+    {
+      "batch_index": 5,
+      "full_context": 4.050746917724609,
+      "gate_zero": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 69.62010963773355,
+        "feedback_rms": 0.0,
+        "finite": true,
+        "loss": 5.9449968338012695,
+        "routing_entropy": 0.347665935754776,
+        "routing_weights": {
+          "v16": 0.7188102602958679,
+          "v17": 0.005216781981289387,
+          "v20": 0.15082979202270508,
+          "v24": 0.1251431554555893
+        },
+        "state_position": 1024,
+        "tokens_per_second": 941.3372133571017,
+        "topdown_rms": 0.16556215286254883,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.18859915435314178,
+            "cosine_source_adapted": 0.9976038932800293,
+            "delta_rms": 0.011966708116233349,
+            "delta_to_source_rms_ratio": 0.06496468186378479,
+            "maximum_delta_to_source_rms_ratio": 0.1499626487493515,
+            "source_rms": 0.18787705898284912
+          },
+          "v17": {
+            "adapted_memory_rms": 0.18142597377300262,
+            "cosine_source_adapted": 0.9939042329788208,
+            "delta_rms": 0.018999438732862473,
+            "delta_to_source_rms_ratio": 0.10858265310525894,
+            "maximum_delta_to_source_rms_ratio": 0.15853305160999298,
+            "source_rms": 0.17988546192646027
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19134126603603363,
+            "cosine_source_adapted": 0.9979591369628906,
+            "delta_rms": 0.010393520817160606,
+            "delta_to_source_rms_ratio": 0.05681626498699188,
+            "maximum_delta_to_source_rms_ratio": 0.16669583320617676,
+            "source_rms": 0.19114983081817627
+          },
+          "v24": {
+            "adapted_memory_rms": 0.17953868210315704,
+            "cosine_source_adapted": 0.9990140795707703,
+            "delta_rms": 0.0068606226705014706,
+            "delta_to_source_rms_ratio": 0.0393824577331543,
+            "maximum_delta_to_source_rms_ratio": 0.14225517213344574,
+            "source_rms": 0.1792786717414856
+          }
+        }
+      },
+      "masked_l1_no_feedback": 5.944792747497559,
+      "payload_sha256": "ae3818c48fb8426d5ffaafabb55c47bc227c6d2310d3961fbd2066b817a656df",
+      "real_with_representation": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 69.98787170788273,
+        "feedback_rms": 0.0259489007294178,
+        "finite": true,
+        "loss": 5.072998523712158,
+        "representation_drift": {
+          "teacher_vs_adapted_memory": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.8276630640029907,
+                "norm_ratio": 1.017005443572998,
+                "rms_difference": 0.11619144678115845
+              },
+              "v17": {
+                "cosine_similarity": 0.833518385887146,
+                "norm_ratio": 1.0247726440429688,
+                "rms_difference": 0.12196146696805954
+              },
+              "v20": {
+                "cosine_similarity": 0.8439916968345642,
+                "norm_ratio": 0.97371506690979,
+                "rms_difference": 0.11255291849374771
+              },
+              "v24": {
+                "cosine_similarity": 0.8195685148239136,
+                "norm_ratio": 0.9398564100265503,
+                "rms_difference": 0.12073590606451035
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.6808648705482483,
+                "norm_ratio": 0.9408350586891174,
+                "rms_difference": 0.15708132088184357
+              },
+              "v17": {
+                "cosine_similarity": 0.8113861680030823,
+                "norm_ratio": 0.8894836902618408,
+                "rms_difference": 0.13767072558403015
+              },
+              "v20": {
+                "cosine_similarity": 0.7001740336418152,
+                "norm_ratio": 0.9018295407295227,
+                "rms_difference": 0.15765537321567535
+              },
+              "v24": {
+                "cosine_similarity": 0.6440331935882568,
+                "norm_ratio": 0.9041578769683838,
+                "rms_difference": 0.16782301664352417
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.7135147452354431,
+                "norm_ratio": 0.9766261577606201,
+                "rms_difference": 0.15346810221672058
+              },
+              "v17": {
+                "cosine_similarity": 0.7729237079620361,
+                "norm_ratio": 0.9915485978126526,
+                "rms_difference": 0.14654730260372162
+              },
+              "v20": {
+                "cosine_similarity": 0.7279068827629089,
+                "norm_ratio": 0.9249871969223022,
+                "rms_difference": 0.1515505313873291
+              },
+              "v24": {
+                "cosine_similarity": 0.6777092218399048,
+                "norm_ratio": 0.9186601638793945,
+                "rms_difference": 0.16200989484786987
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.6929956078529358,
+                "norm_ratio": 0.9389523267745972,
+                "rms_difference": 0.1543835699558258
+              },
+              "v17": {
+                "cosine_similarity": 0.8225542306900024,
+                "norm_ratio": 0.8644489645957947,
+                "rms_difference": 0.13317488133907318
+              },
+              "v20": {
+                "cosine_similarity": 0.7126625180244446,
+                "norm_ratio": 0.9052044749259949,
+                "rms_difference": 0.1558828204870224
+              },
+              "v24": {
+                "cosine_similarity": 0.6617063283920288,
+                "norm_ratio": 0.9084501266479492,
+                "rms_difference": 0.16527070105075836
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.685261070728302,
+                "norm_ratio": 0.9704074859619141,
+                "rms_difference": 0.15856344997882843
+              },
+              "v17": {
+                "cosine_similarity": 0.7687147259712219,
+                "norm_ratio": 0.9688010215759277,
+                "rms_difference": 0.14870257675647736
+              },
+              "v20": {
+                "cosine_similarity": 0.7037960886955261,
+                "norm_ratio": 0.9168424606323242,
+                "rms_difference": 0.15778805315494537
+              },
+              "v24": {
+                "cosine_similarity": 0.64603191614151,
+                "norm_ratio": 0.919348418712616,
+                "rms_difference": 0.1673964262008667
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.7007024656769814,
+                "norm_ratio": 0.910212328289353,
+                "rms_difference": 0.15462435668228658
+              },
+              "v17": {
+                "cosine_similarity": 0.8307800890181629,
+                "norm_ratio": 0.8531896064892673,
+                "rms_difference": 0.12468752329130228
+              },
+              "v20": {
+                "cosine_similarity": 0.7313340517406127,
+                "norm_ratio": 0.9018036903933769,
+                "rms_difference": 0.15398421912743854
+              },
+              "v24": {
+                "cosine_similarity": 0.6896012337940313,
+                "norm_ratio": 0.9436474107716182,
+                "rms_difference": 0.16107952618085708
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.675800621509552,
+                "norm_ratio": 0.9447284936904907,
+                "rms_difference": 0.16029588878154755
+              },
+              "v17": {
+                "cosine_similarity": 0.7917290329933167,
+                "norm_ratio": 0.9242846965789795,
+                "rms_difference": 0.14485961198806763
+              },
+              "v20": {
+                "cosine_similarity": 0.6929605007171631,
+                "norm_ratio": 0.9029051661491394,
+                "rms_difference": 0.15992148220539093
+              },
+              "v24": {
+                "cosine_similarity": 0.6339907646179199,
+                "norm_ratio": 0.909209668636322,
+                "rms_difference": 0.16913774609565735
+              }
+            }
+          },
+          "teacher_vs_raw_student": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.8283974528312683,
+                "norm_ratio": 1.0151978731155396,
+                "rms_difference": 0.11578836292028427
+              },
+              "v17": {
+                "cosine_similarity": 0.8339166045188904,
+                "norm_ratio": 1.0231220722198486,
+                "rms_difference": 0.12165553122758865
+              },
+              "v20": {
+                "cosine_similarity": 0.844661295413971,
+                "norm_ratio": 0.9725738763809204,
+                "rms_difference": 0.1122092455625534
+              },
+              "v24": {
+                "cosine_similarity": 0.8201650381088257,
+                "norm_ratio": 0.938805878162384,
+                "rms_difference": 0.12043821811676025
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.681733250617981,
+                "norm_ratio": 0.9384810924530029,
+                "rms_difference": 0.15670250356197357
+              },
+              "v17": {
+                "cosine_similarity": 0.8159085512161255,
+                "norm_ratio": 0.8832395672798157,
+                "rms_difference": 0.1359591782093048
+              },
+              "v20": {
+                "cosine_similarity": 0.7011619210243225,
+                "norm_ratio": 0.9003950953483582,
+                "rms_difference": 0.15731565654277802
+              },
+              "v24": {
+                "cosine_similarity": 0.6449416875839233,
+                "norm_ratio": 0.9029724597930908,
+                "rms_difference": 0.1675393283367157
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.7143895030021667,
+                "norm_ratio": 0.9741859436035156,
+                "rms_difference": 0.1530548334121704
+              },
+              "v17": {
+                "cosine_similarity": 0.7742761373519897,
+                "norm_ratio": 0.9884358644485474,
+                "rms_difference": 0.1458909809589386
+              },
+              "v20": {
+                "cosine_similarity": 0.7287039756774902,
+                "norm_ratio": 0.9236528873443604,
+                "rms_difference": 0.15124377608299255
+              },
+              "v24": {
+                "cosine_similarity": 0.6783121228218079,
+                "norm_ratio": 0.9176729917526245,
+                "rms_difference": 0.16178786754608154
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.6938139200210571,
+                "norm_ratio": 0.9369013905525208,
+                "rms_difference": 0.15404291450977325
+              },
+              "v17": {
+                "cosine_similarity": 0.8278309106826782,
+                "norm_ratio": 0.8574602007865906,
+                "rms_difference": 0.13124988973140717
+              },
+              "v20": {
+                "cosine_similarity": 0.7136377096176147,
+                "norm_ratio": 0.9039308428764343,
+                "rms_difference": 0.15554751455783844
+              },
+              "v24": {
+                "cosine_similarity": 0.6627575755119324,
+                "norm_ratio": 0.9070232510566711,
+                "rms_difference": 0.1649319976568222
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.6861348748207092,
+                "norm_ratio": 0.9680006504058838,
+                "rms_difference": 0.15816451609134674
+              },
+              "v17": {
+                "cosine_similarity": 0.7710290551185608,
+                "norm_ratio": 0.964831531047821,
+                "rms_difference": 0.14771321415901184
+              },
+              "v20": {
+                "cosine_similarity": 0.7047680020332336,
+                "norm_ratio": 0.9154184460639954,
+                "rms_difference": 0.15745067596435547
+              },
+              "v24": {
+                "cosine_similarity": 0.6467449069023132,
+                "norm_ratio": 0.9181358218193054,
+                "rms_difference": 0.16714493930339813
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.7017150401135946,
+                "norm_ratio": 0.908214472044704,
+                "rms_difference": 0.15425023267413773
+              },
+              "v17": {
+                "cosine_similarity": 0.8365557944937928,
+                "norm_ratio": 0.8452285199249328,
+                "rms_difference": 0.12267237026864068
+              },
+              "v20": {
+                "cosine_similarity": 0.7321975021213002,
+                "norm_ratio": 0.9007850841066842,
+                "rms_difference": 0.15368541859367355
+              },
+              "v24": {
+                "cosine_similarity": 0.6906854737761436,
+                "norm_ratio": 0.9421796406785102,
+                "rms_difference": 0.16071019480606347
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.6767658591270447,
+                "norm_ratio": 0.9422723650932312,
+                "rms_difference": 0.15988759696483612
+              },
+              "v17": {
+                "cosine_similarity": 0.7951330542564392,
+                "norm_ratio": 0.9191495776176453,
+                "rms_difference": 0.14350920915603638
+              },
+              "v20": {
+                "cosine_similarity": 0.6939964890480042,
+                "norm_ratio": 0.9013606309890747,
+                "rms_difference": 0.15956652164459229
+              },
+              "v24": {
+                "cosine_similarity": 0.6348589658737183,
+                "norm_ratio": 0.9080898761749268,
+                "rms_difference": 0.16886287927627563
+              }
+            }
+          }
+        },
+        "routing_entropy": 0.46010008454322815,
+        "routing_weights": {
+          "v16": 0.5557185411453247,
+          "v17": 0.022197160869836807,
+          "v20": 0.2239941656589508,
+          "v24": 0.19808979332447052
+        },
+        "state_position": 1024,
+        "tokens_per_second": 936.390811732866,
+        "topdown_rms": 0.16402605175971985,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19368959963321686,
+            "cosine_source_adapted": 0.9984799027442932,
+            "delta_rms": 0.00928476732224226,
+            "delta_to_source_rms_ratio": 0.04952888563275337,
+            "maximum_delta_to_source_rms_ratio": 0.16584010422229767,
+            "source_rms": 0.1932707130908966
+          },
+          "v17": {
+            "adapted_memory_rms": 0.19907867908477783,
+            "cosine_source_adapted": 0.9949378967285156,
+            "delta_rms": 0.01892423816025257,
+            "delta_to_source_rms_ratio": 0.09869834780693054,
+            "maximum_delta_to_source_rms_ratio": 0.16074427962303162,
+            "source_rms": 0.19753102958202362
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19761823117733002,
+            "cosine_source_adapted": 0.9981722831726074,
+            "delta_rms": 0.00993475690484047,
+            "delta_to_source_rms_ratio": 0.052980463951826096,
+            "maximum_delta_to_source_rms_ratio": 0.17420966923236847,
+            "source_rms": 0.19737866520881653
+          },
+          "v24": {
+            "adapted_memory_rms": 0.1922660768032074,
+            "cosine_source_adapted": 0.9990314245223999,
+            "delta_rms": 0.007019274402409792,
+            "delta_to_source_rms_ratio": 0.03835555911064148,
+            "maximum_delta_to_source_rms_ratio": 0.13690029084682465,
+            "source_rms": 0.1919908970594406
+          }
+        }
+      },
+      "teacher_sources_with_writers": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 68.87250377004966,
+        "feedback_rms": 0.0279394444078207,
+        "finite": true,
+        "loss": 5.1983561515808105,
+        "routing_entropy": 0.5459679365158081,
+        "routing_weights": {
+          "v16": 0.43280333280563354,
+          "v17": 0.0881049856543541,
+          "v20": 0.267647922039032,
+          "v24": 0.2114439308643341
+        },
+        "state_position": 1024,
+        "tokens_per_second": 951.5553582720105,
+        "topdown_rms": 0.17660856246948242,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19140096008777618,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19140096008777618
+          },
+          "v17": {
+            "adapted_memory_rms": 0.19366255402565002,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19366255402565002
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19507719576358795,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19507719576358795
+          },
+          "v24": {
+            "adapted_memory_rms": 0.1869407296180725,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.1869407296180725
+          }
+        }
+      },
+      "writer_bypass": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 68.58481214893982,
+        "feedback_rms": 0.02561287395656109,
+        "finite": true,
+        "loss": 5.666422367095947,
+        "routing_entropy": 0.480325311422348,
+        "routing_weights": {
+          "v16": 0.6357355117797852,
+          "v17": 0.0182302575558424,
+          "v20": 0.13335047662258148,
+          "v24": 0.2126840353012085
+        },
+        "state_position": 1024,
+        "tokens_per_second": 955.5468324048337,
+        "topdown_rms": 0.16190186142921448,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19260986149311066,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19260986149311066
+          },
+          "v17": {
+            "adapted_memory_rms": 0.188948392868042,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.188948392868042
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19341684877872467,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19341684877872467
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18538184463977814,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18538184463977814
+          }
+        }
+      }
+    },
+    {
+      "batch_index": 9,
+      "full_context": 4.083972930908203,
+      "gate_zero": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 69.72009438509122,
+        "feedback_rms": 0.0,
+        "finite": true,
+        "loss": 5.978236198425293,
+        "routing_entropy": 0.3388461768627167,
+        "routing_weights": {
+          "v16": 0.7326362729072571,
+          "v17": 0.004993278067559004,
+          "v20": 0.14349643886089325,
+          "v24": 0.11887382715940475
+        },
+        "state_position": 1024,
+        "tokens_per_second": 939.9872530008231,
+        "topdown_rms": 0.16504086554050446,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.18710672855377197,
+            "cosine_source_adapted": 0.9976222515106201,
+            "delta_rms": 0.011786374263465405,
+            "delta_to_source_rms_ratio": 0.06457804888486862,
+            "maximum_delta_to_source_rms_ratio": 0.1632324755191803,
+            "source_rms": 0.1863897740840912
+          },
+          "v17": {
+            "adapted_memory_rms": 0.18090280890464783,
+            "cosine_source_adapted": 0.9938399195671082,
+            "delta_rms": 0.01902632787823677,
+            "delta_to_source_rms_ratio": 0.10905137658119202,
+            "maximum_delta_to_source_rms_ratio": 0.16147193312644958,
+            "source_rms": 0.17938430607318878
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19087888300418854,
+            "cosine_source_adapted": 0.9980003833770752,
+            "delta_rms": 0.01023583672940731,
+            "delta_to_source_rms_ratio": 0.05610886588692665,
+            "maximum_delta_to_source_rms_ratio": 0.17105408012866974,
+            "source_rms": 0.19069057703018188
+          },
+          "v24": {
+            "adapted_memory_rms": 0.17831169068813324,
+            "cosine_source_adapted": 0.9989354014396667,
+            "delta_rms": 0.0070501696318387985,
+            "delta_to_source_rms_ratio": 0.04086952656507492,
+            "maximum_delta_to_source_rms_ratio": 0.14287589490413666,
+            "source_rms": 0.17805002629756927
+          }
+        }
+      },
+      "masked_l1_no_feedback": 5.978191375732422,
+      "payload_sha256": "11d674bbd6a1f9f3bc63ffb7807fdce6d44b30c439c86e5149e8102204e45ebd",
+      "real_with_representation": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 69.83514164900407,
+        "feedback_rms": 0.025912204757332802,
+        "finite": true,
+        "loss": 5.110197067260742,
+        "representation_drift": {
+          "teacher_vs_adapted_memory": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.834618330001831,
+                "norm_ratio": 1.0147225856781006,
+                "rms_difference": 0.11333145201206207
+              },
+              "v17": {
+                "cosine_similarity": 0.8342999815940857,
+                "norm_ratio": 1.023026943206787,
+                "rms_difference": 0.1199483647942543
+              },
+              "v20": {
+                "cosine_similarity": 0.8462368845939636,
+                "norm_ratio": 0.9748069047927856,
+                "rms_difference": 0.11219394207000732
+              },
+              "v24": {
+                "cosine_similarity": 0.8235689997673035,
+                "norm_ratio": 0.9447489976882935,
+                "rms_difference": 0.11943349987268448
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.6835001707077026,
+                "norm_ratio": 0.9423206448554993,
+                "rms_difference": 0.15635551512241364
+              },
+              "v17": {
+                "cosine_similarity": 0.8079405426979065,
+                "norm_ratio": 0.8938465118408203,
+                "rms_difference": 0.1394324004650116
+              },
+              "v20": {
+                "cosine_similarity": 0.7020120620727539,
+                "norm_ratio": 0.9036731123924255,
+                "rms_difference": 0.15756964683532715
+              },
+              "v24": {
+                "cosine_similarity": 0.644896924495697,
+                "norm_ratio": 0.8963108658790588,
+                "rms_difference": 0.1678532361984253
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.7166115641593933,
+                "norm_ratio": 0.9782696962356567,
+                "rms_difference": 0.1504652053117752
+              },
+              "v17": {
+                "cosine_similarity": 0.7586922645568848,
+                "norm_ratio": 0.9964456558227539,
+                "rms_difference": 0.14698629081249237
+              },
+              "v20": {
+                "cosine_similarity": 0.7348674535751343,
+                "norm_ratio": 0.9315458536148071,
+                "rms_difference": 0.15100134909152985
+              },
+              "v24": {
+                "cosine_similarity": 0.6864916682243347,
+                "norm_ratio": 0.9227416515350342,
+                "rms_difference": 0.1585201919078827
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.6972331404685974,
+                "norm_ratio": 0.9431186318397522,
+                "rms_difference": 0.15233425796031952
+              },
+              "v17": {
+                "cosine_similarity": 0.8247495889663696,
+                "norm_ratio": 0.8632099628448486,
+                "rms_difference": 0.13267329335212708
+              },
+              "v20": {
+                "cosine_similarity": 0.7162142395973206,
+                "norm_ratio": 0.9119628667831421,
+                "rms_difference": 0.15397456288337708
+              },
+              "v24": {
+                "cosine_similarity": 0.6644583344459534,
+                "norm_ratio": 0.9074400067329407,
+                "rms_difference": 0.16388151049613953
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.6843575239181519,
+                "norm_ratio": 0.9655105471611023,
+                "rms_difference": 0.1572202742099762
+              },
+              "v17": {
+                "cosine_similarity": 0.7573348879814148,
+                "norm_ratio": 0.9738056063652039,
+                "rms_difference": 0.14945358037948608
+              },
+              "v20": {
+                "cosine_similarity": 0.7076738476753235,
+                "norm_ratio": 0.9145607948303223,
+                "rms_difference": 0.15610527992248535
+              },
+              "v24": {
+                "cosine_similarity": 0.653620719909668,
+                "norm_ratio": 0.9064270853996277,
+                "rms_difference": 0.1674012392759323
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.7018939053709027,
+                "norm_ratio": 0.9182539191497981,
+                "rms_difference": 0.15287776282622156
+              },
+              "v17": {
+                "cosine_similarity": 0.8345968765288649,
+                "norm_ratio": 0.8637584828117356,
+                "rms_difference": 0.12224899112828323
+              },
+              "v20": {
+                "cosine_similarity": 0.7311406742103412,
+                "norm_ratio": 0.9063318778857327,
+                "rms_difference": 0.15309593962130014
+              },
+              "v24": {
+                "cosine_similarity": 0.6842083417739421,
+                "norm_ratio": 0.9358254150868396,
+                "rms_difference": 0.1609557388813295
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.6650042533874512,
+                "norm_ratio": 0.9497680068016052,
+                "rms_difference": 0.16208919882774353
+              },
+              "v17": {
+                "cosine_similarity": 0.7833739519119263,
+                "norm_ratio": 0.9365602135658264,
+                "rms_difference": 0.14504922926425934
+              },
+              "v20": {
+                "cosine_similarity": 0.6842873692512512,
+                "norm_ratio": 0.9036445617675781,
+                "rms_difference": 0.16180036962032318
+              },
+              "v24": {
+                "cosine_similarity": 0.6299791932106018,
+                "norm_ratio": 0.9032347798347473,
+                "rms_difference": 0.17086589336395264
+              }
+            }
+          },
+          "teacher_vs_raw_student": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.8353994488716125,
+                "norm_ratio": 1.0127311944961548,
+                "rms_difference": 0.11289607733488083
+              },
+              "v17": {
+                "cosine_similarity": 0.8347243666648865,
+                "norm_ratio": 1.021733283996582,
+                "rms_difference": 0.11967537552118301
+              },
+              "v20": {
+                "cosine_similarity": 0.8469281196594238,
+                "norm_ratio": 0.973755419254303,
+                "rms_difference": 0.11183314770460129
+              },
+              "v24": {
+                "cosine_similarity": 0.8240673542022705,
+                "norm_ratio": 0.9437199831008911,
+                "rms_difference": 0.11916866898536682
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.6843352913856506,
+                "norm_ratio": 0.9400938749313354,
+                "rms_difference": 0.15599416196346283
+              },
+              "v17": {
+                "cosine_similarity": 0.8124291300773621,
+                "norm_ratio": 0.8879451751708984,
+                "rms_difference": 0.1377129703760147
+              },
+              "v20": {
+                "cosine_similarity": 0.7030612826347351,
+                "norm_ratio": 0.9022656083106995,
+                "rms_difference": 0.15721625089645386
+              },
+              "v24": {
+                "cosine_similarity": 0.6458975076675415,
+                "norm_ratio": 0.8951082825660706,
+                "rms_difference": 0.16754543781280518
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.7175171971321106,
+                "norm_ratio": 0.9759758114814758,
+                "rms_difference": 0.15005891025066376
+              },
+              "v17": {
+                "cosine_similarity": 0.76019686460495,
+                "norm_ratio": 0.9935305118560791,
+                "rms_difference": 0.14626601338386536
+              },
+              "v20": {
+                "cosine_similarity": 0.735692024230957,
+                "norm_ratio": 0.9304957985877991,
+                "rms_difference": 0.1506938338279724
+              },
+              "v24": {
+                "cosine_similarity": 0.6871187686920166,
+                "norm_ratio": 0.9217365384101868,
+                "rms_difference": 0.15829098224639893
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.6979832649230957,
+                "norm_ratio": 0.9410327076911926,
+                "rms_difference": 0.15200760960578918
+              },
+              "v17": {
+                "cosine_similarity": 0.8300631046295166,
+                "norm_ratio": 0.8564632534980774,
+                "rms_difference": 0.13072286546230316
+              },
+              "v20": {
+                "cosine_similarity": 0.7170909643173218,
+                "norm_ratio": 0.9107093811035156,
+                "rms_difference": 0.15366730093955994
+              },
+              "v24": {
+                "cosine_similarity": 0.6656082272529602,
+                "norm_ratio": 0.9061018824577332,
+                "rms_difference": 0.163526713848114
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.6852761507034302,
+                "norm_ratio": 0.9631713032722473,
+                "rms_difference": 0.1568201333284378
+              },
+              "v17": {
+                "cosine_similarity": 0.759907603263855,
+                "norm_ratio": 0.9698521494865417,
+                "rms_difference": 0.1483924835920334
+              },
+              "v20": {
+                "cosine_similarity": 0.7086933255195618,
+                "norm_ratio": 0.9132300019264221,
+                "rms_difference": 0.15575987100601196
+              },
+              "v24": {
+                "cosine_similarity": 0.654346227645874,
+                "norm_ratio": 0.9053500890731812,
+                "rms_difference": 0.1671513020992279
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.7028776941467405,
+                "norm_ratio": 0.9162399978786998,
+                "rms_difference": 0.152511940077093
+              },
+              "v17": {
+                "cosine_similarity": 0.8405608235040056,
+                "norm_ratio": 0.8558092210624083,
+                "rms_difference": 0.12012303272105476
+              },
+              "v20": {
+                "cosine_similarity": 0.7319547350859222,
+                "norm_ratio": 0.9052731986148483,
+                "rms_difference": 0.1528089041812546
+              },
+              "v24": {
+                "cosine_similarity": 0.6854001995168787,
+                "norm_ratio": 0.9343902528169337,
+                "rms_difference": 0.160567162321505
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.6658240556716919,
+                "norm_ratio": 0.9474383592605591,
+                "rms_difference": 0.1617155522108078
+              },
+              "v17": {
+                "cosine_similarity": 0.7868754863739014,
+                "norm_ratio": 0.9316208958625793,
+                "rms_difference": 0.14366325736045837
+              },
+              "v20": {
+                "cosine_similarity": 0.6853539347648621,
+                "norm_ratio": 0.9022597670555115,
+                "rms_difference": 0.16144268214702606
+              },
+              "v24": {
+                "cosine_similarity": 0.6308161020278931,
+                "norm_ratio": 0.9021251201629639,
+                "rms_difference": 0.17059801518917084
+              }
+            }
+          }
+        },
+        "routing_entropy": 0.4589129388332367,
+        "routing_weights": {
+          "v16": 0.5622208714485168,
+          "v17": 0.023401105776429176,
+          "v20": 0.2240893691778183,
+          "v24": 0.19028867781162262
+        },
+        "state_position": 1024,
+        "tokens_per_second": 938.4387065381519,
+        "topdown_rms": 0.16379408538341522,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19325846433639526,
+            "cosine_source_adapted": 0.9985149502754211,
+            "delta_rms": 0.009105369448661804,
+            "delta_to_source_rms_ratio": 0.04879328981041908,
+            "maximum_delta_to_source_rms_ratio": 0.14734525978565216,
+            "source_rms": 0.19284550845623016
+          },
+          "v17": {
+            "adapted_memory_rms": 0.19958074390888214,
+            "cosine_source_adapted": 0.994878351688385,
+            "delta_rms": 0.019057275727391243,
+            "delta_to_source_rms_ratio": 0.09915609657764435,
+            "maximum_delta_to_source_rms_ratio": 0.15951502323150635,
+            "source_rms": 0.19807150959968567
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19749227166175842,
+            "cosine_source_adapted": 0.9981868267059326,
+            "delta_rms": 0.009899177588522434,
+            "delta_to_source_rms_ratio": 0.05279717221856117,
+            "maximum_delta_to_source_rms_ratio": 0.16839537024497986,
+            "source_rms": 0.19725467264652252
+          },
+          "v24": {
+            "adapted_memory_rms": 0.19070592522621155,
+            "cosine_source_adapted": 0.999014675617218,
+            "delta_rms": 0.0069877151399850845,
+            "delta_to_source_rms_ratio": 0.03861762210726738,
+            "maximum_delta_to_source_rms_ratio": 0.14947015047073364,
+            "source_rms": 0.19044077396392822
+          }
+        }
+      },
+      "teacher_sources_with_writers": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 68.59612027090043,
+        "feedback_rms": 0.027826054021716118,
+        "finite": true,
+        "loss": 5.224507808685303,
+        "routing_entropy": 0.5336613655090332,
+        "routing_weights": {
+          "v16": 0.44613879919052124,
+          "v17": 0.08213097602128983,
+          "v20": 0.27408459782600403,
+          "v24": 0.19764548540115356
+        },
+        "state_position": 1024,
+        "tokens_per_second": 955.3893097916417,
+        "topdown_rms": 0.17589183151721954,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19034074246883392,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19034074246883392
+          },
+          "v17": {
+            "adapted_memory_rms": 0.19419291615486145,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19419291615486145
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19495119154453278,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19495119154453278
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18588650226593018,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18588650226593018
+          }
+        }
+      },
+      "writer_bypass": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 68.60966473259032,
+        "feedback_rms": 0.025605112314224243,
+        "finite": true,
+        "loss": 5.7024126052856445,
+        "routing_entropy": 0.47573646903038025,
+        "routing_weights": {
+          "v16": 0.6451742649078369,
+          "v17": 0.019402386620640755,
+          "v20": 0.13434378802776337,
+          "v24": 0.20107966661453247
+        },
+        "state_position": 1024,
+        "tokens_per_second": 955.2007032162293,
+        "topdown_rms": 0.16185273230075836,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19191209971904755,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19191209971904755
+          },
+          "v17": {
+            "adapted_memory_rms": 0.18916212022304535,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18916212022304535
+          },
+          "v20": {
+            "adapted_memory_rms": 0.1931605041027069,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.1931605041027069
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18411077558994293,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18411077558994293
+          }
+        }
+      }
+    },
+    {
+      "batch_index": 13,
+      "full_context": 4.046570301055908,
+      "gate_zero": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 69.74982581520453,
+        "feedback_rms": 0.0,
+        "finite": true,
+        "loss": 5.97887659072876,
+        "routing_entropy": 0.3541681170463562,
+        "routing_weights": {
+          "v16": 0.7134002447128296,
+          "v17": 0.004897308070212603,
+          "v20": 0.14508658647537231,
+          "v24": 0.1366156041622162
+        },
+        "state_position": 1024,
+        "tokens_per_second": 939.586575794918,
+        "topdown_rms": 0.16486172378063202,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.1885032057762146,
+            "cosine_source_adapted": 0.9976357221603394,
+            "delta_rms": 0.01182551123201847,
+            "delta_to_source_rms_ratio": 0.06429879367351532,
+            "maximum_delta_to_source_rms_ratio": 0.1646154522895813,
+            "source_rms": 0.18778228759765625
+          },
+          "v17": {
+            "adapted_memory_rms": 0.1802137792110443,
+            "cosine_source_adapted": 0.9938532710075378,
+            "delta_rms": 0.01899786852300167,
+            "delta_to_source_rms_ratio": 0.10908951610326767,
+            "maximum_delta_to_source_rms_ratio": 0.1681886464357376,
+            "source_rms": 0.17868556082248688
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19150646030902863,
+            "cosine_source_adapted": 0.9980528950691223,
+            "delta_rms": 0.010040546767413616,
+            "delta_to_source_rms_ratio": 0.05500241369009018,
+            "maximum_delta_to_source_rms_ratio": 0.16800250113010406,
+            "source_rms": 0.19131624698638916
+          },
+          "v24": {
+            "adapted_memory_rms": 0.17667891085147858,
+            "cosine_source_adapted": 0.9989036321640015,
+            "delta_rms": 0.007221397943794727,
+            "delta_to_source_rms_ratio": 0.04204249009490013,
+            "maximum_delta_to_source_rms_ratio": 0.1564817726612091,
+            "source_rms": 0.1763944774866104
+          }
+        }
+      },
+      "masked_l1_no_feedback": 5.978822231292725,
+      "payload_sha256": "75909eefd3f507dc595d0cd1e910aeb03141bd0e54ec3ba24d788fbca09e59dd",
+      "real_with_representation": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 79.92378262197599,
+        "feedback_rms": 0.025964830070734024,
+        "finite": true,
+        "loss": 5.074042797088623,
+        "representation_drift": {
+          "teacher_vs_adapted_memory": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.8295078277587891,
+                "norm_ratio": 1.0082337856292725,
+                "rms_difference": 0.11534883081912994
+              },
+              "v17": {
+                "cosine_similarity": 0.8290276527404785,
+                "norm_ratio": 1.0287193059921265,
+                "rms_difference": 0.12127485126256943
+              },
+              "v20": {
+                "cosine_similarity": 0.8418731689453125,
+                "norm_ratio": 0.9672582149505615,
+                "rms_difference": 0.11465013027191162
+              },
+              "v24": {
+                "cosine_similarity": 0.8181260824203491,
+                "norm_ratio": 0.9309266805648804,
+                "rms_difference": 0.12213257700204849
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.6813210844993591,
+                "norm_ratio": 0.9337335228919983,
+                "rms_difference": 0.15873093903064728
+              },
+              "v17": {
+                "cosine_similarity": 0.8106967806816101,
+                "norm_ratio": 0.8989607691764832,
+                "rms_difference": 0.13639158010482788
+              },
+              "v20": {
+                "cosine_similarity": 0.6984143257141113,
+                "norm_ratio": 0.896620512008667,
+                "rms_difference": 0.1599089503288269
+              },
+              "v24": {
+                "cosine_similarity": 0.6443957686424255,
+                "norm_ratio": 0.8951725363731384,
+                "rms_difference": 0.16609476506710052
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.7149438858032227,
+                "norm_ratio": 0.9698919057846069,
+                "rms_difference": 0.1515514850616455
+              },
+              "v17": {
+                "cosine_similarity": 0.7615277171134949,
+                "norm_ratio": 1.003503441810608,
+                "rms_difference": 0.14986880123615265
+              },
+              "v20": {
+                "cosine_similarity": 0.7318628430366516,
+                "norm_ratio": 0.9202253818511963,
+                "rms_difference": 0.15290682017803192
+              },
+              "v24": {
+                "cosine_similarity": 0.687927782535553,
+                "norm_ratio": 0.9051225185394287,
+                "rms_difference": 0.1592746376991272
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.696592390537262,
+                "norm_ratio": 0.9307054877281189,
+                "rms_difference": 0.1535949856042862
+              },
+              "v17": {
+                "cosine_similarity": 0.828889012336731,
+                "norm_ratio": 0.8695109486579895,
+                "rms_difference": 0.1289535015821457
+              },
+              "v20": {
+                "cosine_similarity": 0.71625155210495,
+                "norm_ratio": 0.9013352990150452,
+                "rms_difference": 0.15488848090171814
+              },
+              "v24": {
+                "cosine_similarity": 0.6670827269554138,
+                "norm_ratio": 0.9002866744995117,
+                "rms_difference": 0.16133475303649902
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.6769931316375732,
+                "norm_ratio": 0.9592426419258118,
+                "rms_difference": 0.16145819425582886
+              },
+              "v17": {
+                "cosine_similarity": 0.7643337845802307,
+                "norm_ratio": 0.9728244543075562,
+                "rms_difference": 0.15034662187099457
+              },
+              "v20": {
+                "cosine_similarity": 0.6980651021003723,
+                "norm_ratio": 0.898899257183075,
+                "rms_difference": 0.16264629364013672
+              },
+              "v24": {
+                "cosine_similarity": 0.6449614763259888,
+                "norm_ratio": 0.904436469078064,
+                "rms_difference": 0.16787101328372955
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.7051167646732815,
+                "norm_ratio": 0.9029408434365827,
+                "rms_difference": 0.1540511069699043
+              },
+              "v17": {
+                "cosine_similarity": 0.8444321365505748,
+                "norm_ratio": 0.8537700974078094,
+                "rms_difference": 0.11980154556304275
+              },
+              "v20": {
+                "cosine_similarity": 0.7341929695144325,
+                "norm_ratio": 0.8994421912266084,
+                "rms_difference": 0.15300181887154476
+              },
+              "v24": {
+                "cosine_similarity": 0.692615665801584,
+                "norm_ratio": 0.9333044600813356,
+                "rms_difference": 0.15848839866205205
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.6761862635612488,
+                "norm_ratio": 0.9398536682128906,
+                "rms_difference": 0.1603001207113266
+              },
+              "v17": {
+                "cosine_similarity": 0.7849631309509277,
+                "norm_ratio": 0.931896448135376,
+                "rms_difference": 0.14299772679805756
+              },
+              "v20": {
+                "cosine_similarity": 0.693790853023529,
+                "norm_ratio": 0.8942670226097107,
+                "rms_difference": 0.1619114726781845
+              },
+              "v24": {
+                "cosine_similarity": 0.6341196894645691,
+                "norm_ratio": 0.9004854559898376,
+                "rms_difference": 0.16742637753486633
+              }
+            }
+          },
+          "teacher_vs_raw_student": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.8303282260894775,
+                "norm_ratio": 1.0062819719314575,
+                "rms_difference": 0.11490087956190109
+              },
+              "v17": {
+                "cosine_similarity": 0.8293840289115906,
+                "norm_ratio": 1.027303695678711,
+                "rms_difference": 0.12101586908102036
+              },
+              "v20": {
+                "cosine_similarity": 0.8424584269523621,
+                "norm_ratio": 0.9662190675735474,
+                "rms_difference": 0.1143287718296051
+              },
+              "v24": {
+                "cosine_similarity": 0.8186216354370117,
+                "norm_ratio": 0.9298567175865173,
+                "rms_difference": 0.12186598777770996
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.6821696162223816,
+                "norm_ratio": 0.9314880967140198,
+                "rms_difference": 0.15836463868618011
+              },
+              "v17": {
+                "cosine_similarity": 0.8154786229133606,
+                "norm_ratio": 0.8928752541542053,
+                "rms_difference": 0.13456887006759644
+              },
+              "v20": {
+                "cosine_similarity": 0.6992363333702087,
+                "norm_ratio": 0.8952510356903076,
+                "rms_difference": 0.15961380302906036
+              },
+              "v24": {
+                "cosine_similarity": 0.645290195941925,
+                "norm_ratio": 0.8937581181526184,
+                "rms_difference": 0.1657940298318863
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.7159253358840942,
+                "norm_ratio": 0.9675858020782471,
+                "rms_difference": 0.15112018585205078
+              },
+              "v17": {
+                "cosine_similarity": 0.763118326663971,
+                "norm_ratio": 1.0004247426986694,
+                "rms_difference": 0.14911551773548126
+              },
+              "v20": {
+                "cosine_similarity": 0.7325369119644165,
+                "norm_ratio": 0.9190300107002258,
+                "rms_difference": 0.15265429019927979
+              },
+              "v24": {
+                "cosine_similarity": 0.6884586215019226,
+                "norm_ratio": 0.9041638374328613,
+                "rms_difference": 0.15908494591712952
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.6973875761032104,
+                "norm_ratio": 0.9285827279090881,
+                "rms_difference": 0.15325778722763062
+              },
+              "v17": {
+                "cosine_similarity": 0.8345125317573547,
+                "norm_ratio": 0.8624988198280334,
+                "rms_difference": 0.12687049806118011
+              },
+              "v20": {
+                "cosine_similarity": 0.7171016335487366,
+                "norm_ratio": 0.9000305533409119,
+                "rms_difference": 0.15458616614341736
+              },
+              "v24": {
+                "cosine_similarity": 0.6682154536247253,
+                "norm_ratio": 0.898780345916748,
+                "rms_difference": 0.16097451746463776
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.6778010725975037,
+                "norm_ratio": 0.9570555090904236,
+                "rms_difference": 0.16109365224838257
+              },
+              "v17": {
+                "cosine_similarity": 0.7668512463569641,
+                "norm_ratio": 0.9689854383468628,
+                "rms_difference": 0.14928966760635376
+              },
+              "v20": {
+                "cosine_similarity": 0.6986997723579407,
+                "norm_ratio": 0.8977081775665283,
+                "rms_difference": 0.16240854561328888
+              },
+              "v24": {
+                "cosine_similarity": 0.6456311941146851,
+                "norm_ratio": 0.9031379222869873,
+                "rms_difference": 0.16762253642082214
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.7061381778605064,
+                "norm_ratio": 0.9009191583980553,
+                "rms_difference": 0.15367793850236208
+              },
+              "v17": {
+                "cosine_similarity": 0.8505409076489114,
+                "norm_ratio": 0.8458261508531066,
+                "rms_difference": 0.11763719383284538
+              },
+              "v20": {
+                "cosine_similarity": 0.7349606866705908,
+                "norm_ratio": 0.8984071615857387,
+                "rms_difference": 0.15273213246563877
+              },
+              "v24": {
+                "cosine_similarity": 0.6937911599116316,
+                "norm_ratio": 0.9317543940534797,
+                "rms_difference": 0.158092416662526
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.6771108508110046,
+                "norm_ratio": 0.9374856352806091,
+                "rms_difference": 0.15990646183490753
+              },
+              "v17": {
+                "cosine_similarity": 0.7886085510253906,
+                "norm_ratio": 0.9269101023674011,
+                "rms_difference": 0.1415722370147705
+              },
+              "v20": {
+                "cosine_similarity": 0.6946516036987305,
+                "norm_ratio": 0.8927891850471497,
+                "rms_difference": 0.1616009771823883
+              },
+              "v24": {
+                "cosine_similarity": 0.6349244713783264,
+                "norm_ratio": 0.8990833759307861,
+                "rms_difference": 0.1671500951051712
+              }
+            }
+          }
+        },
+        "routing_entropy": 0.45674338936805725,
+        "routing_weights": {
+          "v16": 0.5500909686088562,
+          "v17": 0.020509306341409683,
+          "v20": 0.22218060493469238,
+          "v24": 0.20721912384033203
+        },
+        "state_position": 1024,
+        "tokens_per_second": 819.9812102234023,
+        "topdown_rms": 0.16412664949893951,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19349417090415955,
+            "cosine_source_adapted": 0.9984992146492004,
+            "delta_rms": 0.009158742614090443,
+            "delta_to_source_rms_ratio": 0.048948273062705994,
+            "maximum_delta_to_source_rms_ratio": 0.15603667497634888,
+            "source_rms": 0.19307242333889008
+          },
+          "v17": {
+            "adapted_memory_rms": 0.19776558876037598,
+            "cosine_source_adapted": 0.994942307472229,
+            "delta_rms": 0.01885456033051014,
+            "delta_to_source_rms_ratio": 0.0986935943365097,
+            "maximum_delta_to_source_rms_ratio": 0.16510899364948273,
+            "source_rms": 0.19623367488384247
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19767574965953827,
+            "cosine_source_adapted": 0.9982597827911377,
+            "delta_rms": 0.009594223462045193,
+            "delta_to_source_rms_ratio": 0.051284950226545334,
+            "maximum_delta_to_source_rms_ratio": 0.1724727600812912,
+            "source_rms": 0.19743479788303375
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18903882801532745,
+            "cosine_source_adapted": 0.9989427328109741,
+            "delta_rms": 0.007324260659515858,
+            "delta_to_source_rms_ratio": 0.04057446867227554,
+            "maximum_delta_to_source_rms_ratio": 0.14877207577228546,
+            "source_rms": 0.18874084949493408
+          }
+        }
+      },
+      "teacher_sources_with_writers": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 74.50484763737768,
+        "feedback_rms": 0.02818435989320278,
+        "finite": true,
+        "loss": 5.206569671630859,
+        "routing_entropy": 0.5292810201644897,
+        "routing_weights": {
+          "v16": 0.41738244891166687,
+          "v17": 0.07494743168354034,
+          "v20": 0.27794480323791504,
+          "v24": 0.22972553968429565
+        },
+        "state_position": 1024,
+        "tokens_per_second": 879.6206163519731,
+        "topdown_rms": 0.1781565397977829,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19129878282546997,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19129878282546997
+          },
+          "v17": {
+            "adapted_memory_rms": 0.19260872900485992,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19260872900485992
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19517821073532104,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19517821073532104
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18371480703353882,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18371480703353882
+          }
+        }
+      },
+      "writer_bypass": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 68.2984443679452,
+        "feedback_rms": 0.025593118742108345,
+        "finite": true,
+        "loss": 5.660856246948242,
+        "routing_entropy": 0.4738495945930481,
+        "routing_weights": {
+          "v16": 0.6377289295196533,
+          "v17": 0.016821803525090218,
+          "v20": 0.13769282400608063,
+          "v24": 0.20775680243968964
+        },
+        "state_position": 1024,
+        "tokens_per_second": 959.5533339959686,
+        "topdown_rms": 0.16177712380886078,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19180230796337128,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19180230796337128
+          },
+          "v17": {
+            "adapted_memory_rms": 0.187431201338768,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.187431201338768
+          },
+          "v20": {
+            "adapted_memory_rms": 0.1931450366973877,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.1931450366973877
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18221446871757507,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18221446871757507
+          }
+        }
+      }
+    },
+    {
+      "batch_index": 17,
+      "full_context": 4.137699127197266,
+      "gate_zero": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 75.39678178634495,
+        "feedback_rms": 0.0,
+        "finite": true,
+        "loss": 6.009172439575195,
+        "routing_entropy": 0.36047080159187317,
+        "routing_weights": {
+          "v16": 0.7083652019500732,
+          "v17": 0.006202188786119223,
+          "v20": 0.142181396484375,
+          "v24": 0.1432514190673828
+        },
+        "state_position": 1024,
+        "tokens_per_second": 869.2148185543534,
+        "topdown_rms": 0.16568611562252045,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19021263718605042,
+            "cosine_source_adapted": 0.9977174997329712,
+            "delta_rms": 0.011683370918035507,
+            "delta_to_source_rms_ratio": 0.06307531893253326,
+            "maximum_delta_to_source_rms_ratio": 0.16584376990795135,
+            "source_rms": 0.18952296674251556
+          },
+          "v17": {
+            "adapted_memory_rms": 0.18382856249809265,
+            "cosine_source_adapted": 0.9940862059593201,
+            "delta_rms": 0.018887318670749664,
+            "delta_to_source_rms_ratio": 0.10671454668045044,
+            "maximum_delta_to_source_rms_ratio": 0.16152800619602203,
+            "source_rms": 0.1823539137840271
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19272321462631226,
+            "cosine_source_adapted": 0.997930645942688,
+            "delta_rms": 0.010530597530305386,
+            "delta_to_source_rms_ratio": 0.05722144991159439,
+            "maximum_delta_to_source_rms_ratio": 0.1806277185678482,
+            "source_rms": 0.19257888197898865
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18131901323795319,
+            "cosine_source_adapted": 0.9989754557609558,
+            "delta_rms": 0.006986665073782206,
+            "delta_to_source_rms_ratio": 0.03995569795370102,
+            "maximum_delta_to_source_rms_ratio": 0.1446145921945572,
+            "source_rms": 0.18106389045715332
+          }
+        }
+      },
+      "masked_l1_no_feedback": 6.009128570556641,
+      "payload_sha256": "f33370b7aa5a0699c2114dad6286c2b758ac1eccd814f094774fee082046b4aa",
+      "real_with_representation": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 75.74432270415127,
+        "feedback_rms": 0.026008816435933113,
+        "finite": true,
+        "loss": 5.147797584533691,
+        "representation_drift": {
+          "teacher_vs_adapted_memory": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.8320097923278809,
+                "norm_ratio": 1.0070244073867798,
+                "rms_difference": 0.11545257270336151
+              },
+              "v17": {
+                "cosine_similarity": 0.8313887715339661,
+                "norm_ratio": 1.025222659111023,
+                "rms_difference": 0.12329940497875214
+              },
+              "v20": {
+                "cosine_similarity": 0.8457046747207642,
+                "norm_ratio": 0.9741021990776062,
+                "rms_difference": 0.11329366266727448
+              },
+              "v24": {
+                "cosine_similarity": 0.8165535926818848,
+                "norm_ratio": 0.9475815892219543,
+                "rms_difference": 0.12280977517366409
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.6780551075935364,
+                "norm_ratio": 0.9407641887664795,
+                "rms_difference": 0.1595647633075714
+              },
+              "v17": {
+                "cosine_similarity": 0.8145433664321899,
+                "norm_ratio": 0.8833720684051514,
+                "rms_difference": 0.14031055569648743
+              },
+              "v20": {
+                "cosine_similarity": 0.6951013803482056,
+                "norm_ratio": 0.8943830132484436,
+                "rms_difference": 0.1616315245628357
+              },
+              "v24": {
+                "cosine_similarity": 0.6443021893501282,
+                "norm_ratio": 0.8905760645866394,
+                "rms_difference": 0.1703382432460785
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.717689037322998,
+                "norm_ratio": 0.9624128341674805,
+                "rms_difference": 0.1545514166355133
+              },
+              "v17": {
+                "cosine_similarity": 0.7688789963722229,
+                "norm_ratio": 0.9960057735443115,
+                "rms_difference": 0.14839068055152893
+              },
+              "v20": {
+                "cosine_similarity": 0.7369223833084106,
+                "norm_ratio": 0.9206257462501526,
+                "rms_difference": 0.15148095786571503
+              },
+              "v24": {
+                "cosine_similarity": 0.6907243728637695,
+                "norm_ratio": 0.9163269400596619,
+                "rms_difference": 0.16078685224056244
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.6953291893005371,
+                "norm_ratio": 0.938383936882019,
+                "rms_difference": 0.1560239940881729
+              },
+              "v17": {
+                "cosine_similarity": 0.8288406133651733,
+                "norm_ratio": 0.8540202975273132,
+                "rms_difference": 0.1346595138311386
+              },
+              "v20": {
+                "cosine_similarity": 0.7140482068061829,
+                "norm_ratio": 0.903099775314331,
+                "rms_difference": 0.15631096065044403
+              },
+              "v24": {
+                "cosine_similarity": 0.6677930951118469,
+                "norm_ratio": 0.9008461833000183,
+                "rms_difference": 0.16575737297534943
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.6795260906219482,
+                "norm_ratio": 0.9551884531974792,
+                "rms_difference": 0.16178227961063385
+              },
+              "v17": {
+                "cosine_similarity": 0.7705415487289429,
+                "norm_ratio": 0.9655349850654602,
+                "rms_difference": 0.150776669383049
+              },
+              "v20": {
+                "cosine_similarity": 0.7003580331802368,
+                "norm_ratio": 0.9086491465568542,
+                "rms_difference": 0.16018632054328918
+              },
+              "v24": {
+                "cosine_similarity": 0.6475733518600464,
+                "norm_ratio": 0.9042560458183289,
+                "rms_difference": 0.1700890064239502
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.7044069174451137,
+                "norm_ratio": 0.911529541015625,
+                "rms_difference": 0.1554301461594912
+              },
+              "v17": {
+                "cosine_similarity": 0.839248269038191,
+                "norm_ratio": 0.8491989105881543,
+                "rms_difference": 0.12536494186013178
+              },
+              "v20": {
+                "cosine_similarity": 0.7321842439953828,
+                "norm_ratio": 0.9020106843772933,
+                "rms_difference": 0.15441101731152918
+              },
+              "v24": {
+                "cosine_similarity": 0.6946270190573018,
+                "norm_ratio": 0.9390317315924658,
+                "rms_difference": 0.16148155496078462
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.671074390411377,
+                "norm_ratio": 0.9353607892990112,
+                "rms_difference": 0.1630793809890747
+              },
+              "v17": {
+                "cosine_similarity": 0.7937524318695068,
+                "norm_ratio": 0.9265369176864624,
+                "rms_difference": 0.14625346660614014
+              },
+              "v20": {
+                "cosine_similarity": 0.6893072724342346,
+                "norm_ratio": 0.8929860591888428,
+                "rms_difference": 0.1630958616733551
+              },
+              "v24": {
+                "cosine_similarity": 0.6339014768600464,
+                "norm_ratio": 0.8950985670089722,
+                "rms_difference": 0.1709056943655014
+              }
+            }
+          },
+          "teacher_vs_raw_student": {
+            "1-16": {
+              "v16": {
+                "cosine_similarity": 0.8327853679656982,
+                "norm_ratio": 1.0050780773162842,
+                "rms_difference": 0.11503516882658005
+              },
+              "v17": {
+                "cosine_similarity": 0.831814706325531,
+                "norm_ratio": 1.023738145828247,
+                "rms_difference": 0.12300221621990204
+              },
+              "v20": {
+                "cosine_similarity": 0.8463704586029053,
+                "norm_ratio": 0.9732557535171509,
+                "rms_difference": 0.11296708881855011
+              },
+              "v24": {
+                "cosine_similarity": 0.8170992732048035,
+                "norm_ratio": 0.9465007781982422,
+                "rms_difference": 0.12252862751483917
+              }
+            },
+            "129-256": {
+              "v16": {
+                "cosine_similarity": 0.6786711812019348,
+                "norm_ratio": 0.938658595085144,
+                "rms_difference": 0.15926304459571838
+              },
+              "v17": {
+                "cosine_similarity": 0.818926215171814,
+                "norm_ratio": 0.877621591091156,
+                "rms_difference": 0.13862958550453186
+              },
+              "v20": {
+                "cosine_similarity": 0.6960834264755249,
+                "norm_ratio": 0.8930483460426331,
+                "rms_difference": 0.1612972468137741
+              },
+              "v24": {
+                "cosine_similarity": 0.6451336145401001,
+                "norm_ratio": 0.8893049955368042,
+                "rms_difference": 0.17006681859493256
+              }
+            },
+            "17-32": {
+              "v16": {
+                "cosine_similarity": 0.7184430360794067,
+                "norm_ratio": 0.9602803587913513,
+                "rms_difference": 0.15419620275497437
+              },
+              "v17": {
+                "cosine_similarity": 0.7703084945678711,
+                "norm_ratio": 0.9929232001304626,
+                "rms_difference": 0.14768901467323303
+              },
+              "v20": {
+                "cosine_similarity": 0.7379129528999329,
+                "norm_ratio": 0.9194468259811401,
+                "rms_difference": 0.15113024413585663
+              },
+              "v24": {
+                "cosine_similarity": 0.6911873817443848,
+                "norm_ratio": 0.9154378175735474,
+                "rms_difference": 0.1606084108352661
+              }
+            },
+            "257-512": {
+              "v16": {
+                "cosine_similarity": 0.6959644556045532,
+                "norm_ratio": 0.9364773631095886,
+                "rms_difference": 0.15573255717754364
+              },
+              "v17": {
+                "cosine_similarity": 0.8338407278060913,
+                "norm_ratio": 0.8474994897842407,
+                "rms_difference": 0.13280972838401794
+              },
+              "v20": {
+                "cosine_similarity": 0.715042233467102,
+                "norm_ratio": 0.9020261168479919,
+                "rms_difference": 0.15598426759243011
+              },
+              "v24": {
+                "cosine_similarity": 0.6688264012336731,
+                "norm_ratio": 0.8995168209075928,
+                "rms_difference": 0.16542962193489075
+              }
+            },
+            "33-64": {
+              "v16": {
+                "cosine_similarity": 0.6802416443824768,
+                "norm_ratio": 0.9529269337654114,
+                "rms_difference": 0.16143590211868286
+              },
+              "v17": {
+                "cosine_similarity": 0.7729815244674683,
+                "norm_ratio": 0.9616463780403137,
+                "rms_difference": 0.1497349888086319
+              },
+              "v20": {
+                "cosine_similarity": 0.701404869556427,
+                "norm_ratio": 0.9072836637496948,
+                "rms_difference": 0.15982158482074738
+              },
+              "v24": {
+                "cosine_similarity": 0.6481617093086243,
+                "norm_ratio": 0.9032467603683472,
+                "rms_difference": 0.169880211353302
+              }
+            },
+            "513-1023": {
+              "v16": {
+                "cosine_similarity": 0.705279624625428,
+                "norm_ratio": 0.9096376900570267,
+                "rms_difference": 0.155095303828469
+              },
+              "v17": {
+                "cosine_similarity": 0.8445964298136314,
+                "norm_ratio": 0.8417467688394386,
+                "rms_difference": 0.12345352471458002
+              },
+              "v20": {
+                "cosine_similarity": 0.7330534873409981,
+                "norm_ratio": 0.9011097290277947,
+                "rms_difference": 0.1541132768306247
+              },
+              "v24": {
+                "cosine_similarity": 0.6955229578186155,
+                "norm_ratio": 0.9377397809709821,
+                "rms_difference": 0.16116671926121423
+              }
+            },
+            "65-128": {
+              "v16": {
+                "cosine_similarity": 0.67171710729599,
+                "norm_ratio": 0.9331260919570923,
+                "rms_difference": 0.1627587378025055
+              },
+              "v17": {
+                "cosine_similarity": 0.7971022129058838,
+                "norm_ratio": 0.9217019081115723,
+                "rms_difference": 0.14488713443279266
+              },
+              "v20": {
+                "cosine_similarity": 0.690360963344574,
+                "norm_ratio": 0.8915451765060425,
+                "rms_difference": 0.1627434939146042
+              },
+              "v24": {
+                "cosine_similarity": 0.6346556544303894,
+                "norm_ratio": 0.8939893841743469,
+                "rms_difference": 0.1706628054380417
+              }
+            }
+          }
+        },
+        "routing_entropy": 0.47650212049484253,
+        "routing_weights": {
+          "v16": 0.5456081628799438,
+          "v17": 0.027805885300040245,
+          "v20": 0.21924427151679993,
+          "v24": 0.20734165608882904
+        },
+        "state_position": 1024,
+        "tokens_per_second": 865.226562999001,
+        "topdown_rms": 0.16440463066101074,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19603130221366882,
+            "cosine_source_adapted": 0.9985717535018921,
+            "delta_rms": 0.009040563367307186,
+            "delta_to_source_rms_ratio": 0.047778334468603134,
+            "maximum_delta_to_source_rms_ratio": 0.15749907493591309,
+            "source_rms": 0.19563701748847961
+          },
+          "v17": {
+            "adapted_memory_rms": 0.20388847589492798,
+            "cosine_source_adapted": 0.995220959186554,
+            "delta_rms": 0.01874920167028904,
+            "delta_to_source_rms_ratio": 0.09567557275295258,
+            "maximum_delta_to_source_rms_ratio": 0.16588915884494781,
+            "source_rms": 0.20241035521030426
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19860173761844635,
+            "cosine_source_adapted": 0.9981245994567871,
+            "delta_rms": 0.01013366598635912,
+            "delta_to_source_rms_ratio": 0.05379698425531387,
+            "maximum_delta_to_source_rms_ratio": 0.17793726921081543,
+            "source_rms": 0.19838915765285492
+          },
+          "v24": {
+            "adapted_memory_rms": 0.19376122951507568,
+            "cosine_source_adapted": 0.9990320205688477,
+            "delta_rms": 0.006958834361284971,
+            "delta_to_source_rms_ratio": 0.03797603398561478,
+            "maximum_delta_to_source_rms_ratio": 0.14787709712982178,
+            "source_rms": 0.19350799918174744
+          }
+        }
+      },
+      "teacher_sources_with_writers": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 74.27570183202624,
+        "feedback_rms": 0.02822011150419712,
+        "finite": true,
+        "loss": 5.256510257720947,
+        "routing_entropy": 0.5482407212257385,
+        "routing_weights": {
+          "v16": 0.4291852116584778,
+          "v17": 0.07823199778795242,
+          "v20": 0.2529422640800476,
+          "v24": 0.23964078724384308
+        },
+        "state_position": 1024,
+        "tokens_per_second": 882.3343083072982,
+        "topdown_rms": 0.17838265001773834,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.1936766654253006,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.1936766654253006
+          },
+          "v17": {
+            "adapted_memory_rms": 0.19874316453933716,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19874316453933716
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19652988016605377,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19652988016605377
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18928605318069458,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18928605318069458
+          }
+        }
+      },
+      "writer_bypass": {
+        "cache_health": {
+          "all_expected_lengths": true,
+          "block_1_cache_absent": true,
+          "blocks_2_through_12_lengths": [
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024,
+            1024
+          ],
+          "historical_kv_detached": true
+        },
+        "elapsed_seconds": 74.13007882330567,
+        "feedback_rms": 0.025722051039338112,
+        "finite": true,
+        "loss": 5.7438764572143555,
+        "routing_entropy": 0.49411511421203613,
+        "routing_weights": {
+          "v16": 0.6245072484016418,
+          "v17": 0.02372908778488636,
+          "v20": 0.12351839989423752,
+          "v24": 0.22824515402317047
+        },
+        "state_position": 1024,
+        "tokens_per_second": 884.0675882216412,
+        "topdown_rms": 0.16259202361106873,
+        "writer_behavior": {
+          "v16": {
+            "adapted_memory_rms": 0.19473174214363098,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19473174214363098
+          },
+          "v17": {
+            "adapted_memory_rms": 0.193277969956398,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.193277969956398
+          },
+          "v20": {
+            "adapted_memory_rms": 0.19423319399356842,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.19423319399356842
+          },
+          "v24": {
+            "adapted_memory_rms": 0.18688201904296875,
+            "cosine_source_adapted": 1.0,
+            "delta_rms": 0.0,
+            "delta_to_source_rms_ratio": 0.0,
+            "maximum_delta_to_source_rms_ratio": 0.0,
+            "source_rms": 0.18688201904296875
+          }
+        }
+      }
+    }
+  ]
+}

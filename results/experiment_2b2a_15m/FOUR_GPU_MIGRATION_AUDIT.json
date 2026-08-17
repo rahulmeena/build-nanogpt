@@ -1,0 +1,168 @@
+{
+  "absolute_loss_difference": 0.0,
+  "acceptance": {
+    "gradient_cosine_min": 0.999999,
+    "gradient_norm_relative_difference_max": 0.0001,
+    "gradient_relative_l2_max": 0.0001,
+    "loss_absolute_difference_max": 1e-05,
+    "parameter_update_cosine_min": 0.999999,
+    "parameter_update_relative_l2_max": 0.0001
+  },
+  "authoritative_checkpoint_unchanged": true,
+  "consumed_global_batch_sha256": "e3289bee6ed5a5b2fa1d2c05a615cd3f10f07c51b71aa091ee40380ebeedc21b",
+  "experiment": "2B2A",
+  "four_gpu_loss": 5.580326527473517,
+  "gpu_model": "NVIDIA A100-SXM4-80GB",
+  "gradient_all_reduce_seconds": 15.977494862861931,
+  "gradient_comparison": {
+    "cosine_similarity": 0.9999999997923387,
+    "left_norm": 0.6745032317491829,
+    "maximum_absolute_difference": 9.499490261077881e-07,
+    "relative_l2_difference": 2.0478076604693596e-05,
+    "relative_norm_difference": 2.0113683697847555e-06,
+    "right_norm": 0.6745045884236486
+  },
+  "gradient_elements": 49152,
+  "gradient_reduction": "one flattened FP32 NCCL all_reduce(SUM)",
+  "loss_scaling": "each token-loss sum / 524288; no division after SUM",
+  "microsteps_per_rank": 2,
+  "one_gpu_loss": 5.580326527473517,
+  "passed": true,
+  "per_writer_gradient_comparison": {
+    "transformer.memory_writers.writer_v16.W_down.weight": {
+      "cosine_similarity": 0.9999999998586181,
+      "left_norm": 0.32926074044881376,
+      "maximum_absolute_difference": 5.681067705154419e-07,
+      "relative_l2_difference": 1.6818626615859075e-05,
+      "relative_norm_difference": 3.21952039118063e-07,
+      "right_norm": 0.32926084645498055
+    },
+    "transformer.memory_writers.writer_v16.W_up.weight": {
+      "cosine_similarity": 0.9999999998419135,
+      "left_norm": 0.5447689743622276,
+      "maximum_absolute_difference": 9.499490261077881e-07,
+      "relative_l2_difference": 1.7814810792434327e-05,
+      "relative_norm_difference": 1.0912782460153752e-06,
+      "right_norm": 0.5447695688567584
+    },
+    "transformer.memory_writers.writer_v17.W_down.weight": {
+      "cosine_similarity": 0.9999999998023632,
+      "left_norm": 0.008360697771644767,
+      "maximum_absolute_difference": 1.8684659153223038e-08,
+      "relative_l2_difference": 2.0024811094862274e-05,
+      "relative_norm_difference": 2.391349116705869e-06,
+      "right_norm": 0.008360677778297536
+    },
+    "transformer.memory_writers.writer_v17.W_up.weight": {
+      "cosine_similarity": 0.9999999975508758,
+      "left_norm": 0.01171699072436467,
+      "maximum_absolute_difference": 7.894414011389017e-08,
+      "relative_l2_difference": 7.004805704001871e-05,
+      "relative_norm_difference": 2.9097673653280653e-06,
+      "right_norm": 0.0117170248180819
+    },
+    "transformer.memory_writers.writer_v20.W_down.weight": {
+      "cosine_similarity": 0.9999999993848729,
+      "left_norm": 0.07780615359442195,
+      "maximum_absolute_difference": 1.8416903913021088e-07,
+      "relative_l2_difference": 3.517910866774274e-05,
+      "relative_norm_difference": 2.7037305240954384e-06,
+      "right_norm": 0.07780636396129438
+    },
+    "transformer.memory_writers.writer_v20.W_up.weight": {
+      "cosine_similarity": 0.9999999996205262,
+      "left_norm": 0.13057167432443462,
+      "maximum_absolute_difference": 3.236345946788788e-07,
+      "relative_l2_difference": 2.7569213978422014e-05,
+      "relative_norm_difference": 1.0545536655957723e-06,
+      "right_norm": 0.1305718120192724
+    },
+    "transformer.memory_writers.writer_v24.W_down.weight": {
+      "cosine_similarity": 0.9999999990283904,
+      "left_norm": 0.07636012457670108,
+      "maximum_absolute_difference": 2.062879502773285e-07,
+      "relative_l2_difference": 4.5320821758946195e-05,
+      "relative_norm_difference": 1.0523123014361834e-05,
+      "right_norm": 0.07636092812368539
+    },
+    "transformer.memory_writers.writer_v24.W_up.weight": {
+      "cosine_similarity": 0.9999999994538944,
+      "left_norm": 0.1436242374191614,
+      "maximum_absolute_difference": 6.454065442085266e-07,
+      "relative_l2_difference": 3.987888989265074e-05,
+      "relative_norm_difference": 2.2317932615855795e-05,
+      "right_norm": 0.1436274428152141
+    }
+  },
+  "rank_to_loader_mapping": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  },
+  "rng_policy": {
+    "rank_seed_base": 2026082000,
+    "rank_seeds": [
+      2026082000,
+      2026082001,
+      2026082002,
+      2026082003
+    ],
+    "stochastic_training_operations": "none found"
+  },
+  "source_checkpoint_sha256": "a125c81acb9e4ec3395bd8b38dee8fade62012c642b102a1b6c4c0e0997f0637",
+  "source_next_global_batch_sha256": "e3289bee6ed5a5b2fa1d2c05a615cd3f10f07c51b71aa091ee40380ebeedc21b",
+  "stage": "1GPU_to_4GPU_migration",
+  "status": "PASS",
+  "temporary_optimizer_comparison": {
+    "cross_rank_state": {
+      "adam_m1": "1b670e7bb2ee670045c9214f7cf79a8368857d0bd787bcf322357c6300726254",
+      "adam_m2": "e6bc6a0d2e47d27d9b7df9dd630f9108c847d351e8b95a288144d5cc25f3abbf",
+      "adam_steps": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "writer": "407869a2ddc8ef191b857851e6164d96dfa643c0215a58cd6e63cb552a8e4a95"
+    },
+    "m1": {
+      "cosine_similarity": 0.999999999992382,
+      "left_norm": 0.3520831469797015,
+      "maximum_absolute_difference": 9.499490261077881e-08,
+      "relative_l2_difference": 3.923470861183972e-06,
+      "relative_norm_difference": 4.109575385481617e-07,
+      "right_norm": 0.35208329167092495
+    },
+    "m2": {
+      "cosine_similarity": 0.9999999999865621,
+      "left_norm": 0.002502392374092236,
+      "maximum_absolute_difference": 2.7066562324762344e-09,
+      "relative_l2_difference": 5.261972610449188e-06,
+      "relative_norm_difference": 9.001703894244281e-07,
+      "right_norm": 0.002502394626671754
+    },
+    "parameter_update": {
+      "cosine_similarity": 0.9999999996807993,
+      "left_norm": 0.02107679429553153,
+      "maximum_absolute_difference": 8.195638656616211e-08,
+      "relative_l2_difference": 2.526759670866831e-05,
+      "relative_norm_difference": 1.449667894057658e-07,
+      "right_norm": 0.02107679124009633
+    },
+    "parameters_after_step": {
+      "cosine_similarity": 0.9999999999999768,
+      "left_norm": 3.1611088197903716,
+      "maximum_absolute_difference": 8.195638656616211e-08,
+      "relative_l2_difference": 1.684725102903506e-07,
+      "relative_norm_difference": 7.226085780172737e-10,
+      "right_norm": 3.1611088175061273
+    }
+  },
+  "temporary_states_disposition": "discarded",
+  "world_size": 4
+}

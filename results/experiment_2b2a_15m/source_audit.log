@@ -1,0 +1,98 @@
+{
+  "stage": "2b2a_source_audit",
+  "source_checkpoint": "/workspace/migration/experiment_2b2_5m/result/checkpoints/checkpoint_updates_000010.pt",
+  "source_checkpoint_sha256": "a125c81acb9e4ec3395bd8b38dee8fade62012c642b102a1b6c4c0e0997f0637",
+  "schema": "exp2b2_memory_writers_1step_v1",
+  "training_state": {
+    "local_completed_updates": 10,
+    "processed_2b2_tokens": 5242880,
+    "fineweb_lineage_completed_update": 497,
+    "kind": "result_5m"
+  },
+  "writer_parameters": 49152,
+  "optimizer": {
+    "state_entries": 8,
+    "steps": [
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10
+    ],
+    "moments_finite": true,
+    "lr": 0.0001,
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0
+  },
+  "loader_states": [
+    {
+      "process_rank": 0,
+      "num_processes": 4,
+      "B": 64,
+      "T": 1024,
+      "current_shard": 7,
+      "current_position": 61603840,
+      "current_shard_path": "edu_fineweb10B/edufineweb_train_000008.npy"
+    },
+    {
+      "process_rank": 1,
+      "num_processes": 4,
+      "B": 64,
+      "T": 1024,
+      "current_shard": 7,
+      "current_position": 61669376,
+      "current_shard_path": "edu_fineweb10B/edufineweb_train_000008.npy"
+    },
+    {
+      "process_rank": 2,
+      "num_processes": 4,
+      "B": 64,
+      "T": 1024,
+      "current_shard": 7,
+      "current_position": 63569920,
+      "current_shard_path": "edu_fineweb10B/edufineweb_train_000008.npy"
+    },
+    {
+      "process_rank": 3,
+      "num_processes": 4,
+      "B": 64,
+      "T": 1024,
+      "current_shard": 7,
+      "current_position": 63635456,
+      "current_shard_path": "edu_fineweb10B/edufineweb_train_000008.npy"
+    }
+  ],
+  "rng_fields": [
+    "numpy_random",
+    "python_random",
+    "torch_cpu",
+    "torch_cuda"
+  ],
+  "next_global_batch_sha256": "e3289bee6ed5a5b2fa1d2c05a615cd3f10f07c51b71aa091ee40380ebeedc21b",
+  "source_2b1_checkpoint_sha256": "5a97c36c038ad04155c7965e20a800cdd78845819671f91c6d516599bb9cd69a",
+  "writer_architecture": {
+    "sources": [
+      "v16",
+      "v17",
+      "v20",
+      "v24"
+    ],
+    "rank": 8,
+    "eps": 1e-05,
+    "bias": false,
+    "initialization_seed": 20260202,
+    "W_down_initialization": "Normal(mean=0,std=0.02)",
+    "W_up_initialization": "exact zero",
+    "temporal_credit_horizon_tokens": 1
+  },
+  "implementation_git_commit": "5305709f93cee736d33b93402324a7d3fed40235",
+  "result_commit": "be74383a15c1834d3b56a0767586f1a991fc5dbc",
+  "passed": true
+}

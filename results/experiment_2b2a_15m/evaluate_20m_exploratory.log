@@ -1,0 +1,45 @@
+W0817 04:17:16.597000 3890 torch/distributed/run.py:774] 
+W0817 04:17:16.597000 3890 torch/distributed/run.py:774] *****************************************
+W0817 04:17:16.597000 3890 torch/distributed/run.py:774] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0817 04:17:16.597000 3890 torch/distributed/run.py:774] *****************************************
+found 1 shards for split val
+found 1 shards for split val
+found 1 shards for split val
+found 1 shards for split val
+/usr/local/lib/python3.12/dist-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+[rank2]:[W817 04:17:22.681282576 ProcessGroupNCCL.cpp:5023] [PG ID 0 PG GUID 0 Rank 2]  using GPU 2 as device used by this process is currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. You can specify device_id in init_process_group() to force use of a particular device.
+/usr/local/lib/python3.12/dist-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+[rank1]:[W817 04:17:22.733733853 ProcessGroupNCCL.cpp:5023] [PG ID 0 PG GUID 0 Rank 1]  using GPU 1 as device used by this process is currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. You can specify device_id in init_process_group() to force use of a particular device.
+/usr/local/lib/python3.12/dist-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+[rank3]:[W817 04:17:22.735886866 ProcessGroupNCCL.cpp:5023] [PG ID 0 PG GUID 0 Rank 3]  using GPU 3 as device used by this process is currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. You can specify device_id in init_process_group() to force use of a particular device.
+/usr/local/lib/python3.12/dist-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+[rank0]:[W817 04:17:23.980707889 ProcessGroupNCCL.cpp:5023] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 as device used by this process is currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. You can specify device_id in init_process_group() to force use of a particular device.
+found 1 shards for split valfound 1 shards for split val
+
+found 1 shards for split val
+found 1 shards for split val
+rank=0 eval=00 real=4.789419 shuffled=4.789975
+rank=2 eval=02 real=4.830501 shuffled=4.840931
+rank=3 eval=03 real=4.788116 shuffled=4.798518
+rank=1 eval=01 real=4.764122 shuffled=4.771506
+rank=0 eval=04 real=4.759095 shuffled=4.762823
+rank=2 eval=06 real=4.810007 shuffled=4.819469
+rank=3 eval=07 real=4.756423 shuffled=4.772904
+rank=1 eval=05 real=4.803571 shuffled=4.816047
+rank=0 eval=08 real=4.830506 shuffled=4.841498
+rank=2 eval=10 real=4.842412 shuffled=4.851060
+rank=3 eval=11 real=4.958088 shuffled=4.952986
+rank=1 eval=09 real=4.831111 shuffled=4.842108
+rank=0 eval=12 real=4.788764 shuffled=4.802629
+rank=2 eval=14 real=4.979628 shuffled=4.986678
+rank=3 eval=15 real=4.813923 shuffled=4.820945
+rank=1 eval=13 real=4.803469 shuffled=4.813250
+rank=0 eval=16 real=4.866881 shuffled=4.874212
+rank=2 eval=18 real=4.738900 shuffled=4.744098
+rank=3 eval=19 real=4.768204 shuffled=4.786239
+rank=1 eval=17 real=4.870996 shuffled=4.882564
+MILESTONE_20M_EXPLORATORY real=4.8197069407 shuffled=4.8285220146 gap=0.0088150740 wins=19/20 continue=NO

@@ -1,0 +1,211 @@
+{
+  "experiment": "2B2A",
+  "protocol": "experiment_2b2a_4gpu_writer_scaling_v1",
+  "branch": "experiment-2b2a-writers-scaling-4gpu",
+  "source_2b2_tag": "experiment-2b2-writers-5m",
+  "source_2b2_commit": "be74383a15c1834d3b56a0767586f1a991fc5dbc",
+  "implementation_commits": {
+    "four_gpu_core": "b96a487",
+    "source_tag_fix": "752d5ef",
+    "migration_hash_fix": "ede5eb2",
+    "authorized_exploratory_override": "d53578d",
+    "terminal_diagnostics": "6587500841871ea8eeb395e67f681e183391dc2b"
+  },
+  "source_checkpoint": {
+    "path": "/workspace/migration/experiment_2b2_5m/result/checkpoints/checkpoint_updates_000010.pt",
+    "sha256": "a125c81acb9e4ec3395bd8b38dee8fade62012c642b102a1b6c4c0e0997f0637",
+    "next_global_batch_sha256": "e3289bee6ed5a5b2fa1d2c05a615cd3f10f07c51b71aa091ee40380ebeedc21b",
+    "writer_updates": 10,
+    "writer_training_tokens": 5242880,
+    "adam_steps": [10, 10, 10, 10, 10, 10, 10, 10]
+  },
+  "hardware": {
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "world_size": 4,
+    "processes_per_gpu": 1,
+    "microsteps_per_rank": 2,
+    "batch_sequences": 64,
+    "sequence_length": 1024,
+    "targets_per_rank": 131072,
+    "global_targets_per_update": 524288,
+    "gradient_reduction": "one flattened FP32 NCCL all_reduce(SUM) per global update",
+    "loss_scaling": "each token-loss sum / 524288; no division after SUM"
+  },
+  "migration": {
+    "passed": true,
+    "one_gpu_loss": 5.580326527473517,
+    "four_gpu_loss": 5.580326527473517,
+    "absolute_loss_difference": 0.0,
+    "gradient_cosine_similarity": 0.9999999997923387,
+    "gradient_relative_l2_difference": 0.000020478076604693596,
+    "gradient_relative_norm_difference": 0.0000020113683697847555,
+    "gradient_maximum_absolute_difference": 9.499490261077881e-7,
+    "parameter_update_cosine_similarity": 0.9999999996807993,
+    "parameter_update_relative_l2_difference": 0.00002526759670866831,
+    "parameter_update_maximum_absolute_difference": 8.195638656616211e-8,
+    "adam_m1_relative_l2_difference": 0.000003923470861183972,
+    "adam_m2_relative_l2_difference": 0.000005261972610449188,
+    "temporary_states_discarded": true,
+    "authoritative_checkpoint_unchanged": true
+  },
+  "canonical_validation": {
+    "validation_batches": 20,
+    "batch_sequences": 64,
+    "sequence_length": 1024,
+    "validation_global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "milestones": {
+      "5m_frozen_reference": {
+        "writer_updates": 10,
+        "writer_training_tokens": 5242880,
+        "real_loss": 5.590033102035522,
+        "shuffled_loss": 5.625972080230713,
+        "specific_gap": 0.03593897819519043,
+        "writer_gain_vs_2b1": 0.11127562522888201,
+        "recovery_fraction": 0.20244713507759038,
+        "real_wins": 20,
+        "shuffled_wins": 0
+      },
+      "10m": {
+        "writer_updates": 20,
+        "writer_training_tokens": 10485760,
+        "real_loss": 5.36134774684906,
+        "shuffled_loss": 5.4016084432601925,
+        "specific_gap": 0.04026069641113228,
+        "incremental_real_gain": 0.22868535518646205,
+        "writer_gain_vs_2b1": 0.33996098041534406,
+        "recovery_fraction": 0.32312414406907103,
+        "real_wins": 20,
+        "shuffled_wins": 0,
+        "continuation_gate": "PASS"
+      },
+      "15m_terminal": {
+        "writer_updates": 29,
+        "writer_training_tokens": 15204352,
+        "real_loss": 5.0959878206253055,
+        "shuffled_loss": 5.125001215934754,
+        "specific_gap": 0.029013395309448242,
+        "specific_gap_change_from_10m": -0.011247301101684037,
+        "specific_gap_change_from_5m": -0.0069255828857421875,
+        "incremental_real_gain": 0.2653599262237547,
+        "writer_gain_vs_2b1": 0.6053209066390988,
+        "recovery_fraction": 0.4631542836325441,
+        "real_wins": 20,
+        "shuffled_wins": 0,
+        "continuation_gate": "FAIL",
+        "failed_condition": "specific_gap_15m >= specific_gap_10m - 0.005"
+      }
+    }
+  },
+  "terminal_controls_15m": {
+    "full_context": 4.078654408454895,
+    "masked_l1_no_feedback": 5.973674488067627,
+    "frozen_2b1_self": 5.701308727264404,
+    "terminal_writer_real": 5.0959878206253055,
+    "terminal_writer_shuffled": 5.125001215934754,
+    "terminal_writer_bypass": 5.701308727264404,
+    "terminal_gate_zero": 5.9736480712890625,
+    "teacher_sources_with_terminal_writers": 5.217039656639099,
+    "frozen_regressions_passed": true,
+    "teacher_training_forward_calls": 0,
+    "hellaswag_run": false
+  },
+  "terminal_writer_behavior_15m": {
+    "v16": {
+      "delta_rms": 0.009243828896433114,
+      "source_rms": 0.19419924318790435,
+      "delta_to_source_rms_ratio": 0.049116401746869084,
+      "maximum_delta_to_source_rms_ratio": 0.16584010422229767,
+      "cosine_source_adapted": 0.9984994471073151
+    },
+    "v17": {
+      "delta_rms": 0.01894037425518036,
+      "source_rms": 0.2002063862979412,
+      "delta_to_source_rms_ratio": 0.09749914184212685,
+      "maximum_delta_to_source_rms_ratio": 0.16631709039211273,
+      "cosine_source_adapted": 0.9950502276420593
+    },
+    "v20": {
+      "delta_rms": 0.0099261240568012,
+      "source_rms": 0.19783498495817184,
+      "delta_to_source_rms_ratio": 0.052848685160279275,
+      "maximum_delta_to_source_rms_ratio": 0.17793726921081543,
+      "cosine_source_adapted": 0.9981757014989853
+    },
+    "v24": {
+      "delta_rms": 0.007250901847146452,
+      "source_rms": 0.1923778995871544,
+      "delta_to_source_rms_ratio": 0.03960675671696663,
+      "maximum_delta_to_source_rms_ratio": 0.15904469788074493,
+      "cosine_source_adapted": 0.9989678680896759
+    }
+  },
+  "terminal_routing_15m": {
+    "v16": 0.5535031855106354,
+    "v17": 0.02414347417652607,
+    "v20": 0.21805217489600182,
+    "v24": 0.2043011412024498,
+    "entropy": 0.46564250588417055,
+    "topdown_rms": 0.1642566777765751,
+    "feedback_rms": 0.025985410809516905
+  },
+  "writer_residual_ablations_15m": {
+    "v16": {"ablated_loss": 5.348613166809082, "delta": 0.25262534618377686, "positive_batches": 20},
+    "v17": {"ablated_loss": 5.108227610588074, "delta": 0.012239789962768555, "positive_batches": 20},
+    "v20": {"ablated_loss": 5.150924801826477, "delta": 0.054936981201171874, "positive_batches": 20},
+    "v24": {"ablated_loss": 5.145125532150269, "delta": 0.04913771152496338, "positive_batches": 20}
+  },
+  "reset_interval_losses": {
+    "1": {"frozen_2b1": 5.9737106323, "2b2_5m": 5.973710632324218, "terminal_2b2a_15m": 5.9736480712890625},
+    "2": {"frozen_2b1": 5.8261914968, "2b2_5m": 5.776876783370971, "terminal_2b2a_15m": 5.539660954475403},
+    "4": {"frozen_2b1": 5.7499492407, "2b2_5m": 5.672141647338867, "terminal_2b2a_15m": 5.3130240678787235},
+    "8": {"frozen_2b1": 5.721898365, "2b2_5m": 5.628350162506104, "terminal_2b2a_15m": 5.204313921928406},
+    "16": {"frozen_2b1": 5.7104103088, "2b2_5m": 5.608282852172851, "terminal_2b2a_15m": 5.150771808624268},
+    "32": {"frozen_2b1": 5.7059802055, "2b2_5m": 5.599210906028747, "terminal_2b2a_15m": 5.123137760162353},
+    "64": {"frozen_2b1": 5.7035196781, "2b2_5m": 5.594184994697571, "terminal_2b2a_15m": 5.108782720565796},
+    "128": {"frozen_2b1": 5.7021847963, "2b2_5m": 5.591853499412537, "terminal_2b2a_15m": 5.10157425403595},
+    "never": {"frozen_2b1": 5.7013566494, "2b2_5m": 5.590046334266662, "terminal_2b2a_15m": 5.0959878206253055}
+  },
+  "performance": {
+    "historical_1gpu_seconds_per_update": 4241.4325053,
+    "historical_1gpu_targets_per_second": 123.61106756853052,
+    "canonical_4gpu_seconds_per_update": 784.1702961592052,
+    "canonical_4gpu_targets_per_second": 668.6812582539006,
+    "speedup": 5.4088155673253,
+    "scaling_efficiency": 1.352203891831325,
+    "average_gradient_sync_seconds": 18.243552004011644,
+    "gradient_sync_percent": 2.326478329180141
+  },
+  "canonical_terminal_checkpoint": {
+    "path": "/workspace/runs/experiment_2b2a/checkpoints/checkpoint_updates_000029.pt",
+    "sha256": "86c66343141e24d0beffcf8bc98a558f25c82e1dc05582feade2300d30b2ba84",
+    "next_global_batch_sha256": "8b9fe2fa1c2a10ce930caff4d527c48e4f14ab0e1a6f5e4b352e42f61b8b360d",
+    "strict_verification_passed": true
+  },
+  "exploratory_20m_user_override": {
+    "canonical_2b2a": false,
+    "writer_updates": 38,
+    "writer_training_tokens": 19922944,
+    "real_loss": 4.81970694065094,
+    "shuffled_loss": 4.82852201461792,
+    "specific_gap": 0.008815073966979448,
+    "incremental_real_gain": 0.27628087997436523,
+    "real_wins": 19,
+    "shuffled_wins": 1,
+    "checkpoint_sha256": "d65ff192e037862008d85253a215d3112922c9c8365a576671462f3eaf56a838",
+    "next_global_batch_sha256": "7f6d8da5044e9f485492712373fda12d09eb4ccec60ab8fdee812519d05869a7",
+    "strict_verification_passed": true,
+    "interpretation": "supports continued real-loss improvement but further collapse of sequence-specific memory advantage"
+  },
+  "classification": "WRITER MEMORY SIGNAL REVERSING",
+  "classification_basis": "At the canonical 15M terminal milestone, real loss improved materially but the sequence-specific shuffled-minus-real validation gap fell by 0.0112473 from 10M, violating the frozen final-interval condition by more than the allowed 0.005. The noncanonical user-authorized 20M extension reduced the gap further to 0.0088151.",
+  "decisions": {
+    "A": "YES_SWITCH_TO_JOINT_WRITER_READER; writer-only real loss was not saturated, but its sequence-specific advantage was reversing.",
+    "B": "YES_KEEP_EXACTLY_ONE_TOKEN; the one-step boundary remained valid and effective, with no evidence here supporting a longer credit horizon.",
+    "C": "YES_TEACHER_ASSISTED_OPTIMIZATION_IS_NO_LONGER_NEEDED_AS_A_TRAINING_TARGET; terminal self-recurrent learned-writer loss 5.09599 beats teacher-source plus terminal-writer loss 5.21704, while raw teacher memory and teacher plus 5M writer are distinct weaker references.",
+    "D": "YES_USE_FOUR_RANK_IMPLEMENTATION; migration equivalence passed and measured speedup was 5.41x."
+  },
+  "hellaswag_run": false,
+  "continue_writer_only_training": "NO",
+  "passed": true,
+  "terminal_line": "# EXPERIMENT 2B2A COMPLETE"
+}
