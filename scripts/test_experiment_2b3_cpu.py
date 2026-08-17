@@ -13,7 +13,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 import experiment_2b3 as candidate  # noqa: E402
-from train_gpt2 import GPT, GPTConfig  # noqa: E402
 
 
 def test_config():
@@ -32,7 +31,8 @@ def test_config():
 
 
 def test_joint_freeze_contract():
-    config = GPTConfig(
+    symbols = candidate.a0.support.load_training_symbols()
+    config = symbols["GPTConfig"](
         block_size=8,
         vocab_size=32,
         n_layer=12,
@@ -44,7 +44,7 @@ def test_joint_freeze_contract():
         memory_writer_rank=8,
         memory_writer_init_seed=7,
     )
-    model = GPT(config)
+    model = symbols["GPT"](config)
     model.freeze_for_joint_writer_reader_training()
     trainable = {
         name for name, value in model.named_parameters() if value.requires_grad
