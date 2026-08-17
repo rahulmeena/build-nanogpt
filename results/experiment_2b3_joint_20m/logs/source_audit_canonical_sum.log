@@ -1,0 +1,79 @@
+{
+  "experiment": "2B3",
+  "implementation_git_commit": "a83c02a39ae6ac5941afbdc41a3b1d4188e3869f",
+  "loader_states": 4,
+  "model_subset_sha256": {
+    "base": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+    "reader": "aca8f87518e3728b5d721a48e7729b8e93569a23174f29299d3795227fcd61a7",
+    "writers": "d2e23a5f07f45f15847d70d112be5c6ae63b06000c82f5eb624ac4d60501b45c"
+  },
+  "next_global_batch_sha256": "8b9fe2fa1c2a10ce930caff4d527c48e4f14ab0e1a6f5e4b352e42f61b8b360d",
+  "passed": true,
+  "rank_rng_states": 4,
+  "rank_to_loader_mapping": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  },
+  "reader_optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "lr": 0.0001,
+    "moments_finite": true,
+    "state_entries": 0,
+    "steps": [],
+    "weight_decay": 0.0
+  },
+  "reader_weights": {
+    "gate": 0.1594133824110031,
+    "gate_coefficient": 0.15807659924030304,
+    "query_norm": 1.9570869207382202,
+    "reader_parameters": 1537,
+    "rmsnorm_displacement": 1.9478669166564941
+  },
+  "source_checkpoint": "/workspace/runs/experiment_2b2a/checkpoints/checkpoint_updates_000029.pt",
+  "source_checkpoint_sha256": "86c66343141e24d0beffcf8bc98a558f25c82e1dc05582feade2300d30b2ba84",
+  "source_git_lineage": {
+    "checkpoint_implementation_commit": "ede5eb245f44d19c53d7fcbc5187f020d40f5ffc",
+    "frozen_commit": "c47e4c7619d4f7507f1c05bba8557d6c4712ab73",
+    "frozen_tag": "experiment-2b2a-writers-15m-canonical"
+  },
+  "source_schema": "exp2b2a_writers_4gpu_v1",
+  "stage": "canonical_15m_source_audit",
+  "starting_components": {
+    "path": "/workspace/runs/experiment_2b3/starting_15m_components.pt",
+    "sha256": "f5e20f4d27cd37c6bf164d4b65ed1f9e68ba8a3d404738d4c3899297cd7ba022"
+  },
+  "trainable_parameters": 50689,
+  "training_state": {
+    "fineweb_lineage_completed_update": 526,
+    "kind": "2b2a_15m",
+    "writer_training_tokens": 15204352,
+    "writer_updates": 29
+  },
+  "writer_optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "lr": 0.0001,
+    "moments_finite": true,
+    "state_entries": 8,
+    "steps": [
+      29,
+      29,
+      29,
+      29,
+      29,
+      29,
+      29,
+      29
+    ],
+    "weight_decay": 0.0
+  }
+}

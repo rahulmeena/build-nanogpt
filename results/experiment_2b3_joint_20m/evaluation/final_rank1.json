@@ -1,0 +1,2454 @@
+{
+  "rows": [
+    {
+      "batch_index": 1,
+      "conditions": {
+        "final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 80.30598675413057,
+          "feedback_rms": 0.026160096749663353,
+          "finite": true,
+          "loss": 4.7584052085876465,
+          "routing_entropy": 0.5019949674606323,
+          "routing_weights": {
+            "v16": 0.4477900564670563,
+            "v17": 0.10164251178503036,
+            "v20": 0.279058575630188,
+            "v24": 0.17150922119617462
+          },
+          "state_position": 1024,
+          "tokens_per_second": 816.0786343445201,
+          "topdown_rms": 0.16434648633003235,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19605125486850739,
+              "cosine_source_adapted": 0.9966021180152893,
+              "delta_rms": 0.013613677583634853,
+              "delta_to_source_rms_ratio": 0.07246363908052444,
+              "maximum_delta_to_source_rms_ratio": 0.24737972021102905,
+              "source_rms": 0.1952475607395172
+            },
+            "v17": {
+              "adapted_memory_rms": 0.21196363866329193,
+              "cosine_source_adapted": 0.9888078570365906,
+              "delta_rms": 0.029944567009806633,
+              "delta_to_source_rms_ratio": 0.1477443277835846,
+              "maximum_delta_to_source_rms_ratio": 0.24693749845027924,
+              "source_rms": 0.2087467610836029
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20081444084644318,
+              "cosine_source_adapted": 0.9951573014259338,
+              "delta_rms": 0.016260499134659767,
+              "delta_to_source_rms_ratio": 0.08593826740980148,
+              "maximum_delta_to_source_rms_ratio": 0.2797493040561676,
+              "source_rms": 0.20002059638500214
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19637127220630646,
+              "cosine_source_adapted": 0.997733473777771,
+              "delta_rms": 0.010760679841041565,
+              "delta_to_source_rms_ratio": 0.058426447212696075,
+              "maximum_delta_to_source_rms_ratio": 0.2236616015434265,
+              "source_rms": 0.19579631090164185
+            }
+          }
+        },
+        "final_writer_final_reader_gate_zero": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.40074812807143,
+          "feedback_rms": 0.0,
+          "finite": true,
+          "loss": 5.915982246398926,
+          "routing_entropy": 0.32698291540145874,
+          "routing_weights": {
+            "v16": 0.7052255868911743,
+            "v17": 0.015675215050578117,
+            "v20": 0.17696397006511688,
+            "v24": 0.10213568061590195
+          },
+          "state_position": 1024,
+          "tokens_per_second": 825.3826512351252,
+          "topdown_rms": 0.1673852652311325,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.18963313102722168,
+              "cosine_source_adapted": 0.9932152628898621,
+              "delta_rms": 0.020182384178042412,
+              "delta_to_source_rms_ratio": 0.10979297012090683,
+              "maximum_delta_to_source_rms_ratio": 0.26078495383262634,
+              "source_rms": 0.18791654706001282
+            },
+            "v17": {
+              "adapted_memory_rms": 0.18469546735286713,
+              "cosine_source_adapted": 0.9844400882720947,
+              "delta_rms": 0.030830787494778633,
+              "delta_to_source_rms_ratio": 0.1747642159461975,
+              "maximum_delta_to_source_rms_ratio": 0.2515288293361664,
+              "source_rms": 0.18148277699947357
+            },
+            "v20": {
+              "adapted_memory_rms": 0.1918685883283615,
+              "cosine_source_adapted": 0.9942882657051086,
+              "delta_rms": 0.01732679083943367,
+              "delta_to_source_rms_ratio": 0.09500231593847275,
+              "maximum_delta_to_source_rms_ratio": 0.28771427273750305,
+              "source_rms": 0.1911342293024063
+            },
+            "v24": {
+              "adapted_memory_rms": 0.17908750474452972,
+              "cosine_source_adapted": 0.9972620010375977,
+              "delta_rms": 0.011499975807964802,
+              "delta_to_source_rms_ratio": 0.06651727855205536,
+              "maximum_delta_to_source_rms_ratio": 0.23869875073432922,
+              "source_rms": 0.17847171425819397
+            }
+          }
+        },
+        "final_writer_final_reader_shuffled": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.36795185972005,
+          "feedback_rms": 0.026026541367173195,
+          "finite": true,
+          "loss": 4.760339260101318,
+          "routing_entropy": 0.4959619641304016,
+          "routing_weights": {
+            "v16": 0.4549960792064667,
+            "v17": 0.1099240630865097,
+            "v20": 0.27610254287719727,
+            "v24": 0.15897762775421143
+          },
+          "state_position": 1024,
+          "tokens_per_second": 825.7237142245082,
+          "topdown_rms": 0.16350772976875305,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19496838748455048,
+              "cosine_source_adapted": 0.9964494109153748,
+              "delta_rms": 0.013787906616926193,
+              "delta_to_source_rms_ratio": 0.07399354130029678,
+              "maximum_delta_to_source_rms_ratio": 0.24578306078910828,
+              "source_rms": 0.19412288069725037
+            },
+            "v17": {
+              "adapted_memory_rms": 0.21185235679149628,
+              "cosine_source_adapted": 0.9885497689247131,
+              "delta_rms": 0.030283916741609573,
+              "delta_to_source_rms_ratio": 0.14951308071613312,
+              "maximum_delta_to_source_rms_ratio": 0.2473791241645813,
+              "source_rms": 0.20853909850120544
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19981525838375092,
+              "cosine_source_adapted": 0.9949730038642883,
+              "delta_rms": 0.016393501311540604,
+              "delta_to_source_rms_ratio": 0.08733876794576645,
+              "maximum_delta_to_source_rms_ratio": 0.31422245502471924,
+              "source_rms": 0.19897489249706268
+            },
+            "v24": {
+              "adapted_memory_rms": 0.1958562284708023,
+              "cosine_source_adapted": 0.9977713227272034,
+              "delta_rms": 0.010647181421518326,
+              "delta_to_source_rms_ratio": 0.058036722242832184,
+              "maximum_delta_to_source_rms_ratio": 0.23547543585300446,
+              "source_rms": 0.19528736174106598
+            }
+          }
+        },
+        "final_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.80306791700423,
+          "feedback_rms": 0.026088153943419456,
+          "finite": true,
+          "loss": 4.764611721038818,
+          "routing_entropy": 0.48549872636795044,
+          "routing_weights": {
+            "v16": 0.4675508141517639,
+            "v17": 0.08030866086483002,
+            "v20": 0.27495917677879333,
+            "v24": 0.17718148231506348
+          },
+          "state_position": 1024,
+          "tokens_per_second": 831.6427485922608,
+          "topdown_rms": 0.16490601003170013,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19601838290691376,
+              "cosine_source_adapted": 0.9965792298316956,
+              "delta_rms": 0.01366417296230793,
+              "delta_to_source_rms_ratio": 0.0727473646402359,
+              "maximum_delta_to_source_rms_ratio": 0.23717647790908813,
+              "source_rms": 0.19520911574363708
+            },
+            "v17": {
+              "adapted_memory_rms": 0.21117280423641205,
+              "cosine_source_adapted": 0.9887078404426575,
+              "delta_rms": 0.029956335201859474,
+              "delta_to_source_rms_ratio": 0.14839638769626617,
+              "maximum_delta_to_source_rms_ratio": 0.24803748726844788,
+              "source_rms": 0.20795024931430817
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20090174674987793,
+              "cosine_source_adapted": 0.9951714277267456,
+              "delta_rms": 0.016225893050432205,
+              "delta_to_source_rms_ratio": 0.08574966341257095,
+              "maximum_delta_to_source_rms_ratio": 0.27956101298332214,
+              "source_rms": 0.20011113584041595
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19648846983909607,
+              "cosine_source_adapted": 0.9977388381958008,
+              "delta_rms": 0.01074740570038557,
+              "delta_to_source_rms_ratio": 0.058338768780231476,
+              "maximum_delta_to_source_rms_ratio": 0.22348198294639587,
+              "source_rms": 0.19591568410396576
+            }
+          }
+        },
+        "full_context": {
+          "finite": true,
+          "loss": 4.031586170196533
+        },
+        "masked_l1_no_feedback": {
+          "finite": true,
+          "loss": 5.916080951690674
+        },
+        "start_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.86838066205382,
+          "feedback_rms": 0.025975773110985756,
+          "finite": true,
+          "loss": 5.045424938201904,
+          "routing_entropy": 0.4843747019767761,
+          "routing_weights": {
+            "v16": 0.542530357837677,
+            "v17": 0.03663838282227516,
+            "v20": 0.22835952043533325,
+            "v24": 0.19247184693813324
+          },
+          "state_position": 1024,
+          "tokens_per_second": 830.9540458402175,
+          "topdown_rms": 0.1631888747215271,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.1940966099500656,
+              "cosine_source_adapted": 0.9985185861587524,
+              "delta_rms": 0.009143220260739326,
+              "delta_to_source_rms_ratio": 0.04871847480535507,
+              "maximum_delta_to_source_rms_ratio": 0.15028016269207,
+              "source_rms": 0.19369588792324066
+            },
+            "v17": {
+              "adapted_memory_rms": 0.2015838474035263,
+              "cosine_source_adapted": 0.9949990510940552,
+              "delta_rms": 0.019031047821044922,
+              "delta_to_source_rms_ratio": 0.09802969545125961,
+              "maximum_delta_to_source_rms_ratio": 0.16326873004436493,
+              "source_rms": 0.20003412663936615
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19763757288455963,
+              "cosine_source_adapted": 0.9981468319892883,
+              "delta_rms": 0.010009096004068851,
+              "delta_to_source_rms_ratio": 0.05335945263504982,
+              "maximum_delta_to_source_rms_ratio": 0.15941870212554932,
+              "source_rms": 0.19740842282772064
+            },
+            "v24": {
+              "adapted_memory_rms": 0.1912863701581955,
+              "cosine_source_adapted": 0.9989990592002869,
+              "delta_rms": 0.0070831202901899815,
+              "delta_to_source_rms_ratio": 0.0389862097799778,
+              "maximum_delta_to_source_rms_ratio": 0.14898957312107086,
+              "source_rms": 0.1910213828086853
+            }
+          }
+        },
+        "start_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.00962455756962,
+          "feedback_rms": 0.02591998502612114,
+          "finite": true,
+          "loss": 5.047558784484863,
+          "routing_entropy": 0.4689648747444153,
+          "routing_weights": {
+            "v16": 0.5570290684700012,
+            "v17": 0.0274310614913702,
+            "v20": 0.22055472433567047,
+            "v24": 0.19498464465141296
+          },
+          "state_position": 1024,
+          "tokens_per_second": 829.468566228255,
+          "topdown_rms": 0.16384318470954895,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19408489763736725,
+              "cosine_source_adapted": 0.9985141754150391,
+              "delta_rms": 0.009157618507742882,
+              "delta_to_source_rms_ratio": 0.04880055412650108,
+              "maximum_delta_to_source_rms_ratio": 0.15250931680202484,
+              "source_rms": 0.19368280470371246
+            },
+            "v17": {
+              "adapted_memory_rms": 0.2011447548866272,
+              "cosine_source_adapted": 0.9949748516082764,
+              "delta_rms": 0.01903720572590828,
+              "delta_to_source_rms_ratio": 0.09827776998281479,
+              "maximum_delta_to_source_rms_ratio": 0.163913294672966,
+              "source_rms": 0.19959299266338348
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19767966866493225,
+              "cosine_source_adapted": 0.9981526136398315,
+              "delta_rms": 0.009988919831812382,
+              "delta_to_source_rms_ratio": 0.05324944481253624,
+              "maximum_delta_to_source_rms_ratio": 0.1606171429157257,
+              "source_rms": 0.19745196402072906
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19143350422382355,
+              "cosine_source_adapted": 0.9990022778511047,
+              "delta_rms": 0.007074812892824411,
+              "delta_to_source_rms_ratio": 0.03891701623797417,
+              "maximum_delta_to_source_rms_ratio": 0.14702154695987701,
+              "source_rms": 0.19116869568824768
+            }
+          }
+        },
+        "teacher_sources_final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 77.62226108415052,
+          "feedback_rms": 0.028246833011507988,
+          "finite": true,
+          "loss": 4.871515274047852,
+          "routing_entropy": 0.5368661284446716,
+          "routing_weights": {
+            "v16": 0.3608890771865845,
+            "v17": 0.18159690499305725,
+            "v20": 0.28109821677207947,
+            "v24": 0.17641574144363403
+          },
+          "state_position": 1024,
+          "tokens_per_second": 844.2938801918206,
+          "topdown_rms": 0.17745622992515564,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.1933630257844925,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.1933630257844925
+            },
+            "v17": {
+              "adapted_memory_rms": 0.2052619457244873,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.2052619457244873
+            },
+            "v20": {
+              "adapted_memory_rms": 0.1975296586751938,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.1975296586751938
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19070316851139069,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.19070316851139069
+            }
+          }
+        }
+      },
+      "payload_sha256": "aee1d37289084111b5692ca859f10bd24eb9092a150a632ea1f2b481638f4814"
+    },
+    {
+      "batch_index": 5,
+      "conditions": {
+        "final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.96514241583645,
+          "feedback_rms": 0.026188112795352936,
+          "finite": true,
+          "loss": 4.797606468200684,
+          "routing_entropy": 0.4907670021057129,
+          "routing_weights": {
+            "v16": 0.45330294966697693,
+            "v17": 0.08983680605888367,
+            "v20": 0.2853199541568756,
+            "v24": 0.17154009640216827
+          },
+          "state_position": 1024,
+          "tokens_per_second": 829.935817184783,
+          "topdown_rms": 0.16452263295650482,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19553770124912262,
+              "cosine_source_adapted": 0.9965306520462036,
+              "delta_rms": 0.013785329647362232,
+              "delta_to_source_rms_ratio": 0.07350385189056396,
+              "maximum_delta_to_source_rms_ratio": 0.25213751196861267,
+              "source_rms": 0.19470687210559845
+            },
+            "v17": {
+              "adapted_memory_rms": 0.209274023771286,
+              "cosine_source_adapted": 0.9886177778244019,
+              "delta_rms": 0.02982158400118351,
+              "delta_to_source_rms_ratio": 0.14906933903694153,
+              "maximum_delta_to_source_rms_ratio": 0.2478923350572586,
+              "source_rms": 0.2060564011335373
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20069539546966553,
+              "cosine_source_adapted": 0.9951830506324768,
+              "delta_rms": 0.0162083450704813,
+              "delta_to_source_rms_ratio": 0.08570359647274017,
+              "maximum_delta_to_source_rms_ratio": 0.28745800256729126,
+              "source_rms": 0.19988085329532623
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19690552353858948,
+              "cosine_source_adapted": 0.997836172580719,
+              "delta_rms": 0.010551524348556995,
+              "delta_to_source_rms_ratio": 0.0570366308093071,
+              "maximum_delta_to_source_rms_ratio": 0.21584993600845337,
+              "source_rms": 0.19633075594902039
+            }
+          }
+        },
+        "final_writer_final_reader_gate_zero": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.06171736074612,
+          "feedback_rms": 0.0,
+          "finite": true,
+          "loss": 5.9449968338012695,
+          "routing_entropy": 0.3190929889678955,
+          "routing_weights": {
+            "v16": 0.7084768414497375,
+            "v17": 0.013258683495223522,
+            "v20": 0.1787245273590088,
+            "v24": 0.09954019635915756
+          },
+          "state_position": 1024,
+          "tokens_per_second": 828.9220394868175,
+          "topdown_rms": 0.1679193526506424,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.1896415501832962,
+              "cosine_source_adapted": 0.9930956363677979,
+              "delta_rms": 0.020454952493309975,
+              "delta_to_source_rms_ratio": 0.11115644127130508,
+              "maximum_delta_to_source_rms_ratio": 0.24744799733161926,
+              "source_rms": 0.18787705898284912
+            },
+            "v17": {
+              "adapted_memory_rms": 0.18302364647388458,
+              "cosine_source_adapted": 0.9844492077827454,
+              "delta_rms": 0.030557498335838318,
+              "delta_to_source_rms_ratio": 0.17472513020038605,
+              "maximum_delta_to_source_rms_ratio": 0.25146934390068054,
+              "source_rms": 0.17988546192646027
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19189266860485077,
+              "cosine_source_adapted": 0.9943115711212158,
+              "delta_rms": 0.01729988120496273,
+              "delta_to_source_rms_ratio": 0.09483654797077179,
+              "maximum_delta_to_source_rms_ratio": 0.27199023962020874,
+              "source_rms": 0.19114983081817627
+            },
+            "v24": {
+              "adapted_memory_rms": 0.17989087104797363,
+              "cosine_source_adapted": 0.9973855018615723,
+              "delta_rms": 0.011286583729088306,
+              "delta_to_source_rms_ratio": 0.06488877534866333,
+              "maximum_delta_to_source_rms_ratio": 0.21858279407024384,
+              "source_rms": 0.1792786717414856
+            }
+          }
+        },
+        "final_writer_final_reader_shuffled": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.02079056017101,
+          "feedback_rms": 0.026077261194586754,
+          "finite": true,
+          "loss": 4.805413722991943,
+          "routing_entropy": 0.4862788915634155,
+          "routing_weights": {
+            "v16": 0.46031180024147034,
+            "v17": 0.09990064054727554,
+            "v20": 0.27943670749664307,
+            "v24": 0.16035079956054688
+          },
+          "state_position": 1024,
+          "tokens_per_second": 829.3513584896002,
+          "topdown_rms": 0.16382625699043274,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19446636736392975,
+              "cosine_source_adapted": 0.9963650703430176,
+              "delta_rms": 0.013978488743305206,
+              "delta_to_source_rms_ratio": 0.0751224011182785,
+              "maximum_delta_to_source_rms_ratio": 0.2632768154144287,
+              "source_rms": 0.19359202682971954
+            },
+            "v17": {
+              "adapted_memory_rms": 0.20959818363189697,
+              "cosine_source_adapted": 0.9883681535720825,
+              "delta_rms": 0.030197065323591232,
+              "delta_to_source_rms_ratio": 0.15076319873332977,
+              "maximum_delta_to_source_rms_ratio": 0.248650923371315,
+              "source_rms": 0.20627449452877045
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20000462234020233,
+              "cosine_source_adapted": 0.995030403137207,
+              "delta_rms": 0.01632673665881157,
+              "delta_to_source_rms_ratio": 0.08687839657068253,
+              "maximum_delta_to_source_rms_ratio": 0.29144206643104553,
+              "source_rms": 0.1991439163684845
+            },
+            "v24": {
+              "adapted_memory_rms": 0.1966642290353775,
+              "cosine_source_adapted": 0.9978612661361694,
+              "delta_rms": 0.010478795506060123,
+              "delta_to_source_rms_ratio": 0.0567830353975296,
+              "maximum_delta_to_source_rms_ratio": 0.20919841527938843,
+              "source_rms": 0.19609470665454865
+            }
+          }
+        },
+        "final_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.63651481596753,
+          "feedback_rms": 0.026131588965654373,
+          "finite": true,
+          "loss": 4.80406379699707,
+          "routing_entropy": 0.4743696451187134,
+          "routing_weights": {
+            "v16": 0.4720795154571533,
+            "v17": 0.07044424116611481,
+            "v20": 0.28056246042251587,
+            "v24": 0.17691345512866974
+          },
+          "state_position": 1024,
+          "tokens_per_second": 833.4041781146257,
+          "topdown_rms": 0.16518078744411469,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.1955329179763794,
+              "cosine_source_adapted": 0.9965110421180725,
+              "delta_rms": 0.013829776085913181,
+              "delta_to_source_rms_ratio": 0.07374460250139236,
+              "maximum_delta_to_source_rms_ratio": 0.25360244512557983,
+              "source_rms": 0.1946972757577896
+            },
+            "v17": {
+              "adapted_memory_rms": 0.20855499804019928,
+              "cosine_source_adapted": 0.9885178804397583,
+              "delta_rms": 0.02983730472624302,
+              "delta_to_source_rms_ratio": 0.14971289038658142,
+              "maximum_delta_to_source_rms_ratio": 0.2474656105041504,
+              "source_rms": 0.20533235371112823
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20078493654727936,
+              "cosine_source_adapted": 0.9952005743980408,
+              "delta_rms": 0.01616743579506874,
+              "delta_to_source_rms_ratio": 0.08548000454902649,
+              "maximum_delta_to_source_rms_ratio": 0.2901724874973297,
+              "source_rms": 0.1999746561050415
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19704174995422363,
+              "cosine_source_adapted": 0.9978386163711548,
+              "delta_rms": 0.010550608858466148,
+              "delta_to_source_rms_ratio": 0.057005446404218674,
+              "maximum_delta_to_source_rms_ratio": 0.21517781913280487,
+              "source_rms": 0.19646799564361572
+            }
+          }
+        },
+        "full_context": {
+          "finite": true,
+          "loss": 4.050746917724609
+        },
+        "masked_l1_no_feedback": {
+          "finite": true,
+          "loss": 5.944792747497559
+        },
+        "start_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.83960740501061,
+          "feedback_rms": 0.0260121151804924,
+          "finite": true,
+          "loss": 5.07070255279541,
+          "routing_entropy": 0.47437411546707153,
+          "routing_weights": {
+            "v16": 0.5420670509338379,
+            "v17": 0.030007412657141685,
+            "v20": 0.23208670318126678,
+            "v24": 0.19583891332149506
+          },
+          "state_position": 1024,
+          "tokens_per_second": 831.2573103431625,
+          "topdown_rms": 0.16341698169708252,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19369453191757202,
+              "cosine_source_adapted": 0.9984831809997559,
+              "delta_rms": 0.009272697381675243,
+              "delta_to_source_rms_ratio": 0.04946269094944,
+              "maximum_delta_to_source_rms_ratio": 0.1679978370666504,
+              "source_rms": 0.19327673316001892
+            },
+            "v17": {
+              "adapted_memory_rms": 0.1994648426771164,
+              "cosine_source_adapted": 0.9949620962142944,
+              "delta_rms": 0.018915148451924324,
+              "delta_to_source_rms_ratio": 0.09845457226037979,
+              "maximum_delta_to_source_rms_ratio": 0.1601249873638153,
+              "source_rms": 0.19791868329048157
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19757269322872162,
+              "cosine_source_adapted": 0.9981656074523926,
+              "delta_rms": 0.009952954947948456,
+              "delta_to_source_rms_ratio": 0.05308052897453308,
+              "maximum_delta_to_source_rms_ratio": 0.17053993046283722,
+              "source_rms": 0.1973322182893753
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19209866225719452,
+              "cosine_source_adapted": 0.9990294575691223,
+              "delta_rms": 0.007022280711680651,
+              "delta_to_source_rms_ratio": 0.038401465862989426,
+              "maximum_delta_to_source_rms_ratio": 0.13890579342842102,
+              "source_rms": 0.19182397425174713
+            }
+          }
+        },
+        "start_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.72753277840093,
+          "feedback_rms": 0.0259489007294178,
+          "finite": true,
+          "loss": 5.072998523712158,
+          "routing_entropy": 0.46010008454322815,
+          "routing_weights": {
+            "v16": 0.5557185411453247,
+            "v17": 0.022197160869836807,
+            "v20": 0.2239941656589508,
+            "v24": 0.19808979332447052
+          },
+          "state_position": 1024,
+          "tokens_per_second": 832.4406683042904,
+          "topdown_rms": 0.16402605175971985,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19368959963321686,
+              "cosine_source_adapted": 0.9984799027442932,
+              "delta_rms": 0.00928476732224226,
+              "delta_to_source_rms_ratio": 0.04952888563275337,
+              "maximum_delta_to_source_rms_ratio": 0.16584010422229767,
+              "source_rms": 0.1932707130908966
+            },
+            "v17": {
+              "adapted_memory_rms": 0.19907867908477783,
+              "cosine_source_adapted": 0.9949378967285156,
+              "delta_rms": 0.01892423816025257,
+              "delta_to_source_rms_ratio": 0.09869834780693054,
+              "maximum_delta_to_source_rms_ratio": 0.16074427962303162,
+              "source_rms": 0.19753102958202362
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19761823117733002,
+              "cosine_source_adapted": 0.9981722831726074,
+              "delta_rms": 0.00993475690484047,
+              "delta_to_source_rms_ratio": 0.052980463951826096,
+              "maximum_delta_to_source_rms_ratio": 0.17420966923236847,
+              "source_rms": 0.19737866520881653
+            },
+            "v24": {
+              "adapted_memory_rms": 0.1922660768032074,
+              "cosine_source_adapted": 0.9990314245223999,
+              "delta_rms": 0.007019274402409792,
+              "delta_to_source_rms_ratio": 0.03835555911064148,
+              "maximum_delta_to_source_rms_ratio": 0.13690029084682465,
+              "source_rms": 0.1919908970594406
+            }
+          }
+        },
+        "teacher_sources_final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.05318379681557,
+          "feedback_rms": 0.028157420456409454,
+          "finite": true,
+          "loss": 4.919609546661377,
+          "routing_entropy": 0.5405504107475281,
+          "routing_weights": {
+            "v16": 0.3572975993156433,
+            "v17": 0.1732693761587143,
+            "v20": 0.2916107475757599,
+            "v24": 0.17782215774059296
+          },
+          "state_position": 1024,
+          "tokens_per_second": 839.632630112825,
+          "topdown_rms": 0.17689454555511475,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19267761707305908,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.19267761707305908
+            },
+            "v17": {
+              "adapted_memory_rms": 0.20181821286678314,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.20181821286678314
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19713722169399261,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.19713722169399261
+            },
+            "v24": {
+              "adapted_memory_rms": 0.1908552348613739,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.1908552348613739
+            }
+          }
+        }
+      },
+      "payload_sha256": "ae3818c48fb8426d5ffaafabb55c47bc227c6d2310d3961fbd2066b817a656df"
+    },
+    {
+      "batch_index": 9,
+      "conditions": {
+        "final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.9466739660129,
+          "feedback_rms": 0.02611570805311203,
+          "finite": true,
+          "loss": 4.824883460998535,
+          "routing_entropy": 0.49046170711517334,
+          "routing_weights": {
+            "v16": 0.4566150903701782,
+            "v17": 0.09283961355686188,
+            "v20": 0.28366029262542725,
+            "v24": 0.1668849140405655
+          },
+          "state_position": 1024,
+          "tokens_per_second": 830.1299688472463,
+          "topdown_rms": 0.16406777501106262,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.1949673742055893,
+              "cosine_source_adapted": 0.9965861439704895,
+              "delta_rms": 0.013575585559010506,
+              "delta_to_source_rms_ratio": 0.07271372526884079,
+              "maximum_delta_to_source_rms_ratio": 0.2359904646873474,
+              "source_rms": 0.19414466619491577
+            },
+            "v17": {
+              "adapted_memory_rms": 0.2097393274307251,
+              "cosine_source_adapted": 0.9885538220405579,
+              "delta_rms": 0.029954442754387856,
+              "delta_to_source_rms_ratio": 0.149334117770195,
+              "maximum_delta_to_source_rms_ratio": 0.24140310287475586,
+              "source_rms": 0.2065800577402115
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20049121975898743,
+              "cosine_source_adapted": 0.9952170252799988,
+              "delta_rms": 0.016153231263160706,
+              "delta_to_source_rms_ratio": 0.08549357205629349,
+              "maximum_delta_to_source_rms_ratio": 0.27250924706459045,
+              "source_rms": 0.19968582689762115
+            },
+            "v24": {
+              "adapted_memory_rms": 0.1953856199979782,
+              "cosine_source_adapted": 0.9977713227272034,
+              "delta_rms": 0.010586860589683056,
+              "delta_to_source_rms_ratio": 0.05781019851565361,
+              "maximum_delta_to_source_rms_ratio": 0.22325117886066437,
+              "source_rms": 0.1948167085647583
+            }
+          }
+        },
+        "final_writer_final_reader_gate_zero": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.61148058297113,
+          "feedback_rms": 0.0,
+          "finite": true,
+          "loss": 5.978236198425293,
+          "routing_entropy": 0.31364044547080994,
+          "routing_weights": {
+            "v16": 0.7200390696525574,
+            "v17": 0.012752272188663483,
+            "v20": 0.17008019983768463,
+            "v24": 0.09712794423103333
+          },
+          "state_position": 1024,
+          "tokens_per_second": 823.1978543810443,
+          "topdown_rms": 0.16715823113918304,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.18814001977443695,
+              "cosine_source_adapted": 0.9931293725967407,
+              "delta_rms": 0.02018747851252556,
+              "delta_to_source_rms_ratio": 0.11071556806564331,
+              "maximum_delta_to_source_rms_ratio": 0.2686516344547272,
+              "source_rms": 0.1863897740840912
+            },
+            "v17": {
+              "adapted_memory_rms": 0.1824912279844284,
+              "cosine_source_adapted": 0.9842835068702698,
+              "delta_rms": 0.030603354796767235,
+              "delta_to_source_rms_ratio": 0.1754893958568573,
+              "maximum_delta_to_source_rms_ratio": 0.2542014420032501,
+              "source_rms": 0.17938430607318878
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19142447412014008,
+              "cosine_source_adapted": 0.9943997859954834,
+              "delta_rms": 0.01709207519888878,
+              "delta_to_source_rms_ratio": 0.09394915401935577,
+              "maximum_delta_to_source_rms_ratio": 0.2866069972515106,
+              "source_rms": 0.19069057703018188
+            },
+            "v24": {
+              "adapted_memory_rms": 0.17867404222488403,
+              "cosine_source_adapted": 0.997198760509491,
+              "delta_rms": 0.011552279815077782,
+              "delta_to_source_rms_ratio": 0.06706470251083374,
+              "maximum_delta_to_source_rms_ratio": 0.21867182850837708,
+              "source_rms": 0.17805002629756927
+            }
+          }
+        },
+        "final_writer_final_reader_shuffled": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.18570091715083,
+          "feedback_rms": 0.025948476046323776,
+          "finite": true,
+          "loss": 4.830584526062012,
+          "routing_entropy": 0.4834981858730316,
+          "routing_weights": {
+            "v16": 0.4708540141582489,
+            "v17": 0.09813143312931061,
+            "v20": 0.27710914611816406,
+            "v24": 0.15390515327453613
+          },
+          "state_position": 1024,
+          "tokens_per_second": 827.6241700325161,
+          "topdown_rms": 0.1630173623561859,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19358402490615845,
+              "cosine_source_adapted": 0.9963822960853577,
+              "delta_rms": 0.013834284618496895,
+              "delta_to_source_rms_ratio": 0.07479584962129593,
+              "maximum_delta_to_source_rms_ratio": 0.24965013563632965,
+              "source_rms": 0.19270890951156616
+            },
+            "v17": {
+              "adapted_memory_rms": 0.209705650806427,
+              "cosine_source_adapted": 0.9883366227149963,
+              "delta_rms": 0.030266592279076576,
+              "delta_to_source_rms_ratio": 0.15084519982337952,
+              "maximum_delta_to_source_rms_ratio": 0.25312232971191406,
+              "source_rms": 0.20647041499614716
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19937507808208466,
+              "cosine_source_adapted": 0.9950281977653503,
+              "delta_rms": 0.016308628022670746,
+              "delta_to_source_rms_ratio": 0.08700677752494812,
+              "maximum_delta_to_source_rms_ratio": 0.27337148785591125,
+              "source_rms": 0.19852794706821442
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19465886056423187,
+              "cosine_source_adapted": 0.9977811574935913,
+              "delta_rms": 0.01051951665431261,
+              "delta_to_source_rms_ratio": 0.057722058147192,
+              "maximum_delta_to_source_rms_ratio": 0.20996539294719696,
+              "source_rms": 0.19409693777561188
+            }
+          }
+        },
+        "final_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.8653157632798,
+          "feedback_rms": 0.02605387382209301,
+          "finite": true,
+          "loss": 4.831756114959717,
+          "routing_entropy": 0.4747716784477234,
+          "routing_weights": {
+            "v16": 0.4752906560897827,
+            "v17": 0.07323837280273438,
+            "v20": 0.2788165807723999,
+            "v24": 0.1726544052362442
+          },
+          "state_position": 1024,
+          "tokens_per_second": 820.5814923996321,
+          "topdown_rms": 0.16468968987464905,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19500595331192017,
+              "cosine_source_adapted": 0.9965659976005554,
+              "delta_rms": 0.013623813167214394,
+              "delta_to_source_rms_ratio": 0.0729614719748497,
+              "maximum_delta_to_source_rms_ratio": 0.23997952044010162,
+              "source_rms": 0.19417797029018402
+            },
+            "v17": {
+              "adapted_memory_rms": 0.20906393229961395,
+              "cosine_source_adapted": 0.9884552359580994,
+              "delta_rms": 0.029975514858961105,
+              "delta_to_source_rms_ratio": 0.14996881783008575,
+              "maximum_delta_to_source_rms_ratio": 0.24314269423484802,
+              "source_rms": 0.20589841902256012
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20059624314308167,
+              "cosine_source_adapted": 0.9952331781387329,
+              "delta_rms": 0.016118166968226433,
+              "delta_to_source_rms_ratio": 0.0852871686220169,
+              "maximum_delta_to_source_rms_ratio": 0.27257299423217773,
+              "source_rms": 0.1997947096824646
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19549298286437988,
+              "cosine_source_adapted": 0.9977730512619019,
+              "delta_rms": 0.010584627278149128,
+              "delta_to_source_rms_ratio": 0.057777825742959976,
+              "maximum_delta_to_source_rms_ratio": 0.22273895144462585,
+              "source_rms": 0.19492539763450623
+            }
+          }
+        },
+        "full_context": {
+          "finite": true,
+          "loss": 4.083972930908203
+        },
+        "masked_l1_no_feedback": {
+          "finite": true,
+          "loss": 5.978191375732422
+        },
+        "start_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.09053845889866,
+          "feedback_rms": 0.02596660703420639,
+          "finite": true,
+          "loss": 5.107421875,
+          "routing_entropy": 0.47332853078842163,
+          "routing_weights": {
+            "v16": 0.5486465096473694,
+            "v17": 0.031490523368120193,
+            "v20": 0.23232346773147583,
+            "v24": 0.18753944337368011
+          },
+          "state_position": 1024,
+          "tokens_per_second": 828.6199749930568,
+          "topdown_rms": 0.1631309539079666,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19323499500751495,
+              "cosine_source_adapted": 0.9985185265541077,
+              "delta_rms": 0.00909201055765152,
+              "delta_to_source_rms_ratio": 0.04872743785381317,
+              "maximum_delta_to_source_rms_ratio": 0.14937862753868103,
+              "source_rms": 0.19282324612140656
+            },
+            "v17": {
+              "adapted_memory_rms": 0.1999315768480301,
+              "cosine_source_adapted": 0.9948987364768982,
+              "delta_rms": 0.019052648916840553,
+              "delta_to_source_rms_ratio": 0.09895174205303192,
+              "maximum_delta_to_source_rms_ratio": 0.15971364080905914,
+              "source_rms": 0.19842371344566345
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19743750989437103,
+              "cosine_source_adapted": 0.9981813430786133,
+              "delta_rms": 0.0099153658375144,
+              "delta_to_source_rms_ratio": 0.0528905875980854,
+              "maximum_delta_to_source_rms_ratio": 0.16784895956516266,
+              "source_rms": 0.19719822704792023
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19054101407527924,
+              "cosine_source_adapted": 0.9990124702453613,
+              "delta_rms": 0.006992068607360125,
+              "delta_to_source_rms_ratio": 0.03867096081376076,
+              "maximum_delta_to_source_rms_ratio": 0.1454753875732422,
+              "source_rms": 0.19027578830718994
+            }
+          }
+        },
+        "start_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.95829145098105,
+          "feedback_rms": 0.025912204757332802,
+          "finite": true,
+          "loss": 5.110197067260742,
+          "routing_entropy": 0.4589129388332367,
+          "routing_weights": {
+            "v16": 0.5622208714485168,
+            "v17": 0.023401105776429176,
+            "v20": 0.2240893691778183,
+            "v24": 0.19028867781162262
+          },
+          "state_position": 1024,
+          "tokens_per_second": 830.007828128932,
+          "topdown_rms": 0.16379408538341522,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19325846433639526,
+              "cosine_source_adapted": 0.9985149502754211,
+              "delta_rms": 0.009105369448661804,
+              "delta_to_source_rms_ratio": 0.04879328981041908,
+              "maximum_delta_to_source_rms_ratio": 0.14734525978565216,
+              "source_rms": 0.19284550845623016
+            },
+            "v17": {
+              "adapted_memory_rms": 0.19958074390888214,
+              "cosine_source_adapted": 0.994878351688385,
+              "delta_rms": 0.019057275727391243,
+              "delta_to_source_rms_ratio": 0.09915609657764435,
+              "maximum_delta_to_source_rms_ratio": 0.15951502323150635,
+              "source_rms": 0.19807150959968567
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19749227166175842,
+              "cosine_source_adapted": 0.9981868267059326,
+              "delta_rms": 0.009899177588522434,
+              "delta_to_source_rms_ratio": 0.05279717221856117,
+              "maximum_delta_to_source_rms_ratio": 0.16839537024497986,
+              "source_rms": 0.19725467264652252
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19070592522621155,
+              "cosine_source_adapted": 0.999014675617218,
+              "delta_rms": 0.0069877151399850845,
+              "delta_to_source_rms_ratio": 0.03861762210726738,
+              "maximum_delta_to_source_rms_ratio": 0.14947015047073364,
+              "source_rms": 0.19044077396392822
+            }
+          }
+        },
+        "teacher_sources_final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.80806647473946,
+          "feedback_rms": 0.028021110221743584,
+          "finite": true,
+          "loss": 4.95177698135376,
+          "routing_entropy": 0.5290922522544861,
+          "routing_weights": {
+            "v16": 0.3691215515136719,
+            "v17": 0.16229966282844543,
+            "v20": 0.29651448130607605,
+            "v24": 0.172064408659935
+          },
+          "state_position": 1024,
+          "tokens_per_second": 831.590000003444,
+          "topdown_rms": 0.17603805661201477,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19169119000434875,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.19169119000434875
+            },
+            "v17": {
+              "adapted_memory_rms": 0.20194676518440247,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.20194676518440247
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19688165187835693,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.19688165187835693
+            },
+            "v24": {
+              "adapted_memory_rms": 0.1897796094417572,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.1897796094417572
+            }
+          }
+        }
+      },
+      "payload_sha256": "11d674bbd6a1f9f3bc63ffb7807fdce6d44b30c439c86e5149e8102204e45ebd"
+    },
+    {
+      "batch_index": 13,
+      "conditions": {
+        "final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.20587616367266,
+          "feedback_rms": 0.02621600776910782,
+          "finite": true,
+          "loss": 4.797852993011475,
+          "routing_entropy": 0.48699066042900085,
+          "routing_weights": {
+            "v16": 0.44474753737449646,
+            "v17": 0.08480486273765564,
+            "v20": 0.2823091447353363,
+            "v24": 0.18813830614089966
+          },
+          "state_position": 1024,
+          "tokens_per_second": 827.4133583798134,
+          "topdown_rms": 0.16469788551330566,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19556544721126556,
+              "cosine_source_adapted": 0.996577262878418,
+              "delta_rms": 0.013589315116405487,
+              "delta_to_source_rms_ratio": 0.07252191752195358,
+              "maximum_delta_to_source_rms_ratio": 0.23749688267707825,
+              "source_rms": 0.19473542273044586
+            },
+            "v17": {
+              "adapted_memory_rms": 0.20758768916130066,
+              "cosine_source_adapted": 0.9885903000831604,
+              "delta_rms": 0.02974371239542961,
+              "delta_to_source_rms_ratio": 0.1493617594242096,
+              "maximum_delta_to_source_rms_ratio": 0.2486141175031662,
+              "source_rms": 0.20441555976867676
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20071624219417572,
+              "cosine_source_adapted": 0.9953994750976562,
+              "delta_rms": 0.015714392066001892,
+              "delta_to_source_rms_ratio": 0.08323826640844345,
+              "maximum_delta_to_source_rms_ratio": 0.2699381709098816,
+              "source_rms": 0.19992011785507202
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19349178671836853,
+              "cosine_source_adapted": 0.9976045489311218,
+              "delta_rms": 0.011109951883554459,
+              "delta_to_source_rms_ratio": 0.06084703654050827,
+              "maximum_delta_to_source_rms_ratio": 0.20615363121032715,
+              "source_rms": 0.1928669661283493
+            }
+          }
+        },
+        "final_writer_final_reader_gate_zero": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.18086488591507,
+          "feedback_rms": 0.0,
+          "finite": true,
+          "loss": 5.97887659072876,
+          "routing_entropy": 0.32570216059684753,
+          "routing_weights": {
+            "v16": 0.704251229763031,
+            "v17": 0.012523017823696136,
+            "v20": 0.16944004595279694,
+            "v24": 0.11378564685583115
+          },
+          "state_position": 1024,
+          "tokens_per_second": 827.6747178049294,
+          "topdown_rms": 0.16722983121871948,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.18954385817050934,
+              "cosine_source_adapted": 0.9931610822677612,
+              "delta_rms": 0.020261501893401146,
+              "delta_to_source_rms_ratio": 0.11027000099420547,
+              "maximum_delta_to_source_rms_ratio": 0.2632367014884949,
+              "source_rms": 0.18778228759765625
+            },
+            "v17": {
+              "adapted_memory_rms": 0.18180057406425476,
+              "cosine_source_adapted": 0.9843196868896484,
+              "delta_rms": 0.030556483194231987,
+              "delta_to_source_rms_ratio": 0.1755436658859253,
+              "maximum_delta_to_source_rms_ratio": 0.2624134421348572,
+              "source_rms": 0.17868556082248688
+            },
+            "v20": {
+              "adapted_memory_rms": 0.1920386403799057,
+              "cosine_source_adapted": 0.9945467710494995,
+              "delta_rms": 0.01676688715815544,
+              "delta_to_source_rms_ratio": 0.09208177030086517,
+              "maximum_delta_to_source_rms_ratio": 0.27923524379730225,
+              "source_rms": 0.19131624698638916
+            },
+            "v24": {
+              "adapted_memory_rms": 0.17706198990345,
+              "cosine_source_adapted": 0.9970996379852295,
+              "delta_rms": 0.011863998137414455,
+              "delta_to_source_rms_ratio": 0.06916097551584244,
+              "maximum_delta_to_source_rms_ratio": 0.24093171954154968,
+              "source_rms": 0.1763944774866104
+            }
+          }
+        },
+        "final_writer_final_reader_shuffled": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.12061764905229,
+          "feedback_rms": 0.02606932632625103,
+          "finite": true,
+          "loss": 4.8030805587768555,
+          "routing_entropy": 0.4839613437652588,
+          "routing_weights": {
+            "v16": 0.4554399847984314,
+            "v17": 0.0915604904294014,
+            "v20": 0.2770672142505646,
+            "v24": 0.17593209445476532
+          },
+          "state_position": 1024,
+          "tokens_per_second": 828.3049595326938,
+          "topdown_rms": 0.1637764722108841,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19463299214839935,
+              "cosine_source_adapted": 0.9964374303817749,
+              "delta_rms": 0.013767560012638569,
+              "delta_to_source_rms_ratio": 0.07398372888565063,
+              "maximum_delta_to_source_rms_ratio": 0.24443814158439636,
+              "source_rms": 0.19376349449157715
+            },
+            "v17": {
+              "adapted_memory_rms": 0.20713931322097778,
+              "cosine_source_adapted": 0.9883227348327637,
+              "delta_rms": 0.030040252953767776,
+              "delta_to_source_rms_ratio": 0.15118539333343506,
+              "maximum_delta_to_source_rms_ratio": 0.2513441741466522,
+              "source_rms": 0.2038719803094864
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19992762804031372,
+              "cosine_source_adapted": 0.9952414035797119,
+              "delta_rms": 0.015841763466596603,
+              "delta_to_source_rms_ratio": 0.08449631184339523,
+              "maximum_delta_to_source_rms_ratio": 0.2886563539505005,
+              "source_rms": 0.19909325242042542
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19278496503829956,
+              "cosine_source_adapted": 0.9976168870925903,
+              "delta_rms": 0.011029094457626343,
+              "delta_to_source_rms_ratio": 0.06071358546614647,
+              "maximum_delta_to_source_rms_ratio": 0.23498274385929108,
+              "source_rms": 0.19216787815093994
+            }
+          }
+        },
+        "final_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.43114016624168,
+          "feedback_rms": 0.026148736476898193,
+          "finite": true,
+          "loss": 4.804074764251709,
+          "routing_entropy": 0.4712240397930145,
+          "routing_weights": {
+            "v16": 0.46384066343307495,
+            "v17": 0.06623636186122894,
+            "v20": 0.27631431818008423,
+            "v24": 0.19360853731632233
+          },
+          "state_position": 1024,
+          "tokens_per_second": 825.0668423346248,
+          "topdown_rms": 0.16528917849063873,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19554002583026886,
+              "cosine_source_adapted": 0.9965500235557556,
+              "delta_rms": 0.013649096712470055,
+              "delta_to_source_rms_ratio": 0.0728505477309227,
+              "maximum_delta_to_source_rms_ratio": 0.2377002239227295,
+              "source_rms": 0.19470326602458954
+            },
+            "v17": {
+              "adapted_memory_rms": 0.20690546929836273,
+              "cosine_source_adapted": 0.9884960055351257,
+              "delta_rms": 0.02975912019610405,
+              "delta_to_source_rms_ratio": 0.14997124671936035,
+              "maximum_delta_to_source_rms_ratio": 0.24939179420471191,
+              "source_rms": 0.2037269026041031
+            },
+            "v20": {
+              "adapted_memory_rms": 0.2008090615272522,
+              "cosine_source_adapted": 0.9954168200492859,
+              "delta_rms": 0.015676051378250122,
+              "delta_to_source_rms_ratio": 0.08302512764930725,
+              "maximum_delta_to_source_rms_ratio": 0.2718571126461029,
+              "source_rms": 0.20001725852489471
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19365884363651276,
+              "cosine_source_adapted": 0.9976075887680054,
+              "delta_rms": 0.011107168160378933,
+              "delta_to_source_rms_ratio": 0.060790009796619415,
+              "maximum_delta_to_source_rms_ratio": 0.20611436665058136,
+              "source_rms": 0.19303461909294128
+            }
+          }
+        },
+        "full_context": {
+          "finite": true,
+          "loss": 4.046570301055908
+        },
+        "masked_l1_no_feedback": {
+          "finite": true,
+          "loss": 5.978822231292725
+        },
+        "start_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.09502555429935,
+          "feedback_rms": 0.026031261309981346,
+          "finite": true,
+          "loss": 5.071434497833252,
+          "routing_entropy": 0.4705860912799835,
+          "routing_weights": {
+            "v16": 0.536383867263794,
+            "v17": 0.027809936553239822,
+            "v20": 0.23117414116859436,
+            "v24": 0.20463232696056366
+          },
+          "state_position": 1024,
+          "tokens_per_second": 828.5729670193864,
+          "topdown_rms": 0.16353754699230194,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.1935063898563385,
+              "cosine_source_adapted": 0.9985047578811646,
+              "delta_rms": 0.009141683578491211,
+              "delta_to_source_rms_ratio": 0.04885397106409073,
+              "maximum_delta_to_source_rms_ratio": 0.15699660778045654,
+              "source_rms": 0.19308629631996155
+            },
+            "v17": {
+              "adapted_memory_rms": 0.19813452661037445,
+              "cosine_source_adapted": 0.9949666857719421,
+              "delta_rms": 0.018845926970243454,
+              "delta_to_source_rms_ratio": 0.09845905750989914,
+              "maximum_delta_to_source_rms_ratio": 0.16435900330543518,
+              "source_rms": 0.19660520553588867
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19761131703853607,
+              "cosine_source_adapted": 0.998253583908081,
+              "delta_rms": 0.009613567031919956,
+              "delta_to_source_rms_ratio": 0.05139575153589249,
+              "maximum_delta_to_source_rms_ratio": 0.17192456126213074,
+              "source_rms": 0.19736896455287933
+            },
+            "v24": {
+              "adapted_memory_rms": 0.18885618448257446,
+              "cosine_source_adapted": 0.9989405870437622,
+              "delta_rms": 0.007325516548007727,
+              "delta_to_source_rms_ratio": 0.0406164824962616,
+              "maximum_delta_to_source_rms_ratio": 0.14636410772800446,
+              "source_rms": 0.1885586678981781
+            }
+          }
+        },
+        "start_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 79.22231406765059,
+          "feedback_rms": 0.025964830070734024,
+          "finite": true,
+          "loss": 5.074042797088623,
+          "routing_entropy": 0.45674338936805725,
+          "routing_weights": {
+            "v16": 0.5500909686088562,
+            "v17": 0.020509306341409683,
+            "v20": 0.22218060493469238,
+            "v24": 0.20721912384033203
+          },
+          "state_position": 1024,
+          "tokens_per_second": 827.2416776924316,
+          "topdown_rms": 0.16412664949893951,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19349417090415955,
+              "cosine_source_adapted": 0.9984992146492004,
+              "delta_rms": 0.009158742614090443,
+              "delta_to_source_rms_ratio": 0.048948273062705994,
+              "maximum_delta_to_source_rms_ratio": 0.15603667497634888,
+              "source_rms": 0.19307242333889008
+            },
+            "v17": {
+              "adapted_memory_rms": 0.19776558876037598,
+              "cosine_source_adapted": 0.994942307472229,
+              "delta_rms": 0.01885456033051014,
+              "delta_to_source_rms_ratio": 0.0986935943365097,
+              "maximum_delta_to_source_rms_ratio": 0.16510899364948273,
+              "source_rms": 0.19623367488384247
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19767574965953827,
+              "cosine_source_adapted": 0.9982597827911377,
+              "delta_rms": 0.009594223462045193,
+              "delta_to_source_rms_ratio": 0.051284950226545334,
+              "maximum_delta_to_source_rms_ratio": 0.1724727600812912,
+              "source_rms": 0.19743479788303375
+            },
+            "v24": {
+              "adapted_memory_rms": 0.18903882801532745,
+              "cosine_source_adapted": 0.9989427328109741,
+              "delta_rms": 0.007324260659515858,
+              "delta_to_source_rms_ratio": 0.04057446867227554,
+              "maximum_delta_to_source_rms_ratio": 0.14877207577228546,
+              "source_rms": 0.18874084949493408
+            }
+          }
+        },
+        "teacher_sources_final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.34507340472192,
+          "feedback_rms": 0.028305627405643463,
+          "finite": true,
+          "loss": 4.930416107177734,
+          "routing_entropy": 0.5296923518180847,
+          "routing_weights": {
+            "v16": 0.3476162552833557,
+            "v17": 0.15349163115024567,
+            "v20": 0.2975914478302002,
+            "v24": 0.20130082964897156
+          },
+          "state_position": 1024,
+          "tokens_per_second": 836.504417596858,
+          "topdown_rms": 0.1778256744146347,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.192626491189003,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.192626491189003
+            },
+            "v17": {
+              "adapted_memory_rms": 0.1999729573726654,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.1999729573726654
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19708538055419922,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.19708538055419922
+            },
+            "v24": {
+              "adapted_memory_rms": 0.18771357834339142,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.18771357834339142
+            }
+          }
+        }
+      },
+      "payload_sha256": "75909eefd3f507dc595d0cd1e910aeb03141bd0e54ec3ba24d788fbca09e59dd"
+    },
+    {
+      "batch_index": 17,
+      "conditions": {
+        "final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.54322052001953,
+          "feedback_rms": 0.026323700323700905,
+          "finite": true,
+          "loss": 4.865792751312256,
+          "routing_entropy": 0.5034391283988953,
+          "routing_weights": {
+            "v16": 0.4402340054512024,
+            "v17": 0.09944132715463638,
+            "v20": 0.28006497025489807,
+            "v24": 0.1802598536014557
+          },
+          "state_position": 1024,
+          "tokens_per_second": 834.3941025857963,
+          "topdown_rms": 0.16537457704544067,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19810575246810913,
+              "cosine_source_adapted": 0.996765673160553,
+              "delta_rms": 0.013389913365244865,
+              "delta_to_source_rms_ratio": 0.07061371207237244,
+              "maximum_delta_to_source_rms_ratio": 0.25244373083114624,
+              "source_rms": 0.19731952250003815
+            },
+            "v17": {
+              "adapted_memory_rms": 0.21477507054805756,
+              "cosine_source_adapted": 0.9892104864120483,
+              "delta_rms": 0.029693694785237312,
+              "delta_to_source_rms_ratio": 0.14483822882175446,
+              "maximum_delta_to_source_rms_ratio": 0.25463956594467163,
+              "source_rms": 0.21166573464870453
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20164504647254944,
+              "cosine_source_adapted": 0.9951393604278564,
+              "delta_rms": 0.016390353441238403,
+              "delta_to_source_rms_ratio": 0.08628083020448685,
+              "maximum_delta_to_source_rms_ratio": 0.2805747389793396,
+              "source_rms": 0.20087988674640656
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19847269356250763,
+              "cosine_source_adapted": 0.9978232979774475,
+              "delta_rms": 0.010495686903595924,
+              "delta_to_source_rms_ratio": 0.056641265749931335,
+              "maximum_delta_to_source_rms_ratio": 0.2112332433462143,
+              "source_rms": 0.19792822003364563
+            }
+          }
+        },
+        "final_writer_final_reader_gate_zero": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.9880774342455,
+          "feedback_rms": 0.0,
+          "finite": true,
+          "loss": 6.009172439575195,
+          "routing_entropy": 0.33481088280677795,
+          "routing_weights": {
+            "v16": 0.6947089433670044,
+            "v17": 0.016201481223106384,
+            "v20": 0.17240528762340546,
+            "v24": 0.11668500304222107
+          },
+          "state_position": 1024,
+          "tokens_per_second": 829.6948365980445,
+          "topdown_rms": 0.16773469746112823,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.1912078559398651,
+              "cosine_source_adapted": 0.9934303164482117,
+              "delta_rms": 0.019958820194005966,
+              "delta_to_source_rms_ratio": 0.10786828398704529,
+              "maximum_delta_to_source_rms_ratio": 0.27228888869285583,
+              "source_rms": 0.18952296674251556
+            },
+            "v17": {
+              "adapted_memory_rms": 0.18538253009319305,
+              "cosine_source_adapted": 0.9848752617835999,
+              "delta_rms": 0.030421167612075806,
+              "delta_to_source_rms_ratio": 0.17193154990673065,
+              "maximum_delta_to_source_rms_ratio": 0.2561556100845337,
+              "source_rms": 0.1823539137840271
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19324640929698944,
+              "cosine_source_adapted": 0.9942782521247864,
+              "delta_rms": 0.01744234375655651,
+              "delta_to_source_rms_ratio": 0.09506478160619736,
+              "maximum_delta_to_source_rms_ratio": 0.2912173867225647,
+              "source_rms": 0.19257888197898865
+            },
+            "v24": {
+              "adapted_memory_rms": 0.1816713809967041,
+              "cosine_source_adapted": 0.9973083138465881,
+              "delta_rms": 0.011430015787482262,
+              "delta_to_source_rms_ratio": 0.06545853614807129,
+              "maximum_delta_to_source_rms_ratio": 0.22356916964054108,
+              "source_rms": 0.18106389045715332
+            }
+          }
+        },
+        "final_writer_final_reader_shuffled": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.88395173614845,
+          "feedback_rms": 0.02613360434770584,
+          "finite": true,
+          "loss": 4.8711018562316895,
+          "routing_entropy": 0.49844032526016235,
+          "routing_weights": {
+            "v16": 0.4509570300579071,
+            "v17": 0.10306614637374878,
+            "v20": 0.27758097648620605,
+            "v24": 0.1683955192565918
+          },
+          "state_position": 1024,
+          "tokens_per_second": 830.7900220212755,
+          "topdown_rms": 0.16418036818504333,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19684536755084991,
+              "cosine_source_adapted": 0.9965949058532715,
+              "delta_rms": 0.013594618998467922,
+              "delta_to_source_rms_ratio": 0.07232104986906052,
+              "maximum_delta_to_source_rms_ratio": 0.24587956070899963,
+              "source_rms": 0.19601215422153473
+            },
+            "v17": {
+              "adapted_memory_rms": 0.21489764750003815,
+              "cosine_source_adapted": 0.9889693856239319,
+              "delta_rms": 0.030047347769141197,
+              "delta_to_source_rms_ratio": 0.14648611843585968,
+              "maximum_delta_to_source_rms_ratio": 0.2512414753437042,
+              "source_rms": 0.21171477437019348
+            },
+            "v20": {
+              "adapted_memory_rms": 0.2003137767314911,
+              "cosine_source_adapted": 0.9949132204055786,
+              "delta_rms": 0.016600485891103745,
+              "delta_to_source_rms_ratio": 0.08819469809532166,
+              "maximum_delta_to_source_rms_ratio": 0.27675145864486694,
+              "source_rms": 0.19949957728385925
+            },
+            "v24": {
+              "adapted_memory_rms": 0.1975681334733963,
+              "cosine_source_adapted": 0.9978255033493042,
+              "delta_rms": 0.01043627504259348,
+              "delta_to_source_rms_ratio": 0.05665614828467369,
+              "maximum_delta_to_source_rms_ratio": 0.22358284890651703,
+              "source_rms": 0.19703412055969238
+            }
+          }
+        },
+        "final_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.47409568028525,
+          "feedback_rms": 0.026241889223456383,
+          "finite": true,
+          "loss": 4.871734142303467,
+          "routing_entropy": 0.48765626549720764,
+          "routing_weights": {
+            "v16": 0.45936742424964905,
+            "v17": 0.07885193079710007,
+            "v20": 0.2754908502101898,
+            "v24": 0.18629013001918793
+          },
+          "state_position": 1024,
+          "tokens_per_second": 835.1290885466599,
+          "topdown_rms": 0.1658778190612793,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.1980874389410019,
+              "cosine_source_adapted": 0.9967402815818787,
+              "delta_rms": 0.013447740115225315,
+              "delta_to_source_rms_ratio": 0.07092593610286713,
+              "maximum_delta_to_source_rms_ratio": 0.2522067129611969,
+              "source_rms": 0.19729521870613098
+            },
+            "v17": {
+              "adapted_memory_rms": 0.2139957845211029,
+              "cosine_source_adapted": 0.9891141653060913,
+              "delta_rms": 0.0297076515853405,
+              "delta_to_source_rms_ratio": 0.14547444880008698,
+              "maximum_delta_to_source_rms_ratio": 0.2535600960254669,
+              "source_rms": 0.21088223159313202
+            },
+            "v20": {
+              "adapted_memory_rms": 0.20174150168895721,
+              "cosine_source_adapted": 0.9951547384262085,
+              "delta_rms": 0.01635614223778248,
+              "delta_to_source_rms_ratio": 0.08608824014663696,
+              "maximum_delta_to_source_rms_ratio": 0.2783809006214142,
+              "source_rms": 0.2009790539741516
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19864299893379211,
+              "cosine_source_adapted": 0.9978264570236206,
+              "delta_rms": 0.010495711117982864,
+              "delta_to_source_rms_ratio": 0.05660080537199974,
+              "maximum_delta_to_source_rms_ratio": 0.2098950743675232,
+              "source_rms": 0.1980992555618286
+            }
+          }
+        },
+        "full_context": {
+          "finite": true,
+          "loss": 4.137699127197266
+        },
+        "masked_l1_no_feedback": {
+          "finite": true,
+          "loss": 6.009128570556641
+        },
+        "start_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.55357481213287,
+          "feedback_rms": 0.026068944483995438,
+          "finite": true,
+          "loss": 5.145936012268066,
+          "routing_entropy": 0.49142196774482727,
+          "routing_weights": {
+            "v16": 0.5313587188720703,
+            "v17": 0.03709131479263306,
+            "v20": 0.2271110713481903,
+            "v24": 0.20443831384181976
+          },
+          "state_position": 1024,
+          "tokens_per_second": 834.2841195545151,
+          "topdown_rms": 0.16377386450767517,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19604064524173737,
+              "cosine_source_adapted": 0.9985755681991577,
+              "delta_rms": 0.00902712531387806,
+              "delta_to_source_rms_ratio": 0.04770427942276001,
+              "maximum_delta_to_source_rms_ratio": 0.1555292010307312,
+              "source_rms": 0.19564786553382874
+            },
+            "v17": {
+              "adapted_memory_rms": 0.2043381780385971,
+              "cosine_source_adapted": 0.9952446818351746,
+              "delta_rms": 0.018744133412837982,
+              "delta_to_source_rms_ratio": 0.09543169289827347,
+              "maximum_delta_to_source_rms_ratio": 0.16485436260700226,
+              "source_rms": 0.20286107063293457
+            },
+            "v20": {
+              "adapted_memory_rms": 0.1985463947057724,
+              "cosine_source_adapted": 0.9981189370155334,
+              "delta_rms": 0.010154603980481625,
+              "delta_to_source_rms_ratio": 0.05391085892915726,
+              "maximum_delta_to_source_rms_ratio": 0.17502382397651672,
+              "source_rms": 0.19833333790302277
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19359691441059113,
+              "cosine_source_adapted": 0.9990296363830566,
+              "delta_rms": 0.0069651175290346146,
+              "delta_to_source_rms_ratio": 0.03803614526987076,
+              "maximum_delta_to_source_rms_ratio": 0.14635895192623138,
+              "source_rms": 0.19334323704242706
+            }
+          }
+        },
+        "start_writer_start_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 78.58117773011327,
+          "feedback_rms": 0.026008816435933113,
+          "finite": true,
+          "loss": 5.147797584533691,
+          "routing_entropy": 0.47650212049484253,
+          "routing_weights": {
+            "v16": 0.5456081628799438,
+            "v17": 0.027805885300040245,
+            "v20": 0.21924427151679993,
+            "v24": 0.20734165608882904
+          },
+          "state_position": 1024,
+          "tokens_per_second": 833.9910636753641,
+          "topdown_rms": 0.16440463066101074,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19603130221366882,
+              "cosine_source_adapted": 0.9985717535018921,
+              "delta_rms": 0.009040563367307186,
+              "delta_to_source_rms_ratio": 0.047778334468603134,
+              "maximum_delta_to_source_rms_ratio": 0.15749907493591309,
+              "source_rms": 0.19563701748847961
+            },
+            "v17": {
+              "adapted_memory_rms": 0.20388847589492798,
+              "cosine_source_adapted": 0.995220959186554,
+              "delta_rms": 0.01874920167028904,
+              "delta_to_source_rms_ratio": 0.09567557275295258,
+              "maximum_delta_to_source_rms_ratio": 0.16588915884494781,
+              "source_rms": 0.20241035521030426
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19860173761844635,
+              "cosine_source_adapted": 0.9981245994567871,
+              "delta_rms": 0.01013366598635912,
+              "delta_to_source_rms_ratio": 0.05379698425531387,
+              "maximum_delta_to_source_rms_ratio": 0.17793726921081543,
+              "source_rms": 0.19838915765285492
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19376122951507568,
+              "cosine_source_adapted": 0.9990320205688477,
+              "delta_rms": 0.006958834361284971,
+              "delta_to_source_rms_ratio": 0.03797603398561478,
+              "maximum_delta_to_source_rms_ratio": 0.14787709712982178,
+              "source_rms": 0.19350799918174744
+            }
+          }
+        },
+        "teacher_sources_final_writer_final_reader": {
+          "cache_health": {
+            "all_expected_lengths": true,
+            "block_1_cache_absent": true,
+            "blocks_2_through_12_lengths": [
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024,
+              1024
+            ],
+            "historical_kv_detached": true
+          },
+          "elapsed_seconds": 77.83038886124268,
+          "feedback_rms": 0.028416596353054047,
+          "finite": true,
+          "loss": 4.987966060638428,
+          "routing_entropy": 0.5449001789093018,
+          "routing_weights": {
+            "v16": 0.3565821349620819,
+            "v17": 0.1549500972032547,
+            "v20": 0.28100964426994324,
+            "v24": 0.20745781064033508
+          },
+          "state_position": 1024,
+          "tokens_per_second": 842.0361372835831,
+          "topdown_rms": 0.17852269113063812,
+          "writer_behavior": {
+            "v16": {
+              "adapted_memory_rms": 0.19526980817317963,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.19526980817317963
+            },
+            "v17": {
+              "adapted_memory_rms": 0.2068805992603302,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.2068805992603302
+            },
+            "v20": {
+              "adapted_memory_rms": 0.19861796498298645,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.19861796498298645
+            },
+            "v24": {
+              "adapted_memory_rms": 0.19333885610103607,
+              "cosine_source_adapted": 1.0,
+              "delta_rms": 0.0,
+              "delta_to_source_rms_ratio": 0.0,
+              "maximum_delta_to_source_rms_ratio": 0.0,
+              "source_rms": 0.19333885610103607
+            }
+          }
+        }
+      },
+      "payload_sha256": "f33370b7aa5a0699c2114dad6286c2b758ac1eccd814f094774fee082046b4aa"
+    }
+  ]
+}

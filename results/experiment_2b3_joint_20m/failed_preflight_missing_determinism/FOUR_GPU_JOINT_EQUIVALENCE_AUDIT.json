@@ -1,0 +1,154 @@
+{
+  "absolute_loss_difference": 0.0,
+  "acceptance": {
+    "gradient_cosine_min": 0.999999,
+    "gradient_norm_relative_difference_max": 0.0001,
+    "gradient_relative_l2_max": 0.0001,
+    "loss_absolute_difference_max": 1e-05,
+    "parameter_update_cosine_min": 0.999999,
+    "parameter_update_relative_l2_max": 0.0001
+  },
+  "authoritative_checkpoint_unchanged": true,
+  "communication_buffer_elements": 202756,
+  "consumed_global_batch_sha256": "8b9fe2fa1c2a10ce930caff4d527c48e4f14ab0e1a6f5e4b352e42f61b8b360d",
+  "experiment": "2B3",
+  "four_gpu_loss": 5.077572417940246,
+  "gpu_model": "NVIDIA A100-SXM4-80GB",
+  "gradient_all_reduce_seconds": 19.270909337792546,
+  "gradient_comparison": {
+    "reader": {
+      "cosine_similarity": 0.9999999999034127,
+      "left_norm": 0.9684639459216571,
+      "maximum_absolute_difference": 4.172325134277344e-06,
+      "relative_l2_difference": 1.4575019988179565e-05,
+      "relative_norm_difference": 4.3884861980259655e-06,
+      "right_norm": 0.9684596958309971
+    },
+    "writer": {
+      "cosine_similarity": 0.9999999997189332,
+      "left_norm": 1.1038429091121753,
+      "maximum_absolute_difference": 1.1455267667770386e-06,
+      "relative_l2_difference": 2.374400990384001e-05,
+      "relative_norm_difference": 1.2912116646181166e-06,
+      "right_norm": 1.1038443344070155
+    }
+  },
+  "gradient_elements": 50689,
+  "gradient_reduction": "one combined rank-slotted flattened FP32 NCCL all_reduce(SUM), then fixed rank-order local sum",
+  "implementation_git_commit": "a83c02a39ae6ac5941afbdc41a3b1d4188e3869f",
+  "loss_scaling": "each token-loss sum / 524288; no division after SUM",
+  "microsteps_per_rank": 2,
+  "one_gpu_loss": 5.077572417940246,
+  "passed": false,
+  "rank_to_loader_mapping": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  },
+  "reader_gradient_elements": 1537,
+  "source_checkpoint_sha256": "86c66343141e24d0beffcf8bc98a558f25c82e1dc05582feade2300d30b2ba84",
+  "source_next_global_batch_sha256": "8b9fe2fa1c2a10ce930caff4d527c48e4f14ab0e1a6f5e4b352e42f61b8b360d",
+  "stage": "1GPU_to_4GPU_joint_gradient_equivalence",
+  "status": "FAIL",
+  "temporary_cross_rank_state": {
+    "reader": {
+      "adam_m1": "7ab5bd64604a11b238cd6e51d8890829fef6a337dc08d87c1de3fd18ee06c951",
+      "adam_m2": "8d42b5278c74d6b196e9f9c324ca4e06240e608f1bf928c5c2c1340b58991664",
+      "adam_steps": [
+        1,
+        1,
+        1
+      ],
+      "parameters": "d35a3d8db600f278cba5a62d5dfaf16515c3cbc1d221d2414b474e62c80ca4cf"
+    },
+    "writer": {
+      "adam_m1": "86340db5433a8bdc8f981e5290e88f3477934fc309832168c2f555663b8a8741",
+      "adam_m2": "77291e590989ef45db2d810936902deb749ec763591f5b59858b29340cc2cdee",
+      "adam_steps": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "parameters": "45037435f2ee199a38e7290ccab660dbea4484b166b9b9b426bf9a512a699a6f"
+    }
+  },
+  "temporary_optimizer_comparison": {
+    "reader": {
+      "m1": {
+        "cosine_similarity": 0.999999999903414,
+        "left_norm": 0.09684639608039279,
+        "maximum_absolute_difference": 4.172325134277344e-07,
+        "relative_l2_difference": 1.4574921330355815e-05,
+        "relative_norm_difference": 4.388490284049108e-06,
+        "right_norm": 0.09684597107092455
+      },
+      "m2": {
+        "cosine_similarity": 1.0000000000000004,
+        "left_norm": 0.046789203318647984,
+        "maximum_absolute_difference": 4.0605664253234863e-07,
+        "relative_l2_difference": 8.678564635481749e-06,
+        "relative_norm_difference": 8.678427462506768e-06,
+        "right_norm": 0.046788797261940955
+      },
+      "parameters": {
+        "cosine_similarity": 0.9999999999999709,
+        "left_norm": 29.29482125154818,
+        "maximum_absolute_difference": 7.271766662597656e-06,
+        "relative_l2_difference": 2.507823846131138e-07,
+        "relative_norm_difference": 9.03115284235979e-09,
+        "right_norm": 29.29482098698217
+      },
+      "update": {
+        "cosine_similarity": 0.999998241877819,
+        "left_norm": 0.003917102368773237,
+        "maximum_absolute_difference": 7.271766662597656e-06,
+        "relative_l2_difference": 0.0018755254365688174,
+        "relative_norm_difference": 3.8560183889268786e-05,
+        "right_norm": 0.003916951324585584
+      }
+    },
+    "writer": {
+      "m1": {
+        "cosine_similarity": 0.9999999999963578,
+        "left_norm": 0.879957071029916,
+        "maximum_absolute_difference": 1.0803341865539551e-07,
+        "relative_l2_difference": 2.694586001729177e-06,
+        "relative_norm_difference": 4.996553135397921e-08,
+        "right_norm": 0.8799571149974387
+      },
+      "m2": {
+        "cosine_similarity": 0.9999999999975556,
+        "left_norm": 0.00973339117858489,
+        "maximum_absolute_difference": 2.735760062932968e-09,
+        "relative_l2_difference": 2.263261768014396e-06,
+        "relative_norm_difference": 4.803688537935623e-07,
+        "right_norm": 0.009733395854202853
+      },
+      "parameters": {
+        "cosine_similarity": 0.999999999999988,
+        "left_norm": 3.216271092872625,
+        "maximum_absolute_difference": 2.8638169169425964e-08,
+        "relative_l2_difference": 7.561774709789533e-08,
+        "relative_norm_difference": 2.172259601453167e-10,
+        "right_norm": 3.2162710921739674
+      },
+      "update": {
+        "cosine_similarity": 0.9999999999366311,
+        "left_norm": 0.02160190167267278,
+        "maximum_absolute_difference": 2.8638169169425964e-08,
+        "relative_l2_difference": 1.1258600181796951e-05,
+        "relative_norm_difference": 1.1327817108137403e-07,
+        "right_norm": 0.021601899225648865
+      }
+    }
+  },
+  "temporary_states_disposition": "discarded",
+  "world_size": 4,
+  "writer_gradient_elements": 49152
+}

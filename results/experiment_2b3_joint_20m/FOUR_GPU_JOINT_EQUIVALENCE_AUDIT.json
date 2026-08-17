@@ -1,0 +1,154 @@
+{
+  "absolute_loss_difference": 0.0,
+  "acceptance": {
+    "gradient_cosine_min": 0.999999,
+    "gradient_norm_relative_difference_max": 0.0001,
+    "gradient_relative_l2_max": 0.0001,
+    "loss_absolute_difference_max": 1e-05,
+    "parameter_update_cosine_min": 0.999999,
+    "parameter_update_relative_l2_max": 0.0001
+  },
+  "authoritative_checkpoint_unchanged": true,
+  "communication_buffer_elements": 202756,
+  "consumed_global_batch_sha256": "8b9fe2fa1c2a10ce930caff4d527c48e4f14ab0e1a6f5e4b352e42f61b8b360d",
+  "experiment": "2B3",
+  "four_gpu_loss": 5.077572417940246,
+  "gpu_model": "NVIDIA A100-SXM4-80GB",
+  "gradient_all_reduce_seconds": 22.07032562000677,
+  "gradient_comparison": {
+    "reader": {
+      "cosine_similarity": 1.0000000000000007,
+      "left_norm": 0.9684597860374161,
+      "maximum_absolute_difference": 0.0,
+      "relative_l2_difference": 0.0,
+      "relative_norm_difference": 0.0,
+      "right_norm": 0.9684597860374161
+    },
+    "writer": {
+      "cosine_similarity": 0.9999999999999925,
+      "left_norm": 1.1038495269170832,
+      "maximum_absolute_difference": 0.0,
+      "relative_l2_difference": 0.0,
+      "relative_norm_difference": 0.0,
+      "right_norm": 1.1038495269170832
+    }
+  },
+  "gradient_elements": 50689,
+  "gradient_reduction": "one combined rank-slotted flattened FP32 NCCL all_reduce(SUM), then fixed rank-order local sum",
+  "implementation_git_commit": "7a2b8ba7de4294438db4ba63f236e7f4e46452fc",
+  "loss_scaling": "each token-loss sum / 524288; no division after SUM",
+  "microsteps_per_rank": 2,
+  "one_gpu_loss": 5.077572417940246,
+  "passed": true,
+  "rank_to_loader_mapping": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  },
+  "reader_gradient_elements": 1537,
+  "source_checkpoint_sha256": "86c66343141e24d0beffcf8bc98a558f25c82e1dc05582feade2300d30b2ba84",
+  "source_next_global_batch_sha256": "8b9fe2fa1c2a10ce930caff4d527c48e4f14ab0e1a6f5e4b352e42f61b8b360d",
+  "stage": "1GPU_to_4GPU_joint_gradient_equivalence",
+  "status": "PASS",
+  "temporary_cross_rank_state": {
+    "reader": {
+      "adam_m1": "6bb98761aa1c5abd2e0b0d9548675648a10d5def3760049fbe552b118fb03900",
+      "adam_m2": "540eb8afe2eef5037467c0f5fcbbbc8d3eaa0af25a5a9759489ebf7be9f3c94e",
+      "adam_steps": [
+        1,
+        1,
+        1
+      ],
+      "parameters": "09e314e4d33f9b51d4b87551e73bb8d54465f095a0b225cb07165b93c882accb"
+    },
+    "writer": {
+      "adam_m1": "71b16d8fd11be697f20af8d8b3d9e6b2f404b23973afcb76a068fab553f20ec2",
+      "adam_m2": "0eb5e49434a5475621a5cb208c6b224c0d1a909256a3cb221238905042fab148",
+      "adam_steps": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "parameters": "ae47c7a95e488c882976c7a8745c924d7034e80fd7d86b7678344b078e5ae8f1"
+    }
+  },
+  "temporary_optimizer_comparison": {
+    "reader": {
+      "m1": {
+        "cosine_similarity": 0.9999999999999994,
+        "left_norm": 0.09684598009252311,
+        "maximum_absolute_difference": 0.0,
+        "relative_l2_difference": 0.0,
+        "relative_norm_difference": 0.0,
+        "right_norm": 0.09684598009252311
+      },
+      "m2": {
+        "cosine_similarity": 1.0000000000000009,
+        "left_norm": 0.04678879726204273,
+        "maximum_absolute_difference": 0.0,
+        "relative_l2_difference": 0.0,
+        "relative_norm_difference": 0.0,
+        "right_norm": 0.04678879726204273
+      },
+      "parameters": {
+        "cosine_similarity": 1.0000000000000024,
+        "left_norm": 29.294821233067374,
+        "maximum_absolute_difference": 0.0,
+        "relative_l2_difference": 0.0,
+        "relative_norm_difference": 0.0,
+        "right_norm": 29.294821233067374
+      },
+      "update": {
+        "cosine_similarity": 0.9999999999999997,
+        "left_norm": 0.003917020023533828,
+        "maximum_absolute_difference": 0.0,
+        "relative_l2_difference": 0.0,
+        "relative_norm_difference": 0.0,
+        "right_norm": 0.003917020023533828
+      }
+    },
+    "writer": {
+      "m1": {
+        "cosine_similarity": 0.9999999999999893,
+        "left_norm": 0.879957083531443,
+        "maximum_absolute_difference": 0.0,
+        "relative_l2_difference": 0.0,
+        "relative_norm_difference": 0.0,
+        "right_norm": 0.879957083531443
+      },
+      "m2": {
+        "cosine_similarity": 1.0000000000000013,
+        "left_norm": 0.009733392952305246,
+        "maximum_absolute_difference": 0.0,
+        "relative_l2_difference": 0.0,
+        "relative_norm_difference": 0.0,
+        "right_norm": 0.009733392952305246
+      },
+      "parameters": {
+        "cosine_similarity": 0.9999999999999909,
+        "left_norm": 3.216271091748835,
+        "maximum_absolute_difference": 0.0,
+        "relative_l2_difference": 0.0,
+        "relative_norm_difference": 0.0,
+        "right_norm": 3.216271091748835
+      },
+      "update": {
+        "cosine_similarity": 1.0000000000000024,
+        "left_norm": 0.021601900027122135,
+        "maximum_absolute_difference": 0.0,
+        "relative_l2_difference": 0.0,
+        "relative_norm_difference": 0.0,
+        "right_norm": 0.021601900027122135
+      }
+    }
+  },
+  "temporary_states_disposition": "discarded",
+  "world_size": 4,
+  "writer_gradient_elements": 49152
+}

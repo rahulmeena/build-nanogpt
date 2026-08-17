@@ -1,0 +1,243 @@
+{
+  "causality": {
+    "fresh_state": {
+      "block_1_cache_absent": true,
+      "initial_memory_exactly_zero": true,
+      "initial_position_zero": true,
+      "other_caches_empty": true,
+      "passed": true
+    },
+    "future_causality": {
+      "maximum_absolute_logit_difference": 0.0,
+      "passed": true,
+      "prefix_logits_bit_exact": true,
+      "prefix_memory_and_kv_bit_exact": true
+    },
+    "passed": true,
+    "row_isolation": {
+      "passed": true,
+      "unchanged_row_logits_bit_exact": true,
+      "unchanged_row_memory_and_kv_bit_exact": true
+    }
+  },
+  "experiment": "2B3",
+  "hellaswag_run": false,
+  "implementation_git_commit": "7a2b8ba7de4294438db4ba63f236e7f4e46452fc",
+  "model_state_unchanged": true,
+  "passed": true,
+  "reader_optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "lr": 0.0001,
+    "moments_finite": true,
+    "state_entries": 0,
+    "steps": [],
+    "weight_decay": 0.0
+  },
+  "source_checkpoint_sha256": "86c66343141e24d0beffcf8bc98a558f25c82e1dc05582feade2300d30b2ba84",
+  "source_next_global_batch_sha256": "8b9fe2fa1c2a10ce930caff4d527c48e4f14ab0e1a6f5e4b352e42f61b8b360d",
+  "stage": "joint_gradient_and_integrity_preflight",
+  "teacher_training_forward_calls": 0,
+  "temporal_gradient_boundary": {
+    "frozen_base_gradients_none": true,
+    "historical_kv_temporal_gradient_none": true,
+    "loss_t_plus_1_to_writer_memory_t": {
+      "finite": true,
+      "nonzero": true,
+      "present": true
+    },
+    "loss_t_plus_2_to_writer_memory_t": {
+      "finite": false,
+      "nonzero": false,
+      "present": false
+    },
+    "loss_t_plus_2_to_writer_memory_t_plus_1": {
+      "finite": true,
+      "nonzero": true,
+      "present": true
+    },
+    "passed": true,
+    "precision": "FP32",
+    "reader_gradients": {
+      "gate": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.2920128107070923,
+        "present": true
+      },
+      "query": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.8180862665176392,
+        "present": true
+      },
+      "rmsnorm": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.0538247674703598,
+        "present": true
+      }
+    },
+    "stored_state_after_each_token": [
+      {
+        "block_1_cache_absent": true,
+        "blocks_2_through_12_lengths": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "historical_kv_finite_detached": true,
+        "memory_finite_with_expected_graph": true,
+        "memory_has_grad_fn": true,
+        "memory_requires_grad": true,
+        "passed": true
+      },
+      {
+        "block_1_cache_absent": true,
+        "blocks_2_through_12_lengths": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "historical_kv_finite_detached": true,
+        "memory_finite_with_expected_graph": true,
+        "memory_has_grad_fn": true,
+        "memory_requires_grad": true,
+        "passed": true
+      },
+      {
+        "block_1_cache_absent": true,
+        "blocks_2_through_12_lengths": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "historical_kv_finite_detached": true,
+        "memory_finite_with_expected_graph": true,
+        "memory_has_grad_fn": true,
+        "memory_requires_grad": true,
+        "passed": true
+      },
+      {
+        "block_1_cache_absent": true,
+        "blocks_2_through_12_lengths": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "historical_kv_finite_detached": true,
+        "memory_finite_with_expected_graph": true,
+        "memory_has_grad_fn": true,
+        "memory_requires_grad": true,
+        "passed": true
+      }
+    ],
+    "writer_gradients": {
+      "transformer.memory_writers.writer_v16.W_down.weight": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.604631781578064,
+        "present": true
+      },
+      "transformer.memory_writers.writer_v16.W_up.weight": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.22037875652313232,
+        "present": true
+      },
+      "transformer.memory_writers.writer_v17.W_down.weight": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.06638689339160919,
+        "present": true
+      },
+      "transformer.memory_writers.writer_v17.W_up.weight": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.13334324955940247,
+        "present": true
+      },
+      "transformer.memory_writers.writer_v20.W_down.weight": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.6564540266990662,
+        "present": true
+      },
+      "transformer.memory_writers.writer_v20.W_up.weight": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.3961745500564575,
+        "present": true
+      },
+      "transformer.memory_writers.writer_v24.W_down.weight": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.04510503262281418,
+        "present": true
+      },
+      "transformer.memory_writers.writer_v24.W_up.weight": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.030635761097073555,
+        "present": true
+      }
+    }
+  },
+  "trainable_parameters": 50689,
+  "writer_optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "lr": 0.0001,
+    "moments_finite": true,
+    "state_entries": 8,
+    "steps": [
+      29,
+      29,
+      29,
+      29,
+      29,
+      29,
+      29,
+      29
+    ],
+    "weight_decay": 0.0
+  }
+}

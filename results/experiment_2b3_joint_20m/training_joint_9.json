@@ -1,0 +1,93 @@
+{
+  "end_joint_update": 9,
+  "fresh_process_restart_required": false,
+  "frozen_base_unchanged": true,
+  "hard_stop_reached": true,
+  "input_checkpoint_sha256": "c2fb2cac39fdbdbbbdd277d9a7db19ada1451ac2790aea59e4a1170714db33ec",
+  "joint_training_tokens": 4718592,
+  "new_joint_updates": 4,
+  "output_checkpoint": {
+    "bytes": 498818571,
+    "checkpoint": "/workspace/runs/experiment_2b3/checkpoints/checkpoint_joint_updates_000009.pt",
+    "cross_rank_consistency": {
+      "reader": {
+        "adam_m1": "bdbf0568b7b4c611b8d36383216213bde7227aada33a630236830067b5a76801",
+        "adam_m2": "63a9382f5e73b79ffef0e33210a9cbd78eab85e2d6151e1b20c5a609dc3f4f37",
+        "adam_steps": [
+          9,
+          9,
+          9
+        ],
+        "parameters": "8f74a00de94ee92f7fbd4049224843ce67e89af92f7bf08a3aaae19e7e1adb14"
+      },
+      "writer": {
+        "adam_m1": "113654975a259d5ccb5fd45a8fbf6f054c3cfad30356b3ceb980d11642500acb",
+        "adam_m2": "21f05605dbf907c2dbeaed732d9ca8e06269d573f85ca08510ff8c4ce3a4a2ad",
+        "adam_steps": [
+          38,
+          38,
+          38,
+          38,
+          38,
+          38,
+          38,
+          38
+        ],
+        "parameters": "5aadab032ef0b2fd1971d8c1245d0bf45da5306af782c3b6ee730c63b6acaeca"
+      }
+    },
+    "loader_states": 4,
+    "model_strict_reload": true,
+    "next_global_batch_sha256": "7f6d8da5044e9f485492712373fda12d09eb4ccec60ab8fdee812519d05869a7",
+    "passed": true,
+    "rank_rng_states": 4,
+    "reader_optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "lr": 0.0001,
+      "moments_finite": true,
+      "state_entries": 3,
+      "steps": [
+        9,
+        9,
+        9
+      ],
+      "weight_decay": 0.0
+    },
+    "reader_optimizer_strict_reload": true,
+    "sha256": "7797f349905e344934bd7d2475cf61b332ef9053cb0bc1a44f450fc24249c65b",
+    "writer_optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "lr": 0.0001,
+      "moments_finite": true,
+      "state_entries": 8,
+      "steps": [
+        38,
+        38,
+        38,
+        38,
+        38,
+        38,
+        38,
+        38
+      ],
+      "weight_decay": 0.0
+    },
+    "writer_optimizer_strict_reload": true
+  },
+  "passed": true,
+  "source_kind": "fresh_joint_update_5_resume",
+  "stage": "final_after_9",
+  "stage_wall_seconds": 3520.577405937016,
+  "start_joint_update": 5,
+  "teacher_training_forward_calls": 0,
+  "writer_lineage_tokens": 19922944,
+  "writer_lineage_update": 38
+}

@@ -1,0 +1,113 @@
+{
+  "experiment": "2B3",
+  "title": "Joint Writer + Reader Co-Adaptation with One-Step Temporal Credit",
+  "status": "COMPLETE",
+  "classification": "JOINT CO-ADAPTATION IMPROVES GENERIC COMPENSATION ONLY",
+  "git": {
+    "parent_tag": "experiment-2b2a-writers-15m-canonical",
+    "parent_commit": "c47e4c7619d4f7507f1c05bba8557d6c4712ab73",
+    "branch": "experiment-2b3-joint-writer-reader-1step",
+    "implementation_commit": "7a2b8ba7de4294438db4ba63f236e7f4e46452fc"
+  },
+  "source": {
+    "checkpoint": "/workspace/runs/experiment_2b2a/checkpoints/checkpoint_updates_000029.pt",
+    "sha256": "86c66343141e24d0beffcf8bc98a558f25c82e1dc05582feade2300d30b2ba84",
+    "next_global_batch_sha256": "8b9fe2fa1c2a10ce930caff4d527c48e4f14ab0e1a6f5e4b352e42f61b8b360d",
+    "writer_adam_start_step": 29,
+    "reader_adam_start_step": 0,
+    "writer_weights_preserved": true,
+    "reader_weights_preserved": true,
+    "reader_optimizer_fresh": true
+  },
+  "distributed_equivalence": {
+    "status": "PASS",
+    "one_gpu_loss": 5.077572417940246,
+    "four_gpu_loss": 5.077572417940246,
+    "absolute_loss_difference": 0.0,
+    "writer_gradient_cosine": 0.9999999999999925,
+    "reader_gradient_cosine": 1.0000000000000007,
+    "writer_gradient_relative_l2": 0.0,
+    "reader_gradient_relative_l2": 0.0,
+    "writer_update_cosine": 1.0000000000000024,
+    "reader_update_cosine": 0.9999999999999997,
+    "writer_update_relative_l2": 0.0,
+    "reader_update_relative_l2": 0.0,
+    "temporary_states_discarded": true,
+    "source_checkpoint_unchanged": true
+  },
+  "training": {
+    "joint_updates": 9,
+    "additional_tokens": 4718592,
+    "writer_lineage_updates_final": 38,
+    "writer_lineage_tokens_final": 19922944,
+    "writer_adam_final_step": 38,
+    "reader_adam_final_step": 9,
+    "forced_process_restart_after_joint_update": 5,
+    "forced_process_restart_verified": true,
+    "global_targets_per_update": 524288,
+    "stage_wall_seconds": 7848.9379969541915,
+    "update_compute_wall_seconds": 7825.426672734786,
+    "mean_update_wall_seconds": 869.4918525260873,
+    "effective_targets_per_second": 602.9820733533209,
+    "peak_allocated_mib": 40904.05712890625,
+    "peak_reserved_mib": 79968.0,
+    "teacher_training_forward_calls": 0,
+    "hellaswag_run": false
+  },
+  "final_checkpoint": {
+    "path": "/workspace/runs/experiment_2b3/checkpoints/checkpoint_joint_updates_000009.pt",
+    "local_backup": "runs/experiment_2b3/checkpoints/checkpoint_joint_updates_000009.pt",
+    "sha256": "7797f349905e344934bd7d2475cf61b332ef9053cb0bc1a44f450fc24249c65b",
+    "bytes": 498818571,
+    "next_global_batch_sha256": "7f6d8da5044e9f485492712373fda12d09eb4ccec60ab8fdee812519d05869a7",
+    "strict_reload": true,
+    "four_loader_states": true,
+    "four_rank_rng_states": true,
+    "cross_rank_model_and_optimizer_state_identical": true
+  },
+  "validation": {
+    "global_batches_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "full_context": 4.078654408454895,
+    "masked_l1_no_feedback": 5.973674488067627,
+    "starting_15m_real": 5.0959878206253055,
+    "final_joint_real": 4.814190459251404,
+    "final_joint_shuffled": 4.817693614959717,
+    "final_joint_specific_gap": 0.003503155708313166,
+    "final_joint_gate_zero": 5.9736480712890625,
+    "teacher_sources_final_joint": 4.935879254341126,
+    "real_wins": 16,
+    "shuffled_wins": 4,
+    "ties": 0,
+    "joint_real_gain_from_start": 0.28179736137390154,
+    "specific_gap_change_from_start": -0.025510239601135076
+  },
+  "matched_writer_only_counterfactual": {
+    "writer_only_real": 4.81970694065094,
+    "writer_only_shuffled": 4.82852201461792,
+    "writer_only_specific_gap": 0.008815073966979448,
+    "joint_real": 4.814190459251404,
+    "joint_shuffled": 4.817693614959717,
+    "joint_specific_gap": 0.003503155708313166,
+    "specific_gap_gain_over_writer_only": -0.005311918258666282,
+    "joint_vs_writer_only_real_loss_delta": -0.0055164813995363104,
+    "restores_memory_specificity_vs_writer_only": false
+  },
+  "cross_swap": {
+    "start_writer_start_reader": 5.0959878206253055,
+    "final_writer_start_reader": 4.8203086137771605,
+    "start_writer_final_reader": 5.093716454505921,
+    "final_writer_final_reader": 4.814190459251404
+  },
+  "conditional_diagnostics": {
+    "required": false,
+    "status": "SKIPPED_AS_REQUIRED",
+    "reason": "primary IMPROVES RECURRENT MEMORY criterion did not pass"
+  },
+  "decisions": {
+    "A_prevented_sequence_specific_collapse": "NO",
+    "B_continue_joint_training_another_approximately_5m_tokens": "NO",
+    "C_keep_temporal_credit_exactly_one_token": "YES",
+    "D_begin_unfreezing_source_producing_transformer_layers": "NO",
+    "E_reuse_validated_four_gpu_implementation": "YES"
+  }
+}
