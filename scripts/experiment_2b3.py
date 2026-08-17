@@ -461,6 +461,7 @@ def source_audit(args):
     report = {
         "experiment": "2B3",
         "stage": "canonical_15m_source_audit",
+        "implementation_git_commit": git_output("rev-parse", "HEAD"),
         "source_checkpoint": str(Path(args.source_checkpoint).resolve()),
         "source_checkpoint_sha256": digest,
         "source_schema": checkpoint["schema"],
@@ -669,6 +670,7 @@ def preflight(args):
     report = {
         "experiment": "2B3",
         "stage": "joint_gradient_and_integrity_preflight",
+        "implementation_git_commit": git_output("rev-parse", "HEAD"),
         "source_checkpoint_sha256": digest,
         "source_next_global_batch_sha256": next_hash,
         "trainable_parameters": sum(
@@ -761,6 +763,7 @@ def migration_reference(args):
     validate_gradient_report(gradient_report(model))
     temporary = temporary_optimizer_vectors(model, writer_optimizer, reader_optimizer)
     artifact = {
+        "implementation_git_commit": git_output("rev-parse", "HEAD"),
         "source_checkpoint_sha256": digest,
         "global_batch_sha256": actual,
         "global_loss": sum(row["raw_loss_sum"] for row in rank_metrics) / GLOBAL_TARGETS,
@@ -776,6 +779,7 @@ def migration_reference(args):
         raise SystemExit(f"refusing to overwrite joint migration reference: {output}")
     torch.save(artifact, output)
     summary = {
+        "implementation_git_commit": git_output("rev-parse", "HEAD"),
         "source_checkpoint_sha256": digest,
         "global_batch_sha256": actual,
         "global_loss": artifact["global_loss"],
@@ -875,6 +879,7 @@ def migration_candidate(args):
             audit = {
                 "experiment": "2B3",
                 "stage": "1GPU_to_4GPU_joint_gradient_equivalence",
+                "implementation_git_commit": git_output("rev-parse", "HEAD"),
                 "source_checkpoint_sha256": digest,
                 "source_next_global_batch_sha256": SOURCE_NEXT_SHA256,
                 "consumed_global_batch_sha256": actual,
@@ -885,6 +890,7 @@ def migration_candidate(args):
                 "loss_scaling": "each token-loss sum / 524288; no division after SUM",
                 "gradient_reduction": "one combined rank-slotted flattened FP32 NCCL all_reduce(SUM), then fixed rank-order local sum",
                 "gradient_elements": combined.numel(),
+                "communication_buffer_elements": WORLD_SIZE * combined.numel(),
                 "writer_gradient_elements": writer_elements,
                 "reader_gradient_elements": combined.numel() - writer_elements,
                 "gradient_all_reduce_seconds": reduction_seconds,
