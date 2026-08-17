@@ -1121,10 +1121,391 @@ def milestone_evaluate(args):
             dist.destroy_process_group()
 
 
+def load_evaluation_models(checkpoint_path, source_checkpoint_path, local_rank,
+                           include_teacher=False):
+    device = torch.device("cuda", local_rank)
+    checkpoint = a0.torch_load(checkpoint_path, mmap=True)
+    if checkpoint.get("schema") != CHECKPOINT_SCHEMA:
+        raise SystemExit("terminal checkpoint schema mismatch")
+    symbols = a0.support.load_training_symbols()
+    with torch.random.fork_rng(devices=[]):
+        model = symbols["GPT"](b2.model_config(symbols, enable_writers=True))
+    model.load_state_dict(checkpoint["model"], strict=True)
+    for parameter in model.parameters():
+        parameter.requires_grad_(False)
+    model.eval().to(device)
+    teacher = None
+    if include_teacher:
+        source, digest = load_source_checkpoint(source_checkpoint_path)
+        if digest != SOURCE_SHA256:
+            raise SystemExit("terminal teacher source checkpoint mismatch")
+        with torch.random.fork_rng(devices=[]):
+            teacher = symbols["GPT"](b2.model_config(symbols, enable_writers=False))
+        missing, unexpected = teacher.load_state_dict(source["model"], strict=False)
+        expected_unexpected = {
+            name for name in source["model"]
+            if name.startswith("transformer.memory_writers.")
+        }
+        if missing or set(unexpected) != expected_unexpected:
+            raise SystemExit(
+                f"terminal teacher load mismatch: missing={missing}, unexpected={unexpected}"
+            )
+        for parameter in teacher.parameters():
+            parameter.requires_grad_(False)
+        teacher.eval().to(device)
+    return checkpoint, symbols, model, teacher, device
+
+
+def rank_progress(path):
+    path = Path(path)
+    if not path.is_file():
+        return {"rows": []}
+    payload = json.loads(path.read_text())
+    if set(payload) != {"rows"} or not isinstance(payload["rows"], list):
+        raise SystemExit(f"invalid rank progress artifact: {path}")
+    return payload
+
+
+def progress_lookup(progress, batch_index):
+    rows = [row for row in progress["rows"] if row["batch_index"] == batch_index]
+    if len(rows) > 1:
+        raise SystemExit(f"duplicate progress row {batch_index}")
+    if rows:
+        return rows[0]
+    row = {"batch_index": batch_index}
+    progress["rows"].append(row)
+    progress["rows"].sort(key=lambda value: value["batch_index"])
+    return row
+
+
+def terminal_controls(args):
+    require_git(clean=True)
+    rank, local_rank = init_distributed()
+    try:
+        checkpoint, symbols, model, teacher, device = load_evaluation_models(
+            args.checkpoint, args.source_checkpoint, local_rank, include_teacher=True
+        )
+        if checkpoint["training_state"]["writer_updates"] != 29:
+            raise SystemExit("canonical terminal controls require update-29 checkpoint")
+        milestone = json.loads((Path(args.run_dir) / "milestone_15m.json").read_text())
+        if milestone.get("continuation_gate_passed") is not False:
+            raise SystemExit("terminal controls require the failed canonical 15M gate")
+        milestone_rows = {row["batch_index"]: row for row in milestone["batch_rows"]}
+        progress_path = Path(args.run_dir) / "terminal" / f"controls_rank{rank}.json"
+        progress = rank_progress(progress_path)
+        loader = b2.validation_loader(symbols)
+        payload_hashes = []
+        for batch_index in range(a0.VALIDATION_BATCHES):
+            x_cpu, y_cpu = loader.next_batch()
+            payload_hash = a0.batch_payload_hash(x_cpu, y_cpu)
+            payload_hashes.append(payload_hash)
+            if batch_index % WORLD_SIZE != rank:
+                continue
+            row = progress_lookup(progress, batch_index)
+            if row.get("payload_sha256") not in (None, payload_hash):
+                raise SystemExit("terminal control payload mismatch")
+            row["payload_sha256"] = payload_hash
+            x = x_cpu.to(device, non_blocking=True)
+            y = y_cpu.to(device, non_blocking=True)
+            if "full_context" not in row:
+                row["full_context"] = b2.b0.parallel_loss(model, x, y, "full_context")
+                write_json(progress_path, progress)
+            if "masked_l1_no_feedback" not in row:
+                row["masked_l1_no_feedback"] = b2.b0.parallel_loss(
+                    model, x, y, "masked_l1_no_feedback"
+                )
+                write_json(progress_path, progress)
+            if "writer_bypass" not in row:
+                row["writer_bypass"] = b2.stream_loss(
+                    model, x, y, mode="masked_l1_topdown_self", use_writers=False
+                )
+                write_json(progress_path, progress)
+            if "gate_zero" not in row:
+                row["gate_zero"] = b2.stream_loss(
+                    model, x, y, mode="masked_l1_topdown_self", use_writers=True,
+                    gate_override=0.0,
+                )
+                write_json(progress_path, progress)
+            teacher_raw = None
+            memory = None
+            if "real_with_representation" not in row or "teacher_sources_with_writers" not in row:
+                with torch.no_grad(), torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+                    teacher_raw = teacher.capture_residual_sources(x, b2.SOURCE_DEPTHS)
+                memory = b2.writer_adapted_teacher_memory(model, teacher_raw)
+            if "real_with_representation" not in row:
+                row["real_with_representation"] = b2.stream_loss(
+                    model, x, y, mode="masked_l1_topdown_self", use_writers=True,
+                    teacher_raw=teacher_raw,
+                )
+                write_json(progress_path, progress)
+            if "teacher_sources_with_writers" not in row:
+                row["teacher_sources_with_writers"] = b2.stream_loss(
+                    model, x, y, mode="masked_l1_topdown_teacher", use_writers=False,
+                    feedback_sources=memory,
+                )
+                write_json(progress_path, progress)
+            expected_real = milestone_rows[batch_index]["real"]["loss"]
+            if row["real_with_representation"]["loss"] != expected_real:
+                raise SystemExit("terminal real loss changed while adding teacher diagnostics")
+            print(
+                f"rank={rank} terminal-control={batch_index:02d} "
+                f"bypass={row['writer_bypass']['loss']:.6f} "
+                f"teacher={row['teacher_sources_with_writers']['loss']:.6f}",
+                flush=True,
+            )
+            del x, y, teacher_raw, memory
+            torch.cuda.empty_cache()
+        digest = hashlib.sha256()
+        for value in payload_hashes:
+            digest.update(bytes.fromhex(value))
+        if digest.hexdigest() != a0.EXPECTED_VALIDATION_GLOBAL_BATCH_SHA256:
+            raise SystemExit("terminal validation hash mismatch")
+        gathered = [None] * WORLD_SIZE
+        dist.all_gather_object(gathered, progress["rows"])
+        if rank == 0:
+            rows = sorted((row for group in gathered for row in group), key=lambda row: row["batch_index"])
+            if [row["batch_index"] for row in rows] != list(range(20)):
+                raise SystemExit("terminal control coverage mismatch")
+            losses = {
+                "full_context": statistics.fmean(row["full_context"] for row in rows),
+                "masked_l1_no_feedback": statistics.fmean(row["masked_l1_no_feedback"] for row in rows),
+                "frozen_2b1_self": FROZEN_2B1_REAL,
+                "terminal_writer_real": milestone["losses"]["real"],
+                "terminal_writer_shuffled": milestone["losses"]["shuffled"],
+                "terminal_writer_bypass": statistics.fmean(row["writer_bypass"]["loss"] for row in rows),
+                "terminal_gate_zero": statistics.fmean(row["gate_zero"]["loss"] for row in rows),
+                "teacher_sources_with_terminal_writers": statistics.fmean(
+                    row["teacher_sources_with_writers"]["loss"] for row in rows
+                ),
+            }
+            regressions = {
+                "full_context": abs(losses["full_context"] - FULL_CONTEXT),
+                "masked_l1_no_feedback": abs(losses["masked_l1_no_feedback"] - MASKED),
+                "writer_bypass": abs(losses["terminal_writer_bypass"] - FROZEN_2B1_REAL),
+                "gate_zero": abs(losses["terminal_gate_zero"] - b2.PINNED["source_2b1_gate_zero"]),
+            }
+            report = {
+                "stage": "canonical_terminal_controls_15m",
+                "checkpoint": str(Path(args.checkpoint).resolve()),
+                "checkpoint_sha256": file_sha256(args.checkpoint),
+                "validation_global_batches_sha256": digest.hexdigest(),
+                "losses": losses,
+                "frozen_regression_absolute_differences": regressions,
+                "frozen_regressions_passed": all(value <= 5e-4 for value in regressions.values()),
+                "writer_behavior": b2.average_writer_behavior(
+                    [row["real_with_representation"] for row in rows]
+                ),
+                "representation_drift": b2.average_representation_drift(
+                    [row["real_with_representation"] for row in rows]
+                ),
+                "teacher_training_forward_calls": 0,
+                "hellaswag_run": False,
+                "batch_rows": rows,
+            }
+            report["passed"] = (
+                report["frozen_regressions_passed"]
+                and all(
+                    row[name]["finite"] for row in rows
+                    for name in (
+                        "writer_bypass", "gate_zero", "real_with_representation",
+                        "teacher_sources_with_writers",
+                    )
+                )
+            )
+            write_json(Path(args.run_dir) / "terminal" / "controls_15m.json", report)
+            if not report["passed"]:
+                raise SystemExit("canonical terminal controls failed")
+            print(f"TERMINAL_CONTROLS_PASS teacher={losses['teacher_sources_with_terminal_writers']:.10f}", flush=True)
+    finally:
+        if dist.is_initialized():
+            dist.destroy_process_group()
+
+
+def terminal_ablations(args):
+    require_git(clean=True)
+    rank, local_rank = init_distributed()
+    try:
+        checkpoint, symbols, model, _, device = load_evaluation_models(
+            args.checkpoint, args.source_checkpoint, local_rank, include_teacher=False
+        )
+        if checkpoint["training_state"]["writer_updates"] != 29:
+            raise SystemExit("canonical writer ablations require update 29")
+        milestone = json.loads((Path(args.run_dir) / "milestone_15m.json").read_text())
+        real_by_batch = {
+            row["batch_index"]: row["real"]["loss"] for row in milestone["batch_rows"]
+        }
+        progress_path = Path(args.run_dir) / "terminal" / f"ablations_rank{rank}.json"
+        progress = rank_progress(progress_path)
+        loader = b2.validation_loader(symbols)
+        hashes = []
+        for batch_index in range(20):
+            x_cpu, y_cpu = loader.next_batch()
+            payload_hash = a0.batch_payload_hash(x_cpu, y_cpu)
+            hashes.append(payload_hash)
+            if batch_index % WORLD_SIZE != rank:
+                continue
+            row = progress_lookup(progress, batch_index)
+            row["payload_sha256"] = payload_hash
+            row.setdefault("ablations", {})
+            x = x_cpu.to(device, non_blocking=True)
+            y = y_cpu.to(device, non_blocking=True)
+            for depth in b2.SOURCE_DEPTHS:
+                name = f"v{depth}"
+                if name not in row["ablations"]:
+                    row["ablations"][name] = b2.stream_loss(
+                        model, x, y, mode="masked_l1_topdown_self", use_writers=True,
+                        disabled_writer_depths=(depth,),
+                    )
+                    write_json(progress_path, progress)
+            print(f"rank={rank} ablations={batch_index:02d} complete", flush=True)
+            del x, y
+            torch.cuda.empty_cache()
+        digest = hashlib.sha256()
+        for value in hashes:
+            digest.update(bytes.fromhex(value))
+        if digest.hexdigest() != a0.EXPECTED_VALIDATION_GLOBAL_BATCH_SHA256:
+            raise SystemExit("ablation validation hash mismatch")
+        gathered = [None] * WORLD_SIZE
+        dist.all_gather_object(gathered, progress["rows"])
+        if rank == 0:
+            rows = sorted((row for group in gathered for row in group), key=lambda row: row["batch_index"])
+            result = {}
+            for depth in b2.SOURCE_DEPTHS:
+                name = f"v{depth}"
+                losses = [row["ablations"][name]["loss"] for row in rows]
+                deltas = [value - real_by_batch[index] for index, value in enumerate(losses)]
+                result[name] = {
+                    "ablated_loss": statistics.fmean(losses),
+                    "delta": statistics.fmean(deltas),
+                    "positive_batches": sum(value > 0 for value in deltas),
+                    "negative_batches": sum(value < 0 for value in deltas),
+                    "ties": sum(value == 0 for value in deltas),
+                    "batch_losses": losses,
+                    "batch_deltas": deltas,
+                }
+            report = {
+                "stage": "canonical_terminal_writer_residual_ablations_15m",
+                "validation_global_batches_sha256": digest.hexdigest(),
+                "baseline_real_loss": milestone["losses"]["real"],
+                "writer_residual_ablations": result,
+                "model_state_unchanged": b2.state_subset_sha256(model, "writers") == checkpoint["writer_sha256"],
+                "hellaswag_run": False,
+            }
+            report["passed"] = report["model_state_unchanged"] and all(
+                row["ablations"][f"v{depth}"]["finite"]
+                for row in rows for depth in b2.SOURCE_DEPTHS
+            )
+            write_json(Path(args.run_dir) / "terminal" / "ablations_15m.json", report)
+            if not report["passed"]:
+                raise SystemExit("terminal writer ablations failed")
+            print("TERMINAL_ABLATIONS_PASS", flush=True)
+    finally:
+        if dist.is_initialized():
+            dist.destroy_process_group()
+
+
+def terminal_reset_horizons(args):
+    require_git(clean=True)
+    rank, local_rank = init_distributed()
+    try:
+        checkpoint, symbols, model, _, device = load_evaluation_models(
+            args.checkpoint, args.source_checkpoint, local_rank, include_teacher=False
+        )
+        if checkpoint["training_state"]["writer_updates"] != 29:
+            raise SystemExit("canonical reset sweep requires update 29")
+        interval_values = (1, 2, 4, 8, 16, 32, 64, 128, None)
+        interval_names = ["never" if value is None else str(value) for value in interval_values]
+        progress_path = Path(args.run_dir) / "terminal" / f"reset_rank{rank}.json"
+        progress = rank_progress(progress_path)
+        existing = {
+            (row["batch_index"], row["interval"]): row for row in progress["rows"]
+        }
+        loader = b2.validation_loader(symbols)
+        batches = []
+        digest = hashlib.sha256()
+        for batch_index in range(20):
+            x_cpu, y_cpu = loader.next_batch()
+            digest.update(bytes.fromhex(a0.batch_payload_hash(x_cpu, y_cpu)))
+            batches.append((x_cpu, y_cpu))
+        if digest.hexdigest() != a0.EXPECTED_VALIDATION_GLOBAL_BATCH_SHA256:
+            raise SystemExit("reset validation hash mismatch")
+        task_index = 0
+        for interval, interval_name in zip(interval_values, interval_names):
+            for batch_index, (x_cpu, y_cpu) in enumerate(batches):
+                if task_index % WORLD_SIZE != rank:
+                    task_index += 1
+                    continue
+                key = (batch_index, interval_name)
+                if key not in existing:
+                    x = x_cpu.to(device, non_blocking=True)
+                    y = y_cpu.to(device, non_blocking=True)
+                    result = b2.stream_loss(
+                        model, x, y, mode="masked_l1_topdown_self", use_writers=True,
+                        reset_interval=interval,
+                    )
+                    row = {
+                        "batch_index": batch_index,
+                        "interval": interval_name,
+                        "loss": result["loss"],
+                        "finite": result["finite"],
+                        "cache_health": result["cache_health"],
+                    }
+                    progress["rows"].append(row)
+                    existing[key] = row
+                    write_json(progress_path, progress)
+                    del x, y
+                    torch.cuda.empty_cache()
+                print(f"rank={rank} reset={interval_name} batch={batch_index:02d}", flush=True)
+                task_index += 1
+        gathered = [None] * WORLD_SIZE
+        dist.all_gather_object(gathered, progress["rows"])
+        if rank == 0:
+            rows = [row for group in gathered for row in group]
+            if len(rows) != 180 or len({(row["batch_index"], row["interval"]) for row in rows}) != 180:
+                raise SystemExit("terminal reset sweep coverage mismatch")
+            terminal = {
+                name: statistics.fmean(
+                    row["loss"] for row in rows if row["interval"] == name
+                ) for name in interval_names
+            }
+            reference = json.loads(
+                (REPO_ROOT / "results" / "experiment_2b2_5m" / "evaluation" /
+                 "conditional_diagnostics.json").read_text()
+            )
+            report = {
+                "stage": "canonical_terminal_reset_horizons_15m",
+                "validation_global_batches_sha256": digest.hexdigest(),
+                "interval_losses": {
+                    name: {
+                        "frozen_2b1": reference["frozen_2b1_reset_interval_losses"][name],
+                        "2b2_5m": reference["reset_interval_losses"][name],
+                        "terminal_2b2a_15m": terminal[name],
+                    } for name in interval_names
+                },
+                "standard_batch_shape_each_condition": {"B": 64, "T": 1024},
+                "conditions_batched_together": False,
+                "model_state_unchanged": b2.state_subset_sha256(model, "writers") == checkpoint["writer_sha256"],
+                "hellaswag_run": False,
+            }
+            report["passed"] = (
+                report["model_state_unchanged"]
+                and all(row["finite"] and row["cache_health"]["all_expected_lengths"] for row in rows)
+            )
+            write_json(Path(args.run_dir) / "terminal" / "reset_horizons_15m.json", report)
+            if not report["passed"]:
+                raise SystemExit("terminal reset-horizon sweep failed")
+            print("TERMINAL_RESET_HORIZONS_PASS", flush=True)
+    finally:
+        if dist.is_initialized():
+            dist.destroy_process_group()
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=(
-        "source-audit", "migration-reference", "migration-candidate", "train", "milestone-evaluate"
+        "source-audit", "migration-reference", "migration-candidate", "train",
+        "milestone-evaluate", "terminal-controls", "terminal-ablations",
+        "terminal-reset-horizons",
     ))
     parser.add_argument("--source-checkpoint", required=True)
     parser.add_argument("--run-dir", required=True)
@@ -1151,6 +1532,18 @@ def main():
         if args.checkpoint is None or args.update is None:
             raise SystemExit("milestone-evaluate requires --checkpoint and --update")
         milestone_evaluate(args)
+    elif args.command == "terminal-controls":
+        if args.checkpoint is None:
+            raise SystemExit("terminal-controls requires --checkpoint")
+        terminal_controls(args)
+    elif args.command == "terminal-ablations":
+        if args.checkpoint is None:
+            raise SystemExit("terminal-ablations requires --checkpoint")
+        terminal_ablations(args)
+    elif args.command == "terminal-reset-horizons":
+        if args.checkpoint is None:
+            raise SystemExit("terminal-reset-horizons requires --checkpoint")
+        terminal_reset_horizons(args)
 
 
 if __name__ == "__main__":
