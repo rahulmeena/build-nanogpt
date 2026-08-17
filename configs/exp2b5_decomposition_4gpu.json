@@ -1,0 +1,23 @@
+{
+  "protocol": "exp2b5_mean_residual_decomposition_v1",
+  "world_size": 4,
+  "batch_sequences": 64,
+  "sequence_length": 1024,
+  "canonical_batches": 20,
+  "calibration_batches": 4,
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "calibration_aggregate_sha256": "d159c297f26e5e7ef707d37c5656b3702d66a11809ebed5577cd12903bfcb2f6",
+  "diagnostic_seed": 20260817,
+  "alphas": [0.25, 0.5, 1.0, 2.0],
+  "checkpoint_labels": [
+    "C0_2B2_5M",
+    "C1_2B2A_10M",
+    "C2_2B2A_15M",
+    "C3_2B3_FINAL"
+  ],
+  "parallelization": "one isolated checkpoint worker per GPU; no gradient collectives",
+  "calibration_reduction": "four disjoint B64 calibration batches accumulated in fixed batch order in FP32",
+  "decomposition_arithmetic": "FP32 subtract/scale/add followed by one cast to recurrent memory dtype",
+  "training": "forbidden",
+  "hellaswag": "forbidden"
+}
