@@ -45,6 +45,7 @@ RANK_TARGETS = 131_072
 BACKWARD_CHUNK = 16
 MAX_UPDATE = 48
 MILESTONES = {20: "10m", 29: "15m", 48: "25m"}
+EXPLORATORY_MILESTONES = {38: "20m_exploratory"}
 SOURCE_REAL = 5.590033102035522
 SOURCE_SHUFFLED = 5.625972080230713
 FROZEN_2B1_REAL = 5.701308727264404
@@ -776,7 +777,7 @@ def save_distributed_checkpoint(args, checkpoint_source, source_digest, symbols,
                 "writer_updates": update_number,
                 "writer_training_tokens": update_number * GLOBAL_TARGETS,
                 "fineweb_lineage_completed_update": 497 + update_number,
-                "kind": f"2b2a_{MILESTONES[update_number]}",
+                "kind": f"2b2a_{(MILESTONES | EXPLORATORY_MILESTONES)[update_number]}",
             },
             "dataloader_states": loader_states,
             "rank_rng_states": rng_states,
@@ -845,8 +846,18 @@ def train(args):
     audit_path = Path(args.run_dir) / "FOUR_GPU_MIGRATION_AUDIT.json"
     if not audit_path.is_file() or not json.loads(audit_path.read_text()).get("passed"):
         raise SystemExit("a passing FOUR_GPU_MIGRATION_AUDIT.json is required")
-    if args.target_update not in MILESTONES:
-        raise SystemExit("target update must be 20, 29, or 48")
+    labels = MILESTONES | EXPLORATORY_MILESTONES
+    if args.target_update not in labels:
+        raise SystemExit("target update must be 20, 29, 38 exploratory, or 48")
+    if args.target_update == 38:
+        gate_path = Path(args.run_dir) / "milestone_15m.json"
+        if not args.exploratory or not gate_path.is_file():
+            raise SystemExit("update 38 requires --exploratory and a completed 15M gate")
+        gate = json.loads(gate_path.read_text())
+        if gate.get("continuation_gate_passed") is not False:
+            raise SystemExit("exploratory update 38 is authorized only after a failed 15M gate")
+    elif args.exploratory:
+        raise SystemExit("--exploratory is valid only for update 38")
     rank, local_rank = init_distributed()
     try:
         stage_started = time.perf_counter()
@@ -925,7 +936,7 @@ def train(args):
         )
         if rank == 0:
             summary = {
-                "stage": MILESTONES[args.target_update],
+                "stage": labels[args.target_update],
                 "start_update": completed,
                 "end_update": args.target_update,
                 "new_updates": args.target_update - completed,
@@ -937,10 +948,12 @@ def train(args):
                 "frozen_reader_unchanged": True,
                 "teacher_training_forward_calls": 0,
                 "stage_wall_seconds": time.perf_counter() - stage_started,
+                "canonical_2b2a": args.target_update != 38,
+                "exploratory_override": args.target_update == 38,
                 "fresh_process_restart_required_before_continuation": args.target_update in (20, 29),
                 "passed": True,
             }
-            write_json(Path(args.run_dir) / f"training_{MILESTONES[args.target_update]}.json", summary)
+            write_json(Path(args.run_dir) / f"training_{labels[args.target_update]}.json", summary)
     finally:
         if dist.is_initialized():
             dist.destroy_process_group()
@@ -949,8 +962,11 @@ def train(args):
 def milestone_evaluate(args):
     require_git(clean=True)
     load_config()
-    if args.update not in MILESTONES:
-        raise SystemExit("evaluation update must be 20, 29, or 48")
+    labels = MILESTONES | EXPLORATORY_MILESTONES
+    if args.update not in labels:
+        raise SystemExit("evaluation update must be 20, 29, 38 exploratory, or 48")
+    if (args.update == 38) != bool(args.exploratory):
+        raise SystemExit("update 38 evaluation requires --exploratory exclusively")
     rank, local_rank = init_distributed()
     try:
         device = torch.device("cuda", local_rank)
@@ -1073,8 +1089,8 @@ def milestone_evaluate(args):
             else:
                 gate = False
             report = {
-                "experiment": "2B2A",
-                "milestone": MILESTONES[args.update],
+                "experiment": "2B2A" if args.update != 38 else "2B2A exploratory override",
+                "milestone": labels[args.update],
                 "writer_update": args.update,
                 "writer_training_tokens": args.update * GLOBAL_TARGETS,
                 "checkpoint": str(checkpoint_path),
@@ -1087,13 +1103,15 @@ def milestone_evaluate(args):
                 "writer_behavior": b2.average_writer_behavior([row["real"] for row in rows]),
                 "integrity": integrity,
                 "continuation_gate_passed": gate,
-                "terminal": args.update == 48 or not gate,
+                "canonical_2b2a": args.update != 38,
+                "exploratory_override": args.update == 38,
+                "terminal": args.update in (38, 48) or not gate,
                 "batch_rows": rows,
                 "passed": integrity["passed"],
             }
-            write_json(Path(args.run_dir) / f"milestone_{MILESTONES[args.update]}.json", report)
+            write_json(Path(args.run_dir) / f"milestone_{labels[args.update]}.json", report)
             print(
-                f"MILESTONE_{MILESTONES[args.update].upper()} real={real_mean:.10f} "
+                f"MILESTONE_{labels[args.update].upper()} real={real_mean:.10f} "
                 f"shuffled={shuffled_mean:.10f} gap={gap:.10f} wins={paired['real_wins']}/20 "
                 f"continue={'YES' if gate else 'NO'}",
                 flush=True,
@@ -1113,6 +1131,7 @@ def parse_args():
     parser.add_argument("--checkpoint")
     parser.add_argument("--target-update", type=int)
     parser.add_argument("--update", type=int)
+    parser.add_argument("--exploratory", action="store_true")
     return parser.parse_args()
 
 
