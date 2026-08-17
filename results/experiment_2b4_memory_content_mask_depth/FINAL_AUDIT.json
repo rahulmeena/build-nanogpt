@@ -1,0 +1,432 @@
+{
+  "classification_review": {
+    "automated_preliminary_classification": "MASK PRESSURE DOES NOT INCREASE RECURRENT DEPENDENCE",
+    "final_protocol_classification": "MASK PRESSURE DESTROYS RECURRENT UTILITY",
+    "raw_results_changed": false,
+    "reason": "Protocol section 44 classifies loss of useful real-feedback advantage with depth as destruction. Real recovery fell 97.81080617716782% from depth 1 to depth 4 and specificity also deteriorated."
+  },
+  "calibration": {
+    "calibration_aggregate_sha256": "d159c297f26e5e7ef707d37c5656b3702d66a11809ebed5577cd12903bfcb2f6",
+    "calibration_batch_count": 4,
+    "calibration_batch_indices": [
+      20,
+      21,
+      22,
+      23
+    ],
+    "calibration_batch_payload_sha256": [
+      "8e1ec2729d0d75d26a6ecef91d483450e167d51c7b6ca8cb62ce213f66cb11bf",
+      "37ad2b8d376a0d631715079f0da695d0b68a3e4e5821a7cbe2e7e4b28ef8cfd1",
+      "ed1856868bf8ef1e5076254f8380ff42a752cba42a1cbd43849575cc0f29274b",
+      "91ba1d1d617d441264df5d9f334008b84bc98a6845552c4529ecd003a79c358c"
+    ],
+    "calibration_evaluation_disjoint": true,
+    "canonical_batch_count": 20,
+    "global_template_shape": [
+      4,
+      768
+    ],
+    "passed": true,
+    "per_rank_calibration_batch": {
+      "0": 20,
+      "1": 21,
+      "2": 22,
+      "3": 23
+    },
+    "position_template_shape": [
+      4,
+      1024,
+      768
+    ],
+    "position_zero_exactly_zero": true,
+    "rank_slotted_fp32_sum_fixed_rank_order": true,
+    "rank_wall_seconds": 90.58188534993678,
+    "source": "four validation batches immediately after canonical batch 19",
+    "template_hashes": {
+      "global_template_sha256": "26c550b5770307b50c20a384447785f348515e4a232f60f78b58c71b62c1fd99",
+      "position_template_sha256": "878323e41111d2f30243fa7bb5ff0458f6e8d2876e0694038a1bb4df53307b4a"
+    }
+  },
+  "experiment": "2B4",
+  "hard_audit_checklist": {
+    "2B2A 10M checkpoint SHA": "PASS",
+    "2B3 checkpoint SHA": "PASS",
+    "Block-1 d=1 regression": "PASS",
+    "HellaSwag": "NOT RUN",
+    "all losses finite": "PASS",
+    "all memory-control causality checks": "PASS",
+    "backward calls": 0,
+    "calibration/evaluation data disjoint": "PASS",
+    "canonical validation SHA": "PASS",
+    "future causality": "PASS",
+    "generalized mask d=1 FP32 equivalence": "PASS",
+    "masked-cache absence": "PASS",
+    "model parameter hashes before/after": "IDENTICAL",
+    "no optimizer constructed for result path": "PASS",
+    "optimizer steps": 0,
+    "row isolation": "PASS",
+    "unmasked-cache health": "PASS"
+  },
+  "hellaswag_run": false,
+  "implementation_git_commit": "de036520dc146a73a98d7e5e9319de081066ed93",
+  "integrity": {
+    "all_losses_finite": true,
+    "all_memory_control_causality_passed": true,
+    "all_models_eval_and_frozen": true,
+    "all_stream_cache_health_passed": true,
+    "backward_calls_zero": true,
+    "calibration_evaluation_disjoint": true,
+    "canonical_validation_sha256_exact": true,
+    "d1_default_explicit_fp32_equivalence": true,
+    "final_2b3_checkpoint_sha256_exact": true,
+    "fresh_sequence_reset_passed": true,
+    "future_causality_passed": true,
+    "grad_scalers_created_zero": true,
+    "hellaswag_not_run": true,
+    "masked_cache_absence_passed": true,
+    "model_parameter_hashes_identical": true,
+    "optimizer_objects_created_zero": true,
+    "optimizer_steps_zero": true,
+    "part_a_control_regression_passed": true,
+    "part_b_depth1_regression_passed": true,
+    "passed": true,
+    "preflight_passed": true,
+    "row_isolation_passed": true,
+    "scheduler_objects_created_zero": true,
+    "unmasked_cache_health_passed": true,
+    "writer_10m_checkpoint_sha256_exact": true
+  },
+  "part_a_baseline_regression": {
+    "error": "Part-A established control reproduction failed",
+    "expected": {
+      "coherent_shuffle:d1": 4.817693614959717,
+      "full_context:d1": 4.078654408454895,
+      "masked_l1_no_feedback:d1": 5.973674488067627,
+      "real:d1": 4.814190459251404,
+      "zero:d1": 5.9736480712890625
+    },
+    "means": {
+      "coherent_shuffle:d1": 4.817693614959717,
+      "full_context:d1": 4.078654408454895,
+      "masked_l1_no_feedback:d1": 5.973674488067627,
+      "real:d1": 4.814190459251404,
+      "zero:d1": 5.9736480712890625
+    },
+    "mismatches": {},
+    "passed": true,
+    "tolerances": {
+      "coherent_shuffle:d1": 5e-06,
+      "full_context:d1": 0.0005,
+      "masked_l1_no_feedback:d1": 0.0005,
+      "real:d1": 5e-06,
+      "zero:d1": 5e-06
+    }
+  },
+  "part_b_depth1_regression": {
+    "error": "Part-B depth-1 reproduction failed",
+    "expected": {
+      "coherent_shuffle:d1": 5.4016084432601925,
+      "real:d1": 5.36134774684906,
+      "zero:d1": 5.9736480712890625
+    },
+    "means": {
+      "coherent_shuffle:d1": 5.4016084432601925,
+      "real:d1": 5.36134774684906,
+      "zero:d1": 5.9736480712890625
+    },
+    "mismatches": {},
+    "passed": true,
+    "tolerances": {
+      "coherent_shuffle:d1": 5e-06,
+      "real:d1": 5e-06,
+      "zero:d1": 5e-06
+    }
+  },
+  "passed": true,
+  "preflight": {
+    "d1_equivalence": {
+      "logits_bit_exact": true,
+      "passed": true,
+      "state_bit_exact": true
+    },
+    "device": "NVIDIA A100-SXM4-80GB",
+    "experiment": "2B4",
+    "implementation_git_commit": "de036520dc146a73a98d7e5e9319de081066ed93",
+    "independent_source_permutations": {
+      "v16": 1,
+      "v17": 2,
+      "v20": 3,
+      "v24": 4
+    },
+    "integrity": {
+      "all_depth_tests_passed": true,
+      "all_memory_control_causality_passed": true,
+      "backward_calls": 0,
+      "d1_default_explicit_equivalence": true,
+      "fp32": true,
+      "hellaswag_not_run": true,
+      "model_parameter_hash_identical": true,
+      "optimizer_objects_created": 0,
+      "optimizer_steps": 0,
+      "passed": true
+    },
+    "mask_depth_tests": {
+      "1": {
+        "all_outputs_finite": true,
+        "fresh_sequence_logits_bit_exact": true,
+        "fresh_sequence_state_bit_exact": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "masked_cache_absence": true,
+        "passed": true,
+        "row_isolation_logits_bit_exact": true,
+        "row_isolation_state_bit_exact": true,
+        "serialization": {
+          "continuation_logits_bit_exact": true,
+          "final_state_bit_exact": true,
+          "schema": "full_attnres_recurrent_state_v1"
+        },
+        "unmasked_cache_expected_lengths": true,
+        "unmasked_cache_finite": true
+      },
+      "2": {
+        "all_outputs_finite": true,
+        "fresh_sequence_logits_bit_exact": true,
+        "fresh_sequence_state_bit_exact": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "masked_cache_absence": true,
+        "passed": true,
+        "row_isolation_logits_bit_exact": true,
+        "row_isolation_state_bit_exact": true,
+        "serialization": {
+          "continuation_logits_bit_exact": true,
+          "final_state_bit_exact": true,
+          "schema": "full_attnres_recurrent_state_v2"
+        },
+        "unmasked_cache_expected_lengths": true,
+        "unmasked_cache_finite": true
+      },
+      "3": {
+        "all_outputs_finite": true,
+        "fresh_sequence_logits_bit_exact": true,
+        "fresh_sequence_state_bit_exact": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "masked_cache_absence": true,
+        "passed": true,
+        "row_isolation_logits_bit_exact": true,
+        "row_isolation_state_bit_exact": true,
+        "serialization": {
+          "continuation_logits_bit_exact": true,
+          "final_state_bit_exact": true,
+          "schema": "full_attnres_recurrent_state_v2"
+        },
+        "unmasked_cache_expected_lengths": true,
+        "unmasked_cache_finite": true
+      },
+      "4": {
+        "all_outputs_finite": true,
+        "fresh_sequence_logits_bit_exact": true,
+        "fresh_sequence_state_bit_exact": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "masked_cache_absence": true,
+        "passed": true,
+        "row_isolation_logits_bit_exact": true,
+        "row_isolation_state_bit_exact": true,
+        "serialization": {
+          "continuation_logits_bit_exact": true,
+          "final_state_bit_exact": true,
+          "schema": "full_attnres_recurrent_state_v2"
+        },
+        "unmasked_cache_expected_lengths": true,
+        "unmasked_cache_finite": true
+      }
+    },
+    "memory_control_causality": {
+      "batch_mean": {
+        "finite": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "passed": true
+      },
+      "coherent_shuffle": {
+        "finite": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "passed": true
+      },
+      "global_template": {
+        "finite": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "passed": true
+      },
+      "independent_source_shuffle": {
+        "finite": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "passed": true
+      },
+      "lag32": {
+        "finite": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "passed": true
+      },
+      "lag8": {
+        "finite": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "passed": true
+      },
+      "norm_random": {
+        "finite": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "passed": true
+      },
+      "position_template": {
+        "finite": true,
+        "future_prefix_logits_bit_exact": true,
+        "future_prefix_state_bit_exact": true,
+        "passed": true
+      }
+    },
+    "parameter_sha256_after": "cd6ae6ac72c2c245befbd69b8ffc9e1ee32b911c0fe6ae4dfed8366ae2971c33",
+    "parameter_sha256_before": "cd6ae6ac72c2c245befbd69b8ffc9e1ee32b911c0fe6ae4dfed8366ae2971c33",
+    "passed": true,
+    "stage": "fp32_preflight"
+  },
+  "runtime_by_rank": [
+    {
+      "all_parameters_frozen": true,
+      "models_eval": true,
+      "parameter_sha256_after": {
+        "final_2b3": "6c8b0a7288dbba66a65e224b1712fa7dc74d68371781853f24509a0228ded5c3",
+        "writer_10m": "93caca25315f3482a3dbb772f872305c66de7f7c496fd1e1fec01af48883dece"
+      },
+      "parameter_sha256_before": {
+        "final_2b3": "6c8b0a7288dbba66a65e224b1712fa7dc74d68371781853f24509a0228ded5c3",
+        "writer_10m": "93caca25315f3482a3dbb772f872305c66de7f7c496fd1e1fec01af48883dece"
+      },
+      "rank": 0,
+      "rank_seed": 2026082000,
+      "runtime_counts": {
+        "backward_calls": 0,
+        "grad_scalers_created": 0,
+        "optimizer_objects_created": 0,
+        "optimizer_steps": 0,
+        "scheduler_objects_created": 0
+      }
+    },
+    {
+      "all_parameters_frozen": true,
+      "models_eval": true,
+      "parameter_sha256_after": {
+        "final_2b3": "6c8b0a7288dbba66a65e224b1712fa7dc74d68371781853f24509a0228ded5c3",
+        "writer_10m": "93caca25315f3482a3dbb772f872305c66de7f7c496fd1e1fec01af48883dece"
+      },
+      "parameter_sha256_before": {
+        "final_2b3": "6c8b0a7288dbba66a65e224b1712fa7dc74d68371781853f24509a0228ded5c3",
+        "writer_10m": "93caca25315f3482a3dbb772f872305c66de7f7c496fd1e1fec01af48883dece"
+      },
+      "rank": 1,
+      "rank_seed": 2026082001,
+      "runtime_counts": {
+        "backward_calls": 0,
+        "grad_scalers_created": 0,
+        "optimizer_objects_created": 0,
+        "optimizer_steps": 0,
+        "scheduler_objects_created": 0
+      }
+    },
+    {
+      "all_parameters_frozen": true,
+      "models_eval": true,
+      "parameter_sha256_after": {
+        "final_2b3": "6c8b0a7288dbba66a65e224b1712fa7dc74d68371781853f24509a0228ded5c3",
+        "writer_10m": "93caca25315f3482a3dbb772f872305c66de7f7c496fd1e1fec01af48883dece"
+      },
+      "parameter_sha256_before": {
+        "final_2b3": "6c8b0a7288dbba66a65e224b1712fa7dc74d68371781853f24509a0228ded5c3",
+        "writer_10m": "93caca25315f3482a3dbb772f872305c66de7f7c496fd1e1fec01af48883dece"
+      },
+      "rank": 2,
+      "rank_seed": 2026082002,
+      "runtime_counts": {
+        "backward_calls": 0,
+        "grad_scalers_created": 0,
+        "optimizer_objects_created": 0,
+        "optimizer_steps": 0,
+        "scheduler_objects_created": 0
+      }
+    },
+    {
+      "all_parameters_frozen": true,
+      "models_eval": true,
+      "parameter_sha256_after": {
+        "final_2b3": "6c8b0a7288dbba66a65e224b1712fa7dc74d68371781853f24509a0228ded5c3",
+        "writer_10m": "93caca25315f3482a3dbb772f872305c66de7f7c496fd1e1fec01af48883dece"
+      },
+      "parameter_sha256_before": {
+        "final_2b3": "6c8b0a7288dbba66a65e224b1712fa7dc74d68371781853f24509a0228ded5c3",
+        "writer_10m": "93caca25315f3482a3dbb772f872305c66de7f7c496fd1e1fec01af48883dece"
+      },
+      "rank": 3,
+      "rank_seed": 2026082003,
+      "runtime_counts": {
+        "backward_calls": 0,
+        "grad_scalers_created": 0,
+        "optimizer_objects_created": 0,
+        "optimizer_steps": 0,
+        "scheduler_objects_created": 0
+      }
+    }
+  ],
+  "source_checkpoints": {
+    "final_2b3": {
+      "all_parameters_frozen": true,
+      "eval": true,
+      "next_global_batch_sha256": "7f6d8da5044e9f485492712373fda12d09eb4ccec60ab8fdee812519d05869a7",
+      "path": "/workspace/runs/experiment_2b3/checkpoints/checkpoint_joint_updates_000009.pt",
+      "schema": "exp2b3_joint_writer_reader_1step_v1",
+      "sha256": "7797f349905e344934bd7d2475cf61b332ef9053cb0bc1a44f450fc24249c65b",
+      "strict_load": true,
+      "subset_sha256": {
+        "base": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+        "reader": "403bf6614813dfd2fbafcee292c769dabbbf037dd8d6e03f843a7eb197f17459",
+        "writers": "7983f220aaca29711802fcb9fde4655140e636c7c43a0fd3bb8d60928ec294c1"
+      },
+      "training_state": {
+        "fineweb_lineage_completed_update": 535,
+        "joint_local_updates": 9,
+        "joint_training_tokens": 4718592,
+        "kind": "2b3_final",
+        "writer_lineage_tokens": 19922944,
+        "writer_lineage_updates": 38
+      }
+    },
+    "writer_10m": {
+      "all_parameters_frozen": true,
+      "eval": true,
+      "next_global_batch_sha256": "ddbb966eff17ddabd102ce4706ccace0e23973f98803478b392b8c4e5f9d32f3",
+      "path": "/workspace/runs/experiment_2b2a/checkpoints/checkpoint_updates_000020.pt",
+      "schema": "exp2b2a_writers_4gpu_v1",
+      "sha256": "de5e04f817dcfa5dd8a4dcc6e503ec86d8545d558d837b517c7259917218dff3",
+      "strict_load": true,
+      "subset_sha256": {
+        "base": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+        "reader": "aca8f87518e3728b5d721a48e7729b8e93569a23174f29299d3795227fcd61a7",
+        "writers": "5c50a5b94c63f45462aff1497c79868ecf05a514043c6f689edffc139f52626b"
+      },
+      "training_state": {
+        "fineweb_lineage_completed_update": 517,
+        "kind": "2b2a_10m",
+        "writer_training_tokens": 10485760,
+        "writer_updates": 20
+      }
+    }
+  }
+}

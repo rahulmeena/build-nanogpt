@@ -1,0 +1,156 @@
+{
+  "d1_equivalence": {
+    "logits_bit_exact": true,
+    "passed": true,
+    "state_bit_exact": true
+  },
+  "device": "NVIDIA A100-SXM4-80GB",
+  "experiment": "2B4",
+  "implementation_git_commit": "de036520dc146a73a98d7e5e9319de081066ed93",
+  "independent_source_permutations": {
+    "v16": 1,
+    "v17": 2,
+    "v20": 3,
+    "v24": 4
+  },
+  "integrity": {
+    "all_depth_tests_passed": true,
+    "all_memory_control_causality_passed": true,
+    "backward_calls": 0,
+    "d1_default_explicit_equivalence": true,
+    "fp32": true,
+    "hellaswag_not_run": true,
+    "model_parameter_hash_identical": true,
+    "optimizer_objects_created": 0,
+    "optimizer_steps": 0,
+    "passed": true
+  },
+  "mask_depth_tests": {
+    "1": {
+      "all_outputs_finite": true,
+      "fresh_sequence_logits_bit_exact": true,
+      "fresh_sequence_state_bit_exact": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "masked_cache_absence": true,
+      "passed": true,
+      "row_isolation_logits_bit_exact": true,
+      "row_isolation_state_bit_exact": true,
+      "serialization": {
+        "continuation_logits_bit_exact": true,
+        "final_state_bit_exact": true,
+        "schema": "full_attnres_recurrent_state_v1"
+      },
+      "unmasked_cache_expected_lengths": true,
+      "unmasked_cache_finite": true
+    },
+    "2": {
+      "all_outputs_finite": true,
+      "fresh_sequence_logits_bit_exact": true,
+      "fresh_sequence_state_bit_exact": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "masked_cache_absence": true,
+      "passed": true,
+      "row_isolation_logits_bit_exact": true,
+      "row_isolation_state_bit_exact": true,
+      "serialization": {
+        "continuation_logits_bit_exact": true,
+        "final_state_bit_exact": true,
+        "schema": "full_attnres_recurrent_state_v2"
+      },
+      "unmasked_cache_expected_lengths": true,
+      "unmasked_cache_finite": true
+    },
+    "3": {
+      "all_outputs_finite": true,
+      "fresh_sequence_logits_bit_exact": true,
+      "fresh_sequence_state_bit_exact": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "masked_cache_absence": true,
+      "passed": true,
+      "row_isolation_logits_bit_exact": true,
+      "row_isolation_state_bit_exact": true,
+      "serialization": {
+        "continuation_logits_bit_exact": true,
+        "final_state_bit_exact": true,
+        "schema": "full_attnres_recurrent_state_v2"
+      },
+      "unmasked_cache_expected_lengths": true,
+      "unmasked_cache_finite": true
+    },
+    "4": {
+      "all_outputs_finite": true,
+      "fresh_sequence_logits_bit_exact": true,
+      "fresh_sequence_state_bit_exact": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "masked_cache_absence": true,
+      "passed": true,
+      "row_isolation_logits_bit_exact": true,
+      "row_isolation_state_bit_exact": true,
+      "serialization": {
+        "continuation_logits_bit_exact": true,
+        "final_state_bit_exact": true,
+        "schema": "full_attnres_recurrent_state_v2"
+      },
+      "unmasked_cache_expected_lengths": true,
+      "unmasked_cache_finite": true
+    }
+  },
+  "memory_control_causality": {
+    "batch_mean": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "coherent_shuffle": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "global_template": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "independent_source_shuffle": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "lag32": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "lag8": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "norm_random": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "position_template": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    }
+  },
+  "parameter_sha256_after": "cd6ae6ac72c2c245befbd69b8ffc9e1ee32b911c0fe6ae4dfed8366ae2971c33",
+  "parameter_sha256_before": "cd6ae6ac72c2c245befbd69b8ffc9e1ee32b911c0fe6ae4dfed8366ae2971c33",
+  "passed": true,
+  "stage": "fp32_preflight"
+}
