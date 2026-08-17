@@ -1027,6 +1027,19 @@ class GPT(nn.Module):
         for parameter in self.transformer.memory_writers.parameters():
             parameter.requires_grad_(True)
 
+    def freeze_for_joint_writer_reader_training(self):
+        """Train only the existing recurrent-memory writers and reader."""
+        if not self.config.enable_memory_writers:
+            raise ValueError("this model has no memory writers")
+        if not self.config.enable_topdown_feedback:
+            raise ValueError("this model has no top-down feedback reader")
+        for parameter in self.parameters():
+            parameter.requires_grad_(False)
+        for parameter in self.transformer.memory_writers.parameters():
+            parameter.requires_grad_(True)
+        for parameter in self.transformer.topdown_attnres.parameters():
+            parameter.requires_grad_(True)
+
     def load_shared_baseline_state(self, baseline_state):
         """Load every GPT-2 tensor and leave only AttnRes tensors initialized."""
         current = self.state_dict()
