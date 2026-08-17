@@ -8,6 +8,7 @@ import inspect
 import json
 import math
 import os
+import random
 import subprocess
 import sys
 import time
@@ -17,6 +18,7 @@ os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
 
 import torch
 import torch.distributed as dist
+import numpy as np
 from torch.nn import functional as F
 
 
@@ -1911,6 +1913,14 @@ def parse_args():
 
 def main():
     args = parse_args()
+    torch.set_float32_matmul_precision("high")
+    torch.use_deterministic_algorithms(True)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+    random.seed(a0.SEED)
+    np.random.seed(a0.SEED)
+    torch.manual_seed(a0.SEED)
+    torch.cuda.manual_seed(a0.SEED)
     if args.command == "source-audit":
         source_audit(args)
     elif args.command == "preflight":

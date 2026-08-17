@@ -12,6 +12,8 @@ buffer has one disjoint rank slot per local flattened gradient; after the single
 collective, every rank sums those slots in fixed rank order. This preserves the
 required single synchronization while making fresh-reader Adam-step comparisons
 reproducible instead of depending on NCCL's floating-point reduction order.
+All execution paths enable PyTorch deterministic algorithms, deterministic
+cuDNN, and the fixed cuBLAS workspace configuration before model construction.
 Writer and reader gradients are clipped separately to 1.0 after synchronization. Temporal
 credit remains exactly one token because every next writer input is detached and
 Blocks 2–12 historical K/V are detached.

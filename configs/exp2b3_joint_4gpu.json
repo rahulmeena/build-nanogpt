@@ -17,6 +17,12 @@
   "writer_parameters": 49152,
   "reader_parameters": 1537,
   "trainable_parameters": 50689,
+  "determinism": {
+    "torch_deterministic_algorithms": true,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "cublas_workspace_config": ":4096:8"
+  },
   "gradient_reduction": "one combined rank-slotted flattened FP32 all_reduce(SUM), then fixed local rank-order sum",
   "loss_scaling": "each token-loss sum divided by 524288; no post-SUM division",
   "writer_gradient_clip": 1.0,
