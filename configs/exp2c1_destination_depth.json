@@ -1,0 +1,77 @@
+{
+  "protocol": "exp2c1_destination_depth_teacher_reader_v1",
+  "seed": 1337,
+  "destinations": {
+    "D1": 1,
+    "D5": 5,
+    "D9": 9,
+    "D12": 12
+  },
+  "gpu_mapping": {
+    "D1": 0,
+    "D5": 1,
+    "D9": 2,
+    "D12": 3
+  },
+  "independent_single_gpu_workers": true,
+  "ddp": false,
+  "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "parent_completed_updates": 954,
+  "parent_tokens": 500170752,
+  "parent_parameter_count": 124514304,
+  "source_depths": [16, 17, 20, 24],
+  "reader_initialization": {
+    "query": "zeros",
+    "rmsnorm_scale": "ones",
+    "gate": "zero",
+    "trainable_parameters": 1537
+  },
+  "mask_semantics": "only the destination attention block lacks historical context; current-token attention and every other block remain normal",
+  "teacher": "frozen full-context Experiment 1B model; raw sources shifted one token and detached",
+  "legacy_world_size": 4,
+  "legacy_micro_batch_sequences_per_rank": 64,
+  "sequence_length": 1024,
+  "legacy_gradient_accumulation": 2,
+  "serialized_microbatches_per_update": 8,
+  "global_targets_per_update": 524288,
+  "optimizer_updates": 48,
+  "processed_reader_tokens": 25165824,
+  "milestone_updates": [10, 20, 29, 48],
+  "milestone_tokens": [5242880, 10485760, 15204352, 25165824],
+  "forced_process_restart_after_update": 20,
+  "optimizer": {
+    "name": "AdamW",
+    "betas": [0.9, 0.95],
+    "eps": 1e-8,
+    "weight_decay": 0.0,
+    "lr_schedule": "continue original 10B schedule from completed parent update 954"
+  },
+  "validation_batches": 20,
+  "validation_batch_sequences": 64,
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "full_context_loss": 4.0786544085,
+  "low_damage_threshold": 0.02,
+  "teacher_self_gate": {
+    "specific_gap_minimum": 0.02,
+    "real_wins_minimum": 18,
+    "recovery_must_be_positive": true
+  },
+  "hierarchical_support": {
+    "specific_gap_minimum": 0.05,
+    "real_wins_minimum": 18,
+    "recovery_must_be_positive": true,
+    "real_better_than_generic_minimum": 0.01
+  },
+  "d1_regression": {
+    "real": 5.8353391409,
+    "shuffled": 5.8765912533,
+    "specific_gap": 0.0412521124,
+    "absolute_tolerance": 5e-6
+  },
+  "writers": "forbidden",
+  "generic_branch_during_training": "forbidden",
+  "auxiliary_loss": "forbidden",
+  "self_recurrent_training": "forbidden",
+  "bptt": "forbidden",
+  "hellaswag": "forbidden"
+}

@@ -238,6 +238,11 @@ class TopDownAttnRes(nn.Module):
                     "query_norm": self.query.detach().float().norm().cpu().item(),
                     "gate": self.gate.detach().float().cpu().item(),
                     "gate_coefficient": self.gate.detach().float().tanh().cpu().item(),
+                    "topdown_rms": output.detach().float().pow(2).mean().sqrt().cpu().item(),
+                    "feedback_rms": (
+                        self.gate.detach().float().tanh()
+                        * output.detach().float()
+                    ).pow(2).mean().sqrt().cpu().item(),
                 }
 
         if return_weights:
@@ -271,6 +276,9 @@ EXPERIMENT_2A0_MODES = {
     "masked_l1_no_feedback",
     "masked_l1_topdown_teacher",
     "masked_l1_shuffled_feedback",
+    "masked_destination_no_feedback",
+    "masked_destination_topdown_teacher",
+    "masked_destination_shuffled_feedback",
 }
 
 EXPERIMENT_2B0_INCREMENTAL_MODES = {
@@ -279,6 +287,7 @@ EXPERIMENT_2B0_INCREMENTAL_MODES = {
     "masked_l1_topdown_teacher",
     "masked_l1_topdown_self",
     "masked_l1_shuffled_self_feedback",
+    "masked_single_no_feedback",
 }
 
 
@@ -303,6 +312,7 @@ class RecurrentState:
     kv_caches: tuple
     feedback_memory: torch.Tensor
     mask_depth: int = 1
+    masked_block_index: int | None = None
 
     def state_dict(self):
         caches = []
@@ -320,9 +330,13 @@ class RecurrentState:
                 )
         payload = {
             "schema": (
-                "full_attnres_recurrent_state_v1"
-                if self.mask_depth == 1
-                else "full_attnres_recurrent_state_v2"
+                "full_attnres_recurrent_state_v3"
+                if self.masked_block_index is not None
+                else (
+                    "full_attnres_recurrent_state_v1"
+                    if self.mask_depth == 1
+                    else "full_attnres_recurrent_state_v2"
+                )
             ),
             "position": self.position,
             "mode": self.mode,
@@ -331,6 +345,8 @@ class RecurrentState:
         }
         if self.mask_depth != 1:
             payload["mask_depth"] = self.mask_depth
+        if self.masked_block_index is not None:
+            payload["masked_block_index"] = self.masked_block_index
         return payload
 
 
@@ -495,6 +511,7 @@ class GPT(nn.Module):
         feedback_permutation=None,
         feedback_gate_override=None,
         return_source_depths=None,
+        feedback_destination_block=0,
     ):
         # idx is of shape (B, T)
         B, T = idx.size()
@@ -505,10 +522,23 @@ class GPT(nn.Module):
             raise ValueError("masked/top-down modes require residual_mode='full_attnres'")
         if return_source_depths is not None and self.config.residual_mode != "full_attnres":
             raise ValueError("residual source capture requires residual_mode='full_attnres'")
-        masked_l1 = mode != "full_context"
+        if (
+            not isinstance(feedback_destination_block, int)
+            or not 0 <= feedback_destination_block < self.config.n_layer
+        ):
+            raise ValueError("feedback_destination_block must identify one block")
+        if mode == "full_context" and feedback_destination_block != 0:
+            raise ValueError("full-context mode does not accept a feedback destination")
+        masked_destination = mode != "full_context"
         uses_feedback = mode in {
             "masked_l1_topdown_teacher",
             "masked_l1_shuffled_feedback",
+            "masked_destination_topdown_teacher",
+            "masked_destination_shuffled_feedback",
+        }
+        shuffled_feedback = mode in {
+            "masked_l1_shuffled_feedback",
+            "masked_destination_shuffled_feedback",
         }
         if uses_feedback and not self.config.enable_topdown_feedback:
             raise ValueError("this model was constructed without top-down feedback")
@@ -516,7 +546,7 @@ class GPT(nn.Module):
             raise ValueError(f"{mode} requires shifted teacher feedback sources")
         if not uses_feedback and feedback_sources is not None:
             raise ValueError(f"{mode} does not accept feedback sources")
-        if mode != "masked_l1_shuffled_feedback" and feedback_permutation is not None:
+        if not shuffled_feedback and feedback_permutation is not None:
             raise ValueError("a feedback permutation is valid only in shuffled-feedback mode")
         if not uses_feedback and feedback_gate_override is not None:
             raise ValueError("a gate override is valid only in a feedback mode")
@@ -536,7 +566,7 @@ class GPT(nn.Module):
             destination_index = 0
             for block_index, block in enumerate(self.transformer.h):
                 h = self.transformer.attnres[destination_index](values)
-                if block_index == 0 and masked_l1:
+                if block_index == feedback_destination_block and masked_destination:
                     if uses_feedback:
                         if not isinstance(feedback_sources, torch.Tensor) or feedback_sources.ndim != 4:
                             raise ValueError(
@@ -550,7 +580,7 @@ class GPT(nn.Module):
                                 f"feedback source shape {tuple(feedback_sources.shape)} != {expected_shape}"
                             )
                         memory_bank = feedback_sources.detach()
-                        if mode == "masked_l1_shuffled_feedback":
+                        if shuffled_feedback:
                             if feedback_permutation is None:
                                 feedback_permutation = fixed_derangement(B, idx.device)
                             if tuple(feedback_permutation.shape) != (B,):
@@ -604,6 +634,7 @@ class GPT(nn.Module):
         device=None,
         dtype=None,
         mask_depth=1,
+        masked_block_index=None,
     ):
         """Create explicit, fixed-capacity state for token-by-token inference."""
         if self.config.residual_mode != "full_attnres":
@@ -618,6 +649,23 @@ class GPT(nn.Module):
         if mode == "full_context":
             if mask_depth not in (0, 1):
                 raise ValueError("full-context recurrence does not accept mask_depth")
+            if masked_block_index is not None:
+                raise ValueError("full-context recurrence cannot mask one block")
+            effective_mask_depth = 0
+        elif masked_block_index is not None:
+            if mode != "masked_single_no_feedback":
+                raise ValueError(
+                    "single-block masking requires masked_single_no_feedback mode"
+                )
+            if mask_depth not in (0, 1):
+                raise ValueError(
+                    "single-block masking does not accept a mask-depth intervention"
+                )
+            if (
+                not isinstance(masked_block_index, int)
+                or not 0 <= masked_block_index < self.config.n_layer
+            ):
+                raise ValueError("masked_block_index must identify one Transformer block")
             effective_mask_depth = 0
         else:
             if (
@@ -638,7 +686,10 @@ class GPT(nn.Module):
         )
         caches = []
         for block_index in range(self.config.n_layer):
-            if block_index < effective_mask_depth:
+            if (
+                block_index < effective_mask_depth
+                or block_index == masked_block_index
+            ):
                 caches.append(None)
                 continue
             caches.append(
@@ -662,6 +713,7 @@ class GPT(nn.Module):
             tuple(caches),
             memory,
             effective_mask_depth,
+            masked_block_index,
         )
 
     def load_recurrent_state(self, payload, device=None, dtype=None):
@@ -671,6 +723,7 @@ class GPT(nn.Module):
             or payload.get("schema") not in {
                 "full_attnres_recurrent_state_v1",
                 "full_attnres_recurrent_state_v2",
+                "full_attnres_recurrent_state_v3",
             }
         ):
             raise ValueError("invalid recurrent-state payload")
@@ -683,12 +736,14 @@ class GPT(nn.Module):
         device = memory.device if device is None else torch.device(device)
         dtype = memory.dtype if dtype is None else dtype
         mask_depth = payload.get("mask_depth", 1)
+        masked_block_index = payload.get("masked_block_index")
         state = self.init_recurrent_state(
             memory.size(1),
             payload.get("mode"),
             device=device,
             dtype=dtype,
             mask_depth=mask_depth,
+            masked_block_index=masked_block_index,
         )
         caches = payload.get("kv_caches")
         if not isinstance(caches, (list, tuple)) or len(caches) != self.config.n_layer:
@@ -725,6 +780,7 @@ class GPT(nn.Module):
             tuple(restored),
             memory.detach().to(device=device, dtype=dtype).clone(),
             state.mask_depth,
+            state.masked_block_index,
         )
 
     def reset_recurrent_memory(self, state):
@@ -736,6 +792,7 @@ class GPT(nn.Module):
             state.kv_caches,
             torch.zeros_like(state.feedback_memory),
             state.mask_depth,
+            state.masked_block_index,
         )
 
     def _validate_recurrent_state(self, state, batch_size):
@@ -755,17 +812,37 @@ class GPT(nn.Module):
             raise ValueError("recurrent feedback-memory shape mismatch")
         if len(state.kv_caches) != self.config.n_layer:
             raise ValueError("recurrent state has the wrong number of KV caches")
-        if state.mode == "full_context" and state.mask_depth != 0:
-            raise ValueError("full-context recurrent state must have mask depth zero")
+        if state.mode == "full_context" and (
+            state.mask_depth != 0 or state.masked_block_index is not None
+        ):
+            raise ValueError("full-context recurrent state cannot mask attention history")
+        if state.masked_block_index is not None:
+            if (
+                state.mode != "masked_single_no_feedback"
+                or state.mask_depth != 0
+                or not isinstance(state.masked_block_index, int)
+                or not 0 <= state.masked_block_index < self.config.n_layer
+            ):
+                raise ValueError("recurrent state has an invalid single-block mask")
+        elif state.mode == "masked_single_no_feedback":
+            raise ValueError("single-block mode requires masked_block_index")
         expected_mask_depth = 0 if state.mode == "full_context" else state.mask_depth
         if (
             not isinstance(expected_mask_depth, int)
             or not 0 <= expected_mask_depth <= self.config.n_layer
-            or (state.mode != "full_context" and expected_mask_depth == 0)
+            or (
+                state.mode != "full_context"
+                and state.masked_block_index is None
+                and expected_mask_depth == 0
+            )
         ):
             raise ValueError("recurrent state has an invalid mask depth")
         for block_index, cache in enumerate(state.kv_caches):
-            if block_index < expected_mask_depth:
+            masked = (
+                block_index < expected_mask_depth
+                or block_index == state.masked_block_index
+            )
+            if masked:
                 if cache is not None:
                     raise ValueError("masked blocks must not retain KV caches")
             elif not isinstance(cache, AttentionKVCache) or cache.length != state.position:
@@ -779,6 +856,7 @@ class GPT(nn.Module):
         feedback_permutation=None,
         feedback_gate_override=None,
         block1_feedback=None,
+        attention_feedback=None,
         reset_feedback=False,
         use_memory_writers=False,
         disabled_writer_depths=(),
@@ -817,6 +895,23 @@ class GPT(nn.Module):
                 )
             if block1_feedback.device != idx.device:
                 raise ValueError("direct Block-1 feedback device mismatch")
+        if attention_feedback is not None:
+            if block1_feedback is not None:
+                raise ValueError("only one direct attention feedback path may be active")
+            if (
+                mode != "masked_single_no_feedback"
+                or state.masked_block_index is None
+            ):
+                raise ValueError(
+                    "direct destination feedback requires one explicitly masked block"
+                )
+            expected_direct_shape = (B, 1, self.config.n_embd)
+            if tuple(attention_feedback.shape) != expected_direct_shape:
+                raise ValueError(
+                    "direct destination feedback must have shape [batch, 1, channel]"
+                )
+            if attention_feedback.device != idx.device:
+                raise ValueError("direct destination feedback device mismatch")
         reset_mask = None
         if isinstance(reset_feedback, torch.Tensor):
             if (
@@ -846,8 +941,15 @@ class GPT(nn.Module):
         topdown_weights = None
         for block_index, block in enumerate(self.transformer.h):
             h = self.transformer.attnres[destination_index](values)
-            masked_layer = block_index < state.mask_depth
-            if block_index == 0 and mode != "full_context":
+            masked_layer = (
+                block_index < state.mask_depth
+                or block_index == state.masked_block_index
+            )
+            if (
+                block_index == 0
+                and mode != "full_context"
+                and state.masked_block_index is None
+            ):
                 if uses_feedback:
                     if teacher_mode:
                         memory_bank = feedback_sources.detach()
@@ -913,6 +1015,13 @@ class GPT(nn.Module):
                 attention_output, cache = block.attn.forward_step(
                     block.ln_1(h), cache=None, self_only=True
                 )
+            elif block_index == state.masked_block_index:
+                if attention_feedback is not None:
+                    feedback_contribution = attention_feedback
+                    h = h + feedback_contribution
+                attention_output, cache = block.attn.forward_step(
+                    block.ln_1(h), cache=None, self_only=True
+                )
             elif masked_layer:
                 attention_output, cache = block.attn.forward_step(
                     block.ln_1(h), cache=None, self_only=True
@@ -947,6 +1056,7 @@ class GPT(nn.Module):
             tuple(updated_caches),
             memory,
             state.mask_depth,
+            state.masked_block_index,
         )
         if not return_diagnostics:
             return logits, next_state
