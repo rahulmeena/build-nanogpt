@@ -10,13 +10,14 @@ import torch
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
-from train_gpt2 import GPT, GPTConfig  # noqa: E402
+from smoke_test import load_training_symbols  # noqa: E402
 
 
 def model():
     torch.manual_seed(1234)
-    return GPT(
-        GPTConfig(
+    symbols = load_training_symbols()
+    return symbols["GPT"](
+        symbols["GPTConfig"](
             block_size=8,
             vocab_size=32,
             n_layer=2,
