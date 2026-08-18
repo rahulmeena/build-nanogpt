@@ -2484,14 +2484,25 @@ def main():
     aggregate.add_argument("--run-root", required=True)
     aggregate.add_argument("--output-dir", required=True)
     args = parser.parse_args()
+    os.chdir(REPO_ROOT)
+    torch.set_float32_matmul_precision("high")
+    torch.use_deterministic_algorithms(True)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+    random.seed(a0.SEED)
+    np.random.seed(a0.SEED)
+    torch.manual_seed(a0.SEED)
     if args.command == "aggregate":
         report = aggregate_results(args)
-    elif args.command == "preflight":
-        report = run_preflight(args)
-    elif args.command == "smoke":
-        report = run_smoke(args)
     else:
-        report = run_training(args)
+        a0.require_cuda()
+        torch.cuda.manual_seed(a0.SEED)
+        if args.command == "preflight":
+            report = run_preflight(args)
+        elif args.command == "smoke":
+            report = run_smoke(args)
+        else:
+            report = run_training(args)
     print(json.dumps(report, indent=2, sort_keys=True), flush=True)
 
 
