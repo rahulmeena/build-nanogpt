@@ -1,0 +1,77 @@
+{
+  "protocol": "exp2c2_cumulative_low_kv_matched_feedback_v1",
+  "seed": 1337,
+  "configurations": {
+    "C1": [1],
+    "C2": [1, 2],
+    "C3": [1, 2, 3],
+    "C4": [1, 2, 3, 4]
+  },
+  "gpu_mapping": {
+    "C1": 0,
+    "C2": 1,
+    "C3": 2,
+    "C4": 3
+  },
+  "independent_single_gpu_workers": true,
+  "ddp": false,
+  "nccl_gradient_synchronization": false,
+  "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "parent_completed_updates": 954,
+  "parent_tokens": 500170752,
+  "source_depths": [16, 17, 20, 24],
+  "reader_initialization": {
+    "query": "zeros",
+    "rmsnorm_scale": "ones",
+    "gate": "zero",
+    "parameters_per_reader": 1537
+  },
+  "mask_semantics": "cumulative consecutive low blocks lack historical KV; current-token attention and all higher blocks retain normal behavior",
+  "teacher": "frozen full-context Experiment 1B model; identical raw source bank shifted one token and detached for every reader",
+  "legacy_world_size": 4,
+  "legacy_micro_batch_sequences_per_rank": 64,
+  "sequence_length": 1024,
+  "legacy_gradient_accumulation": 2,
+  "serialized_microbatches_per_update": 8,
+  "global_targets_per_update": 524288,
+  "optimizer_updates": 48,
+  "processed_reader_tokens_per_configuration": 25165824,
+  "milestone_updates": [10, 20, 29, 48],
+  "forced_process_restart_after_update": 20,
+  "optimizer": {
+    "name": "AdamW",
+    "betas": [0.9, 0.95],
+    "eps": 1e-8,
+    "weight_decay": 0.0,
+    "lr_schedule": "exact Experiment 2C1 schedule continued from parent update 954"
+  },
+  "validation_batches": 20,
+  "validation_batch_sequences": 64,
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "full_context_loss": 4.0786544085,
+  "c1_regression": {
+    "real": 5.8353391409,
+    "shuffled": 5.8765912533,
+    "specific_gap": 0.0412521124,
+    "real_wins": 20,
+    "absolute_tolerance": 0.000005
+  },
+  "matched_feedback_success": {
+    "matched_destination_gain_minimum": 0.020,
+    "specific_gap_minimum": 0.010,
+    "real_wins_minimum": 18,
+    "deep_recovery_fraction_retention_minimum": 0.50
+  },
+  "self_trigger": {
+    "teacher_recovery_must_be_positive": true,
+    "specific_gap_minimum": 0.010,
+    "real_wins_minimum": 18,
+    "c2_c4_matched_destination_gain_minimum": 0.020
+  },
+  "writers": "forbidden",
+  "generic_branch_during_training": "forbidden",
+  "auxiliary_loss": "forbidden",
+  "self_recurrent_training": "forbidden",
+  "bptt": "forbidden",
+  "hellaswag": "forbidden"
+}

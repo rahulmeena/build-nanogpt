@@ -279,6 +279,9 @@ EXPERIMENT_2A0_MODES = {
     "masked_destination_no_feedback",
     "masked_destination_topdown_teacher",
     "masked_destination_shuffled_feedback",
+    "masked_cumulative_no_feedback",
+    "masked_cumulative_topdown_teacher",
+    "masked_cumulative_shuffled_feedback",
 }
 
 EXPERIMENT_2B0_INCREMENTAL_MODES = {
@@ -389,6 +392,7 @@ class GPTConfig:
     residual_mode: str = "standard"
     attnres_rms_eps: float = 1e-5
     enable_topdown_feedback: bool = False
+    topdown_feedback_destinations: tuple = ()
     enable_memory_writers: bool = False
     memory_writer_rank: int = 8
     memory_writer_init_seed: int = 20260202
@@ -401,8 +405,27 @@ class GPT(nn.Module):
             raise ValueError(f"unknown residual mode: {config.residual_mode}")
         if config.enable_topdown_feedback and config.residual_mode != "full_attnres":
             raise ValueError("top-down feedback requires residual_mode='full_attnres'")
+        multi_destinations = tuple(config.topdown_feedback_destinations)
+        if multi_destinations:
+            if not config.enable_topdown_feedback:
+                raise ValueError("multi-destination readers require top-down feedback")
+            if (
+                len(set(multi_destinations)) != len(multi_destinations)
+                or any(
+                    not isinstance(block, int)
+                    or not 0 <= block < config.n_layer
+                    for block in multi_destinations
+                )
+            ):
+                raise ValueError("invalid top-down feedback destinations")
+            if multi_destinations != tuple(range(len(multi_destinations))):
+                raise ValueError(
+                    "cumulative top-down destinations must be a consecutive prefix"
+                )
         if config.enable_memory_writers and not config.enable_topdown_feedback:
             raise ValueError("memory writers require the top-down feedback reader")
+        if config.enable_memory_writers and multi_destinations:
+            raise ValueError("memory writers are not supported with multi-destination readers")
         if config.enable_memory_writers and config.memory_writer_rank != 8:
             raise ValueError("Experiment 2B2 memory writers require rank 8")
         self.config = config
@@ -429,12 +452,21 @@ class GPT(nn.Module):
                 )
                 for destination in destinations
             ])
-            if config.enable_topdown_feedback:
+            if config.enable_topdown_feedback and not multi_destinations:
                 transformer["topdown_attnres"] = TopDownAttnRes(
                     config.n_embd,
                     EXPERIMENT_2A0_SOURCE_DEPTHS,
                     eps=config.attnres_rms_eps,
                 )
+            elif multi_destinations:
+                transformer["topdown_attnres_by_destination"] = nn.ModuleDict({
+                    str(block): TopDownAttnRes(
+                        config.n_embd,
+                        EXPERIMENT_2A0_SOURCE_DEPTHS,
+                        eps=config.attnres_rms_eps,
+                    )
+                    for block in multi_destinations
+                })
             if config.enable_memory_writers:
                 transformer["memory_writers"] = nn.ModuleDict({
                     f"writer_v{depth}": MemoryWriterAdapter(
@@ -512,6 +544,7 @@ class GPT(nn.Module):
         feedback_gate_override=None,
         return_source_depths=None,
         feedback_destination_block=0,
+        feedback_active_destination_blocks=None,
     ):
         # idx is of shape (B, T)
         B, T = idx.size()
@@ -522,6 +555,7 @@ class GPT(nn.Module):
             raise ValueError("masked/top-down modes require residual_mode='full_attnres'")
         if return_source_depths is not None and self.config.residual_mode != "full_attnres":
             raise ValueError("residual source capture requires residual_mode='full_attnres'")
+        cumulative_mode = mode.startswith("masked_cumulative_")
         if (
             not isinstance(feedback_destination_block, int)
             or not 0 <= feedback_destination_block < self.config.n_layer
@@ -529,16 +563,34 @@ class GPT(nn.Module):
             raise ValueError("feedback_destination_block must identify one block")
         if mode == "full_context" and feedback_destination_block != 0:
             raise ValueError("full-context mode does not accept a feedback destination")
-        masked_destination = mode != "full_context"
+        cumulative_destinations = tuple(self.config.topdown_feedback_destinations)
+        if cumulative_mode and not cumulative_destinations:
+            raise ValueError("cumulative mode requires configured destination readers")
+        if not cumulative_mode and feedback_active_destination_blocks is not None:
+            raise ValueError("active destination controls require cumulative mode")
+        if feedback_active_destination_blocks is None:
+            active_destinations = set(cumulative_destinations)
+        else:
+            active_destinations = set(feedback_active_destination_blocks)
+            if not active_destinations.issubset(set(cumulative_destinations)):
+                raise ValueError("active feedback destinations must be configured")
+        masked_blocks = (
+            set(cumulative_destinations)
+            if cumulative_mode
+            else ({feedback_destination_block} if mode != "full_context" else set())
+        )
         uses_feedback = mode in {
             "masked_l1_topdown_teacher",
             "masked_l1_shuffled_feedback",
             "masked_destination_topdown_teacher",
             "masked_destination_shuffled_feedback",
+            "masked_cumulative_topdown_teacher",
+            "masked_cumulative_shuffled_feedback",
         }
         shuffled_feedback = mode in {
             "masked_l1_shuffled_feedback",
             "masked_destination_shuffled_feedback",
+            "masked_cumulative_shuffled_feedback",
         }
         if uses_feedback and not self.config.enable_topdown_feedback:
             raise ValueError("this model was constructed without top-down feedback")
@@ -550,6 +602,35 @@ class GPT(nn.Module):
             raise ValueError("a feedback permutation is valid only in shuffled-feedback mode")
         if not uses_feedback and feedback_gate_override is not None:
             raise ValueError("a gate override is valid only in a feedback mode")
+        memory_bank = None
+        if uses_feedback:
+            if not isinstance(feedback_sources, torch.Tensor) or feedback_sources.ndim != 4:
+                raise ValueError(
+                    "feedback sources must have shape [source, batch, time, channel]"
+                )
+            expected_shape = (
+                len(EXPERIMENT_2A0_SOURCE_DEPTHS), B, T, self.config.n_embd
+            )
+            if tuple(feedback_sources.shape) != expected_shape:
+                raise ValueError(
+                    f"feedback source shape {tuple(feedback_sources.shape)} != {expected_shape}"
+                )
+            memory_bank = feedback_sources.detach()
+            if shuffled_feedback:
+                if feedback_permutation is None:
+                    feedback_permutation = fixed_derangement(B, idx.device)
+                if tuple(feedback_permutation.shape) != (B,):
+                    raise ValueError("feedback permutation must have shape [batch]")
+                expected_indices = torch.arange(B, device=feedback_permutation.device)
+                if torch.any(feedback_permutation == expected_indices):
+                    raise ValueError("feedback permutation must be fixed-point-free")
+                if not torch.equal(
+                    torch.sort(feedback_permutation).values, expected_indices
+                ):
+                    raise ValueError(
+                        "feedback permutation must contain every batch index once"
+                    )
+                memory_bank = memory_bank[:, feedback_permutation]
         # forward the token and posisition embeddings
         pos = torch.arange(0, T, dtype=torch.long, device=idx.device) # shape (T)
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (T, n_embd)
@@ -566,38 +647,22 @@ class GPT(nn.Module):
             destination_index = 0
             for block_index, block in enumerate(self.transformer.h):
                 h = self.transformer.attnres[destination_index](values)
-                if block_index == feedback_destination_block and masked_destination:
-                    if uses_feedback:
-                        if not isinstance(feedback_sources, torch.Tensor) or feedback_sources.ndim != 4:
-                            raise ValueError(
-                                "feedback sources must have shape [source, batch, time, channel]"
-                            )
-                        expected_shape = (
-                            len(EXPERIMENT_2A0_SOURCE_DEPTHS), B, T, self.config.n_embd
+                if block_index in masked_blocks:
+                    if uses_feedback and (
+                        not cumulative_mode or block_index in active_destinations
+                    ):
+                        reader = (
+                            self.transformer.topdown_attnres_by_destination[
+                                str(block_index)
+                            ]
+                            if cumulative_mode
+                            else self.transformer.topdown_attnres
                         )
-                        if tuple(feedback_sources.shape) != expected_shape:
-                            raise ValueError(
-                                f"feedback source shape {tuple(feedback_sources.shape)} != {expected_shape}"
-                            )
-                        memory_bank = feedback_sources.detach()
-                        if shuffled_feedback:
-                            if feedback_permutation is None:
-                                feedback_permutation = fixed_derangement(B, idx.device)
-                            if tuple(feedback_permutation.shape) != (B,):
-                                raise ValueError("feedback permutation must have shape [batch]")
-                            expected_indices = torch.arange(B, device=feedback_permutation.device)
-                            if torch.any(feedback_permutation == expected_indices):
-                                raise ValueError("feedback permutation must be fixed-point-free")
-                            if not torch.equal(
-                                torch.sort(feedback_permutation).values, expected_indices
-                            ):
-                                raise ValueError("feedback permutation must contain every batch index once")
-                            memory_bank = memory_bank[:, feedback_permutation]
-                        topdown = self.transformer.topdown_attnres(
+                        topdown = reader(
                             list(memory_bank.unbind(dim=0))
                         )
                         if feedback_gate_override is None:
-                            gate = self.transformer.topdown_attnres.gate.tanh()
+                            gate = reader.gate.tanh()
                         else:
                             gate = h.new_tensor(float(feedback_gate_override))
                         h = h + gate * topdown
@@ -857,6 +922,7 @@ class GPT(nn.Module):
         feedback_gate_override=None,
         block1_feedback=None,
         attention_feedback=None,
+        attention_feedback_by_block=None,
         reset_feedback=False,
         use_memory_writers=False,
         disabled_writer_depths=(),
@@ -896,7 +962,7 @@ class GPT(nn.Module):
             if block1_feedback.device != idx.device:
                 raise ValueError("direct Block-1 feedback device mismatch")
         if attention_feedback is not None:
-            if block1_feedback is not None:
+            if block1_feedback is not None or attention_feedback_by_block is not None:
                 raise ValueError("only one direct attention feedback path may be active")
             if (
                 mode != "masked_single_no_feedback"
@@ -912,6 +978,27 @@ class GPT(nn.Module):
                 )
             if attention_feedback.device != idx.device:
                 raise ValueError("direct destination feedback device mismatch")
+        if attention_feedback_by_block is not None:
+            if block1_feedback is not None:
+                raise ValueError("only one direct attention feedback path may be active")
+            if mode != "masked_l1_no_feedback" or state.masked_block_index is not None:
+                raise ValueError(
+                    "multi-destination direct feedback requires cumulative masking"
+                )
+            if not isinstance(attention_feedback_by_block, dict):
+                raise ValueError("multi-destination feedback must be a block mapping")
+            expected_blocks = set(range(state.mask_depth))
+            if not set(attention_feedback_by_block).issubset(expected_blocks):
+                raise ValueError("direct feedback may target only masked blocks")
+            expected_direct_shape = (B, 1, self.config.n_embd)
+            for block_index, feedback in attention_feedback_by_block.items():
+                if (
+                    not isinstance(block_index, int)
+                    or not isinstance(feedback, torch.Tensor)
+                    or tuple(feedback.shape) != expected_direct_shape
+                    or feedback.device != idx.device
+                ):
+                    raise ValueError("invalid multi-destination feedback tensor")
         reset_mask = None
         if isinstance(reset_feedback, torch.Tensor):
             if (
@@ -941,6 +1028,13 @@ class GPT(nn.Module):
         topdown_weights = None
         for block_index, block in enumerate(self.transformer.h):
             h = self.transformer.attnres[destination_index](values)
+            direct_feedback = (
+                None
+                if attention_feedback_by_block is None
+                else attention_feedback_by_block.get(block_index)
+            )
+            if direct_feedback is not None:
+                h = h + direct_feedback
             masked_layer = (
                 block_index < state.mask_depth
                 or block_index == state.masked_block_index
@@ -1155,58 +1249,81 @@ class GPT(nn.Module):
     def set_topdown_instrumentation(self, enabled=True):
         if not self.config.enable_topdown_feedback:
             raise ValueError("this model has no top-down router")
-        router = self.transformer.topdown_attnres
-        router.instrumentation_enabled = enabled
-        if enabled:
-            router.last_stats = None
+        for router in self._topdown_readers().values():
+            router.instrumentation_enabled = enabled
+            if enabled:
+                router.last_stats = None
 
     def get_topdown_stats(self):
         if not self.config.enable_topdown_feedback:
             return None
-        return self.transformer.topdown_attnres.last_stats
+        readers = self._topdown_readers()
+        if tuple(self.config.topdown_feedback_destinations):
+            return {
+                int(destination): reader.last_stats
+                for destination, reader in readers.items()
+            }
+        return readers["single"].last_stats
+
+    def _topdown_readers(self):
+        if not self.config.enable_topdown_feedback:
+            raise ValueError("this model has no top-down router")
+        if tuple(self.config.topdown_feedback_destinations):
+            return self.transformer.topdown_attnres_by_destination
+        return {"single": self.transformer.topdown_attnres}
 
     def set_topdown_source_mask(self, source_depth=None):
         if not self.config.enable_topdown_feedback:
             raise ValueError("this model has no top-down router")
-        router = self.transformer.topdown_attnres
-        if source_depth is None:
-            router.masked_source = None
-            return
-        if source_depth not in router.source_depths:
-            raise ValueError(
-                f"top-down source must be one of {router.source_depths}, got {source_depth}"
-            )
-        router.masked_source = router.source_depths.index(source_depth)
+        for router in self._topdown_readers().values():
+            if source_depth is None:
+                router.masked_source = None
+                continue
+            if source_depth not in router.source_depths:
+                raise ValueError(
+                    f"top-down source must be one of {router.source_depths}, got {source_depth}"
+                )
+            router.masked_source = router.source_depths.index(source_depth)
 
     def load_experiment1_full_attnres_state(self, experiment1_state):
         """Load an Experiment 1 state while preserving only new 2A0 tensors."""
         if not self.config.enable_topdown_feedback:
             raise ValueError("use strict load_state_dict for a model without top-down feedback")
         missing, unexpected = self.load_state_dict(experiment1_state, strict=False)
-        expected_missing = {
-            "transformer.topdown_attnres.query",
-            "transformer.topdown_attnres.norm.weight",
-            "transformer.topdown_attnres.gate",
-        }
+        if tuple(self.config.topdown_feedback_destinations):
+            expected_missing = {
+                f"transformer.topdown_attnres_by_destination.{destination}.{name}"
+                for destination in self.config.topdown_feedback_destinations
+                for name in ("query", "norm.weight", "gate")
+            }
+        else:
+            expected_missing = {
+                "transformer.topdown_attnres.query",
+                "transformer.topdown_attnres.norm.weight",
+                "transformer.topdown_attnres.gate",
+            }
         if set(missing) != expected_missing or unexpected:
             raise ValueError(
                 f"Experiment 1 state mismatch: missing={missing}, unexpected={unexpected}"
             )
-        router = self.transformer.topdown_attnres
-        if (
-            torch.count_nonzero(router.query).item() != 0
-            or not torch.equal(router.norm.weight, torch.ones_like(router.norm.weight))
-            or torch.count_nonzero(router.gate).item() != 0
-        ):
-            raise RuntimeError("top-down parameters lost their exact zero/one initialization")
+        for router in self._topdown_readers().values():
+            if (
+                torch.count_nonzero(router.query).item() != 0
+                or not torch.equal(router.norm.weight, torch.ones_like(router.norm.weight))
+                or torch.count_nonzero(router.gate).item() != 0
+            ):
+                raise RuntimeError(
+                    "top-down parameters lost their exact zero/one initialization"
+                )
 
     def freeze_for_topdown_training(self):
         if not self.config.enable_topdown_feedback:
             raise ValueError("this model has no top-down feedback parameters")
         for parameter in self.parameters():
             parameter.requires_grad_(False)
-        for parameter in self.transformer.topdown_attnres.parameters():
-            parameter.requires_grad_(True)
+        for reader in self._topdown_readers().values():
+            for parameter in reader.parameters():
+                parameter.requires_grad_(True)
 
     def freeze_for_memory_writer_training(self):
         if not self.config.enable_memory_writers:
