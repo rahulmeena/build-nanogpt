@@ -1463,17 +1463,17 @@ def evaluate_self_controls(student, symbols, configuration):
             )
             token_loss = 0.0
             for position in range(x.size(1)):
-                active = ()
-                bank = state.feedback_memory.detach()
-                if control == "real":
-                    active = blocks
-                elif control == "shuffle":
-                    active = blocks
-                    bank = bank[:, permutation]
-                elif control == "b1_only":
-                    active = (0,)
-                feedback = direct_feedback(student, bank, active)
                 with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+                    active = ()
+                    bank = state.feedback_memory.detach()
+                    if control == "real":
+                        active = blocks
+                    elif control == "shuffle":
+                        active = blocks
+                        bank = bank[:, permutation]
+                    elif control == "b1_only":
+                        active = (0,)
+                    feedback = direct_feedback(student, bank, active)
                     logits, state = student.forward_step(
                         x[:, position],
                         state,
