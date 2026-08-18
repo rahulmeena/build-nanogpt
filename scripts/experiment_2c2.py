@@ -2055,6 +2055,9 @@ def final_report_text(summary):
         f"- 2C1 parent commit: `{PARENT_COMMIT}`",
         f"- 2C2 branch: `{BRANCH}`",
         f"- Implementation commit: `{summary['implementation_commit']}`",
+        "- Evaluation-only finalize commits: `"
+        + "`, `".join(summary.get("evaluation_finalize_commits", []))
+        + "`",
         f"- Results commit: `{summary.get('results_commit', 'recorded by the results commit containing JSON artifacts')}`",
         "- Final-report commit: `the immutable commit containing this file`",
         "- Base checkpoint SHA256: `"
@@ -2227,6 +2230,8 @@ def aggregate_results(args):
     restarts = {}
     stages = {}
     hash_sequences = {}
+    metrics_by_configuration = {}
+    canonical_evaluation_hashes = {}
     generic_shas = set()
     b1_queries = {}
     implementation_commits = set()
@@ -2251,6 +2256,11 @@ def aggregate_results(args):
         ]
         if len(metrics) != TARGET_UPDATE:
             raise SystemExit(f"{configuration} does not have exactly 48 metrics")
+        metrics_by_configuration[configuration] = metrics
+        canonical_evaluation_hashes[configuration] = {
+            str(update): evaluations[update]["canonical_validation_sha256"]
+            for update in MILESTONES
+        }
         preflights[configuration] = preflight
         smokes[configuration] = smoke
         restarts[configuration] = restart
@@ -2421,6 +2431,10 @@ def aggregate_results(args):
         "canonical_validation_hash_exact": all(
             row["evaluation"]["canonical_validation_sha256"] == CANONICAL_SHA
             for row in preflights.values()
+        ) and all(
+            digest == CANONICAL_SHA
+            for configuration in canonical_evaluation_hashes.values()
+            for digest in configuration.values()
         ),
         "c1_historical_trajectory_regression": all(
             row["passed"] for row in c1_regression.values()
@@ -2486,6 +2500,16 @@ def aggregate_results(args):
         ),
         "all_losses_and_gradients_finite": all(
             row["passed"] for row in smokes.values()
+        ) and all(
+            math.isfinite(row["loss"])
+            and math.isfinite(row["total_reader_gradient_norm"])
+            and all(
+                gradient["present"] and gradient["finite"]
+                for reader in row["gradients"].values()
+                for gradient in reader.values()
+            )
+            for configuration in metrics_by_configuration.values()
+            for row in configuration
         ),
         "generic_calibration_disjoint_and_identical": len(generic_shas) == 1
         and all(
@@ -2529,6 +2553,13 @@ def aggregate_results(args):
         "classification_rule": classification_rule(classification),
         "integrity_passed": integrity_passed,
         "implementation_commit": implementation_commit,
+        "evaluation_finalize_commits": sorted(
+            {
+                row["finalize_git_commit"]
+                for row in stages.values()
+                if row.get("finalize_git_commit")
+            }
+        ),
         "2c1_frozen_tag": PARENT_TAG,
         "2c1_parent_commit": PARENT_COMMIT,
         "2c2_branch": BRANCH,
@@ -2594,6 +2625,30 @@ def aggregate_results(args):
     return summary
 
 
+def render_final_report(args):
+    require_git(clean=False)
+    output_dir = Path(args.output_dir)
+    summary_path = output_dir / "result_summary.json"
+    audit_path = output_dir / "FINAL_AUDIT.json"
+    if not summary_path.is_file() or not audit_path.is_file():
+        raise SystemExit("final report rendering requires committed result summary and audit")
+    summary = json.loads(summary_path.read_text())
+    audit = json.loads(audit_path.read_text())
+    if not audit.get("passed") or summary.get("integrity_passed") is not True:
+        raise SystemExit("refusing to render a passing report from a failed audit")
+    if git_output("rev-parse", f"{args.results_commit}^{{commit}}") != args.results_commit:
+        raise SystemExit("results commit is not an exact local commit")
+    summary["results_commit"] = args.results_commit
+    report = final_report_text(summary)
+    durable_text(output_dir / "EXPERIMENT_2C2_FINAL_REPORT.md", report)
+    return {
+        "experiment": "2C2",
+        "results_commit": args.results_commit,
+        "report": str((output_dir / "EXPERIMENT_2C2_FINAL_REPORT.md").resolve()),
+        "ends_with_required_marker": report.endswith("# EXPERIMENT 2C2 COMPLETE"),
+    }
+
+
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -2618,6 +2673,9 @@ def main():
     aggregate = subparsers.add_parser("aggregate")
     aggregate.add_argument("--run-root", required=True)
     aggregate.add_argument("--output-dir", required=True)
+    report = subparsers.add_parser("report")
+    report.add_argument("--output-dir", required=True)
+    report.add_argument("--results-commit", required=True)
     args = parser.parse_args()
     os.chdir(REPO_ROOT)
     torch.set_float32_matmul_precision("high")
@@ -2629,6 +2687,8 @@ def main():
     torch.manual_seed(a0.SEED)
     if args.command == "aggregate":
         report = aggregate_results(args)
+    elif args.command == "report":
+        report = render_final_report(args)
     else:
         a0.require_cuda()
         torch.cuda.manual_seed(a0.SEED)
