@@ -2161,31 +2161,49 @@ def final_report_text(summary):
                 f"{weights['v20']:.10f} | {weights['v24']:.10f} | "
                 f"{row['feedback_rms']:.10f} |"
             )
-    lines.extend(["", "## B1 reader evolution", ""])
+    lines.extend([
+        "",
+        "## B1 reader evolution",
+        "",
+        "| Config | Gate | Query norm | Entropy | v16 | v17 | v20 | v24 | RMS displacement | Feedback RMS |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ])
     for key in CONFIGURATIONS:
         row = summary["router_stats"][key]["B1"]
+        weights = row["routing_weights"]
         lines.append(
-            f"- {key}/B1: gate {row['effective_gate']:.10f}; query norm "
-            f"{row['query_norm']:.10f}; RMS displacement {row['rmsnorm_displacement']:.10f}; "
-            f"routing {row['routing_weights']}; feedback RMS {row['feedback_rms']:.10f}."
+            f"| {key}/B1 | {row['effective_gate']:.10f} | {row['query_norm']:.10f} | "
+            f"{row['routing_entropy']:.10f} | {weights['v16']:.10f} | "
+            f"{weights['v17']:.10f} | {weights['v20']:.10f} | "
+            f"{weights['v24']:.10f} | {row['rmsnorm_displacement']:.10f} | "
+            f"{row['feedback_rms']:.10f} |"
         )
     lines.append(
         f"- Pairwise B1 query cosines: {summary['b1_query_cosines']}"
     )
-    lines.extend(["", "## Conditional self-recurrent transfer", ""])
+    lines.extend([
+        "",
+        "## Conditional self-recurrent transfer",
+        "",
+        "| Config | Status | Teacher real | Teacher shuffled | Teacher gap | Teacher recovery | Self real | Self shuffled | Self gap | Self recovery | Self/teacher recovery | Self B1-only | Self all-readers | Self matched gain |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ])
     for key, row in summary["self_transfer"].items():
         if not row.get("triggered"):
-            lines.append(f"- {key}: SELF TEST NOT TRIGGERED")
-        else:
             lines.append(
-                f"- {key}: teacher real {rows[key]['real_loss']:.10f}, teacher shuffled "
-                f"{rows[key]['shuffled_loss']:.10f}, teacher gap {rows[key]['specific_gap']:.10f}, "
-                f"teacher recovery {rows[key]['recovery']:.10f}; self real "
-                f"{row['losses']['real']:.10f}, self shuffled {row['losses']['shuffle']:.10f}, "
-                f"self gap {row['self_specific_gap']:.10f}, self recovery "
-                f"{row['self_recovery']:.10f}, self/teacher recovery ratio "
-                f"{row['self_teacher_recovery_ratio']:.6f}, self matched gain "
-                f"{row.get('self_matched_destination_gain')}."
+                f"| {key} | SELF TEST NOT TRIGGERED | n/a | n/a | n/a | n/a | "
+                "n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |"
+            )
+        else:
+            self_all = row["losses"]["real"]
+            self_b1 = row["losses"].get("b1_only", self_all)
+            lines.append(
+                f"| {key} | TRIGGERED | {rows[key]['real_loss']:.10f} | "
+                f"{rows[key]['shuffled_loss']:.10f} | {rows[key]['specific_gap']:.10f} | "
+                f"{rows[key]['recovery']:.10f} | {self_all:.10f} | "
+                f"{row['losses']['shuffle']:.10f} | {row['self_specific_gap']:.10f} | "
+                f"{row['self_recovery']:.10f} | {row['self_teacher_recovery_ratio']:.6f} | "
+                f"{self_b1:.10f} | {self_all:.10f} | {self_b1 - self_all:.10f} |"
             )
     lines.extend(["", "## Scientific questions", ""])
     for key, value in summary["scientific_answers"].items():
@@ -2198,6 +2216,13 @@ def final_report_text(summary):
         "## Integrity and stopping",
         "",
         f"All frozen audit checks: **{'PASS' if summary['integrity_passed'] else 'FAIL'}**.",
+        "",
+        "| Audit check | Result |",
+        "|---|---|",
+    ])
+    for key, passed in summary["integrity_checks"].items():
+        lines.append(f"| {key} | {'PASS' if passed else 'FAIL'} |")
+    lines.extend([
         "",
         "- C1 optimizer updates: 48",
         "- C2 optimizer updates: 48",
@@ -2231,6 +2256,7 @@ def aggregate_results(args):
     stages = {}
     hash_sequences = {}
     metrics_by_configuration = {}
+    evaluations_by_configuration = {}
     canonical_evaluation_hashes = {}
     generic_shas = set()
     b1_queries = {}
@@ -2257,6 +2283,7 @@ def aggregate_results(args):
         if len(metrics) != TARGET_UPDATE:
             raise SystemExit(f"{configuration} does not have exactly 48 metrics")
         metrics_by_configuration[configuration] = metrics
+        evaluations_by_configuration[configuration] = evaluations
         canonical_evaluation_hashes[configuration] = {
             str(update): evaluations[update]["canonical_validation_sha256"]
             for update in MILESTONES
@@ -2498,25 +2525,51 @@ def aggregate_results(args):
             for configuration in checkpoint_manifest.values()
             for verification in configuration.values()
         ),
-        "all_losses_and_gradients_finite": all(
-            row["passed"] for row in smokes.values()
+        "all_losses_finite": all(
+            row["integrity"]["finite_losses"] for row in smokes.values()
+        ) and all(
+            math.isfinite(loss)
+            for configuration in evaluations_by_configuration.values()
+            for evaluation in configuration.values()
+            for loss in evaluation["losses"].values()
+        ) and all(
+            not row.get("triggered")
+            or all(math.isfinite(loss) for loss in row["losses"].values())
+            for row in self_transfer.values()
+        ) and all(
+            math.isfinite(row["loss"])
+            for configuration in metrics_by_configuration.values()
+            for row in configuration
+        ),
+        "all_gradients_finite": all(
+            gradient["present"]
+            and gradient["finite"]
+            and math.isfinite(gradient["norm"])
+            for smoke in smokes.values()
+            for update in smoke["updates"]
+            for reader in update["gradients"].values()
+            for gradient in reader.values()
         ) and all(
             math.isfinite(row["loss"])
             and math.isfinite(row["total_reader_gradient_norm"])
             and all(
-                gradient["present"] and gradient["finite"]
+                gradient["present"]
+                and gradient["finite"]
+                and math.isfinite(gradient["norm"])
                 for reader in row["gradients"].values()
                 for gradient in reader.values()
             )
             for configuration in metrics_by_configuration.values()
             for row in configuration
         ),
-        "generic_calibration_disjoint_and_identical": len(generic_shas) == 1
-        and all(
+        "generic_calibration_disjoint": all(
             json.loads(
                 (run_dir_for(args.run_root, key) / "generic_means_manifest.json").read_text()
             )["calibration_batch_indices"] == [20, 21, 22, 23]
-            and json.loads(
+            for key in CONFIGURATIONS
+        ),
+        "generic_calibration_identical": len(generic_shas) == 1 and all(
+            json.loads(
                 (run_dir_for(args.run_root, key) / "generic_means_manifest.json").read_text()
             )["calibration_aggregate_sha256"] == c1.CALIBRATION_SHA
             for key in CONFIGURATIONS
@@ -2552,6 +2605,7 @@ def aggregate_results(args):
         "classification": classification,
         "classification_rule": classification_rule(classification),
         "integrity_passed": integrity_passed,
+        "integrity_checks": integrity,
         "implementation_commit": implementation_commit,
         "evaluation_finalize_commits": sorted(
             {
