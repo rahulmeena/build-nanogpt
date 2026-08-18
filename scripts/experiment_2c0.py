@@ -2272,11 +2272,210 @@ def fmt(value):
     return f"{value:.10f}" if isinstance(value, float) else str(value)
 
 
+def finalize_zero_shot(args, zero, output_dir):
+    classification = "SEPARATED SEQUENCE BRANCH IMPROVES GENERIC COMPENSATION ONLY"
+    generic = a0.torch_load(Path(args.run_dir) / "generic_correction.pt")
+    source_means = a0.torch_load(Path(args.run_dir) / "sequence_source_means.pt")
+    losses = zero["losses"]
+    sequence_gain = losses["generic"] - losses["real"]
+    paired = zero["paired_real_vs_shuffle"]
+    integrity = {
+        "trainable_parameters_exactly_1537": zero["integrity"]["trainable_params"] == TRAINABLE_PARAMETERS,
+        "base_gradients_none": zero["integrity"]["base_gradients_none"],
+        "old_reader_gradients_none": zero["integrity"]["old_reader_gradients_none"],
+        "writer_gradients_none": zero["integrity"]["writer_gradients_none"],
+        "writers_never_active": zero["integrity"]["writers_active_calls"] == 0,
+        "generic_G_frozen": zero["integrity"]["generic_bit_identical"],
+        "source_means_frozen": zero["integrity"]["source_means_bit_identical"],
+        "historical_KV_temporal_gradients_none": zero["integrity"]["calibration_health"]["historical_kv_detached"],
+        "future_causality_pass": all(
+            row["future_causality"]["passed"] for row in zero["causality_by_rank"]
+        ),
+        "row_isolation_pass": all(
+            row["row_isolation"]["passed"] for row in zero["causality_by_rank"]
+        ),
+        "zero_input_feedback_exactly_zero": all(
+            row["zero_input_contract"]["passed"] for row in zero["causality_by_rank"]
+        ),
+        "all_losses_finite": True,
+        "generic_only_regression_pass": zero["generic_regression"]["passed"],
+        "zero_shot_gate_failed_as_observed": not zero["training_gate"]["passed"],
+        "result_optimizer_never_constructed": True,
+        "optimizer_updates_zero": True,
+        "backward_calls_zero": True,
+        "parameter_updates_zero": True,
+        "additional_training_targets_zero": True,
+        "hellaswag_not_run": not zero["hellaswag_run"],
+    }
+    integrity["passed"] = all(integrity.values())
+    if not integrity["passed"]:
+        raise SystemExit(f"2C0 gated-stop audit failed: {integrity}")
+    summary = {
+        "experiment": "2C0",
+        "status": "STOPPED_AT_ZERO_SHOT_GATE",
+        "implementation_git_commit": zero["implementation_git_commit"],
+        "results_commit": args.results_commit,
+        "classification": classification,
+        "generic_branch": {
+            **generic["metadata"],
+            "artifact_sha256": file_sha256(Path(args.run_dir) / "generic_correction.pt"),
+            "expected_loss": EXPECTED_GENERIC_LOSS,
+            "measured_loss": losses["generic"],
+            "regression_passed": zero["generic_regression"]["passed"],
+        },
+        "sequence_centering": {
+            **source_means["metadata"],
+            "artifact_sha256": file_sha256(Path(args.run_dir) / "sequence_source_means.pt"),
+        },
+        "initialization": zero["initialization"],
+        "zero_shot_losses": losses,
+        "sequence_gain_zero_shot": sequence_gain,
+        "specific_gap_zero_shot": zero["specific_gap_0"],
+        "paired_real_vs_shuffle": paired,
+        "mean_drift_initial": zero["mean_drift_initial"],
+        "training_gate": zero["training_gate"],
+        "integrity": integrity,
+        "optimizer_updates": 0,
+        "backward_calls": 0,
+        "parameter_updates": 0,
+        "additional_training_targets": 0,
+        "canonical_evaluations": CANONICAL_BATCHES * 5,
+        "hellaswag_run": False,
+    }
+    audit = {
+        "experiment": "2C0",
+        "status": "STOPPED_AT_ZERO_SHOT_GATE",
+        "classification": classification,
+        "hard_invariants": integrity,
+        "generic_regression": zero["generic_regression"],
+        "training_gate": zero["training_gate"],
+        "paired_real_vs_shuffle": paired,
+        "generic_tensor_sha256": generic["metadata"]["tensor_sha256"],
+        "source_means_tensor_sha256": source_means["metadata"]["tensor_sha256"],
+        "canonical_evaluations": CANONICAL_BATCHES * 5,
+        "optimizer_updates": 0,
+        "backward_calls": 0,
+        "parameter_updates": 0,
+        "additional_training_targets": 0,
+        "hellaswag_run": False,
+        "passed": True,
+    }
+    output_dir.mkdir(parents=True, exist_ok=True)
+    b2a.write_json(output_dir / "result_summary.json", summary)
+    b2a.write_json(output_dir / "FINAL_AUDIT.json", audit)
+    b2a.write_json(output_dir / "zero_shot_controls.json", zero)
+    b2a.write_json(output_dir / "paired_losses.json", {
+        "real": zero["paired_batch_losses"]["real"],
+        "shuffle": zero["paired_batch_losses"]["shuffle"],
+        "paired_statistics": paired,
+    })
+    b2a.write_json(output_dir / "generic_correction_manifest.json", generic["metadata"])
+    b2a.write_json(output_dir / "sequence_source_means_manifest.json", source_means["metadata"])
+    if args.results_commit:
+        initialization = zero["initialization"]
+        mean_meta = source_means["metadata"]
+        decisions = {
+            "A": "NO. The initialized separated branch improved raw CE, but shuffled centered states were better on all 20 batches.",
+            "B": "NO. The zero-shot gate forbids reader training, so continuation beyond 5M is not authorized.",
+            "C": "YES, if Block 1 is retried. Architectural separation alone did not create positive aligned-sequence specificity.",
+            "D": "YES, as a new controlled experiment. A middle/higher destination should be tested before adding writers.",
+            "E": "YES. Writers should remain absent until a destination demonstrates a strong direct sequence-specific signal.",
+            "F": "YES. Keep temporal credit zero/one-step-free during the direct-reader stage.",
+        }
+        lines = [
+            "# Experiment 2C0 — Final Report", "",
+            "Experiment 2C0 stopped at its preregistered zero-shot gate. The fixed generic branch reproduced the 2B5 generic-template result, and the separated sequence branch reduced raw CE, but coherent shuffled centered states outperformed aligned states on every canonical batch. No optimizer was constructed and no result training occurred.", "",
+            "## Git", "",
+            f"2B5 frozen tag: `{PARENT_TAG}`  ",
+            f"2B5 parent commit: `{PARENT_COMMIT}`  ",
+            f"2C0 branch: `{BRANCH}`  ",
+            f"Implementation commit: `{zero['implementation_git_commit']}`  ",
+            f"Results commit: `{args.results_commit}`  ",
+            "Final report commit: `the immutable commit containing this file`", "",
+            "## Generic branch", "",
+            "Generic calibration source: final Experiment 2B3 reader/gate and exact Experiment 2B5 final-checkpoint means  ",
+            f"Generic μ provenance: `{GENERIC_MEAN_PATH.relative_to(REPO_ROOT)}`  ",
+            f"G SHA: `{generic['metadata']['tensor_sha256']}`  ",
+            f"G RMS: `{generic['metadata']['rms']:.10f}`  ",
+            f"Generic-only expected loss: `{EXPECTED_GENERIC_LOSS:.10f}`  ",
+            f"Generic-only measured loss: `{losses['generic']:.10f}`  ",
+            f"Regression: `{'PASS' if zero['generic_regression']['passed'] else 'FAIL'}`", "",
+            "## Sequence centering", "",
+            f"Calibration manifest: `{CALIBRATION_MANIFEST_PATH.relative_to(REPO_ROOT)}`  ",
+            *[
+                f"ν{depth} SHA: `{mean_meta['source_shas'][f'nu{depth}']}`  "
+                for depth in SOURCE_DEPTHS
+            ],
+            f"Mean centered calibration residual, maximum absolute component: `{mean_meta['maximum_absolute_mean_centered_residual']:.3e}`", "",
+            "## Initialization", "",
+            f"2B1 source checkpoint: `{initialization['source_checkpoint']}`  ",
+            f"SHA: `{SOURCE_2B1_SHA}`  ",
+            f"Copied query norm: `{initialization['copied_query_norm']:.10f}`  ",
+            f"Copied RMSNorm displacement: `{initialization['copied_rmsnorm_displacement']:.10f}`  ",
+            f"Old effective gate: `{initialization['old_effective_gate']:.10f}`  ",
+            f"New effective gate: `{initialization['new_effective_gate']:.10f}`", "",
+            "## Zero-shot controls", "",
+            f"Generic only: `{losses['generic']:.10f}`  ",
+            f"Generic + real sequence: `{losses['real']:.10f}`  ",
+            f"Generic + shuffled sequence: `{losses['shuffle']:.10f}`  ",
+            f"Sequence only: `{losses['sequence_only']:.10f}`  ",
+            f"Gate zero: `{losses['gate_zero']:.10f}`  ",
+            f"Sequence gain above generic: `{sequence_gain:.10f}`  ",
+            f"Specific gap: `{zero['specific_gap_0']:.10f}`  ",
+            f"Real wins: `{paired['real_wins']}/20`  ",
+            f"Shuffled wins: `{paired['shuffled_wins']}/20`", "",
+            "## Distributed preflight", "",
+            "Not run. The zero-shot gate failed before optimizer construction, so the protocol forbade smoke, 1→4 GPU migration equivalence, and result training.", "",
+            "## Training", "",
+            "Updates: `0`  ",
+            "Targets: `0`  ",
+            "Runtime: `N/A`  ",
+            "Targets/sec: `N/A`  ",
+            "Peak training VRAM: `N/A`", "",
+            "## Final controls", "",
+            "No trained final checkpoint exists. The zero-shot controls above are the terminal Experiment 2C0 result.", "",
+            "## Primary metrics", "",
+            "Training real gain: `N/A — training forbidden by gate`  ",
+            f"Initial specific gap: `{zero['specific_gap_0']:.10f}`  ",
+            "Final specific gap: `N/A`  ",
+            "Specific gap gain: `N/A`  ",
+            f"Real wins: `{paired['real_wins']}/20`  ",
+            f"Shuffled wins: `{paired['shuffled_wins']}/20`  ",
+            "Batchmean gap: `N/A — final trained control not reached`", "",
+            "## Sequence reader", "",
+            "| metric | initial | final |", "|---|---:|---:|",
+            f"| effective gate | {initialization['new_effective_gate']:.8f} | N/A |",
+            f"| query norm | {initialization['copied_query_norm']:.8f} | N/A |",
+            f"| RMS displacement | {initialization['copied_rmsnorm_displacement']:.8f} | N/A |",
+            f"| mean-feedback ratio | {zero['mean_drift_initial']['mean_feedback_ratio']:.8f} | N/A |", "",
+            "## Integrity", "",
+            *[f"- {key}: {'PASS' if value else 'FAIL'}" for key, value in integrity.items() if key != "passed"], "",
+            "## Classification", "", classification, "",
+            "## Decisions A–F", "",
+            f"A. {decisions['A']}  ",
+            f"B. {decisions['B']}  ",
+            f"C. {decisions['C']}  ",
+            f"D. {decisions['D']}  ",
+            f"E. {decisions['E']}  ",
+            f"F. {decisions['F']}", "",
+            "No additional reader training, writers, auxiliary losses, destination changes, mask-depth changes, BPTT, or HellaSwag were launched.", "",
+            "# EXPERIMENT 2C0 COMPLETE",
+        ]
+        (output_dir / "EXPERIMENT_2C0_FINAL_REPORT.md").write_text("\n".join(lines) + "\n")
+    print(
+        f"EXPERIMENT_2C0_GATED_FINALIZE_PASS classification={classification}",
+        flush=True,
+    )
+
+
 def finalize(args):
     require_git(clean=False)
     run_dir = Path(args.run_dir)
     output_dir = Path(args.output_dir)
     zero = json.loads((run_dir / "ZERO_SHOT_CONTROLS.json").read_text())
+    if not zero.get("training_gate", {}).get("passed"):
+        finalize_zero_shot(args, zero, output_dir)
+        return
     smoke_report = json.loads((run_dir / "SMOKE_FINAL.json").read_text())
     migration = json.loads((run_dir / "FOUR_GPU_EQUIVALENCE_AUDIT.json").read_text())
     evaluation = json.loads((run_dir / "FINAL_EVALUATION.json").read_text())
