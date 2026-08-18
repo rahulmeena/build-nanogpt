@@ -1,0 +1,482 @@
+{
+  "cache_policy": {
+    "fresh_memory_zero": true,
+    "later_caches_empty_and_present": true,
+    "masked_blocks": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "only_intended_caches_absent": true,
+    "passed": true
+  },
+  "causality": {
+    "all_outputs_finite": true,
+    "future_prefix_logits_bit_exact": true,
+    "passed": true,
+    "reader_destination_mapping_exact": true,
+    "reader_destination_perturbations": {
+      "B1": {
+        "changes_logits": true,
+        "only_target_reader_called": true,
+        "reader_calls": {
+          "B1": 1,
+          "B2": 0,
+          "B3": 0,
+          "B4": 0
+        }
+      },
+      "B2": {
+        "changes_logits": true,
+        "only_target_reader_called": true,
+        "reader_calls": {
+          "B1": 0,
+          "B2": 1,
+          "B3": 0,
+          "B4": 0
+        }
+      },
+      "B3": {
+        "changes_logits": true,
+        "only_target_reader_called": true,
+        "reader_calls": {
+          "B1": 0,
+          "B2": 0,
+          "B3": 1,
+          "B4": 0
+        }
+      },
+      "B4": {
+        "changes_logits": true,
+        "only_target_reader_called": true,
+        "reader_calls": {
+          "B1": 0,
+          "B2": 0,
+          "B3": 0,
+          "B4": 1
+        }
+      }
+    },
+    "teacher_memory_prefix_bit_exact": true,
+    "unchanged_row_logits_bit_exact": true,
+    "zero_gate_equals_masked_bit_exact": true
+  },
+  "config": {
+    "auxiliary_loss": "forbidden",
+    "bptt": "forbidden",
+    "c1_regression": {
+      "absolute_tolerance": 5e-06,
+      "real": 5.8353391409,
+      "real_wins": 20,
+      "shuffled": 5.8765912533,
+      "specific_gap": 0.0412521124
+    },
+    "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "configurations": {
+      "C1": [
+        1
+      ],
+      "C2": [
+        1,
+        2
+      ],
+      "C3": [
+        1,
+        2,
+        3
+      ],
+      "C4": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "ddp": false,
+    "forced_process_restart_after_update": 20,
+    "full_context_loss": 4.0786544085,
+    "generic_branch_during_training": "forbidden",
+    "global_targets_per_update": 524288,
+    "gpu_mapping": {
+      "C1": 0,
+      "C2": 1,
+      "C3": 2,
+      "C4": 3
+    },
+    "hellaswag": "forbidden",
+    "independent_single_gpu_workers": true,
+    "legacy_gradient_accumulation": 2,
+    "legacy_micro_batch_sequences_per_rank": 64,
+    "legacy_world_size": 4,
+    "mask_semantics": "cumulative consecutive low blocks lack historical KV; current-token attention and all higher blocks retain normal behavior",
+    "matched_feedback_success": {
+      "deep_recovery_fraction_retention_minimum": 0.5,
+      "matched_destination_gain_minimum": 0.02,
+      "real_wins_minimum": 18,
+      "specific_gap_minimum": 0.01
+    },
+    "milestone_updates": [
+      10,
+      20,
+      29,
+      48
+    ],
+    "nccl_gradient_synchronization": false,
+    "optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "lr_schedule": "exact Experiment 2C1 schedule continued from parent update 954",
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "optimizer_updates": 48,
+    "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "parent_completed_updates": 954,
+    "parent_tokens": 500170752,
+    "processed_reader_tokens_per_configuration": 25165824,
+    "protocol": "exp2c2_cumulative_low_kv_matched_feedback_v1",
+    "reader_initialization": {
+      "gate": "zero",
+      "parameters_per_reader": 1537,
+      "query": "zeros",
+      "rmsnorm_scale": "ones"
+    },
+    "seed": 1337,
+    "self_recurrent_training": "forbidden",
+    "self_trigger": {
+      "c2_c4_matched_destination_gain_minimum": 0.02,
+      "real_wins_minimum": 18,
+      "specific_gap_minimum": 0.01,
+      "teacher_recovery_must_be_positive": true
+    },
+    "sequence_length": 1024,
+    "serialized_microbatches_per_update": 8,
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "teacher": "frozen full-context Experiment 1B model; identical raw source bank shifted one token and detached for every reader",
+    "validation_batch_sequences": 64,
+    "validation_batches": 20,
+    "writers": "forbidden"
+  },
+  "configuration": "C4",
+  "evaluation": {
+    "activation_losses": {},
+    "activation_sets": {},
+    "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "completed_updates": 0,
+    "configuration": "C4",
+    "damage": 3.1386279582977297,
+    "elapsed_seconds": 125.18159606214613,
+    "experiment": "2C2",
+    "generic_means_tensor_sha256": null,
+    "losses": {
+      "full_context": 4.078654408454895,
+      "masked": 7.217282366752625,
+      "real": 7.217282366752625,
+      "shuffle": 7.217282366752625,
+      "zero": 7.217282366752625
+    },
+    "masked_blocks": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "paired_real_vs_shuffled": {
+      "ci95_lower": 0.0,
+      "ci95_upper": 0.0,
+      "gaps": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maximum": 0.0,
+      "mean_gap": 0.0,
+      "median_gap": 0.0,
+      "minimum": 0.0,
+      "real_wins": 0,
+      "sample_std": 0.0,
+      "shuffled_wins": 0,
+      "standard_error": 0.0,
+      "ties": 20
+    },
+    "peak_allocated_mb": 30075.25537109375,
+    "peak_reserved_mb": 31066.0,
+    "per_batch_losses": {
+      "full_context": [
+        4.02687931060791,
+        4.031586170196533,
+        4.076857089996338,
+        4.062042236328125,
+        4.005782127380371,
+        4.050746917724609,
+        4.074737548828125,
+        4.019458293914795,
+        4.100996971130371,
+        4.083972930908203,
+        4.099759578704834,
+        4.210363864898682,
+        4.067445755004883,
+        4.046570301055908,
+        4.2441534996032715,
+        4.068066596984863,
+        4.1077375411987305,
+        4.137699127197266,
+        4.023801803588867,
+        4.034430503845215
+      ],
+      "masked": [
+        7.204545974731445,
+        7.175379276275635,
+        7.267643928527832,
+        7.182651042938232,
+        7.184092044830322,
+        7.176342010498047,
+        7.131106376647949,
+        7.150785446166992,
+        7.236690521240234,
+        7.191440582275391,
+        7.192432403564453,
+        7.334043502807617,
+        7.214151382446289,
+        7.217214584350586,
+        7.391841888427734,
+        7.229692459106445,
+        7.268573760986328,
+        7.244556427001953,
+        7.15492057800293,
+        7.197543144226074
+      ],
+      "real": [
+        7.204545974731445,
+        7.175379276275635,
+        7.267643928527832,
+        7.182651042938232,
+        7.184092044830322,
+        7.176342010498047,
+        7.131106376647949,
+        7.150785446166992,
+        7.236690521240234,
+        7.191440582275391,
+        7.192432403564453,
+        7.334043502807617,
+        7.214151382446289,
+        7.217214584350586,
+        7.391841888427734,
+        7.229692459106445,
+        7.268573760986328,
+        7.244556427001953,
+        7.15492057800293,
+        7.197543144226074
+      ],
+      "shuffle": [
+        7.204545974731445,
+        7.175379276275635,
+        7.267643928527832,
+        7.182651042938232,
+        7.184092044830322,
+        7.176342010498047,
+        7.131106376647949,
+        7.150785446166992,
+        7.236690521240234,
+        7.191440582275391,
+        7.192432403564453,
+        7.334043502807617,
+        7.214151382446289,
+        7.217214584350586,
+        7.391841888427734,
+        7.229692459106445,
+        7.268573760986328,
+        7.244556427001953,
+        7.15492057800293,
+        7.197543144226074
+      ],
+      "zero": [
+        7.204545974731445,
+        7.175379276275635,
+        7.267643928527832,
+        7.182651042938232,
+        7.184092044830322,
+        7.176342010498047,
+        7.131106376647949,
+        7.150785446166992,
+        7.236690521240234,
+        7.191440582275391,
+        7.192432403564453,
+        7.334043502807617,
+        7.214151382446289,
+        7.217214584350586,
+        7.391841888427734,
+        7.229692459106445,
+        7.268573760986328,
+        7.244556427001953,
+        7.15492057800293,
+        7.197543144226074
+      ]
+    },
+    "processed_reader_tokens": 0,
+    "reader": {
+      "B1": {
+        "destination_block": 1,
+        "effective_gate": 0.0,
+        "feedback_rms": 0.0,
+        "gate": 0.0,
+        "parameter_count": 1537,
+        "query_norm": 0.0,
+        "rmsnorm_displacement": 0.0,
+        "routing_entropy": 1.386294960975647,
+        "routing_weights": {
+          "v16": 0.25,
+          "v17": 0.25,
+          "v20": 0.25,
+          "v24": 0.25
+        },
+        "topdown_rms": 0.1241192240267992
+      },
+      "B2": {
+        "destination_block": 2,
+        "effective_gate": 0.0,
+        "feedback_rms": 0.0,
+        "gate": 0.0,
+        "parameter_count": 1537,
+        "query_norm": 0.0,
+        "rmsnorm_displacement": 0.0,
+        "routing_entropy": 1.386294960975647,
+        "routing_weights": {
+          "v16": 0.25,
+          "v17": 0.25,
+          "v20": 0.25,
+          "v24": 0.25
+        },
+        "topdown_rms": 0.1241192240267992
+      },
+      "B3": {
+        "destination_block": 3,
+        "effective_gate": 0.0,
+        "feedback_rms": 0.0,
+        "gate": 0.0,
+        "parameter_count": 1537,
+        "query_norm": 0.0,
+        "rmsnorm_displacement": 0.0,
+        "routing_entropy": 1.386294960975647,
+        "routing_weights": {
+          "v16": 0.25,
+          "v17": 0.25,
+          "v20": 0.25,
+          "v24": 0.25
+        },
+        "topdown_rms": 0.1241192240267992
+      },
+      "B4": {
+        "destination_block": 4,
+        "effective_gate": 0.0,
+        "feedback_rms": 0.0,
+        "gate": 0.0,
+        "parameter_count": 1537,
+        "query_norm": 0.0,
+        "rmsnorm_displacement": 0.0,
+        "routing_entropy": 1.386294960975647,
+        "routing_weights": {
+          "v16": 0.25,
+          "v17": 0.25,
+          "v20": 0.25,
+          "v24": 0.25
+        },
+        "topdown_rms": 0.1241192240267992
+      }
+    },
+    "recovery": 0.0,
+    "recovery_fraction": 0.0,
+    "specific_fraction": 0.0,
+    "specific_gap": 0.0,
+    "specific_share": null,
+    "zero_gate_equals_masked": true
+  },
+  "experiment": "2C2",
+  "hardware": {
+    "cuda_visible_devices": "3",
+    "device_name": "NVIDIA A100-SXM4-80GB",
+    "expected_physical_gpu": 3
+  },
+  "implementation_git_commit": "48c4bf3d7c327484b2ca0037b3d1a175aa0f6df5",
+  "initialization": {
+    "B1": {
+      "gate_exact_zero": true,
+      "query_exact_zero": true,
+      "rmsnorm_exact_one": true,
+      "trainable_parameters": 1537
+    },
+    "B2": {
+      "gate_exact_zero": true,
+      "query_exact_zero": true,
+      "rmsnorm_exact_one": true,
+      "trainable_parameters": 1537
+    },
+    "B3": {
+      "gate_exact_zero": true,
+      "query_exact_zero": true,
+      "rmsnorm_exact_one": true,
+      "trainable_parameters": 1537
+    },
+    "B4": {
+      "gate_exact_zero": true,
+      "query_exact_zero": true,
+      "rmsnorm_exact_one": true,
+      "trainable_parameters": 1537
+    },
+    "passed": true
+  },
+  "integrity": {
+    "all_losses_finite": true,
+    "base_gradients_none": true,
+    "cache_policy": true,
+    "causality_row_mapping": true,
+    "frozen_hashes_unchanged": true,
+    "full_context_reference": true,
+    "hellaswag_not_run": true,
+    "initialization": true,
+    "passed": true,
+    "teacher_eval": true,
+    "teacher_gradients_none": true,
+    "trainable_names_exact": true,
+    "trainable_parameter_count_exact": true,
+    "writers_absent": true,
+    "zero_gate_equivalence": true
+  },
+  "masked_blocks": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "optimizer_constructions": 0,
+  "parent_checkpoint": "/workspace/build-nanogpt/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+  "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "passed": true,
+  "stage": "preflight"
+}

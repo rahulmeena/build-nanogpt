@@ -1,0 +1,325 @@
+{
+  "configuration": "C3",
+  "experiment": "2C2",
+  "geometry": {
+    "B": 2,
+    "T": 64,
+    "updates": 3
+  },
+  "initialization": {
+    "B1": {
+      "gate_exact_zero": true,
+      "query_exact_zero": true,
+      "rmsnorm_exact_one": true,
+      "trainable_parameters": 1537
+    },
+    "B2": {
+      "gate_exact_zero": true,
+      "query_exact_zero": true,
+      "rmsnorm_exact_one": true,
+      "trainable_parameters": 1537
+    },
+    "B3": {
+      "gate_exact_zero": true,
+      "query_exact_zero": true,
+      "rmsnorm_exact_one": true,
+      "trainable_parameters": 1537
+    },
+    "passed": true
+  },
+  "integrity": {
+    "all_gates_begin_learning": true,
+    "finite_losses": true,
+    "frozen_hashes_unchanged": true,
+    "mask_policy": true,
+    "query_gradients_after_gate_moves": true,
+    "rmsnorm_gradients_after_query_moves": true,
+    "teacher_frozen_eval": true,
+    "trainable_parameter_count_exact": true,
+    "writers_absent": true
+  },
+  "passed": true,
+  "stage": "disposable_smoke",
+  "states_discarded": true,
+  "updates": [
+    {
+      "frozen_gradients": [],
+      "gradients": {
+        "B1": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 3.015625,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          }
+        },
+        "B2": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.01708984375,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          }
+        },
+        "B3": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.2490234375,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          }
+        }
+      },
+      "loss": 6.64793586730957,
+      "readers": {
+        "B1": {
+          "destination_block": 1,
+          "effective_gate": 0.0005997741245664656,
+          "gate": 0.0005997741827741265,
+          "parameter_count": 1537,
+          "query_norm": 0.0,
+          "rmsnorm_displacement": 0.0
+        },
+        "B2": {
+          "destination_block": 2,
+          "effective_gate": 0.0005997731350362301,
+          "gate": 0.000599773193243891,
+          "parameter_count": 1537,
+          "query_norm": 0.0,
+          "rmsnorm_displacement": 0.0
+        },
+        "B3": {
+          "destination_block": 3,
+          "effective_gate": -0.0005997740663588047,
+          "gate": -0.0005997741245664656,
+          "parameter_count": 1537,
+          "query_norm": 0.0,
+          "rmsnorm_displacement": 0.0
+        }
+      },
+      "update": 1
+    },
+    {
+      "frozen_gradients": [],
+      "gradients": {
+        "B1": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 4.093748569488525,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.02402142435312271,
+            "present": true
+          }
+        },
+        "B2": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.07128904014825821,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0010564480908215046,
+            "present": true
+          }
+        },
+        "B3": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.22460930049419403,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0011994056403636932,
+            "present": true
+          }
+        }
+      },
+      "loss": 7.021480560302734,
+      "readers": {
+        "B1": {
+          "destination_block": 1,
+          "effective_gate": 0.0011995617533102632,
+          "gate": 0.0011995623353868723,
+          "parameter_count": 1537,
+          "query_norm": 0.012203876860439777,
+          "rmsnorm_displacement": 0.0
+        },
+        "B2": {
+          "destination_block": 2,
+          "effective_gate": 0.00030239802435971797,
+          "gate": 0.00030239802435971797,
+          "parameter_count": 1537,
+          "query_norm": 0.012134780175983906,
+          "rmsnorm_displacement": 0.0
+        },
+        "B3": {
+          "destination_block": 3,
+          "effective_gate": -0.0011844985419884324,
+          "gate": -0.0011844991240650415,
+          "parameter_count": 1537,
+          "query_norm": 0.012126331217586994,
+          "rmsnorm_displacement": 0.0
+        }
+      },
+      "update": 2
+    },
+    {
+      "frozen_gradients": [],
+      "gradients": {
+        "B1": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 3.9218692779541016,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.798205812519882e-05,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.04080009460449219,
+            "present": true
+          }
+        },
+        "B2": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0878906175494194,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.5499365701998613e-07,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0003538228338584304,
+            "present": true
+          }
+        },
+        "B3": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.1572263389825821,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 7.760630751363351e-07,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0017766071250662208,
+            "present": true
+          }
+        }
+      },
+      "loss": 6.958686828613281,
+      "readers": {
+        "B1": {
+          "destination_block": 1,
+          "effective_gate": 0.0017993588699027896,
+          "gate": 0.0017993608489632607,
+          "parameter_count": 1537,
+          "query_norm": 0.02344876527786255,
+          "rmsnorm_displacement": 0.008491216227412224
+        },
+        "B2": {
+          "destination_block": 2,
+          "effective_gate": -0.00013512870646081865,
+          "gate": -0.00013512870646081865,
+          "parameter_count": 1537,
+          "query_norm": 0.021949617192149162,
+          "rmsnorm_displacement": 0.0007731706718914211
+        },
+        "B3": {
+          "destination_block": 3,
+          "effective_gate": -0.0017517845844849944,
+          "gate": -0.0017517863307148218,
+          "parameter_count": 1537,
+          "query_norm": 0.019611528143286705,
+          "rmsnorm_displacement": 0.002734261332079768
+        }
+      },
+      "update": 3
+    }
+  ]
+}

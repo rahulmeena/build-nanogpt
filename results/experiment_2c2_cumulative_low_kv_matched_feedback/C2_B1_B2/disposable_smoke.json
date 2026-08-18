@@ -1,0 +1,235 @@
+{
+  "configuration": "C2",
+  "experiment": "2C2",
+  "geometry": {
+    "B": 2,
+    "T": 64,
+    "updates": 3
+  },
+  "initialization": {
+    "B1": {
+      "gate_exact_zero": true,
+      "query_exact_zero": true,
+      "rmsnorm_exact_one": true,
+      "trainable_parameters": 1537
+    },
+    "B2": {
+      "gate_exact_zero": true,
+      "query_exact_zero": true,
+      "rmsnorm_exact_one": true,
+      "trainable_parameters": 1537
+    },
+    "passed": true
+  },
+  "integrity": {
+    "all_gates_begin_learning": true,
+    "finite_losses": true,
+    "frozen_hashes_unchanged": true,
+    "mask_policy": true,
+    "query_gradients_after_gate_moves": true,
+    "rmsnorm_gradients_after_query_moves": true,
+    "teacher_frozen_eval": true,
+    "trainable_parameter_count_exact": true,
+    "writers_absent": true
+  },
+  "passed": true,
+  "stage": "disposable_smoke",
+  "states_discarded": true,
+  "updates": [
+    {
+      "frozen_gradients": [],
+      "gradients": {
+        "B1": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 3.546875,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          }
+        },
+        "B2": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.04541015625,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          }
+        }
+      },
+      "loss": 6.092159271240234,
+      "readers": {
+        "B1": {
+          "destination_block": 1,
+          "effective_gate": 0.0005997742409817874,
+          "gate": 0.0005997742991894484,
+          "parameter_count": 1537,
+          "query_norm": 0.0,
+          "rmsnorm_displacement": 0.0
+        },
+        "B2": {
+          "destination_block": 2,
+          "effective_gate": -0.0005997736589051783,
+          "gate": -0.0005997737171128392,
+          "parameter_count": 1537,
+          "query_norm": 0.0,
+          "rmsnorm_displacement": 0.0
+        }
+      },
+      "update": 1
+    },
+    {
+      "frozen_gradients": [],
+      "gradients": {
+        "B1": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 3.9531235694885254,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.01908530294895172,
+            "present": true
+          }
+        },
+        "B2": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.06445310264825821,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0013658696552738547,
+            "present": true
+          }
+        }
+      },
+      "loss": 6.602849960327148,
+      "readers": {
+        "B1": {
+          "destination_block": 1,
+          "effective_gate": 0.0011995474342256784,
+          "gate": 0.0011995480163022876,
+          "parameter_count": 1537,
+          "query_norm": 0.012208138592541218,
+          "rmsnorm_displacement": 0.0
+        },
+        "B2": {
+          "destination_block": 2,
+          "effective_gate": -0.0011972117936238647,
+          "gate": -0.0011972123757004738,
+          "parameter_count": 1537,
+          "query_norm": 0.012147479690611362,
+          "rmsnorm_displacement": 0.0
+        }
+      },
+      "update": 2
+    },
+    {
+      "frozen_gradients": [],
+      "gradients": {
+        "B1": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 3.6874947547912598,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.2224318197695538e-05,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.027759315446019173,
+            "present": true
+          }
+        },
+        "B2": {
+          "gate": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.12207014113664627,
+            "present": true
+          },
+          "norm.weight": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 6.698779770886176e-07,
+            "present": true
+          },
+          "query": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0015254755271598697,
+            "present": true
+          }
+        }
+      },
+      "loss": 6.313602447509766,
+      "readers": {
+        "B1": {
+          "destination_block": 1,
+          "effective_gate": 0.001799314864911139,
+          "gate": 0.00179931684397161,
+          "parameter_count": 1537,
+          "query_norm": 0.022155284881591797,
+          "rmsnorm_displacement": 0.008167519234120846
+        },
+        "B2": {
+          "destination_block": 2,
+          "effective_gate": -0.0017591436626389623,
+          "gate": -0.0017591455252841115,
+          "parameter_count": 1537,
+          "query_norm": 0.021521715447306633,
+          "rmsnorm_displacement": 0.0025932639837265015
+        }
+      },
+      "update": 3
+    }
+  ]
+}

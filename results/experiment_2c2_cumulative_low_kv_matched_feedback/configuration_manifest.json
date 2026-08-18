@@ -1,0 +1,70 @@
+{
+  "configurations": {
+    "C1": {
+      "feedback_destinations": [
+        1
+      ],
+      "gpu": 0,
+      "masked_blocks": [
+        1
+      ],
+      "run_directory": "C1_B1",
+      "trainable_parameters": 1537
+    },
+    "C2": {
+      "feedback_destinations": [
+        1,
+        2
+      ],
+      "gpu": 1,
+      "masked_blocks": [
+        1,
+        2
+      ],
+      "run_directory": "C2_B1_B2",
+      "trainable_parameters": 3074
+    },
+    "C3": {
+      "feedback_destinations": [
+        1,
+        2,
+        3
+      ],
+      "gpu": 2,
+      "masked_blocks": [
+        1,
+        2,
+        3
+      ],
+      "run_directory": "C3_B1_B2_B3",
+      "trainable_parameters": 4611
+    },
+    "C4": {
+      "feedback_destinations": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "gpu": 3,
+      "masked_blocks": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "run_directory": "C4_B1_B2_B3_B4",
+      "trainable_parameters": 6148
+    }
+  },
+  "no_ddp": true,
+  "no_parameter_sharing": true,
+  "protocol": "exp2c2_cumulative_low_kv_matched_feedback_v1",
+  "same_source_bank_for_all_readers": true,
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ]
+}

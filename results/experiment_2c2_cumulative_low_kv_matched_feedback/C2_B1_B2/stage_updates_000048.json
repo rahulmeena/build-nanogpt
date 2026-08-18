@@ -1,0 +1,111 @@
+{
+  "checkpoint_lineage": {
+    "base": true,
+    "completed_updates": true,
+    "configuration": true,
+    "masked_blocks": true,
+    "parent": true,
+    "schema": true
+  },
+  "checkpoint_sha256": "6e7cf944f2f4e5f786b1b5409c898567ed37c4438a423cce153e683328221beb",
+  "completed_updates": 48,
+  "configuration": "C2",
+  "experiment": "2C2",
+  "finalize_git_commit": "d0736000235f76c2dd9cea277c7c741c11d27b2a",
+  "finalize_optimizer_updates": 0,
+  "frozen_hashes": {
+    "student_base": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+    "teacher": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd"
+  },
+  "hellaswag_run": false,
+  "next_global_batch_sha256": "1c3290f72d60d356d636e57017bbc5f2cb2ec470af7860d9d95d5c95116d24a5",
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "expected_lr": 0.0005996766832874077,
+    "expected_steps": [
+      48,
+      48,
+      48,
+      48,
+      48,
+      48
+    ],
+    "finite": true,
+    "lr": 0.0005996766832874077,
+    "passed": true,
+    "state_entries": 6,
+    "steps": [
+      48,
+      48,
+      48,
+      48,
+      48,
+      48
+    ],
+    "weight_decay": 0.0
+  },
+  "optimizer_updates_total": 48,
+  "performance": {
+    "evaluation_wall_seconds": 189.01102734496817,
+    "mean_targets_per_second": 16299.656602749477,
+    "peak_allocated_mb": 57778.73486328125,
+    "peak_reserved_mb": 71276.0,
+    "self_evaluation_wall_seconds": 0.0,
+    "training_wall_seconds_all_processes": 1544.293879029341
+  },
+  "processed_targets": 25165824,
+  "reader_state_sha256": "3d18a01575f3f76b6a266b9bb3525c22cf5c8e259cadade2ccae2c3a3c91b487",
+  "restart_audit": {
+    "checkpoint": "/workspace/exp2c2_run_48c4bf3/C2_B1_B2/checkpoints/checkpoint_updates_000020.pt",
+    "completed_updates": 20,
+    "fresh_process": true,
+    "lineage": {
+      "base": true,
+      "configuration": true,
+      "identity": true,
+      "masked_blocks": true,
+      "parent": true,
+      "schema": true,
+      "source_depths": true
+    },
+    "next_hash_exact": true,
+    "optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "expected_lr": 0.0005997368813425469,
+      "expected_steps": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "finite": true,
+      "lr": 0.0005997368813425469,
+      "passed": true,
+      "state_entries": 6,
+      "steps": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "weight_decay": 0.0
+    },
+    "passed": true,
+    "reader_exact_reload": true,
+    "sha256": "4cb313a7d9630ead26ec6d07cd42196583207f9b7c7c4a33e329ca26a84218e8"
+  },
+  "target_update": 48,
+  "writers_active_calls": 0
+}

@@ -1,0 +1,131 @@
+{
+  "c1_regression": {
+    "10": {
+      "checks": {
+        "gap": true,
+        "real": true,
+        "shuffle": true
+      },
+      "expected": {
+        "gap": 0.0084911346,
+        "real": 5.9533051014,
+        "shuffle": 5.961796236
+      },
+      "observed": {
+        "masked": 5.973674488067627,
+        "real": 5.953305101394653,
+        "real_wins": 20,
+        "recovery_fraction": 0.010748902817758903,
+        "shuffled": 5.961796236038208,
+        "specific_gap": 0.008491134643554688,
+        "tokens": 5242880,
+        "updates": 10
+      },
+      "passed": true
+    },
+    "20": {
+      "checks": {
+        "gap": true,
+        "real": true,
+        "shuffle": true
+      },
+      "expected": {
+        "gap": 0.0162187576,
+        "real": 5.9229358435,
+        "shuffle": 5.9391546011
+      },
+      "observed": {
+        "masked": 5.973674488067627,
+        "real": 5.922935843467712,
+        "real_wins": 20,
+        "recovery_fraction": 0.026774726635873644,
+        "shuffled": 5.939154601097107,
+        "specific_gap": 0.01621875762939453,
+        "tokens": 10485760,
+        "updates": 20
+      },
+      "passed": true
+    },
+    "29": {
+      "checks": {
+        "gap": true,
+        "real": true,
+        "shuffle": true
+      },
+      "expected": {
+        "gap": 0.0235682011,
+        "real": 5.8944202185,
+        "shuffle": 5.9179884195
+      },
+      "observed": {
+        "masked": 5.973674488067627,
+        "real": 5.894420218467713,
+        "real_wins": 20,
+        "recovery_fraction": 0.041822390408653314,
+        "shuffled": 5.917988419532776,
+        "specific_gap": 0.023568201065063476,
+        "tokens": 15204352,
+        "updates": 29
+      },
+      "passed": true
+    },
+    "48": {
+      "checks": {
+        "gap": true,
+        "real": true,
+        "shuffle": true
+      },
+      "expected": {
+        "gap": 0.0412521124,
+        "real": 5.8353391409,
+        "shuffle": 5.8765912533
+      },
+      "observed": {
+        "masked": 5.973674488067627,
+        "real": 5.835339140892029,
+        "real_wins": 20,
+        "recovery_fraction": 0.07299940969868833,
+        "shuffled": 5.8765912532806395,
+        "specific_gap": 0.04125211238861084,
+        "tokens": 25165824,
+        "updates": 48
+      },
+      "passed": true
+    }
+  },
+  "checks": {
+    "2c1_frozen_tag_exact": true,
+    "all_gradients_finite": true,
+    "all_later_blocks_retain_kv": true,
+    "all_losses_finite": true,
+    "all_optimizer_updates_exactly_48": true,
+    "all_preflights_passed": true,
+    "all_smokes_passed_and_discarded": true,
+    "base_checkpoint_sha_exact": true,
+    "base_frozen": true,
+    "c1_historical_trajectory_regression": true,
+    "canonical_validation_hash_exact": true,
+    "checkpoint_strict_reload": true,
+    "finalize_added_zero_optimizer_updates": true,
+    "forced_fresh_process_restart": true,
+    "future_causality": true,
+    "generic_calibration_disjoint": true,
+    "generic_calibration_identical": true,
+    "hellaswag_not_run": true,
+    "identical_training_batch_sequence": true,
+    "no_auxiliary_objective": true,
+    "no_bptt": true,
+    "only_intended_low_blocks_masked": true,
+    "reader_destination_mapping_exact": true,
+    "row_isolation": true,
+    "self_state_resume_equivalence": true,
+    "single_implementation_commit": true,
+    "teacher_frozen": true,
+    "trainable_parameter_counts_exact": true,
+    "writers_never_active": true,
+    "zero_gate_equals_cumulative_mask": true
+  },
+  "classification": "MATCHED FEEDBACK DOES NOT RESCUE CUMULATIVE MASKING",
+  "experiment": "2C2",
+  "passed": true
+}

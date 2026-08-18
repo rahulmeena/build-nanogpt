@@ -1,0 +1,136 @@
+{
+  "active_destinations": [
+    1
+  ],
+  "auxiliary_objective": false,
+  "base_model_sha256": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "bptt": false,
+  "branch": "experiment-2c2-cumulative-low-kv-matched-feedback",
+  "config": {
+    "auxiliary_loss": "forbidden",
+    "bptt": "forbidden",
+    "c1_regression": {
+      "absolute_tolerance": 5e-06,
+      "real": 5.8353391409,
+      "real_wins": 20,
+      "shuffled": 5.8765912533,
+      "specific_gap": 0.0412521124
+    },
+    "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "configurations": {
+      "C1": [
+        1
+      ],
+      "C2": [
+        1,
+        2
+      ],
+      "C3": [
+        1,
+        2,
+        3
+      ],
+      "C4": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "ddp": false,
+    "forced_process_restart_after_update": 20,
+    "full_context_loss": 4.0786544085,
+    "generic_branch_during_training": "forbidden",
+    "global_targets_per_update": 524288,
+    "gpu_mapping": {
+      "C1": 0,
+      "C2": 1,
+      "C3": 2,
+      "C4": 3
+    },
+    "hellaswag": "forbidden",
+    "independent_single_gpu_workers": true,
+    "legacy_gradient_accumulation": 2,
+    "legacy_micro_batch_sequences_per_rank": 64,
+    "legacy_world_size": 4,
+    "mask_semantics": "cumulative consecutive low blocks lack historical KV; current-token attention and all higher blocks retain normal behavior",
+    "matched_feedback_success": {
+      "deep_recovery_fraction_retention_minimum": 0.5,
+      "matched_destination_gain_minimum": 0.02,
+      "real_wins_minimum": 18,
+      "specific_gap_minimum": 0.01
+    },
+    "milestone_updates": [
+      10,
+      20,
+      29,
+      48
+    ],
+    "nccl_gradient_synchronization": false,
+    "optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "lr_schedule": "exact Experiment 2C1 schedule continued from parent update 954",
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "optimizer_updates": 48,
+    "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "parent_completed_updates": 954,
+    "parent_tokens": 500170752,
+    "processed_reader_tokens_per_configuration": 25165824,
+    "protocol": "exp2c2_cumulative_low_kv_matched_feedback_v1",
+    "reader_initialization": {
+      "gate": "zero",
+      "parameters_per_reader": 1537,
+      "query": "zeros",
+      "rmsnorm_scale": "ones"
+    },
+    "seed": 1337,
+    "self_recurrent_training": "forbidden",
+    "self_trigger": {
+      "c2_c4_matched_destination_gain_minimum": 0.02,
+      "real_wins_minimum": 18,
+      "specific_gap_minimum": 0.01,
+      "teacher_recovery_must_be_positive": true
+    },
+    "sequence_length": 1024,
+    "serialized_microbatches_per_update": 8,
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "teacher": "frozen full-context Experiment 1B model; identical raw source bank shifted one token and detached for every reader",
+    "validation_batch_sequences": 64,
+    "validation_batches": 20,
+    "writers": "forbidden"
+  },
+  "config_sha256": "48f4dff0f131db1efebcbfc80e36bb9051de9caf36efe4273905092b5bfca2b6",
+  "configuration": "C1",
+  "experiment": "2C2",
+  "hellaswag_run": false,
+  "implementation_git_commit": "48c4bf3d7c327484b2ca0037b3d1a175aa0f6df5",
+  "mask_semantics": "cumulative consecutive low-block historical KV removed",
+  "masked_blocks": [
+    1
+  ],
+  "parent_checkpoint": "/workspace/build-nanogpt/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+  "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "parent_commit": "e4a5eec76181db0581d486e0f5724f196c22db64",
+  "parent_tag": "experiment-2c1-destination-depth-final",
+  "protocol": "exp2c2_cumulative_low_kv_matched_feedback_v1",
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "teacher": "frozen full context, eval/no_grad, one-token shifted raw sources",
+  "training_objective": "next-token cross entropy only",
+  "writers_active": false
+}
