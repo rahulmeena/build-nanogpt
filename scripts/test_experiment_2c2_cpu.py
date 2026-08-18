@@ -17,7 +17,7 @@ def make_model(depth=4):
     config = symbols["GPTConfig"](
         block_size=16,
         vocab_size=64,
-        n_layer=6,
+        n_layer=12,
         n_head=2,
         n_embd=8,
         residual_mode="full_attnres",
@@ -101,7 +101,7 @@ def test_incremental_caches_direct_feedback_and_resume():
         mask_depth=4,
     )
     assert all(state.kv_caches[block] is None for block in range(4))
-    assert all(state.kv_caches[block] is not None for block in range(4, 6))
+    assert all(state.kv_caches[block] is not None for block in range(4, 12))
     token = torch.randint(0, model.config.vocab_size, (2,))
     memory = torch.randn(4, 2, 1, model.config.n_embd)
     feedback = {}
@@ -114,7 +114,7 @@ def test_incremental_caches_direct_feedback_and_resume():
     )
     assert torch.isfinite(logits).all()
     assert all(next_state.kv_caches[block] is None for block in range(4))
-    assert all(next_state.kv_caches[block].length == 1 for block in range(4, 6))
+    assert all(next_state.kv_caches[block].length == 1 for block in range(4, 12))
     payload = next_state.state_dict()
     assert payload["schema"] == "full_attnres_recurrent_state_v2"
     restored = model.load_recurrent_state(payload, device="cpu", dtype=torch.float32)
