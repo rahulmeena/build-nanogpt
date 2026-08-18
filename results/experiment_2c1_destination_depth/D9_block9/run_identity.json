@@ -1,0 +1,119 @@
+{
+  "base_model_sha256": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "branch": "experiment-2c1-destination-depth-sweep",
+  "config": {
+    "auxiliary_loss": "forbidden",
+    "bptt": "forbidden",
+    "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "d1_regression": {
+      "absolute_tolerance": 5e-06,
+      "real": 5.8353391409,
+      "shuffled": 5.8765912533,
+      "specific_gap": 0.0412521124
+    },
+    "ddp": false,
+    "destinations": {
+      "D1": 1,
+      "D12": 12,
+      "D5": 5,
+      "D9": 9
+    },
+    "forced_process_restart_after_update": 20,
+    "full_context_loss": 4.0786544085,
+    "generic_branch_during_training": "forbidden",
+    "global_targets_per_update": 524288,
+    "gpu_mapping": {
+      "D1": 0,
+      "D12": 3,
+      "D5": 1,
+      "D9": 2
+    },
+    "hellaswag": "forbidden",
+    "hierarchical_support": {
+      "real_better_than_generic_minimum": 0.01,
+      "real_wins_minimum": 18,
+      "recovery_must_be_positive": true,
+      "specific_gap_minimum": 0.05
+    },
+    "independent_single_gpu_workers": true,
+    "legacy_gradient_accumulation": 2,
+    "legacy_micro_batch_sequences_per_rank": 64,
+    "legacy_world_size": 4,
+    "low_damage_threshold": 0.02,
+    "mask_semantics": "only the destination attention block lacks historical context; current-token attention and every other block remain normal",
+    "milestone_tokens": [
+      5242880,
+      10485760,
+      15204352,
+      25165824
+    ],
+    "milestone_updates": [
+      10,
+      20,
+      29,
+      48
+    ],
+    "optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "lr_schedule": "continue original 10B schedule from completed parent update 954",
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "optimizer_updates": 48,
+    "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "parent_completed_updates": 954,
+    "parent_parameter_count": 124514304,
+    "parent_tokens": 500170752,
+    "processed_reader_tokens": 25165824,
+    "protocol": "exp2c1_destination_depth_teacher_reader_v1",
+    "reader_initialization": {
+      "gate": "zero",
+      "query": "zeros",
+      "rmsnorm_scale": "ones",
+      "trainable_parameters": 1537
+    },
+    "seed": 1337,
+    "self_recurrent_training": "forbidden",
+    "sequence_length": 1024,
+    "serialized_microbatches_per_update": 8,
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "teacher": "frozen full-context Experiment 1B model; raw sources shifted one token and detached",
+    "teacher_self_gate": {
+      "real_wins_minimum": 18,
+      "recovery_must_be_positive": true,
+      "specific_gap_minimum": 0.02
+    },
+    "validation_batch_sequences": 64,
+    "validation_batches": 20,
+    "writers": "forbidden"
+  },
+  "config_sha256": "6cdb2b44931cd104fa2ced2e06dce35dcaa7e67810bf3b261547d881e339590a",
+  "destination": "D9",
+  "destination_block": 9,
+  "experiment": "2C1",
+  "hellaswag_run": false,
+  "implementation_git_commit": "cbf847f8ad43d59f38cd9cf43008562b3c64fb13",
+  "mask_semantics": "only destination attention history removed",
+  "parent_checkpoint": "/workspace/build-nanogpt/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+  "parent_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "parent_commit": "677d711bc00dba0da1b80cb6369f33841ec29a51",
+  "parent_tag": "experiment-2c0-separated-b1-final",
+  "protocol": "exp2c1_destination_depth_teacher_reader_v1",
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "teacher": "frozen full context, eval/no_grad, one-token shifted raw sources",
+  "training_objective": "next-token cross entropy only"
+}
