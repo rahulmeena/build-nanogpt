@@ -1,0 +1,100 @@
+{
+  "all_checkpoint_shas_exact": true,
+  "assignments": {
+    "0": {
+      "all_parameters_frozen": true,
+      "eval": true,
+      "label": "C0_2B2_5M",
+      "next_global_batch_sha256": "e3289bee6ed5a5b2fa1d2c05a615cd3f10f07c51b71aa091ee40380ebeedc21b",
+      "path": "/workspace/migration/experiment_2b2_5m/result/checkpoints/checkpoint_updates_000010.pt",
+      "schema": "exp2b2_memory_writers_1step_v1",
+      "sha256": "a125c81acb9e4ec3395bd8b38dee8fade62012c642b102a1b6c4c0e0997f0637",
+      "stage": "2B2 5M",
+      "strict_load": true,
+      "subset_sha256": {
+        "base": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+        "reader": "aca8f87518e3728b5d721a48e7729b8e93569a23174f29299d3795227fcd61a7",
+        "writers": "eadff45425a595a79eea10e2ef8313050b338ab2b508c20730df652e0054eafb"
+      },
+      "training_state": {
+        "fineweb_lineage_completed_update": 497,
+        "kind": "result_5m",
+        "local_completed_updates": 10,
+        "processed_2b2_tokens": 5242880
+      },
+      "writer_lineage_tokens": 5242880
+    },
+    "1": {
+      "all_parameters_frozen": true,
+      "eval": true,
+      "label": "C1_2B2A_10M",
+      "next_global_batch_sha256": "ddbb966eff17ddabd102ce4706ccace0e23973f98803478b392b8c4e5f9d32f3",
+      "path": "/workspace/runs/experiment_2b2a/checkpoints/checkpoint_updates_000020.pt",
+      "schema": "exp2b2a_writers_4gpu_v1",
+      "sha256": "de5e04f817dcfa5dd8a4dcc6e503ec86d8545d558d837b517c7259917218dff3",
+      "stage": "2B2A 10M",
+      "strict_load": true,
+      "subset_sha256": {
+        "base": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+        "reader": "aca8f87518e3728b5d721a48e7729b8e93569a23174f29299d3795227fcd61a7",
+        "writers": "5c50a5b94c63f45462aff1497c79868ecf05a514043c6f689edffc139f52626b"
+      },
+      "training_state": {
+        "fineweb_lineage_completed_update": 517,
+        "kind": "2b2a_10m",
+        "writer_training_tokens": 10485760,
+        "writer_updates": 20
+      },
+      "writer_lineage_tokens": 10485760
+    },
+    "2": {
+      "all_parameters_frozen": true,
+      "eval": true,
+      "label": "C2_2B2A_15M",
+      "next_global_batch_sha256": "8b9fe2fa1c2a10ce930caff4d527c48e4f14ab0e1a6f5e4b352e42f61b8b360d",
+      "path": "/workspace/runs/experiment_2b2a/checkpoints/checkpoint_updates_000029.pt",
+      "schema": "exp2b2a_writers_4gpu_v1",
+      "sha256": "86c66343141e24d0beffcf8bc98a558f25c82e1dc05582feade2300d30b2ba84",
+      "stage": "2B2A 15M",
+      "strict_load": true,
+      "subset_sha256": {
+        "base": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+        "reader": "aca8f87518e3728b5d721a48e7729b8e93569a23174f29299d3795227fcd61a7",
+        "writers": "d2e23a5f07f45f15847d70d112be5c6ae63b06000c82f5eb624ac4d60501b45c"
+      },
+      "training_state": {
+        "fineweb_lineage_completed_update": 526,
+        "kind": "2b2a_15m",
+        "writer_training_tokens": 15204352,
+        "writer_updates": 29
+      },
+      "writer_lineage_tokens": 15204352
+    },
+    "3": {
+      "all_parameters_frozen": true,
+      "eval": true,
+      "label": "C3_2B3_FINAL",
+      "next_global_batch_sha256": "7f6d8da5044e9f485492712373fda12d09eb4ccec60ab8fdee812519d05869a7",
+      "path": "/workspace/runs/experiment_2b3/checkpoints/checkpoint_joint_updates_000009.pt",
+      "schema": "exp2b3_joint_writer_reader_1step_v1",
+      "sha256": "7797f349905e344934bd7d2475cf61b332ef9053cb0bc1a44f450fc24249c65b",
+      "stage": "2B3 final",
+      "strict_load": true,
+      "subset_sha256": {
+        "base": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+        "reader": "403bf6614813dfd2fbafcee292c769dabbbf037dd8d6e03f843a7eb197f17459",
+        "writers": "7983f220aaca29711802fcb9fde4655140e636c7c43a0fd3bb8d60928ec294c1"
+      },
+      "training_state": {
+        "fineweb_lineage_completed_update": 535,
+        "joint_local_updates": 9,
+        "joint_training_tokens": 4718592,
+        "kind": "2b3_final",
+        "writer_lineage_tokens": 19922944,
+        "writer_lineage_updates": 38
+      },
+      "writer_lineage_tokens": 19922944
+    }
+  },
+  "experiment": "2B5"
+}

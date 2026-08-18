@@ -1,0 +1,424 @@
+{
+  "closed_loop_rollout_semantics": true,
+  "coherent_permutation": [
+    7,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "decomposition_identity": {
+    "coherent_shuffle_alpha_1": {
+      "element_count": 512,
+      "max_absolute_difference": 0.0,
+      "mean_absolute_difference": 0.0
+    },
+    "independent_shuffle_alpha_1": {
+      "element_count": 512,
+      "max_absolute_difference": 0.0,
+      "mean_absolute_difference": 0.0
+    },
+    "real_alpha_1": {
+      "element_count": 512,
+      "max_absolute_difference": 0.0,
+      "mean_absolute_difference": 0.0
+    }
+  },
+  "device": "NVIDIA A100-SXM4-80GB",
+  "experiment": "2B5",
+  "future_causality": {
+    "alpha_real_0.25": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "alpha_real_0.5": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "alpha_real_1": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "alpha_real_2": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "alpha_shuffle_0.25": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "alpha_shuffle_0.5": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "alpha_shuffle_1": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "alpha_shuffle_2": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "independent_shuffle": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "mu": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "residual": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    },
+    "residual_shuffle": {
+      "finite": true,
+      "future_prefix_logits_bit_exact": true,
+      "future_prefix_state_bit_exact": true,
+      "passed": true
+    }
+  },
+  "hellaswag_run": false,
+  "implementation_git_commit": "17156ad83c080efd407c51a3475cf74837189473",
+  "independent_permutations": [
+    [
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    [
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    [
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    [
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3
+    ]
+  ],
+  "model_state_identical": true,
+  "model_state_sha256_after": "f28101ace580b99988b5d9c3b548bbf79f93100432e7c6d8d8d4199791415128",
+  "model_state_sha256_before": "f28101ace580b99988b5d9c3b548bbf79f93100432e7c6d8d8d4199791415128",
+  "passed": true,
+  "position_zero_exactly_zero": true,
+  "row_coupling": {
+    "coherent_changed_receivers": [
+      1
+    ],
+    "coherent_expected_receivers": [
+      1
+    ],
+    "independent_changed_receivers": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "independent_expected_receivers": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "passed": true
+  },
+  "row_isolation_by_control": {
+    "alpha_real_0.25": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0
+      ],
+      "intentional_coupling_only": false,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "alpha_real_0.5": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0
+      ],
+      "intentional_coupling_only": false,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "alpha_real_1": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0
+      ],
+      "intentional_coupling_only": false,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "alpha_real_2": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0
+      ],
+      "intentional_coupling_only": false,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "alpha_shuffle_0.25": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0,
+        1
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0,
+        1
+      ],
+      "intentional_coupling_only": true,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "alpha_shuffle_0.5": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0,
+        1
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0,
+        1
+      ],
+      "intentional_coupling_only": true,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "alpha_shuffle_1": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0,
+        1
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0,
+        1
+      ],
+      "intentional_coupling_only": true,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "alpha_shuffle_2": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0,
+        1
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0,
+        1
+      ],
+      "intentional_coupling_only": true,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "independent_shuffle": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "intentional_coupling_only": true,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "mu": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0
+      ],
+      "intentional_coupling_only": false,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "residual": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0
+      ],
+      "intentional_coupling_only": false,
+      "passed": true,
+      "perturbed_input_row": 0
+    },
+    "residual_shuffle": {
+      "changed_output_rows_position_0": [
+        0
+      ],
+      "changed_output_rows_position_1": [
+        0,
+        1
+      ],
+      "expected_changed_rows_position_0": [
+        0
+      ],
+      "expected_changed_rows_position_1": [
+        0,
+        1
+      ],
+      "intentional_coupling_only": true,
+      "passed": true,
+      "perturbed_input_row": 0
+    }
+  },
+  "runtime_counts": {
+    "backward_calls": 0,
+    "grad_scalers_created": 0,
+    "optimizer_objects_created": 0,
+    "optimizer_steps": 0,
+    "scheduler_objects_created": 0
+  },
+  "stage": "fp32_preflight"
+}

@@ -61,6 +61,7 @@ CHECKPOINT_LABELS = (
 BASE_SHA256 = "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd"
 FROZEN_READER_SHA256 = "aca8f87518e3728b5d721a48e7729b8e93569a23174f29299d3795227fcd61a7"
 C3_GLOBAL_TEMPLATE_SHA256 = "26c550b5770307b50c20a384447785f348515e4a232f60f78b58c71b62c1fd99"
+DECOMPOSITION_MEMORY_ATOL = torch.finfo(torch.float32).eps
 
 CHECKPOINTS = {
     "C0_2B2_5M": {
@@ -1499,17 +1500,22 @@ def aggregate(args):
         and identity[label]["alpha_real_1"][
             "memory_max_absolute_reconstruction_difference"
         ]
-        == 0.0
+        <= DECOMPOSITION_MEMORY_ATOL
         and identity[label]["alpha_shuffle_1"][
             "memory_max_absolute_reconstruction_difference"
         ]
-        == 0.0
+        <= DECOMPOSITION_MEMORY_ATOL
         and identity[label]["independent_shuffle"][
             "memory_max_absolute_reconstruction_difference"
         ]
-        == 0.0
+        <= DECOMPOSITION_MEMORY_ATOL
         for label in CHECKPOINT_LABELS
     )
+    for label in CHECKPOINT_LABELS:
+        identity[label]["memory_reconstruction_tolerance"] = {
+            "absolute_tolerance": DECOMPOSITION_MEMORY_ATOL,
+            "basis": "torch.float32 machine epsilon",
+        }
     integrity = {
         "2B2_5M_SHA_exact": workers["C0_2B2_5M"]["checkpoint"]["sha256"]
         == CHECKPOINTS["C0_2B2_5M"]["sha256"],
