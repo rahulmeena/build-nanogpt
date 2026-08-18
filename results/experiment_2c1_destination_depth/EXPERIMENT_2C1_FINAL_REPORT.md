@@ -10,7 +10,7 @@ All four independent destination workers completed the frozen 25M-token protocol
 2C0 parent commit: `677d711bc00dba0da1b80cb6369f33841ec29a51`  
 2C1 branch: `experiment-2c1-destination-depth-sweep`  
 Implementation commit: `cbf847f8ad43d59f38cd9cf43008562b3c64fb13`  
-Results commit: `pending`  
+Results commit: `4328d3ed6cdffa4d5bbed96ba58e3c06302333a1`
 Final report commit: `the immutable commit containing this file`  
 Experiment 1B checkpoint SHA: `6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91`  
 Canonical validation SHA: `3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb`  
