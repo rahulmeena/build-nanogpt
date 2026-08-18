@@ -74,13 +74,21 @@ def file_sha256(path):
     return a0.file_sha256(Path(path))
 
 
+def tensor_bytes(tensor):
+    value = tensor.detach().cpu().contiguous()
+    # PyTorch 2.8 rejects a dtype-changing view on a rank-0 tensor. Flattening
+    # preserves the exact storage bytes while making scalar parameters (the
+    # reader gate) hashable by the same path as vectors and matrices.
+    return value.reshape(-1).view(torch.uint8).numpy().tobytes()
+
+
 def tensor_sha256(name, tensor):
     digest = hashlib.sha256()
     value = tensor.detach().cpu().contiguous()
     digest.update(name.encode())
     digest.update(str(value.dtype).encode())
     digest.update(str(tuple(value.shape)).encode())
-    digest.update(value.view(torch.uint8).numpy().tobytes())
+    digest.update(tensor_bytes(value))
     return digest.hexdigest()
 
 
@@ -207,7 +215,7 @@ def reader_state_sha(student):
     digest = hashlib.sha256()
     for name, value in sorted(reader_state(student).items()):
         digest.update(name.encode())
-        digest.update(value.contiguous().view(torch.uint8).numpy().tobytes())
+        digest.update(tensor_bytes(value))
     return digest.hexdigest()
 
 

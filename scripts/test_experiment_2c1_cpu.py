@@ -197,6 +197,18 @@ def test_instrumentation_contract():
     assert reader.last_stats["feedback_rms"] == 0
 
 
+def test_scalar_reader_hash_serialization():
+    model = small_model()
+    initial = candidate.reader_state_sha(model)
+    assert initial == candidate.reader_state_sha(model)
+    scalar_hash = candidate.tensor_sha256(
+        "scalar_gate", model.transformer.topdown_attnres.gate
+    )
+    assert len(scalar_hash) == 64
+    model.transformer.topdown_attnres.gate.data.fill_(0.25)
+    assert candidate.reader_state_sha(model) != initial
+
+
 def main():
     test_config_contract()
     test_all_destination_batch_contracts()
@@ -204,6 +216,7 @@ def main():
     test_d1_legacy_equivalence()
     test_single_block_recurrent_state_and_feedback()
     test_instrumentation_contract()
+    test_scalar_reader_hash_serialization()
     json.loads(candidate.CONFIG_PATH.read_text())
     print("Experiment 2C1 CPU contract tests: PASS")
 
