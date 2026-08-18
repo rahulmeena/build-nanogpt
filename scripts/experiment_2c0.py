@@ -612,7 +612,11 @@ def calibrate_source_means(model, calibration_batch, generic, device):
 
 
 def save_source_means(run_dir, means, calibration_hashes, local_sums):
-    centered_global_sum = local_sums.sum(dim=0) - means.float() * float(WORLD_SIZE * B * (T - 1))
+    means_cpu = means.detach().float().cpu()
+    centered_global_sum = (
+        local_sums.float().cpu().sum(dim=0)
+        - means_cpu * float(WORLD_SIZE * B * (T - 1))
+    )
     metadata = {
         "source_checkpoint_sha256": SOURCE_2B3_SHA,
         "generic_architecture": "fixed generic-only direct Block-1 correction",
@@ -623,12 +627,12 @@ def save_source_means(run_dir, means, calibration_hashes, local_sums):
         "canonical_calibration_disjoint": True,
         "accumulation_dtype": "torch.float32",
         "subtraction_dtype": "torch.float32",
-        "shape": list(means.shape),
+        "shape": list(means_cpu.shape),
         "source_shas": {
-            f"nu{depth}": tensor_sha256(f"nu{depth}", means[index])
+            f"nu{depth}": tensor_sha256(f"nu{depth}", means_cpu[index])
             for index, depth in enumerate(SOURCE_DEPTHS)
         },
-        "tensor_sha256": tensor_sha256("sequence_source_means", means),
+        "tensor_sha256": tensor_sha256("sequence_source_means", means_cpu),
         "mean_centered_calibration_residual": (
             centered_global_sum / float(WORLD_SIZE * B * (T - 1))
         ).cpu().tolist(),
@@ -640,7 +644,7 @@ def save_source_means(run_dir, means, calibration_hashes, local_sums):
     path = Path(run_dir) / "sequence_source_means.pt"
     digest = atomic_torch_save(path, {
         "experiment": "2C0",
-        "sequence_source_means": means.detach().cpu(),
+        "sequence_source_means": means_cpu,
         "metadata": metadata,
     })
     reopened = a0.torch_load(path)
