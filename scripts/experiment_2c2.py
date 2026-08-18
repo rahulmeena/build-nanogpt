@@ -2178,9 +2178,10 @@ def final_report_text(summary):
             f"{weights['v24']:.10f} | {row['rmsnorm_displacement']:.10f} | "
             f"{row['feedback_rms']:.10f} |"
         )
-    lines.append(
-        f"- Pairwise B1 query cosines: {summary['b1_query_cosines']}"
-    )
+    lines.extend([
+        "",
+        f"- Pairwise B1 query cosines: {summary['b1_query_cosines']}",
+    ])
     lines.extend([
         "",
         "## Conditional self-recurrent transfer",
