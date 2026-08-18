@@ -1,0 +1,66 @@
+{
+  "protocol": "exp2c3_cumulative_reader_scaling_100m_v1",
+  "seed": 1337,
+  "configurations": {
+    "C1": [1],
+    "C2": [1, 2],
+    "C3": [1, 2, 3],
+    "C4": [1, 2, 3, 4]
+  },
+  "gpu_mapping": {
+    "C1": 0,
+    "C2": 1,
+    "C3": 2,
+    "C4": 3
+  },
+  "independent_single_gpu_workers": true,
+  "ddp": false,
+  "nccl_gradient_synchronization": false,
+  "2c2_final_commit": "5853308bc172150b05bafb32222f2461230adac5",
+  "2c2_final_tag": "experiment-2c2-cumulative-low-kv-final",
+  "2c2_starting_updates": 48,
+  "2c2_starting_targets": 25165824,
+  "base_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "source_depths": [16, 17, 20, 24],
+  "reader_parameters_per_destination": 1537,
+  "mask_semantics": "cumulative consecutive low blocks lack historical KV; current-token attention and all higher blocks retain normal behavior",
+  "teacher": "frozen full-context Experiment 1B model; identical one-token-shifted detached raw source bank for every reader",
+  "sequence_length": 1024,
+  "serialized_microbatches_per_update": 8,
+  "global_targets_per_update": 524288,
+  "milestone_updates": [96, 144, 191],
+  "milestone_targets": [50331648, 75497472, 100139008],
+  "forced_process_restart_after_update": 144,
+  "new_updates_per_configuration": 143,
+  "new_targets_per_configuration": 74973184,
+  "final_total_updates": 191,
+  "final_total_targets": 100139008,
+  "optimizer": {
+    "name": "AdamW",
+    "betas": [0.9, 0.95],
+    "eps": 1e-08,
+    "weight_decay": 0.0,
+    "lr_schedule": "exact Experiment 2C2 trajectory continued from total reader update 48"
+  },
+  "canonical_validation_batches": 20,
+  "canonical_validation_batch_sequences": 64,
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "c1_m50_regression": {
+    "real": 5.7143192530,
+    "shuffled": 5.7953289270,
+    "specific_gap": 0.0810096741,
+    "absolute_tolerance": 5e-06
+  },
+  "c1_m100_regression": {
+    "real": 5.5957053900,
+    "shuffled": 5.7372799873,
+    "specific_gap": 0.1415745974,
+    "absolute_tolerance": 5e-06
+  },
+  "writers": "forbidden",
+  "auxiliary_loss": "forbidden",
+  "bptt": "forbidden",
+  "iterative_loops": "forbidden",
+  "new_mask_depths": "forbidden",
+  "hellaswag": "forbidden"
+}

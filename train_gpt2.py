@@ -541,6 +541,7 @@ class GPT(nn.Module):
         mode="full_context",
         feedback_sources=None,
         feedback_permutation=None,
+        feedback_permutation_by_destination=None,
         feedback_gate_override=None,
         return_source_depths=None,
         feedback_destination_block=0,
@@ -600,6 +601,42 @@ class GPT(nn.Module):
             raise ValueError(f"{mode} does not accept feedback sources")
         if not shuffled_feedback and feedback_permutation is not None:
             raise ValueError("a feedback permutation is valid only in shuffled-feedback mode")
+        if feedback_permutation_by_destination is not None:
+            if not cumulative_mode or not uses_feedback:
+                raise ValueError(
+                    "per-destination feedback permutations require cumulative feedback"
+                )
+            if feedback_permutation is not None:
+                raise ValueError(
+                    "common and per-destination feedback permutations are mutually exclusive"
+                )
+            if not isinstance(feedback_permutation_by_destination, dict):
+                raise ValueError("per-destination feedback permutations must be a dict")
+            invalid_destinations = set(feedback_permutation_by_destination) - set(
+                cumulative_destinations
+            )
+            if invalid_destinations:
+                raise ValueError(
+                    "per-destination feedback permutations must target configured readers"
+                )
+            normalized_permutations = {}
+            expected_indices = torch.arange(B, device=idx.device)
+            for destination, permutation in feedback_permutation_by_destination.items():
+                if not isinstance(destination, int):
+                    raise ValueError("feedback permutation destinations must be integers")
+                if not isinstance(permutation, torch.Tensor) or tuple(permutation.shape) != (B,):
+                    raise ValueError("feedback permutation must have shape [batch]")
+                permutation = permutation.to(device=idx.device, dtype=torch.long)
+                if torch.any(permutation == expected_indices):
+                    raise ValueError("feedback permutation must be fixed-point-free")
+                if not torch.equal(
+                    torch.sort(permutation).values, expected_indices
+                ):
+                    raise ValueError(
+                        "feedback permutation must contain every batch index once"
+                    )
+                normalized_permutations[destination] = permutation
+            feedback_permutation_by_destination = normalized_permutations
         if not uses_feedback and feedback_gate_override is not None:
             raise ValueError("a gate override is valid only in a feedback mode")
         memory_bank = None
@@ -658,8 +695,16 @@ class GPT(nn.Module):
                             if cumulative_mode
                             else self.transformer.topdown_attnres
                         )
+                        reader_memory_bank = memory_bank
+                        if (
+                            feedback_permutation_by_destination is not None
+                            and block_index in feedback_permutation_by_destination
+                        ):
+                            reader_memory_bank = memory_bank[
+                                :, feedback_permutation_by_destination[block_index]
+                            ]
                         topdown = reader(
-                            list(memory_bank.unbind(dim=0))
+                            list(reader_memory_bank.unbind(dim=0))
                         )
                         if feedback_gate_override is None:
                             gate = reader.gate.tanh()
