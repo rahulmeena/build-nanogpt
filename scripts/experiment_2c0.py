@@ -748,8 +748,9 @@ def causality_and_isolation_tests(model, reader, tokens, source_means, generic):
     zero_sources = torch.zeros(
         4, 2, 1, 768, device=tokens.device, dtype=torch.bfloat16
     )
-    zero_topdown = reader(list(zero_sources.unbind(dim=0)))
-    zero_feedback = reader.gate.tanh() * zero_topdown
+    with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+        zero_topdown = reader(list(zero_sources.unbind(dim=0)))
+        zero_feedback = reader.gate.tanh() * zero_topdown
     zero_contract = {
         "zero_centered_sources_produce_bitwise_zero_topdown": zero_topdown.count_nonzero().item() == 0,
         "zero_centered_sources_produce_bitwise_zero_feedback": zero_feedback.count_nonzero().item() == 0,
@@ -878,7 +879,27 @@ def prepare(args):
         generic_before = generic.detach().cpu().clone()
         means_before = means.detach().cpu().clone()
         controls = ("generic", "real", "shuffle", "sequence_only", "gate_zero")
-        local_rows = []
+        progress_path = run_dir / f"zero_shot_rank{rank}.json"
+        if progress_path.is_file():
+            progress = json.loads(progress_path.read_text())
+            if (
+                progress.get("implementation_git_commit")
+                != git_output("rev-parse", "HEAD")
+                or progress.get("rank") != rank
+            ):
+                raise SystemExit("stale zero-shot progress lineage mismatch")
+        else:
+            progress = {
+                "experiment": "2C0",
+                "stage": "zero_shot_rank_progress",
+                "implementation_git_commit": git_output("rev-parse", "HEAD"),
+                "rank": rank,
+                "rows": [],
+            }
+        local_rows = progress["rows"]
+        completed_tasks = {
+            (row["batch_index"], row["control"]) for row in local_rows
+        }
         permutation = b4.coherent_permutation(B, device)
         for batch_index, (x_cpu, y_cpu) in enumerate(canonical):
             if batch_index % WORLD_SIZE != rank:
@@ -886,6 +907,8 @@ def prepare(args):
             x = x_cpu.to(device, non_blocking=True)
             y = y_cpu.to(device, non_blocking=True)
             for control in controls:
+                if (batch_index, control) in completed_tasks:
+                    continue
                 row = evaluate_stream(
                     model, reader, x, y, means, generic, control,
                     permutation=permutation,
@@ -898,6 +921,8 @@ def prepare(args):
                     "rank": rank,
                 })
                 local_rows.append(row)
+                completed_tasks.add((batch_index, control))
+                b2a.write_json(progress_path, progress)
                 print(
                     f"2C0_ZERO_SHOT rank={rank} control={control} "
                     f"batch={batch_index} loss={row['loss']:.10f} "
