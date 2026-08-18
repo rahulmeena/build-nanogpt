@@ -2206,16 +2206,28 @@ def main():
     render.add_argument("--output-dir", required=True)
     render.add_argument("--results-commit", required=True)
     args = parser.parse_args()
-    if args.command == "preflight":
-        run_preflight(args)
-    elif args.command == "train":
-        run_training(args)
-    elif args.command == "finalize":
-        run_finalize(args)
-    elif args.command == "aggregate":
-        aggregate_results(args)
+    os.chdir(REPO_ROOT)
+    torch.set_float32_matmul_precision("high")
+    torch.use_deterministic_algorithms(True)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+    random.seed(a0.SEED)
+    np.random.seed(a0.SEED)
+    torch.manual_seed(a0.SEED)
+    if args.command == "aggregate":
+        report = aggregate_results(args)
     elif args.command == "render-report":
-        render_final_report(args)
+        report = render_final_report(args)
+    else:
+        a0.require_cuda()
+        torch.cuda.manual_seed(a0.SEED)
+        if args.command == "preflight":
+            report = run_preflight(args)
+        elif args.command == "train":
+            report = run_training(args)
+        else:
+            report = run_finalize(args)
+    print(json.dumps(report, indent=2, sort_keys=True), flush=True)
 
 
 if __name__ == "__main__":
