@@ -778,6 +778,7 @@ class GPT(nn.Module):
         feedback_sources=None,
         feedback_permutation=None,
         feedback_gate_override=None,
+        block1_feedback=None,
         reset_feedback=False,
         use_memory_writers=False,
         disabled_writer_depths=(),
@@ -804,6 +805,18 @@ class GPT(nn.Module):
             raise ValueError("shuffled self-feedback requires exactly one permutation")
         if not uses_feedback and feedback_gate_override is not None:
             raise ValueError("gate override is valid only for a feedback mode")
+        if block1_feedback is not None:
+            if mode != "masked_l1_no_feedback":
+                raise ValueError(
+                    "direct Block-1 feedback requires masked_l1_no_feedback mode"
+                )
+            expected_direct_shape = (B, 1, self.config.n_embd)
+            if tuple(block1_feedback.shape) != expected_direct_shape:
+                raise ValueError(
+                    "direct Block-1 feedback must have shape [batch, 1, channel]"
+                )
+            if block1_feedback.device != idx.device:
+                raise ValueError("direct Block-1 feedback device mismatch")
         reset_mask = None
         if isinstance(reset_feedback, torch.Tensor):
             if (
@@ -888,6 +901,14 @@ class GPT(nn.Module):
                     else:
                         gate = h.new_tensor(float(feedback_gate_override))
                     feedback_contribution = gate * topdown
+                    h = h + feedback_contribution
+                elif block1_feedback is not None:
+                    # Experiment 2C0 supplies two already-separated branches:
+                    # a frozen generic vector and an independent centered-state
+                    # sequence reader.  This hook deliberately bypasses the old
+                    # recurrent reader so no generic information can re-enter
+                    # through its query, norm, gate, or writer adapters.
+                    feedback_contribution = block1_feedback
                     h = h + feedback_contribution
                 attention_output, cache = block.attn.forward_step(
                     block.ln_1(h), cache=None, self_only=True
