@@ -1349,7 +1349,7 @@ def self_resume_preflight(student, symbols, configuration):
             2,
             "masked_l1_no_feedback",
             device="cuda",
-            dtype=torch.float32,
+            dtype=torch.bfloat16,
             mask_depth=len(blocks),
         )
 
@@ -1364,7 +1364,9 @@ def self_resume_preflight(student, symbols, configuration):
                 x[:, position], state, attention_feedback_by_block=feedback
             )
         payload = state.state_dict()
-        restored = student.load_recurrent_state(payload, device="cuda", dtype=torch.float32)
+        restored = student.load_recurrent_state(
+            payload, device="cuda", dtype=torch.bfloat16
+        )
         feedback_a = direct_feedback(
             student, state.feedback_memory.detach(), blocks
         )
@@ -1456,7 +1458,7 @@ def evaluate_self_controls(student, symbols, configuration):
                 x.size(0),
                 "masked_l1_no_feedback",
                 device="cuda",
-                dtype=torch.float32,
+                dtype=torch.bfloat16,
                 mask_depth=len(blocks),
             )
             token_loss = 0.0
@@ -1731,6 +1733,127 @@ def run_training(args):
     )
     print(
         f"{marker} configuration={configuration} updates={completed}", flush=True
+    )
+    return stage
+
+
+def run_finalize(args):
+    """Finish evaluation-only self transfer after an intact update-48 checkpoint."""
+    require_git(clean=True)
+    load_config()
+    configuration = args.configuration
+    blocks = blocks_for(configuration)
+    if os.environ.get("CUDA_VISIBLE_DEVICES") != str(GPU_MAPPING[configuration]):
+        raise SystemExit(f"finalize GPU mapping mismatch for {configuration}")
+    run_dir = run_dir_for(args.run_root, configuration)
+    final_path = evaluation_path(run_dir, TARGET_UPDATE)
+    checkpoint = checkpoint_path(run_dir, TARGET_UPDATE)
+    verification_path = checkpoint.with_suffix(".pt.verification.json")
+    if not final_path.is_file() or not checkpoint.is_file() or not verification_path.is_file():
+        raise SystemExit("finalize requires canonical update-48 evaluation and checkpoint")
+    verification = json.loads(verification_path.read_text())
+    if not verification.get("passed") or file_sha256(checkpoint) != verification.get("sha256"):
+        raise SystemExit("update-48 checkpoint verification failed during finalize")
+    symbols, teacher, student, _, _, _, _ = make_runtime(
+        args.parent_checkpoint, configuration, include_optimizer=False
+    )
+    payload = a0.torch_load(checkpoint, mmap=True)
+    required = {
+        "schema": payload.get("schema") == CHECKPOINT_SCHEMA,
+        "configuration": payload.get("configuration") == configuration,
+        "completed_updates": payload.get("completed_updates") == TARGET_UPDATE,
+        "masked_blocks": payload.get("masked_blocks")
+        == [block + 1 for block in blocks],
+        "parent": payload.get("parent_checkpoint_sha256")
+        == a0.EXPECTED_PARENT_SHA256,
+        "base": payload.get("base_model_sha256") == BASE_MODEL_SHA,
+    }
+    if not all(required.values()):
+        raise SystemExit(f"finalize checkpoint lineage mismatch: {required}")
+    readers(student).load_state_dict(payload["reader_state"], strict=True)
+    if reader_state_sha(student) != payload["reader_state_sha256"]:
+        raise SystemExit("finalize reader strict load mismatch")
+    final_evaluation = json.loads(final_path.read_text())
+    prefix_one = final_evaluation["activation_losses"]["prefix_1"]["mean"]
+    matched_gain = prefix_one - final_evaluation["losses"]["real"]
+    trigger = (
+        final_evaluation["recovery"] > 0
+        and final_evaluation["specific_gap"] >= 0.010
+        and final_evaluation["paired_real_vs_shuffled"]["real_wins"] >= 18
+        and (len(blocks) == 1 or matched_gain >= 0.020)
+    )
+    if trigger:
+        self_transfer = evaluate_self_controls(student, symbols, configuration)
+        self_transfer["teacher_recovery"] = final_evaluation["recovery"]
+        self_transfer["self_recovery"] = (
+            final_evaluation["losses"]["masked"]
+            - self_transfer["losses"]["real"]
+        )
+        self_transfer["self_teacher_recovery_ratio"] = (
+            self_transfer["self_recovery"] / final_evaluation["recovery"]
+        )
+        self_transfer["self_matched_destination_gain"] = (
+            None
+            if len(blocks) == 1
+            else self_transfer["losses"]["b1_only"]
+            - self_transfer["losses"]["real"]
+        )
+    else:
+        self_transfer = {
+            "experiment": "2C2",
+            "configuration": configuration,
+            "triggered": False,
+            "reason": "frozen teacher-assisted self-transfer gate not met",
+            "teacher_recovery": final_evaluation["recovery"],
+            "teacher_specific_gap": final_evaluation["specific_gap"],
+            "teacher_real_wins": final_evaluation["paired_real_vs_shuffled"]["real_wins"],
+            "matched_destination_gain": matched_gain,
+            "optimizer_updates": 0,
+        }
+    self_transfer["evaluation_implementation_commit"] = git_output("rev-parse", "HEAD")
+    durable_json(run_dir / "self_transfer.json", self_transfer)
+    metrics = reconcile_metrics(run_dir / "metrics.jsonl", TARGET_UPDATE)
+    previous_stage = run_dir / "stage_updates_000048.json"
+    if previous_stage.is_file():
+        previous_stage.replace(run_dir / "stage_updates_000048.pre_finalize.json")
+    stage = {
+        "experiment": "2C2",
+        "configuration": configuration,
+        "completed_updates": TARGET_UPDATE,
+        "processed_targets": TARGET_UPDATE * GLOBAL_TARGETS,
+        "target_update": TARGET_UPDATE,
+        "restart_audit": json.loads(
+            (run_dir / "restart_audit_updates_000020.json").read_text()
+        ),
+        "frozen_hashes": validate_frozen_hashes(student, teacher),
+        "reader_state_sha256": reader_state_sha(student),
+        "optimizer": payload["optimizer_integrity"],
+        "next_global_batch_sha256": payload["next_global_batch_sha256"],
+        "performance": {
+            "training_wall_seconds_all_processes": sum(
+                row["wall_seconds"] for row in metrics
+            ),
+            "mean_targets_per_second": statistics.fmean(
+                row["targets_per_second"] for row in metrics
+            ),
+            "peak_allocated_mb": max(row["peak_allocated_mb"] for row in metrics),
+            "peak_reserved_mb": max(row["peak_reserved_mb"] for row in metrics),
+            "evaluation_wall_seconds": final_evaluation["elapsed_seconds"],
+            "self_evaluation_wall_seconds": self_transfer.get("elapsed_seconds", 0.0),
+        },
+        "optimizer_updates_total": TARGET_UPDATE,
+        "finalize_optimizer_updates": 0,
+        "finalize_git_commit": git_output("rev-parse", "HEAD"),
+        "checkpoint_lineage": required,
+        "checkpoint_sha256": verification["sha256"],
+        "writers_active_calls": 0,
+        "hellaswag_run": False,
+    }
+    durable_json(run_dir / "stage_updates_000048.json", stage)
+    print(
+        f"EXPERIMENT_2C2_FINALIZE_COMPLETE configuration={configuration} "
+        f"self_triggered={trigger}",
+        flush=True,
     )
     return stage
 
@@ -2347,6 +2470,9 @@ def aggregate_results(args):
         "all_optimizer_updates_exactly_48": all(
             row["optimizer_updates_total"] == 48 for row in stages.values()
         ),
+        "finalize_added_zero_optimizer_updates": all(
+            row.get("finalize_optimizer_updates") == 0 for row in stages.values()
+        ),
         "forced_fresh_process_restart": all(
             row["fresh_process"] for row in restarts.values()
         ),
@@ -2377,6 +2503,11 @@ def aggregate_results(args):
         "no_auxiliary_objective": True,
         "no_bptt": True,
         "hellaswag_not_run": all(not row["hellaswag_run"] for row in stages.values()),
+        "self_state_resume_equivalence": all(
+            not row.get("triggered")
+            or row.get("resume_preflight", {}).get("passed") is True
+            for row in self_transfer.values()
+        ),
         "all_preflights_passed": all(row["passed"] for row in preflights.values()),
         "all_smokes_passed_and_discarded": all(
             row["passed"] and row["states_discarded"] for row in smokes.values()
@@ -2480,6 +2611,10 @@ def main():
     train.add_argument("--run-root", required=True)
     train.add_argument("--target-update", type=int, required=True)
     train.add_argument("--resume")
+    finalize = subparsers.add_parser("finalize")
+    finalize.add_argument("--configuration", choices=CONFIGURATIONS, required=True)
+    finalize.add_argument("--parent-checkpoint", required=True)
+    finalize.add_argument("--run-root", required=True)
     aggregate = subparsers.add_parser("aggregate")
     aggregate.add_argument("--run-root", required=True)
     aggregate.add_argument("--output-dir", required=True)
@@ -2501,8 +2636,10 @@ def main():
             report = run_preflight(args)
         elif args.command == "smoke":
             report = run_smoke(args)
-        else:
+        elif args.command == "train":
             report = run_training(args)
+        else:
+            report = run_finalize(args)
     print(json.dumps(report, indent=2, sort_keys=True), flush=True)
 
 
