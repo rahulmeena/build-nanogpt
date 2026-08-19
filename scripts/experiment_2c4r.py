@@ -1245,6 +1245,7 @@ def s0_regression(row):
         "teacher_real": row["losses"]["teacher_real"],
         "teacher_shuffled": row["losses"]["teacher_shuffled"],
         "teacher_gap": row["teacher_specific_gap"],
+        "teacher_recovery": row["teacher_recovery"],
         "self_real": row["losses"]["self_real"],
         "self_shuffled": row["losses"]["self_shuffled"],
         "self_gap": row["self_specific_gap"],
