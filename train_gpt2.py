@@ -99,6 +99,53 @@ class CausalSelfAttention(nn.Module):
         updated = AttentionKVCache(cache.key, cache.value, new_length)
         return self.c_proj(y), updated
 
+    def forward_step_rolling(self, x, cache):
+        """Attend one token while retaining only a bounded historical KV window."""
+        B, T, C = x.size()
+        if T != 1:
+            raise ValueError("rolling incremental attention requires exactly one token")
+        if not isinstance(cache, AttentionKVCache):
+            raise ValueError("rolling attention requires an explicit historical cache")
+        capacity = cache.key.size(2)
+        if capacity < 1:
+            raise ValueError("window-1 attention must use the self-only path")
+        if not 0 <= cache.length <= capacity:
+            raise ValueError("rolling KV cache length exceeds its physical capacity")
+        qkv = self.c_attn(x)
+        q, k, v = qkv.split(self.n_embd, dim=2)
+        head_size = C // self.n_head
+        q = q.view(B, 1, self.n_head, head_size).transpose(1, 2)
+        k = k.view(B, 1, self.n_head, head_size).transpose(1, 2)
+        v = v.view(B, 1, self.n_head, head_size).transpose(1, 2)
+        expected = (B, self.n_head, capacity, head_size)
+        if tuple(cache.key.shape) != expected or tuple(cache.value.shape) != expected:
+            raise ValueError("rolling KV cache shape mismatch")
+        if cache.key.device != x.device or cache.value.device != x.device:
+            raise ValueError("rolling KV cache device mismatch")
+
+        historical_k = cache.key[:, :, : cache.length]
+        historical_v = cache.value[:, :, : cache.length]
+        keys = torch.cat((historical_k, k), dim=2)
+        values = torch.cat((historical_v, v), dim=2)
+        y = F.scaled_dot_product_attention(q, keys, values, is_causal=False)
+        y = y.transpose(1, 2).contiguous().view(B, 1, C)
+
+        # Persist only historical entries permitted at the next token.  The
+        # current K/V participates in this token's attention before the oldest
+        # historical entry is evicted.
+        if cache.length < capacity:
+            cache.key[:, :, cache.length : cache.length + 1].copy_(k.detach())
+            cache.value[:, :, cache.length : cache.length + 1].copy_(v.detach())
+            new_length = cache.length + 1
+        else:
+            if capacity > 1:
+                cache.key[:, :, :-1].copy_(cache.key[:, :, 1:].clone())
+                cache.value[:, :, :-1].copy_(cache.value[:, :, 1:].clone())
+            cache.key[:, :, -1:].copy_(k.detach())
+            cache.value[:, :, -1:].copy_(v.detach())
+            new_length = capacity
+        return self.c_proj(y), AttentionKVCache(cache.key, cache.value, new_length)
+
 class MLP(nn.Module):
 
     def __init__(self, config):
@@ -316,6 +363,7 @@ class RecurrentState:
     feedback_memory: torch.Tensor
     mask_depth: int = 1
     masked_block_index: int | None = None
+    attention_windows: tuple | None = None
 
     def state_dict(self):
         caches = []
@@ -331,8 +379,10 @@ class RecurrentState:
                         "length": cache.length,
                     }
                 )
-        payload = {
-            "schema": (
+        if self.attention_windows is not None:
+            schema = "full_attnres_recurrent_state_v4_rolling_windows"
+        else:
+            schema = (
                 "full_attnres_recurrent_state_v3"
                 if self.masked_block_index is not None
                 else (
@@ -340,7 +390,9 @@ class RecurrentState:
                     if self.mask_depth == 1
                     else "full_attnres_recurrent_state_v2"
                 )
-            ),
+            )
+        payload = {
+            "schema": schema,
             "position": self.position,
             "mode": self.mode,
             "kv_caches": caches,
@@ -350,6 +402,8 @@ class RecurrentState:
             payload["mask_depth"] = self.mask_depth
         if self.masked_block_index is not None:
             payload["masked_block_index"] = self.masked_block_index
+        if self.attention_windows is not None:
+            payload["attention_windows"] = list(self.attention_windows)
         return payload
 
 
@@ -745,6 +799,7 @@ class GPT(nn.Module):
         dtype=None,
         mask_depth=1,
         masked_block_index=None,
+        attention_windows=None,
     ):
         """Create explicit, fixed-capacity state for token-by-token inference."""
         if self.config.residual_mode != "full_attnres":
@@ -784,18 +839,47 @@ class GPT(nn.Module):
             ):
                 raise ValueError("mask_depth must be in [1, n_layer]")
             effective_mask_depth = mask_depth
+        normalized_windows = None
+        if attention_windows is not None:
+            normalized_windows = tuple(attention_windows)
+            if (
+                len(normalized_windows) != self.config.n_layer
+                or any(
+                    not isinstance(window, int)
+                    or not 1 <= window <= self.config.block_size
+                    for window in normalized_windows
+                )
+            ):
+                raise ValueError(
+                    "attention_windows must contain one integer in [1, block_size] per layer"
+                )
+            if masked_block_index is not None:
+                raise ValueError("rolling windows do not support a separate masked block")
         reference = self.transformer.wte.weight
         device = reference.device if device is None else torch.device(device)
         dtype = reference.dtype if dtype is None else dtype
         head_size = self.config.n_embd // self.config.n_head
-        cache_shape = (
-            batch_size,
-            self.config.n_head,
-            self.config.block_size,
-            head_size,
-        )
         caches = []
         for block_index in range(self.config.n_layer):
+            if normalized_windows is not None:
+                capacity = normalized_windows[block_index] - 1
+                if capacity == 0:
+                    caches.append(None)
+                    continue
+                cache_shape = (
+                    batch_size,
+                    self.config.n_head,
+                    capacity,
+                    head_size,
+                )
+                caches.append(
+                    AttentionKVCache(
+                        key=torch.empty(cache_shape, device=device, dtype=dtype),
+                        value=torch.empty(cache_shape, device=device, dtype=dtype),
+                        length=0,
+                    )
+                )
+                continue
             if (
                 block_index < effective_mask_depth
                 or block_index == masked_block_index
@@ -804,8 +888,22 @@ class GPT(nn.Module):
                 continue
             caches.append(
                 AttentionKVCache(
-                    key=torch.empty(cache_shape, device=device, dtype=dtype),
-                    value=torch.empty(cache_shape, device=device, dtype=dtype),
+                    key=torch.empty(
+                        batch_size,
+                        self.config.n_head,
+                        self.config.block_size,
+                        head_size,
+                        device=device,
+                        dtype=dtype,
+                    ),
+                    value=torch.empty(
+                        batch_size,
+                        self.config.n_head,
+                        self.config.block_size,
+                        head_size,
+                        device=device,
+                        dtype=dtype,
+                    ),
                     length=0,
                 )
             )
@@ -824,6 +922,7 @@ class GPT(nn.Module):
             memory,
             effective_mask_depth,
             masked_block_index,
+            normalized_windows,
         )
 
     def load_recurrent_state(self, payload, device=None, dtype=None):
@@ -834,6 +933,7 @@ class GPT(nn.Module):
                 "full_attnres_recurrent_state_v1",
                 "full_attnres_recurrent_state_v2",
                 "full_attnres_recurrent_state_v3",
+                "full_attnres_recurrent_state_v4_rolling_windows",
             }
         ):
             raise ValueError("invalid recurrent-state payload")
@@ -847,6 +947,7 @@ class GPT(nn.Module):
         dtype = memory.dtype if dtype is None else dtype
         mask_depth = payload.get("mask_depth", 1)
         masked_block_index = payload.get("masked_block_index")
+        attention_windows = payload.get("attention_windows")
         state = self.init_recurrent_state(
             memory.size(1),
             payload.get("mode"),
@@ -854,28 +955,34 @@ class GPT(nn.Module):
             dtype=dtype,
             mask_depth=mask_depth,
             masked_block_index=masked_block_index,
+            attention_windows=attention_windows,
         )
         caches = payload.get("kv_caches")
         if not isinstance(caches, (list, tuple)) or len(caches) != self.config.n_layer:
             raise ValueError("invalid recurrent cache collection")
         restored = []
-        for fresh, saved in zip(state.kv_caches, caches):
+        for block_index, (fresh, saved) in enumerate(zip(state.kv_caches, caches)):
             if fresh is None or saved is None:
                 if fresh is not None or saved is not None:
                     raise ValueError("recurrent Block-1 cache policy mismatch")
                 restored.append(None)
                 continue
-            if set(saved) != {"key", "value", "length"} or saved["length"] != position:
+            expected_length = (
+                min(position, state.attention_windows[block_index] - 1)
+                if state.attention_windows is not None
+                else position
+            )
+            if set(saved) != {"key", "value", "length"} or saved["length"] != expected_length:
                 raise ValueError("invalid serialized KV cache")
-            expected_prefix = fresh.key[:, :, :position]
+            expected_prefix = fresh.key[:, :, :expected_length]
             if (
                 tuple(saved["key"].shape) != tuple(expected_prefix.shape)
                 or tuple(saved["value"].shape) != tuple(expected_prefix.shape)
             ):
                 raise ValueError("serialized KV cache shape mismatch")
-            fresh.key[:, :, :position].copy_(saved["key"].to(device=device, dtype=dtype))
-            fresh.value[:, :, :position].copy_(saved["value"].to(device=device, dtype=dtype))
-            restored.append(AttentionKVCache(fresh.key, fresh.value, position))
+            fresh.key[:, :, :expected_length].copy_(saved["key"].to(device=device, dtype=dtype))
+            fresh.value[:, :, :expected_length].copy_(saved["value"].to(device=device, dtype=dtype))
+            restored.append(AttentionKVCache(fresh.key, fresh.value, expected_length))
         expected_memory = (
             len(EXPERIMENT_2A0_SOURCE_DEPTHS),
             memory.size(1),
@@ -891,6 +998,7 @@ class GPT(nn.Module):
             memory.detach().to(device=device, dtype=dtype).clone(),
             state.mask_depth,
             state.masked_block_index,
+            state.attention_windows,
         )
 
     def reset_recurrent_memory(self, state):
@@ -903,6 +1011,7 @@ class GPT(nn.Module):
             torch.zeros_like(state.feedback_memory),
             state.mask_depth,
             state.masked_block_index,
+            state.attention_windows,
         )
 
     def _validate_recurrent_state(self, state, batch_size):
@@ -947,7 +1056,33 @@ class GPT(nn.Module):
             )
         ):
             raise ValueError("recurrent state has an invalid mask depth")
+        if state.attention_windows is not None:
+            if (
+                len(state.attention_windows) != self.config.n_layer
+                or any(
+                    not isinstance(window, int)
+                    or not 1 <= window <= self.config.block_size
+                    for window in state.attention_windows
+                )
+            ):
+                raise ValueError("recurrent state has invalid rolling windows")
+            if state.masked_block_index is not None:
+                raise ValueError("rolling-window state cannot mask a separate block")
         for block_index, cache in enumerate(state.kv_caches):
+            if state.attention_windows is not None:
+                capacity = state.attention_windows[block_index] - 1
+                expected_length = min(state.position, capacity)
+                if capacity == 0:
+                    if cache is not None:
+                        raise ValueError("window-1 blocks must not retain KV caches")
+                elif (
+                    not isinstance(cache, AttentionKVCache)
+                    or cache.key.size(2) != capacity
+                    or cache.value.size(2) != capacity
+                    or cache.length != expected_length
+                ):
+                    raise ValueError("rolling-window KV cache capacity/length mismatch")
+                continue
             masked = (
                 block_index < expected_mask_depth
                 or block_index == state.masked_block_index
@@ -1068,11 +1203,14 @@ class GPT(nn.Module):
         values = [x]
         destination_index = 0
         updated_caches = []
+        receiver_states = []
         topdown = None
         feedback_contribution = None
         topdown_weights = None
         for block_index, block in enumerate(self.transformer.h):
             h = self.transformer.attnres[destination_index](values)
+            if return_diagnostics and block_index < 4:
+                receiver_states.append(h.detach())
             direct_feedback = (
                 None
                 if attention_feedback_by_block is None
@@ -1084,7 +1222,17 @@ class GPT(nn.Module):
                 block_index < state.mask_depth
                 or block_index == state.masked_block_index
             )
-            if (
+            if state.attention_windows is not None:
+                window = state.attention_windows[block_index]
+                if window == 1:
+                    attention_output, cache = block.attn.forward_step(
+                        block.ln_1(h), cache=None, self_only=True
+                    )
+                else:
+                    attention_output, cache = block.attn.forward_step_rolling(
+                        block.ln_1(h), state.kv_caches[block_index]
+                    )
+            elif (
                 block_index == 0
                 and mode != "full_context"
                 and state.masked_block_index is None
@@ -1196,6 +1344,7 @@ class GPT(nn.Module):
             memory,
             state.mask_depth,
             state.masked_block_index,
+            state.attention_windows,
         )
         if not return_diagnostics:
             return logits, next_state
@@ -1214,6 +1363,11 @@ class GPT(nn.Module):
             "feedback_rms": None,
             "routing_weights": None,
             "routing_entropy": None,
+            "receiver_states": (
+                None
+                if not receiver_states
+                else torch.stack(receiver_states, dim=0)
+            ),
         }
         if topdown is not None:
             safe_weights = topdown_weights.float().clamp_min(
@@ -1233,6 +1387,43 @@ class GPT(nn.Module):
                 }
             )
         return logits, next_state, diagnostics
+
+    def capture_full_context_diagnostics(
+        self,
+        idx,
+        source_depths=EXPERIMENT_2A0_SOURCE_DEPTHS,
+        receiver_blocks=(0, 1, 2, 3),
+    ):
+        """Capture immutable full-context source and pre-feedback receiver states."""
+        if self.config.residual_mode != "full_attnres":
+            raise ValueError("diagnostic capture requires residual_mode='full_attnres'")
+        _, T = idx.size()
+        if T > self.config.block_size:
+            raise ValueError("diagnostic sequence exceeds block size")
+        source_depths = tuple(source_depths)
+        receiver_blocks = tuple(receiver_blocks)
+        if any(depth < 0 or depth > 2 * self.config.n_layer for depth in source_depths):
+            raise ValueError("invalid diagnostic source depth")
+        if any(block < 0 or block >= self.config.n_layer for block in receiver_blocks):
+            raise ValueError("invalid diagnostic receiver block")
+        pos = torch.arange(T, dtype=torch.long, device=idx.device)
+        x = self.transformer.wte(idx) + self.transformer.wpe(pos)
+        values = [x]
+        receivers = {}
+        destination_index = 0
+        for block_index, block in enumerate(self.transformer.h):
+            h = self.transformer.attnres[destination_index](values)
+            if block_index in receiver_blocks:
+                receivers[block_index] = h.detach()
+            values.append(block.attn(block.ln_1(h)))
+            destination_index += 1
+            h = self.transformer.attnres[destination_index](values)
+            values.append(block.mlp(block.ln_2(h)))
+            destination_index += 1
+        return {
+            "sources": torch.stack([values[depth] for depth in source_depths], dim=0).detach(),
+            "receivers": torch.stack([receivers[block] for block in receiver_blocks], dim=0).detach(),
+        }
 
     def capture_residual_sources(
         self,
