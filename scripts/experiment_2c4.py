@@ -503,18 +503,45 @@ def causality_and_row_tests(student, teacher, symbols, schedule):
         row_logits, _ = recurrent_smoke_logits(
             student, row, windows, "self_real", teacher_sources=teacher_tokens
         )
-        shuffled_reference, _ = recurrent_smoke_logits(
-            student, tokens, windows, "self_shuffled", teacher_sources=teacher_tokens
+        donor_reference = new_state(student, 4, windows, torch.bfloat16)
+        for position in range(4):
+            feedback = direct_feedback(
+                student, donor_reference.feedback_memory.detach(), (0, 1, 2, 3)
+            )
+            _, donor_reference = student.forward_step(
+                tokens[:, position],
+                donor_reference,
+                attention_feedback_by_block=feedback,
+            )
+        donor_perturbed = student.load_recurrent_state(
+            donor_reference.state_dict(), device="cuda", dtype=torch.bfloat16
         )
-        shuffled_row, _ = recurrent_smoke_logits(
-            student, row, windows, "self_shuffled", teacher_sources=teacher_tokens
+        donor_perturbed.feedback_memory[:, 1].add_(0.25)
+        permutation = torch.arange(4, device="cuda").roll(1)
+        reference_feedback = direct_feedback(
+            student, donor_reference.feedback_memory[:, permutation], (0, 1, 2, 3)
         )
-    permutation = torch.arange(4, device="cuda").roll(1)
+        perturbed_feedback = direct_feedback(
+            student, donor_perturbed.feedback_memory[:, permutation], (0, 1, 2, 3)
+        )
+        shuffled_reference, _ = student.forward_step(
+            tokens[:, 4],
+            donor_reference,
+            attention_feedback_by_block=reference_feedback,
+        )
+        shuffled_perturbed, _ = student.forward_step(
+            tokens[:, 4],
+            donor_perturbed,
+            attention_feedback_by_block=perturbed_feedback,
+        )
     donor_receivers = (permutation == 1).nonzero().flatten().tolist()
-    allowed_changed = {1, *donor_receivers}
     shuffled_isolation = all(
-        index in allowed_changed or torch.equal(shuffled_reference[index], shuffled_row[index])
+        index in donor_receivers
+        or torch.equal(shuffled_reference[index], shuffled_perturbed[index])
         for index in range(4)
+    ) and all(
+        not torch.equal(shuffled_reference[index], shuffled_perturbed[index])
+        for index in donor_receivers
     )
     report = {
         "future_prefix_by_control": results,
