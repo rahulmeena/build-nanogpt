@@ -1046,15 +1046,20 @@ def evaluate_schedule(args):
     teacher_gap = means["teacher_shuffled"] - means["teacher_real"]
     self_gap = means["self_shuffled"] - means["self_real"]
     matched_gain = means["self_B1_only"] - means["self_real"]
-    paired_self_no_feedback = paired(
-        losses["self_real"], losses["no_feedback"], "self_real", "no_feedback"
-    )
-    paired_real_shuffle = paired(
-        losses["self_real"], losses["self_shuffled"], "self_real", "self_shuffled"
-    )
-    paired_all_b1 = paired(
-        losses["self_real"], losses["self_B1_only"], "all_readers", "B1_only"
-    )
+    if gate_only:
+        paired_self_no_feedback = None
+        paired_real_shuffle = None
+        paired_all_b1 = None
+    else:
+        paired_self_no_feedback = paired(
+            losses["self_real"], losses["no_feedback"], "self_real", "no_feedback"
+        )
+        paired_real_shuffle = paired(
+            losses["self_real"], losses["self_shuffled"], "self_real", "self_shuffled"
+        )
+        paired_all_b1 = paired(
+            losses["self_real"], losses["self_B1_only"], "all_readers", "B1_only"
+        )
     after = {
         "student": c2.state_hash(student),
         "teacher": c2.state_hash(teacher),
@@ -1561,8 +1566,18 @@ def aggregate_results(args):
     oracle_commit = git_output(
         "log", "-1", "--format=%H", "--", str(ORACLE_PATH.relative_to(REPO_ROOT))
     )
+    oracle_precedes_implementation = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", oracle_commit, implementation_commit],
+        cwd=REPO_ROOT,
+        check=False,
+    ).returncode == 0
     checks = {
         "2c4_final_commit_exact": git_output("rev-parse", f"{PARENT_TAG}^{{}}") == PARENT_COMMIT,
+        "single_2c4r_implementation_commit_exact": all(
+            row["implementation_git_commit"] == implementation_commit
+            and preflights[key]["implementation_git_commit"] == implementation_commit
+            for key, row in rows.items()
+        ),
         "2c3_C4_100M_checkpoint_SHA_exact": all(
             row["source"]["checkpoint_sha256"] == SOURCE_SHA for row in rows.values()
         ),
@@ -1572,7 +1587,7 @@ def aggregate_results(args):
         "canonical_validation_SHA_exact": all(
             row["canonical_validation_sha256"] == CANONICAL_SHA for row in rows.values()
         ),
-        "path_consistent_oracle_written_before_result_run": oracle_commit == implementation_commit
+        "path_consistent_oracle_written_before_result_run": oracle_precedes_implementation
         and oracle == expected_oracle_payload(),
         "two_batch_S0_preflight_regression_exact": gate["passed"]
         and all(all(values) for values in gate["value_checks"].values()),
