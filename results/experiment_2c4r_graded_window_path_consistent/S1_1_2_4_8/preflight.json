@@ -1,0 +1,419 @@
+{
+  "causality_and_row_isolation": {
+    "fixed_derangement": [
+      3,
+      0,
+      1,
+      2
+    ],
+    "future_causality_all_controls": true,
+    "future_prefix_by_control": {
+      "no_feedback": true,
+      "self_B1_only": true,
+      "self_real": true,
+      "self_shuffled": true,
+      "teacher_real": true,
+      "teacher_shuffled": true
+    },
+    "passed": true,
+    "real_row_isolation_bit_exact": true,
+    "shuffled_only_explicit_donor_dependence": true
+  },
+  "checks": {
+    "all_parameters_frozen": true,
+    "diagnostic_source_capture_exact": true,
+    "full_window_equivalence": true,
+    "future_causality_row_isolation": true,
+    "grad_scaler_objects_zero": true,
+    "model_hashes_unchanged": true,
+    "optimizer_objects_zero": true,
+    "path_consistent_oracle_exact": true,
+    "scheduler_objects_zero": true,
+    "serialization_resume": true,
+    "short_fp32_bf16": true,
+    "teacher_eval_no_grad": true,
+    "writers_absent": true
+  },
+  "config": {
+    "2c3_final_commit": "8b1af7e14d1547417e799ac02fe0d513b0755f6e",
+    "2c3_final_tag": "experiment-2c3-cumulative-reader-scaling-100m-final",
+    "2c3_implementation_commit": "792dc701f29b449c611b0a524ef4277a5f982403",
+    "2c3_results_commit": "fc0b4acda5d252cdbe7fc5d3781edffba7520586",
+    "2c4_final_commit": "f1f765c946e218ea3f3f54972133c7d29dceefb5",
+    "2c4_final_tag": "experiment-2c4-graded-window-diagnostic-unstable-final",
+    "2c4_results_commit": "c2d1a73b8a6a43ad93ea2ba7dc036595cdae9459",
+    "backward_calls": 0,
+    "base_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "bptt": "forbidden",
+    "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "controls": [
+      "no_feedback",
+      "teacher_real",
+      "teacher_shuffled",
+      "self_B1_only",
+      "self_real",
+      "self_shuffled"
+    ],
+    "execution_path": "incremental_decoder_plus_rolling_kv_plus_recurrent_state",
+    "gpu_mapping": {
+      "S0": 0,
+      "S1": 1,
+      "S2": 2,
+      "S3": 3
+    },
+    "grad_scaler_objects": 0,
+    "hellaswag": "forbidden",
+    "inner_loops": "forbidden",
+    "optimizer_objects": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "protocol": "exp2c4r_graded_window_path_consistent_zeroopt_v1",
+    "reader_destinations": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "s0_regression_absolute_tolerance": 5e-06,
+    "s0_short_gate_batches": 2,
+    "scheduler_objects": 0,
+    "schedules": {
+      "S0": [
+        1,
+        1,
+        1,
+        1,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "S1": [
+        1,
+        2,
+        4,
+        8,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "S2": [
+        1,
+        4,
+        16,
+        64,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "S3": [
+        1,
+        8,
+        64,
+        256,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ]
+    },
+    "source_checkpoint_sha256": "fce81b995543c42821abd080f615bcb5d2f755f113345988aa24d07b265b0447",
+    "source_configuration": "C4",
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "source_reader_targets": 100139008,
+    "source_reader_updates": 191,
+    "training_targets": 0,
+    "validation_batch_size": 64,
+    "validation_batches": 20,
+    "validation_sequence_length": 1024,
+    "writers": "forbidden"
+  },
+  "experiment": "2C4R",
+  "full_window_equivalence": {
+    "bf16": {
+      "16": {
+        "bit_exact": true,
+        "maximum_absolute_logit_difference": 0.0,
+        "passed": true
+      },
+      "64": {
+        "bit_exact": true,
+        "maximum_absolute_logit_difference": 0.0,
+        "passed": true
+      },
+      "8": {
+        "bit_exact": true,
+        "maximum_absolute_logit_difference": 0.0,
+        "passed": true
+      }
+    },
+    "fp32": {
+      "16": {
+        "bit_exact": true,
+        "maximum_absolute_logit_difference": 0.0,
+        "passed": true
+      },
+      "64": {
+        "bit_exact": true,
+        "maximum_absolute_logit_difference": 0.0,
+        "passed": true
+      },
+      "8": {
+        "bit_exact": true,
+        "maximum_absolute_logit_difference": 0.0,
+        "passed": true
+      }
+    }
+  },
+  "hardware": {
+    "CUDA_VISIBLE_DEVICES": "1",
+    "device_name": "NVIDIA A100-SXM4-80GB",
+    "physical_gpu": 1,
+    "total_memory_bytes": 85095874560
+  },
+  "hashes_after": {
+    "reader": "e3c28e594303ecdaa9dfd3a2c1b0b855d32c5ec7acdbcc5ddecb1b8677901773",
+    "student": "6cc5a28382b2e41de2da6c4b4dcc11236e89db4837675379c08b9e22d0b10613",
+    "teacher": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd"
+  },
+  "hashes_before": {
+    "reader": "e3c28e594303ecdaa9dfd3a2c1b0b855d32c5ec7acdbcc5ddecb1b8677901773",
+    "student": "6cc5a28382b2e41de2da6c4b4dcc11236e89db4837675379c08b9e22d0b10613",
+    "teacher": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd"
+  },
+  "implementation_git_commit": "5bb76b8cc7788718b4e9b72f9433e0eb915c9596",
+  "passed": true,
+  "path_consistent_oracle_sha256": "54fb7401495b5a3006eb4a2bda76f598e8ed0f7e87a5ceb3611b77aa00d112b1",
+  "runtime": {
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "autocast": "torch.autocast(device_type='cuda', dtype=torch.bfloat16)",
+    "canonical_dtype": "torch.bfloat16",
+    "cuda_version": "12.8",
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "flash_sdp_enabled": true,
+    "float32_matmul_precision": "high",
+    "math_sdp_enabled": true,
+    "mem_efficient_sdp_enabled": true,
+    "numpy_seed": 1337,
+    "python_seed": 1337,
+    "torch_cpu_seed": 1337,
+    "torch_cuda_seed": 1337,
+    "torch_version": "2.8.0+cu128"
+  },
+  "schedule": "S1",
+  "serialization": {
+    "fresh_caches_empty": true,
+    "fresh_memory_zero": true,
+    "fresh_position_zero": true,
+    "passed": true,
+    "resume_logits_bit_exact": true,
+    "resume_state_bit_exact": true,
+    "schema": "full_attnres_recurrent_state_v4_rolling_windows",
+    "windows_exact": true
+  },
+  "short_tests": {
+    "bf16": {
+      "16": {
+        "absolute_position_exact": true,
+        "all_logits_finite": true,
+        "all_memory_finite": true,
+        "cache_lengths_exact": true,
+        "capacities": [
+          0,
+          1,
+          3,
+          7,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023
+        ],
+        "passed": true
+      },
+      "64": {
+        "absolute_position_exact": true,
+        "all_logits_finite": true,
+        "all_memory_finite": true,
+        "cache_lengths_exact": true,
+        "capacities": [
+          0,
+          1,
+          3,
+          7,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023
+        ],
+        "passed": true
+      },
+      "8": {
+        "absolute_position_exact": true,
+        "all_logits_finite": true,
+        "all_memory_finite": true,
+        "cache_lengths_exact": true,
+        "capacities": [
+          0,
+          1,
+          3,
+          7,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023
+        ],
+        "passed": true
+      }
+    },
+    "fp32": {
+      "16": {
+        "absolute_position_exact": true,
+        "all_logits_finite": true,
+        "all_memory_finite": true,
+        "cache_lengths_exact": true,
+        "capacities": [
+          0,
+          1,
+          3,
+          7,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023
+        ],
+        "passed": true
+      },
+      "64": {
+        "absolute_position_exact": true,
+        "all_logits_finite": true,
+        "all_memory_finite": true,
+        "cache_lengths_exact": true,
+        "capacities": [
+          0,
+          1,
+          3,
+          7,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023
+        ],
+        "passed": true
+      },
+      "8": {
+        "absolute_position_exact": true,
+        "all_logits_finite": true,
+        "all_memory_finite": true,
+        "cache_lengths_exact": true,
+        "capacities": [
+          0,
+          1,
+          3,
+          7,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023
+        ],
+        "passed": true
+      }
+    }
+  },
+  "source": {
+    "base_checkpoint": "/workspace/build-nanogpt/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+    "base_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "checkpoint": "/workspace/exp2c3_run_792dc70/C4_B1_B2_B3_B4/checkpoints/checkpoint_updates_000191.pt",
+    "checkpoint_sha256": "fce81b995543c42821abd080f615bcb5d2f755f113345988aa24d07b265b0447",
+    "completed_updates": 191,
+    "configuration": "C4",
+    "processed_targets": 100139008,
+    "reader_state_sha256": "e3c28e594303ecdaa9dfd3a2c1b0b855d32c5ec7acdbcc5ddecb1b8677901773",
+    "strict_load": {
+      "base_checkpoint_sha": true,
+      "checkpoint_sha": true,
+      "completed_updates": true,
+      "configuration": true,
+      "destinations": true,
+      "load_completed_updates": true,
+      "load_configuration": true,
+      "load_processed_targets": true,
+      "load_schema": true,
+      "load_sha256": true,
+      "load_sidecar": true,
+      "passed": true,
+      "processed_targets": true,
+      "reader_sha": true,
+      "reader_targets": true,
+      "reader_updates": true,
+      "sha256": true,
+      "sha256_reverified": true,
+      "source_depths": true,
+      "strict_reopen": true,
+      "writers_absent": true
+    }
+  },
+  "stage": "preflight",
+  "windows": [
+    1,
+    2,
+    4,
+    8,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024
+  ]
+}
