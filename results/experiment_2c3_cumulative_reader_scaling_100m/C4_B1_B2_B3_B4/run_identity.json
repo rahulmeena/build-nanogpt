@@ -1,0 +1,141 @@
+{
+  "2c2_implementation_commit": "48c4bf3d7c327484b2ca0037b3d1a175aa0f6df5",
+  "2c2_parent_commit": "5853308bc172150b05bafb32222f2461230adac5",
+  "2c2_parent_tag": "experiment-2c2-cumulative-low-kv-final",
+  "2c2_results_commit": "404ab486a47f891030789496819a2717fd4a5491",
+  "active_destinations": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "auxiliary_objective": false,
+  "base_checkpoint": "/workspace/build-nanogpt/runs/exp1b_500m/full_attnres/checkpoints/checkpoint_tokens_000500170752.pt",
+  "base_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+  "base_model_sha256": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+  "bptt": false,
+  "branch": "experiment-2c3-cumulative-reader-scaling-100m",
+  "config": {
+    "2c2_final_commit": "5853308bc172150b05bafb32222f2461230adac5",
+    "2c2_final_tag": "experiment-2c2-cumulative-low-kv-final",
+    "2c2_starting_targets": 25165824,
+    "2c2_starting_updates": 48,
+    "auxiliary_loss": "forbidden",
+    "base_checkpoint_sha256": "6e3a6dbd9fe3d81d580c1667caae7779e926d464ce3f6d962a8591ceeceefa91",
+    "bptt": "forbidden",
+    "c1_m100_regression": {
+      "absolute_tolerance": 5e-06,
+      "real": 5.59570539,
+      "shuffled": 5.7372799873,
+      "specific_gap": 0.1415745974
+    },
+    "c1_m50_regression": {
+      "absolute_tolerance": 5e-06,
+      "real": 5.714319253,
+      "shuffled": 5.795328927,
+      "specific_gap": 0.0810096741
+    },
+    "canonical_validation_batch_sequences": 64,
+    "canonical_validation_batches": 20,
+    "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "configurations": {
+      "C1": [
+        1
+      ],
+      "C2": [
+        1,
+        2
+      ],
+      "C3": [
+        1,
+        2,
+        3
+      ],
+      "C4": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "ddp": false,
+    "final_total_targets": 100139008,
+    "final_total_updates": 191,
+    "forced_process_restart_after_update": 144,
+    "global_targets_per_update": 524288,
+    "gpu_mapping": {
+      "C1": 0,
+      "C2": 1,
+      "C3": 2,
+      "C4": 3
+    },
+    "hellaswag": "forbidden",
+    "independent_single_gpu_workers": true,
+    "iterative_loops": "forbidden",
+    "mask_semantics": "cumulative consecutive low blocks lack historical KV; current-token attention and all higher blocks retain normal behavior",
+    "milestone_targets": [
+      50331648,
+      75497472,
+      100139008
+    ],
+    "milestone_updates": [
+      96,
+      144,
+      191
+    ],
+    "nccl_gradient_synchronization": false,
+    "new_mask_depths": "forbidden",
+    "new_targets_per_configuration": 74973184,
+    "new_updates_per_configuration": 143,
+    "optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "lr_schedule": "exact Experiment 2C2 trajectory continued from total reader update 48",
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "protocol": "exp2c3_cumulative_reader_scaling_100m_v1",
+    "reader_parameters_per_destination": 1537,
+    "seed": 1337,
+    "sequence_length": 1024,
+    "serialized_microbatches_per_update": 8,
+    "source_depths": [
+      16,
+      17,
+      20,
+      24
+    ],
+    "teacher": "frozen full-context Experiment 1B model; identical one-token-shifted detached raw source bank for every reader",
+    "writers": "forbidden"
+  },
+  "config_sha256": "d4bbd13e6c60ad0143e9c198238b9902f826ed964e9d8ead50a4dc1f31a5dd3a",
+  "configuration": "C4",
+  "experiment": "2C3",
+  "hellaswag_run": false,
+  "implementation_git_commit": "792dc701f29b449c611b0a524ef4277a5f982403",
+  "iterative_loops": false,
+  "mask_semantics": "cumulative consecutive low-block historical KV removed",
+  "masked_blocks": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "protocol": "exp2c3_cumulative_reader_scaling_100m_v1",
+  "source_checkpoint": "/workspace/exp2c2_run_48c4bf3/C4_B1_B2_B3_B4/checkpoints/checkpoint_updates_000048.pt",
+  "source_checkpoint_sha256": "880be20055b82268223bda31b8ed7cceacb61fd83f3ec0f8f75e3b578a9c63cf",
+  "source_completed_updates": 48,
+  "source_depths": [
+    16,
+    17,
+    20,
+    24
+  ],
+  "source_processed_targets": 25165824,
+  "teacher": "frozen full context, eval/no_grad, one-token shifted raw sources",
+  "training_objective": "next-token cross entropy only",
+  "writers_active": false
+}

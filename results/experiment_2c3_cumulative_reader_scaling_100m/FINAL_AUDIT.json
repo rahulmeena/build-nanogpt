@@ -1,0 +1,101 @@
+{
+  "c1_regression": {
+    "100M": {
+      "absolute_tolerance": 5e-06,
+      "checks": {
+        "gap": true,
+        "real": true,
+        "shuffle": true
+      },
+      "deltas": {
+        "gap": -4.129674380237702e-11,
+        "real": -2.3498536450006213e-11,
+        "shuffle": 3.5204728021653864e-11
+      },
+      "expected": {
+        "gap": 0.1415745974,
+        "real": 5.59570539,
+        "shuffle": 5.7372799873
+      },
+      "observed": {
+        "gap": 0.14157459735870326,
+        "real": 5.5957053899765015,
+        "shuffle": 5.737279987335205
+      },
+      "passed": true,
+      "processed_targets": 100139008,
+      "update": 191
+    },
+    "50M": {
+      "absolute_tolerance": 5e-06,
+      "checks": {
+        "gap": true,
+        "real": true,
+        "shuffle": true
+      },
+      "deltas": {
+        "gap": -2.7734550767100075e-11,
+        "real": -3.2165381469440035e-11,
+        "shuffle": 4.0100367471040954e-11
+      },
+      "expected": {
+        "gap": 0.0810096741,
+        "real": 5.714319253,
+        "shuffle": 5.795328927
+      },
+      "observed": {
+        "gap": 0.08100967407226545,
+        "real": 5.714319252967835,
+        "shuffle": 5.7953289270401
+      },
+      "passed": true,
+      "processed_targets": 50331648,
+      "update": 96
+    }
+  },
+  "checks": {
+    "2c2_final_checkpoint_shas_exact": true,
+    "2c2_frozen_commit_exact": true,
+    "all_adam_moments_restored": true,
+    "all_adam_steps_restored": true,
+    "all_gradients_finite": true,
+    "all_later_blocks_retain_kv": true,
+    "all_loader_states_restored": true,
+    "all_losses_finite": true,
+    "all_reader_gradients_nonzero": true,
+    "all_rng_states_restored": true,
+    "base_checkpoint_sha_exact": true,
+    "base_frozen": true,
+    "c1_100m_historical_regression": true,
+    "c1_50m_historical_regression": true,
+    "canonical_validation_hash_exact": true,
+    "exactly_100139008_total_reader_targets_per_config": true,
+    "exactly_143_new_2c3_updates_per_config": true,
+    "exactly_191_total_reader_updates_per_config": true,
+    "exactly_74973184_new_2c3_targets_per_config": true,
+    "final_checkpoints_strict_reload": true,
+    "forced_m75_fresh_process_restart": true,
+    "fresh_process_2c2_to_2c3_resume": true,
+    "future_causality": true,
+    "hellaswag_not_run": true,
+    "identical_c1_c4_batch_streams": true,
+    "m75_checkpoint_strict_reload": true,
+    "no_additional_mask_depths": true,
+    "no_auxiliary_objective": true,
+    "no_bptt": true,
+    "no_iterative_loops": true,
+    "only_intended_blocks_masked": true,
+    "reader_destination_mapping_exact": true,
+    "row_isolation": true,
+    "self_evaluation_zero_optimizer": true,
+    "single_implementation_commit": true,
+    "source_checkpoints_update_48_exact": true,
+    "teacher_frozen": true,
+    "trainable_parameter_counts_exact": true,
+    "writers_never_active": true
+  },
+  "classification": "MATCHED MULTI-DESTINATION FEEDBACK MATURES AND SCALES",
+  "classification_rule": "C1 regressions and integrity pass; C3 or C4 passes the frozen 100M gain, growth, share, recovery, gap, and 18/20 paired-win thresholds.",
+  "experiment": "2C3",
+  "passed": true
+}

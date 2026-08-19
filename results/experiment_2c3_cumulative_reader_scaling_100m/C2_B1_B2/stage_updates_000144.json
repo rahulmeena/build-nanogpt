@@ -1,0 +1,122 @@
+{
+  "2c3_additional_targets": 50331648,
+  "2c3_additional_updates": 96,
+  "auxiliary_objective": false,
+  "bptt": false,
+  "completed_updates": 144,
+  "configuration": "C2",
+  "experiment": "2C3",
+  "frozen_hashes": {
+    "student_base": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd",
+    "teacher": "1bff02fed4110735e5d495cb76670dc05f0b2004371c5ce7df9396ec725095fd"
+  },
+  "hellaswag_run": false,
+  "iterative_loops": false,
+  "next_global_batch_sha256": "0afa61ac1afd8eb5e6c58bd57065e011bd4cb6d34d1b87a9380193b2afff00c7",
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "expected_lr": 0.0005994232935045889,
+    "expected_steps": [
+      144,
+      144,
+      144,
+      144,
+      144,
+      144
+    ],
+    "finite": true,
+    "lr": 0.0005994232935045889,
+    "passed": true,
+    "state_entries": 6,
+    "steps": [
+      144,
+      144,
+      144,
+      144,
+      144,
+      144
+    ],
+    "weight_decay": 0.0
+  },
+  "optimizer_updates_total": 144,
+  "performance": {
+    "mean_targets_per_second": 16371.028565419909,
+    "peak_allocated_mb": 57778.73486328125,
+    "peak_reserved_mb": 71276.0,
+    "process_wall_seconds": 3740.950516394805
+  },
+  "processed_targets": 75497472,
+  "reader_state_sha256": "067f9420df31e28ba509a538869473b1b51b9672d021fdd9d10dd02e092c1fdd",
+  "restart_audit": null,
+  "source_resume_audit": {
+    "all_adam_moments_restored": true,
+    "all_loader_states_restored": true,
+    "all_rng_states_restored": true,
+    "checkpoint": "/workspace/exp2c2_run_48c4bf3/C2_B1_B2/checkpoints/checkpoint_updates_000048.pt",
+    "completed_updates": 48,
+    "fresh_process": true,
+    "lineage": {
+      "2c2_branch": true,
+      "2c2_commit": true,
+      "active_destinations": true,
+      "base": true,
+      "completed_updates": true,
+      "configuration": true,
+      "experiment": true,
+      "masked_blocks": true,
+      "optimizer_record": true,
+      "parent": true,
+      "processed_targets": true,
+      "reader_updates": true,
+      "schedule": true,
+      "schema": true,
+      "sha256": true,
+      "source_depths": true,
+      "source_sidecar": true
+    },
+    "next_global_batch_sha256": "1c3290f72d60d356d636e57017bbc5f2cb2ec470af7860d9d95d5c95116d24a5",
+    "next_hash_exact": true,
+    "optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "expected_lr": 0.0005996766832874077,
+      "expected_steps": [
+        48,
+        48,
+        48,
+        48,
+        48,
+        48
+      ],
+      "finite": true,
+      "lr": 0.0005996766832874077,
+      "passed": true,
+      "state_entries": 6,
+      "steps": [
+        48,
+        48,
+        48,
+        48,
+        48,
+        48
+      ],
+      "weight_decay": 0.0
+    },
+    "passed": true,
+    "processed_targets": 25165824,
+    "reader_exact_reload": true,
+    "resume_pid": 12402,
+    "sha256": "6e7cf944f2f4e5f786b1b5409c898567ed37c4438a423cce153e683328221beb",
+    "source_writer_pid": 5598
+  },
+  "target_update": 144,
+  "writer_pid": 12402,
+  "writers_active_calls": 0
+}
