@@ -1,0 +1,32 @@
+{
+  "branch": "experiment-2d0c-layer-window-sensitivity-map",
+  "commands": [
+    "CUDA_VISIBLE_DEVICES=0 python scripts/experiment_2d0c.py preflight ...",
+    "four independent workers with GPU assignments 0:(B1,B5,B9), 1:(B2,B6,B10), 2:(B3,B7,B11), 3:(B4,B8,B12)",
+    "python scripts/experiment_2d0c.py assemble ...",
+    "python scripts/experiment_2d0c.py finalize ..."
+  ],
+  "ddp": false,
+  "implementation_commit": "4f2bd02f03c47b83da16c0c21dc32e172b422080",
+  "joint_window_cells": 0,
+  "nccl": false,
+  "runtime": {
+    "autocast": "cuda bfloat16",
+    "cublas_workspace_config": ":4096:8",
+    "cuda_device_count_visible": 1,
+    "cuda_runtime": "12.8",
+    "cudnn": 91002,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "flash_sdp_enabled": true,
+    "float32_matmul_precision": "high",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "math_sdp_enabled": true,
+    "mem_efficient_sdp_enabled": true,
+    "platform": "Linux-6.8.0-52-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+    "torch": "2.8.0+cu128"
+  },
+  "training": false
+}

@@ -1,0 +1,31 @@
+{
+  "experiment": "2D0C",
+  "generalized_field": "test_block_index",
+  "human_zero_based_mapping": {
+    "B1": 0,
+    "B10": 9,
+    "B11": 10,
+    "B12": 11,
+    "B2": 1,
+    "B3": 2,
+    "B4": 3,
+    "B5": 4,
+    "B6": 5,
+    "B7": 6,
+    "B8": 7,
+    "B9": 8
+  },
+  "mapping_exact": true,
+  "only_semantic_generalization": "the selected block index is configurable; all other blocks use the frozen full-context forward",
+  "passed": true,
+  "unchanged_semantics": {
+    "absolute_positional_embeddings": true,
+    "attention_implementation": true,
+    "causal_sliding_mask": true,
+    "loss_calculation": true,
+    "precision": true,
+    "validation_loader": true,
+    "window_includes_current": true
+  },
+  "validated_parent_evaluator": "scripts/experiment_2d0a.py via d0.run_block/sliding_mask"
+}
