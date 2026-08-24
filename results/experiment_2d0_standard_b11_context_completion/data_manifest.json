@@ -1,0 +1,35 @@
+{
+  "lineage": {
+    "dataset": "HuggingFaceFW/fineweb-edu",
+    "delimiter": "<|endoftext|>",
+    "sample": "sample-10BT",
+    "tokenizer": "GPT-2 BPE via tiktoken"
+  },
+  "phase_a": {
+    "canonical_batch_collection_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "same_batches_all_windows": true,
+    "validation_batch_size": 64,
+    "validation_batches": 20,
+    "validation_targets": 1310720
+  },
+  "training": [
+    {
+      "filename": "edufineweb_train_000001.npy",
+      "sha256": "fb2b9eef2eab2f9903ee61ff81b5df5eb80455392e407fc3f56de8d7b6c738b5",
+      "tokens": 100000000,
+      "used": false
+    },
+    {
+      "filename": "edufineweb_train_000002.npy",
+      "sha256": "8c4a96a209f29c2b7478e0605fe1ffa6bc06dd97af1047473f23a6f46ee03836",
+      "tokens": 100000000,
+      "used": false
+    }
+  ],
+  "validation": {
+    "filename": "edufineweb_val_000000.npy",
+    "sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+    "tokens": 100000000
+  }
+}
+

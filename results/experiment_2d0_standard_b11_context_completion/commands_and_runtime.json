@@ -1,0 +1,18 @@
+{
+  "branch": "experiment-2d0-standard-b11-context-completion",
+  "commands": [
+    "python3 scripts/test_experiment_2d0_cpu.py",
+    "strict GPU load of model_19072.pt",
+    "torchrun --standalone --nproc_per_node=4 scripts/experiment_2d0.py phase-a --parent-checkpoint /root/exp2d0_assets/model_19072.pt --validation-shard /root/exp2d0_assets/edu_fineweb10B/edufineweb_val_000000.npy --run-root /workspace/exp2d0_run_6bbfd61"
+  ],
+  "gpu_mapping": {
+    "0": 1024,
+    "1": 896,
+    "2": 768,
+    "3": 512
+  },
+  "implementation_commit": "6bbfd617530538e0b8a7522113bd10ae7c02dc9b",
+  "phase_a_exit_code": 0,
+  "phase_b_launched": false,
+  "training_targets": 0
+}

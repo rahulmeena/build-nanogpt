@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "all_losses_finite": "PASS",
+    "all_windows_used_identical_batches": "PASS",
+    "b1_b10_full_context": "PASS",
+    "b12_full_context": "PASS",
+    "full_attnres_active_modules_zero": "PASS",
+    "full_attnres_trainable_parameters_zero": "PASS",
+    "gpu_mapping_exact": "PASS",
+    "no_backward_calls": "PASS",
+    "no_optimizer_objects": "PASS",
+    "no_recurrence": "PASS",
+    "no_training_targets": "PASS",
+    "only_b11_window_changed": "PASS",
+    "phase_b_not_launched": "PASS",
+    "preferred_checkpoint_provenance_verified": "PASS",
+    "selection_rule_followed": "PASS",
+    "source_model_validation_regression": "PASS",
+    "standard_gpt2_architecture_exact": "PASS"
+  },
+  "implementation_commit": "6bbfd617530538e0b8a7522113bd10ae7c02dc9b",
+  "phase_a_integrity_pass": true,
+  "phase_b_authorized": false,
+  "reason": "No preregistered shortened B11 window produced validation damage in [0.01, 0.10].",
+  "selected_window": null,
+  "status": "STOPPED_AFTER_PHASE_A_PER_PREREGISTERED_RULE"
+}
+

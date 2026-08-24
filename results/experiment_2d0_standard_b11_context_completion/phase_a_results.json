@@ -1,0 +1,600 @@
+{
+  "experiment": "2D0",
+  "gpu_mapping": {
+    "1024": 0,
+    "512": 3,
+    "768": 2,
+    "896": 1
+  },
+  "passed": true,
+  "phase_a_batch_identity": true,
+  "protocol": "exp2d0_standard_b11_context_completion_v1",
+  "rows": {
+    "1024": {
+      "b11_attention_output_drift": {
+        "cosine": 1.0000000002664364,
+        "count": 1310720,
+        "mse": 0.0,
+        "rms_difference": 0.0
+      },
+      "b11_post_block_state_drift": {
+        "cosine": 0.9999999916929937,
+        "count": 1310720,
+        "mse": 0.0,
+        "rms_difference": 0.0
+      },
+      "b12_state_drift": {
+        "cosine": 0.9999999915660738,
+        "count": 1310720,
+        "mse": 0.0,
+        "rms_difference": 0.0
+      },
+      "backward_calls": 0,
+      "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+      "damage_vs_1024": 0.0,
+      "final_logit_drift": {
+        "cosine": 0.0,
+        "count": 1310720,
+        "mse": 0.0,
+        "rms_difference": 0.0
+      },
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "optimizer_objects": 0,
+      "passed": true,
+      "per_batch_losses": [
+        3.0201847553253174,
+        3.0230631828308105,
+        3.0887107849121094,
+        3.0628597736358643,
+        2.966921806335449,
+        3.042048215866089,
+        3.1071393489837646,
+        3.0545639991760254,
+        3.084137439727783,
+        3.1009299755096436,
+        3.138197422027588,
+        3.102928638458252,
+        3.051783561706543,
+        3.0322818756103516,
+        3.249208927154541,
+        3.0448131561279297,
+        3.1131181716918945,
+        3.1209816932678223,
+        3.03110408782959,
+        3.065898895263672
+      ],
+      "position_bins": {
+        "1-64": {
+          "ce": 3.5649234840559076,
+          "count": 81920
+        },
+        "129-256": {
+          "ce": 3.0944029219484945,
+          "count": 163840
+        },
+        "257-512": {
+          "ce": 3.037358853716796,
+          "count": 327680
+        },
+        "513-768": {
+          "ce": 3.012558569306202,
+          "count": 327680
+        },
+        "65-128": {
+          "ce": 3.1827517307334348,
+          "count": 81920
+        },
+        "769-896": {
+          "ce": 3.0069411319927895,
+          "count": 163840
+        },
+        "897-1023": {
+          "ce": 3.001629819803116,
+          "count": 162560
+        }
+      },
+      "rank": 0,
+      "source_audit": {
+        "all_base_parameters_frozen": true,
+        "b11_zero_based_index": 10,
+        "b12_zero_based_index": 11,
+        "checkpoint": "/root/exp2d0_assets/model_19072.pt",
+        "checks": {
+          "attnres_modules_zero": true,
+          "attnres_trainable_zero": true,
+          "base_frozen": true,
+          "context": true,
+          "heads": true,
+          "layers": true,
+          "parameters": true,
+          "standard_mode": true,
+          "width": true
+        },
+        "config": {
+          "attnres_rms_eps": 1e-05,
+          "block_size": 1024,
+          "enable_memory_writers": false,
+          "enable_topdown_feedback": false,
+          "memory_writer_init_seed": 20260202,
+          "memory_writer_rank": 8,
+          "n_embd": 768,
+          "n_head": 12,
+          "n_layer": 12,
+          "residual_mode": "standard",
+          "topdown_feedback_destinations": [],
+          "vocab_size": 50304
+        },
+        "full_attnres_active_modules": 0,
+        "full_attnres_module_names": [],
+        "full_attnres_trainable_parameters": 0,
+        "human_block_mapping": {
+          "B1": "transformer.h[0]",
+          "B10": "transformer.h[9]",
+          "B11": "transformer.h[10]",
+          "B12": "transformer.h[11]",
+          "B2": "transformer.h[1]",
+          "B3": "transformer.h[2]",
+          "B4": "transformer.h[3]",
+          "B5": "transformer.h[4]",
+          "B6": "transformer.h[5]",
+          "B7": "transformer.h[6]",
+          "B8": "transformer.h[7]",
+          "B9": "transformer.h[8]"
+        },
+        "parameter_count": 124475904,
+        "passed": true,
+        "sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+        "state_dict_entries": 149,
+        "strict_load": true
+      },
+      "training_targets": 0,
+      "validation_loss": 3.0750437753315962,
+      "validation_tokens": 1310720,
+      "window": 1024
+    },
+    "512": {
+      "b11_attention_output_drift": {
+        "cosine": 0.97780991466459,
+        "count": 1310720,
+        "mse": 0.011242187332960275,
+        "rms_difference": 0.05867074642441139
+      },
+      "b11_post_block_state_drift": {
+        "cosine": 0.9988526994446147,
+        "count": 1310720,
+        "mse": 0.011824293241197442,
+        "rms_difference": 0.0607526377382307
+      },
+      "b12_state_drift": {
+        "cosine": 0.9988820829942597,
+        "count": 1310720,
+        "mse": 0.012078910586187356,
+        "rms_difference": 0.05892123513032543
+      },
+      "backward_calls": 0,
+      "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+      "damage_vs_1024": 0.002309064579458564,
+      "final_logit_drift": {
+        "cosine": 0.0,
+        "count": 1310720,
+        "mse": 0.013010169704934548,
+        "rms_difference": 0.0618469531068494
+      },
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "optimizer_objects": 0,
+      "passed": true,
+      "per_batch_losses": [
+        3.0221505165100098,
+        3.0241944789886475,
+        3.0905373096466064,
+        3.064971446990967,
+        2.9697108268737793,
+        3.0442395210266113,
+        3.109421730041504,
+        3.0560250282287598,
+        3.086524486541748,
+        3.102583169937134,
+        3.1399433612823486,
+        3.106163263320923,
+        3.05446720123291,
+        3.0349082946777344,
+        3.251650333404541,
+        3.0481626987457275,
+        3.1152892112731934,
+        3.1229336261749268,
+        3.0346927642822266,
+        3.0684876441955566
+      ],
+      "position_bins": {
+        "1-64": {
+          "ce": 3.5649136590684067,
+          "count": 81920
+        },
+        "129-256": {
+          "ce": 3.0944142516207647,
+          "count": 163840
+        },
+        "257-512": {
+          "ce": 3.0373326457356598,
+          "count": 327680
+        },
+        "513-768": {
+          "ce": 3.0167738566426126,
+          "count": 327680
+        },
+        "65-128": {
+          "ce": 3.1827433138561902,
+          "count": 81920
+        },
+        "769-896": {
+          "ce": 3.0112997321077275,
+          "count": 163840
+        },
+        "897-1023": {
+          "ce": 3.00740851492907,
+          "count": 162560
+        }
+      },
+      "rank": 3,
+      "source_audit": {
+        "all_base_parameters_frozen": true,
+        "b11_zero_based_index": 10,
+        "b12_zero_based_index": 11,
+        "checkpoint": "/root/exp2d0_assets/model_19072.pt",
+        "checks": {
+          "attnres_modules_zero": true,
+          "attnres_trainable_zero": true,
+          "base_frozen": true,
+          "context": true,
+          "heads": true,
+          "layers": true,
+          "parameters": true,
+          "standard_mode": true,
+          "width": true
+        },
+        "config": {
+          "attnres_rms_eps": 1e-05,
+          "block_size": 1024,
+          "enable_memory_writers": false,
+          "enable_topdown_feedback": false,
+          "memory_writer_init_seed": 20260202,
+          "memory_writer_rank": 8,
+          "n_embd": 768,
+          "n_head": 12,
+          "n_layer": 12,
+          "residual_mode": "standard",
+          "topdown_feedback_destinations": [],
+          "vocab_size": 50304
+        },
+        "full_attnres_active_modules": 0,
+        "full_attnres_module_names": [],
+        "full_attnres_trainable_parameters": 0,
+        "human_block_mapping": {
+          "B1": "transformer.h[0]",
+          "B10": "transformer.h[9]",
+          "B11": "transformer.h[10]",
+          "B12": "transformer.h[11]",
+          "B2": "transformer.h[1]",
+          "B3": "transformer.h[2]",
+          "B4": "transformer.h[3]",
+          "B5": "transformer.h[4]",
+          "B6": "transformer.h[5]",
+          "B7": "transformer.h[6]",
+          "B8": "transformer.h[7]",
+          "B9": "transformer.h[8]"
+        },
+        "parameter_count": 124475904,
+        "passed": true,
+        "sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+        "state_dict_entries": 149,
+        "strict_load": true
+      },
+      "training_targets": 0,
+      "validation_loss": 3.077352839911055,
+      "validation_tokens": 1310720,
+      "window": 512
+    },
+    "768": {
+      "b11_attention_output_drift": {
+        "cosine": 0.9918493437045299,
+        "count": 1310720,
+        "mse": 0.0038880785829554726,
+        "rms_difference": 0.023406912646183907
+      },
+      "b11_post_block_state_drift": {
+        "cosine": 0.9996055235895256,
+        "count": 1310720,
+        "mse": 0.004048469660795204,
+        "rms_difference": 0.024919249991348494
+      },
+      "b12_state_drift": {
+        "cosine": 0.9996199206193979,
+        "count": 1310720,
+        "mse": 0.004112149967384268,
+        "rms_difference": 0.024791650681208248
+      },
+      "backward_calls": 0,
+      "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+      "damage_vs_1024": 0.0006950885072001256,
+      "final_logit_drift": {
+        "cosine": 0.0,
+        "count": 1310720,
+        "mse": 0.004545139013181718,
+        "rms_difference": 0.026961157571744304
+      },
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "optimizer_objects": 0,
+      "passed": true,
+      "per_batch_losses": [
+        3.020756244659424,
+        3.0233476161956787,
+        3.089409828186035,
+        3.0635125637054443,
+        2.9674370288848877,
+        3.04282283782959,
+        3.1076865196228027,
+        3.0548739433288574,
+        3.0845417976379395,
+        3.1014785766601562,
+        3.1389105319976807,
+        3.103914260864258,
+        3.052673816680908,
+        3.0331451892852783,
+        3.249551296234131,
+        3.045933246612549,
+        3.113872528076172,
+        3.121642589569092,
+        3.0323386192321777,
+        3.0669283866882324
+      ],
+      "position_bins": {
+        "1-64": {
+          "ce": 3.5649136590684067,
+          "count": 81920
+        },
+        "129-256": {
+          "ce": 3.0944142516207647,
+          "count": 163840
+        },
+        "257-512": {
+          "ce": 3.037340952972227,
+          "count": 327680
+        },
+        "513-768": {
+          "ce": 3.0125474604956253,
+          "count": 327680
+        },
+        "65-128": {
+          "ce": 3.1827433138561902,
+          "count": 81920
+        },
+        "769-896": {
+          "ce": 3.0093437814794015,
+          "count": 163840
+        },
+        "897-1023": {
+          "ce": 3.0048689947991565,
+          "count": 162560
+        }
+      },
+      "rank": 2,
+      "source_audit": {
+        "all_base_parameters_frozen": true,
+        "b11_zero_based_index": 10,
+        "b12_zero_based_index": 11,
+        "checkpoint": "/root/exp2d0_assets/model_19072.pt",
+        "checks": {
+          "attnres_modules_zero": true,
+          "attnres_trainable_zero": true,
+          "base_frozen": true,
+          "context": true,
+          "heads": true,
+          "layers": true,
+          "parameters": true,
+          "standard_mode": true,
+          "width": true
+        },
+        "config": {
+          "attnres_rms_eps": 1e-05,
+          "block_size": 1024,
+          "enable_memory_writers": false,
+          "enable_topdown_feedback": false,
+          "memory_writer_init_seed": 20260202,
+          "memory_writer_rank": 8,
+          "n_embd": 768,
+          "n_head": 12,
+          "n_layer": 12,
+          "residual_mode": "standard",
+          "topdown_feedback_destinations": [],
+          "vocab_size": 50304
+        },
+        "full_attnres_active_modules": 0,
+        "full_attnres_module_names": [],
+        "full_attnres_trainable_parameters": 0,
+        "human_block_mapping": {
+          "B1": "transformer.h[0]",
+          "B10": "transformer.h[9]",
+          "B11": "transformer.h[10]",
+          "B12": "transformer.h[11]",
+          "B2": "transformer.h[1]",
+          "B3": "transformer.h[2]",
+          "B4": "transformer.h[3]",
+          "B5": "transformer.h[4]",
+          "B6": "transformer.h[5]",
+          "B7": "transformer.h[6]",
+          "B8": "transformer.h[7]",
+          "B9": "transformer.h[8]"
+        },
+        "parameter_count": 124475904,
+        "passed": true,
+        "sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+        "state_dict_entries": 149,
+        "strict_load": true
+      },
+      "training_targets": 0,
+      "validation_loss": 3.0757388638387964,
+      "validation_tokens": 1310720,
+      "window": 768
+    },
+    "896": {
+      "b11_attention_output_drift": {
+        "cosine": 0.9963542284772643,
+        "count": 1310720,
+        "mse": 0.0016804384424550206,
+        "rms_difference": 0.011108006839953784
+      },
+      "b11_post_block_state_drift": {
+        "cosine": 0.9998283631969571,
+        "count": 1310720,
+        "mse": 0.0017436642625273473,
+        "rms_difference": 0.012542553390820891
+      },
+      "b12_state_drift": {
+        "cosine": 0.9998353501083329,
+        "count": 1310720,
+        "mse": 0.0017839335024402848,
+        "rms_difference": 0.013270067997264373
+      },
+      "backward_calls": 0,
+      "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+      "damage_vs_1024": 0.00030259902223406243,
+      "final_logit_drift": {
+        "cosine": 0.0,
+        "count": 1310720,
+        "mse": 0.002009419362437792,
+        "rms_difference": 0.014958495911255568
+      },
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "optimizer_objects": 0,
+      "passed": true,
+      "per_batch_losses": [
+        3.0203664302825928,
+        3.0231456756591797,
+        3.0890233516693115,
+        3.063066005706787,
+        2.9671640396118164,
+        3.04233455657959,
+        3.1074585914611816,
+        3.054744243621826,
+        3.084418296813965,
+        3.101059913635254,
+        3.138472318649292,
+        3.1034014225006104,
+        3.0521507263183594,
+        3.0327277183532715,
+        3.2493767738342285,
+        3.0452518463134766,
+        3.1134934425354004,
+        3.121260643005371,
+        3.031658172607422,
+        3.0663533210754395
+      ],
+      "position_bins": {
+        "1-64": {
+          "ce": 3.5649136590684067,
+          "count": 81920
+        },
+        "129-256": {
+          "ce": 3.0944142516207647,
+          "count": 163840
+        },
+        "257-512": {
+          "ce": 3.037340952972227,
+          "count": 327680
+        },
+        "513-768": {
+          "ce": 3.012541988709927,
+          "count": 327680
+        },
+        "65-128": {
+          "ce": 3.1827433138561902,
+          "count": 81920
+        },
+        "769-896": {
+          "ce": 3.0068962149467553,
+          "count": 163840
+        },
+        "897-1023": {
+          "ce": 3.0041822236236624,
+          "count": 162560
+        }
+      },
+      "rank": 1,
+      "source_audit": {
+        "all_base_parameters_frozen": true,
+        "b11_zero_based_index": 10,
+        "b12_zero_based_index": 11,
+        "checkpoint": "/root/exp2d0_assets/model_19072.pt",
+        "checks": {
+          "attnres_modules_zero": true,
+          "attnres_trainable_zero": true,
+          "base_frozen": true,
+          "context": true,
+          "heads": true,
+          "layers": true,
+          "parameters": true,
+          "standard_mode": true,
+          "width": true
+        },
+        "config": {
+          "attnres_rms_eps": 1e-05,
+          "block_size": 1024,
+          "enable_memory_writers": false,
+          "enable_topdown_feedback": false,
+          "memory_writer_init_seed": 20260202,
+          "memory_writer_rank": 8,
+          "n_embd": 768,
+          "n_head": 12,
+          "n_layer": 12,
+          "residual_mode": "standard",
+          "topdown_feedback_destinations": [],
+          "vocab_size": 50304
+        },
+        "full_attnres_active_modules": 0,
+        "full_attnres_module_names": [],
+        "full_attnres_trainable_parameters": 0,
+        "human_block_mapping": {
+          "B1": "transformer.h[0]",
+          "B10": "transformer.h[9]",
+          "B11": "transformer.h[10]",
+          "B12": "transformer.h[11]",
+          "B2": "transformer.h[1]",
+          "B3": "transformer.h[2]",
+          "B4": "transformer.h[3]",
+          "B5": "transformer.h[4]",
+          "B6": "transformer.h[5]",
+          "B7": "transformer.h[6]",
+          "B8": "transformer.h[7]",
+          "B9": "transformer.h[8]"
+        },
+        "parameter_count": 124475904,
+        "passed": true,
+        "sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+        "state_dict_entries": 149,
+        "strict_load": true
+      },
+      "training_targets": 0,
+      "validation_loss": 3.0753463743538303,
+      "validation_tokens": 1310720,
+      "window": 896
+    }
+  },
+  "selection": {
+    "damages": {
+      "1024": 0.0,
+      "512": 0.002309064579458564,
+      "768": 0.0006950885072001256,
+      "896": 0.00030259902223406243
+    },
+    "phase_b_authorized": false,
+    "selected_window": null,
+    "selection_rule": null
+  },
+  "source_checkpoint_sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+  "windows": [
+    1024,
+    896,
+    768,
+    512
+  ]
+}
