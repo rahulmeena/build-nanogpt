@@ -990,7 +990,8 @@ def render_report(output, summary, interaction_label, recommendation, implementa
     best_argmax = max(GEOMETRIES, key=lambda name: argmax[name]["overall_vs_full"])
     joint_rows = [
         f"| {name} | {row['sum_W']} | {row['fraction_full']:.6f} | {row['validation_loss']:.10f} | {row['damage_vs_full']:+.10f} | {row['argmax_agreement_vs_full']:.10f} | {row['rank'] if row['rank'] is not None else '—'} |"
-        for name, row in joint.items()
+        for name in ("FULL", *GEOMETRIES)
+        for row in (joint[name],)
     ]
     budget_rows = []
     for layer_index in range(12):
@@ -1230,6 +1231,7 @@ def run_finalize(args):
         "report_has_triangle_boundary": "does not by itself falsify the recurrent triangle hypothesis" in report_path.read_text(),
         "all_required_artifacts_present": all((output / name).is_file() for name in required_final),
         "pre_final_integrity_passed": summary["integrity_pre_audit"]["passed"],
+        "report_joint_table_full_row_first": report_path.read_text().index("| FULL |") < report_path.read_text().index("| EMPIRICAL |"),
         "exactly_one_recommendation_heading": report_path.read_text().count("## Exactly one recommended next experiment") == 1,
     }
     audit = {
@@ -1237,6 +1239,7 @@ def run_finalize(args):
         "protocol": PROTOCOL,
         "status": "PASS" if all(cross_checks.values()) else "FAIL",
         "checks": cross_checks,
+        "detailed_integrity_checks": summary["integrity_pre_audit"],
         "interaction_conclusion": args.interaction_conclusion,
         "recommendation": args.recommendation,
         "implementation_commit": args.implementation_commit,
