@@ -220,7 +220,8 @@ def run_worker(args):
         raise SystemExit("2D0A workers forbid DDP/NCCL/distributed state")
     d0.seed_all(physical_gpu)
     device = torch.device("cuda", 0)
-    torch.cuda.reset_peak_memory_stats(device)
+    torch.cuda.set_device(0)
+    torch.cuda.reset_peak_memory_stats(0)
     wall_start = time.time()
     monotonic_start = time.monotonic()
     val_path = Path(args.validation_shard).resolve()
@@ -420,8 +421,8 @@ def run_worker(args):
             "wall_seconds": elapsed,
             "evaluated_targets": loss_count,
             "targets_per_second": loss_count / elapsed,
-            "peak_allocated_vram_mb": torch.cuda.max_memory_allocated(device) / 1024**2,
-            "peak_reserved_vram_mb": torch.cuda.max_memory_reserved(device) / 1024**2,
+            "peak_allocated_vram_mb": torch.cuda.max_memory_allocated(0) / 1024**2,
+            "peak_reserved_vram_mb": torch.cuda.max_memory_reserved(0) / 1024**2,
         },
     }
     result["passed"] = all(
