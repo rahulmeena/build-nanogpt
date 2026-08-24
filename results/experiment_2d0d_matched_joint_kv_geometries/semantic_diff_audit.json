@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "absolute_positions_unchanged": true,
+    "attention_mask_implementation_reused": true,
+    "full_window_dispatches_native_block": true,
+    "loss_calculation_reused": true,
+    "only_generalization_is_12_element_schedule": true,
+    "precision_unchanged": true,
+    "short_window_dispatches_frozen_d0_run_block": true,
+    "source_model_unchanged": true,
+    "token_ordering_unchanged": true,
+    "validation_loader_reused": true
+  },
+  "experiment": "2D0D",
+  "new_interface": "one immutable 12-element W schedule",
+  "old_interface": "one selected block index and one W",
+  "passed": true,
+  "validated_parent_evaluator": "scripts/experiment_2d0c.py"
+}

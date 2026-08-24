@@ -1,0 +1,123 @@
+{
+  "caveat": "Window sums are a nominal deployed KV-capacity proxy, not measured masked-evaluator wall time or total model memory.",
+  "geometries": {
+    "EMPIRICAL": {
+      "checks": {
+        "all_integer": true,
+        "all_within_1_1024": true,
+        "exactly_12_entries": true,
+        "sum_W_exactly_5312": true,
+        "sum_historical_W_minus_1_exactly_5300": true
+      },
+      "fraction_full_nominal_layer_window": 0.4322916666666667,
+      "historical_slot_fraction": 0.4317367220593027,
+      "passed": true,
+      "reduction_full_nominal_layer_window": 0.5677083333333333,
+      "sum_W": 5312,
+      "sum_historical_W_minus_1": 5300,
+      "windows": [
+        1024,
+        1024,
+        128,
+        256,
+        256,
+        64,
+        256,
+        1024,
+        512,
+        256,
+        256,
+        256
+      ]
+    },
+    "REVERSE_TRIANGLE": {
+      "checks": {
+        "all_integer": true,
+        "all_within_1_1024": true,
+        "exactly_12_entries": true,
+        "sum_W_exactly_5312": true,
+        "sum_historical_W_minus_1_exactly_5300": true
+      },
+      "fraction_full_nominal_layer_window": 0.4322916666666667,
+      "historical_slot_fraction": 0.4317367220593027,
+      "passed": true,
+      "reduction_full_nominal_layer_window": 0.5677083333333333,
+      "sum_W": 5312,
+      "sum_historical_W_minus_1": 5300,
+      "windows": [
+        1024,
+        844,
+        700,
+        580,
+        480,
+        396,
+        328,
+        272,
+        224,
+        184,
+        152,
+        128
+      ]
+    },
+    "TOP_WIDE_TRIANGLE": {
+      "checks": {
+        "all_integer": true,
+        "all_within_1_1024": true,
+        "exactly_12_entries": true,
+        "sum_W_exactly_5312": true,
+        "sum_historical_W_minus_1_exactly_5300": true
+      },
+      "fraction_full_nominal_layer_window": 0.4322916666666667,
+      "historical_slot_fraction": 0.4317367220593027,
+      "passed": true,
+      "reduction_full_nominal_layer_window": 0.5677083333333333,
+      "sum_W": 5312,
+      "sum_historical_W_minus_1": 5300,
+      "windows": [
+        128,
+        152,
+        184,
+        224,
+        272,
+        328,
+        396,
+        480,
+        580,
+        700,
+        844,
+        1024
+      ]
+    },
+    "UNIFORM_MATCHED": {
+      "checks": {
+        "all_integer": true,
+        "all_within_1_1024": true,
+        "exactly_12_entries": true,
+        "sum_W_exactly_5312": true,
+        "sum_historical_W_minus_1_exactly_5300": true
+      },
+      "fraction_full_nominal_layer_window": 0.4322916666666667,
+      "historical_slot_fraction": 0.4317367220593027,
+      "passed": true,
+      "reduction_full_nominal_layer_window": 0.5677083333333333,
+      "sum_W": 5312,
+      "sum_historical_W_minus_1": 5300,
+      "windows": [
+        443,
+        443,
+        442,
+        443,
+        442,
+        443,
+        443,
+        442,
+        443,
+        442,
+        443,
+        443
+      ]
+    }
+  },
+  "passed": true,
+  "same_nominal_budget": true
+}
