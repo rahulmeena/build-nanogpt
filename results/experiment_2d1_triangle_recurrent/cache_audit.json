@@ -1,0 +1,479 @@
+{
+  "incremental_equivalence": {
+    "bf16": {
+      "cache_limits": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "cache_maxima": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "final_position": 16,
+      "kernel_note": "BF16 full-sequence and one-token GEMM/SDPA reduction shapes differ",
+      "length": 16,
+      "maximum_absolute_logit_difference": 0.234375,
+      "mean_absolute_logit_difference": 0.022977858781814575,
+      "passed": true,
+      "threshold": 0.3
+    },
+    "fp32": {
+      "cache_limits": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "cache_maxima": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "final_position": 16,
+      "kernel_note": "TF32 disabled for strict FP32 equivalence",
+      "length": 16,
+      "maximum_absolute_logit_difference": 3.910064697265625e-05,
+      "mean_absolute_logit_difference": 4.418973276187899e-06,
+      "passed": true,
+      "threshold": 5e-05
+    },
+    "passed": true
+  },
+  "window_semantics": {
+    "passed": true,
+    "schedules": {
+      "A": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024
+        ]
+      },
+      "B": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 512
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 545
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 581
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 618
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 658
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 702
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 747
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 796
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 848
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 903
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 962
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          512,
+          545,
+          581,
+          618,
+          658,
+          702,
+          747,
+          796,
+          848,
+          903,
+          962,
+          1024
+        ]
+      },
+      "C": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 256
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 290
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 329
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 373
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 423
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 481
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 545
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 619
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 702
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 796
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 903
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          256,
+          290,
+          329,
+          373,
+          423,
+          481,
+          545,
+          619,
+          702,
+          796,
+          903,
+          1024
+        ]
+      },
+      "D": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 128
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 154
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 187
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 225
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 272
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 330
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 398
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 481
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 581
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 702
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 848
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          128,
+          154,
+          187,
+          225,
+          272,
+          330,
+          398,
+          481,
+          581,
+          702,
+          848,
+          1024
+        ]
+      },
+      "E": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 64
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 82
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 106
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 136
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 175
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 226
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 290
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 374
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 481
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 619
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 796
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          64,
+          82,
+          106,
+          136,
+          175,
+          226,
+          290,
+          374,
+          481,
+          619,
+          796,
+          1024
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,677 @@
+{
+  "causality": {
+    "cutoff": 8,
+    "no_wraparound": true,
+    "one_token_shift_exact": true,
+    "pass1_prefix_max_delta": 0.0,
+    "pass2_prefix_logit_max_delta": 0.0,
+    "passed": true,
+    "position_zero_source_exact_zero": true
+  },
+  "commands": {
+    "preflight": "scripts/experiment_2d1.py preflight --parent-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d1-result/results/experiment_2d1_triangle_recurrent --run-root /workspace/exp2d1_run --pod-id iacw1uhacgsq9f --stop-mechanism PID-1 RUNPOD_API_KEY plus REST POST /v1/pods/iacw1uhacgsq9f/stop; credential present but lifecycle request returned HTTP 403 --workspace-mount /workspace (RunPod volume disk) --network-volume-mount none"
+  },
+  "experiment": "2D1",
+  "forbidden_modules": [],
+  "fusion_initialization": {
+    "W_g_initialization": "Identity",
+    "W_u_initialization": "initial_source_scale * Identity",
+    "embedding_rms": 0.03508380427956581,
+    "gate_diagonal_scale": 1.0,
+    "gate_mean": 0.9998282194137573,
+    "gate_preactivation_abs_max": 0.324462890625,
+    "gate_preactivation_mean": -0.00034356839023530483,
+    "gate_preactivation_std": 0.0350821428000927,
+    "gate_saturation_fraction": 0.0,
+    "gate_std": 0.017534803599119186,
+    "identity_gate_safe": true,
+    "initial_source_scale": 0.015298671745807247,
+    "measurement_precision": "BF16 Transformer autocast; FP32 RMS reductions",
+    "representative_batch_shape": [
+      4,
+      1024
+    ],
+    "top_state_rms": 2.2932581901550293
+  },
+  "incremental_equivalence": {
+    "bf16": {
+      "cache_limits": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "cache_maxima": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "final_position": 16,
+      "kernel_note": "BF16 full-sequence and one-token GEMM/SDPA reduction shapes differ",
+      "length": 16,
+      "maximum_absolute_logit_difference": 0.234375,
+      "mean_absolute_logit_difference": 0.022977858781814575,
+      "passed": true,
+      "threshold": 0.3
+    },
+    "fp32": {
+      "cache_limits": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "cache_maxima": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "final_position": 16,
+      "kernel_note": "TF32 disabled for strict FP32 equivalence",
+      "length": 16,
+      "maximum_absolute_logit_difference": 3.910064697265625e-05,
+      "mean_absolute_logit_difference": 4.418973276187899e-06,
+      "passed": true,
+      "threshold": 5e-05
+    },
+    "passed": true
+  },
+  "memory_probe": {
+    "candidates": [
+      64,
+      32,
+      16,
+      8,
+      4
+    ],
+    "global_targets_per_update": 524288,
+    "passed": true,
+    "reports": [
+      {
+        "finite": true,
+        "gradient_accumulation": 8,
+        "gradients": {
+          "W_g": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.012950812466442585,
+            "tensors": 1
+          },
+          "W_u": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 90.27207946777344,
+            "tensors": 1
+          },
+          "base": {
+            "finite": true,
+            "nonzero": true,
+            "norm": 95.41001892089844,
+            "tensors": 148
+          }
+        },
+        "loss": 5.064550399780273,
+        "micro_batch_sequences": 64,
+        "passed": true,
+        "peak_allocated_bytes": 43587954176,
+        "peak_allocated_mb": 41568.71240234375,
+        "total_vram_bytes": 85095874560,
+        "vram_fraction": 0.5122217075901453
+      }
+    ],
+    "selected_gradient_accumulation": 8,
+    "selected_micro_batch_sequences": 64
+  },
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "fused": true,
+    "groups": [
+      {
+        "name": "base_decay",
+        "parameters": 124354560,
+        "peak_lr": 3e-05,
+        "tensors": 50,
+        "weight_decay": 0.1
+      },
+      {
+        "name": "base_nodecay",
+        "parameters": 121344,
+        "peak_lr": 3e-05,
+        "tensors": 98,
+        "weight_decay": 0.0
+      },
+      {
+        "name": "fusion",
+        "parameters": 1179648,
+        "peak_lr": 0.0003,
+        "tensors": 2,
+        "weight_decay": 0.0
+      }
+    ],
+    "logical_lr_groups": 2,
+    "physical_groups": 3,
+    "reason": "the base LR class is split only to preserve Standard GPT-2 decay/no-decay semantics"
+  },
+  "protocol": "exp2d1_triangle_recurrent_cotraining_v1",
+  "result_run_authorized": false,
+  "rho_zero_identity": {
+    "canonical_validation_exact": true,
+    "dormant_validation_loss": 3.0750437753315962,
+    "logits_bit_exact": true,
+    "maximum_absolute_logit_difference": 0.0,
+    "passed": true,
+    "plain_validation_loss": 3.0750437753315962,
+    "top_bit_exact": true,
+    "validation_absolute_delta": 0.0
+  },
+  "runpod_stop_audit": {
+    "authenticated": false,
+    "authentication_status": "unavailable",
+    "mechanism": "PID-1 RUNPOD_API_KEY plus REST POST /v1/pods/iacw1uhacgsq9f/stop; credential present but lifecycle request returned HTTP 403",
+    "network_volume_mount": "none",
+    "pod_id": "iacw1uhacgsq9f",
+    "tested_at": 1787608702.5183682,
+    "workspace_mount": "/workspace (RunPod volume disk)"
+  },
+  "science_checks": {
+    "all_parameters_trainable": true,
+    "canonical_validation_exact": true,
+    "causality": true,
+    "full_attnres_absent": true,
+    "fusion_parameters_trainable": true,
+    "incremental_equivalence": true,
+    "memory_probe": true,
+    "model_finite": true,
+    "optimizer_groups": true,
+    "parent_regression": true,
+    "rho_zero_identity": true,
+    "source_checkpoint_bytes_exact": true,
+    "source_checkpoint_exact": true,
+    "temporal_gradient": true,
+    "validation_shard_exact": true,
+    "weight_tying": true,
+    "window_semantics": true
+  },
+  "science_passed": true,
+  "source_regression": {
+    "absolute_delta": 0.0,
+    "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "oracle": 3.0750437753315962,
+    "passed": true,
+    "per_batch_losses": [
+      3.0201847553253174,
+      3.0230631828308105,
+      3.0887107849121094,
+      3.0628597736358643,
+      2.966921806335449,
+      3.042048215866089,
+      3.1071393489837646,
+      3.0545639991760254,
+      3.084137439727783,
+      3.1009299755096436,
+      3.138197422027588,
+      3.102928638458252,
+      3.051783561706543,
+      3.0322818756103516,
+      3.249208927154541,
+      3.0448131561279297,
+      3.1131181716918945,
+      3.1209816932678223,
+      3.03110408782959,
+      3.065898895263672
+    ],
+    "performance": {
+      "peak_allocated_vram_mb": 26103.6845703125,
+      "peak_reserved_vram_mb": 27796.0,
+      "target_passes_per_second": 405794.9765363003,
+      "wall_seconds": 3.2300054850056767
+    },
+    "validation_loss": 3.0750437753315962
+  },
+  "temporal_gradients": {
+    "all_finite": true,
+    "pass2_direct_gradient_norm": 0.19826561212539673,
+    "pass2_future_gradient_norm": 0.0,
+    "pass3_future_gradient_norm": 0.0,
+    "pass3_two_transition_gradient_norm": 0.11894586682319641,
+    "passed": true
+  },
+  "window_semantics": {
+    "passed": true,
+    "schedules": {
+      "A": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 1024
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024
+        ]
+      },
+      "B": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 512
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 545
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 581
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 618
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 658
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 702
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 747
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 796
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 848
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 903
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 962
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          512,
+          545,
+          581,
+          618,
+          658,
+          702,
+          747,
+          796,
+          848,
+          903,
+          962,
+          1024
+        ]
+      },
+      "C": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 256
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 290
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 329
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 373
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 423
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 481
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 545
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 619
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 702
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 796
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 903
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          256,
+          290,
+          329,
+          373,
+          423,
+          481,
+          545,
+          619,
+          702,
+          796,
+          903,
+          1024
+        ]
+      },
+      "D": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 128
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 154
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 187
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 225
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 272
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 330
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 398
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 481
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 581
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 702
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 848
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          128,
+          154,
+          187,
+          225,
+          272,
+          330,
+          398,
+          481,
+          581,
+          702,
+          848,
+          1024
+        ]
+      },
+      "E": {
+        "layers": [
+          {
+            "exact": true,
+            "layer": 1,
+            "window": 64
+          },
+          {
+            "exact": true,
+            "layer": 2,
+            "window": 82
+          },
+          {
+            "exact": true,
+            "layer": 3,
+            "window": 106
+          },
+          {
+            "exact": true,
+            "layer": 4,
+            "window": 136
+          },
+          {
+            "exact": true,
+            "layer": 5,
+            "window": 175
+          },
+          {
+            "exact": true,
+            "layer": 6,
+            "window": 226
+          },
+          {
+            "exact": true,
+            "layer": 7,
+            "window": 290
+          },
+          {
+            "exact": true,
+            "layer": 8,
+            "window": 374
+          },
+          {
+            "exact": true,
+            "layer": 9,
+            "window": 481
+          },
+          {
+            "exact": true,
+            "layer": 10,
+            "window": 619
+          },
+          {
+            "exact": true,
+            "layer": 11,
+            "window": 796
+          },
+          {
+            "exact": true,
+            "layer": 12,
+            "window": 1024
+          }
+        ],
+        "passed": true,
+        "windows": [
+          64,
+          82,
+          106,
+          136,
+          175,
+          226,
+          290,
+          374,
+          481,
+          619,
+          796,
+          1024
+        ]
+      }
+    }
+  }
+}
