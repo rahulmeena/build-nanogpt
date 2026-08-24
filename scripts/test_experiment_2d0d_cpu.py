@@ -74,10 +74,12 @@ def test_position_bins_and_pairing():
     for _, start, end in d0d.POSITION_BINS:
         positions.extend(range(start, end + 1))
     assert positions == list(range(1, 1024))
-    row = d0d.paired_stats("A", "B", [1.0, 2.0, 4.0], [2.0, 2.0, 3.0])
+    left = [1.0, 3.0] + [2.0] * 18
+    right = [2.0, 2.0] + [2.0] * 18
+    row = d0d.paired_stats("A", "B", left, right)
     assert row["a_wins"] == 1
     assert row["b_wins"] == 1
-    assert row["ties"] == 1
+    assert row["ties"] == 18
     assert abs(row["mean_a_minus_b"]) < 1e-12
 
 
