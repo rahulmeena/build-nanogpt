@@ -1,0 +1,48 @@
+{
+  "experiment": "2D0C",
+  "protocol": "exp2d0c_layer_window_sensitivity_map_v1",
+  "branch": "experiment-2d0c-layer-window-sensitivity-map",
+  "frozen_2d0b_tag": "experiment-2d0b-b11-micro-window-sweep-final",
+  "frozen_2d0b_commit": "43212789a2bca8ded75df9100e981904a0adb6ff",
+  "source_checkpoint_sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "evaluation": {
+    "batch_size": 64,
+    "sequence_length": 1024,
+    "batches": 20,
+    "targets_per_cell": 1310720,
+    "precision": "torch.autocast(cuda,bfloat16)",
+    "windows": [512, 256, 128, 64, 32, 16, 8, 4, 2, 1],
+    "layers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    "gpu_layer_assignment": {
+      "0": [1, 5, 9],
+      "1": [2, 6, 10],
+      "2": [3, 7, 11],
+      "3": [4, 8, 12]
+    }
+  },
+  "preflight": {
+    "baseline_batches_per_gpu": 2,
+    "b11_regression_windows": [512, 128, 1],
+    "absolute_tolerance": 1e-8
+  },
+  "position_bins": [
+    ["1-64", 1, 64],
+    ["65-128", 65, 128],
+    ["129-256", 129, 256],
+    ["257-512", 257, 512],
+    ["513-768", 513, 768],
+    ["769-896", 769, 896],
+    ["897-1023", 897, 1023]
+  ],
+  "damage_thresholds": [0.001, 0.0025, 0.005, 0.01, 0.02, 0.05, 0.1],
+  "training": {
+    "optimizer_objects": 0,
+    "scheduler_objects": 0,
+    "grad_scaler_objects": 0,
+    "backward_calls": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "training_targets": 0
+  }
+}
