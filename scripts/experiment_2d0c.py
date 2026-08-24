@@ -43,12 +43,6 @@ EXTREME_PATH = (
     / "experiment_2d0a_b11_extreme_window_sweep"
     / "extreme_window_results.json"
 )
-MICRO_PATH = (
-    REPO_ROOT
-    / "results"
-    / "experiment_2d0b_b11_micro_window_sweep"
-    / "micro_window_results.json"
-)
 WINDOWS = (512, 256, 128, 64, 32, 16, 8, 4, 2, 1)
 MATRIX_WINDOWS = (1024,) + WINDOWS
 LAYERS = tuple(range(1, 13))
@@ -142,14 +136,13 @@ def environment_audit():
 def historical_oracles():
     phase_a = json.loads(PHASE_A_PATH.read_text())["rows"]
     extreme = json.loads(EXTREME_PATH.read_text())["rows"]
-    micro = json.loads(MICRO_PATH.read_text())["rows"]
     return {
         "full_loss": phase_a["1024"]["validation_loss"],
         "full_per_batch_losses": phase_a["1024"]["per_batch_losses"],
         "b11": {
             512: phase_a["512"]["validation_loss"],
             128: extreme["128"]["validation_loss"],
-            1: micro["1"]["validation_loss"],
+            1: extreme["1"]["validation_loss"],
         },
     }
 
