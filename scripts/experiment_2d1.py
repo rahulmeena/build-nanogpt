@@ -1704,6 +1704,7 @@ def initialize_training_runtime(args, resume=None, require_stop=True):
 
 def train_one_update(runtime, update, force_two_pass=False):
     model = runtime.model
+    model.train()
     optimizer = runtime.optimizer
     device = runtime.device
     schedule = stage_for_update(update)
@@ -1723,23 +1724,26 @@ def train_one_update(runtime, update, force_two_pass=False):
         y = cpu_y.to(device, non_blocking=True)
         prefixes = [runtime.prefix_rng.randrange(T) for _ in range(pass_count - 1)]
         prefix_records.append(prefixes)
+        final_micro = micro_index == runtime.gradient_accumulation - 1
         with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-            top1, loss1, diag1 = model.forward_pass(
-                x, y, schedule["windows"], activation_checkpointing=True, return_diagnostics=True
+            top1, loss1, _ = model.forward_pass(
+                x, y, schedule["windows"], activation_checkpointing=True
             )
             top2, loss2, diag2 = model.forward_pass(
                 x, y, schedule["windows"], previous_top=top1, rho=schedule["rho"],
-                prefix_length=prefixes[0], activation_checkpointing=True, return_diagnostics=True
+                prefix_length=prefixes[0], activation_checkpointing=True,
+                return_diagnostics=final_micro and pass_count == 2,
             )
             losses = [loss1, loss2]
-            diagnostics = [diag1, diag2]
+            final_pass_diagnostics = diag2
             if pass_count == 3:
                 _, loss3, diag3 = model.forward_pass(
                     x, y, schedule["windows"], previous_top=top2, rho=schedule["rho"],
-                    prefix_length=prefixes[1], activation_checkpointing=True, return_diagnostics=True
+                    prefix_length=prefixes[1], activation_checkpointing=True,
+                    return_diagnostics=final_micro,
                 )
                 losses.append(loss3)
-                diagnostics.append(diag3)
+                final_pass_diagnostics = diag3
             weighted = sum(weight * loss for weight, loss in zip(weights, losses))
             scaled = weighted / runtime.gradient_accumulation
         if not math.isfinite(weighted.detach().float().item()):
@@ -1748,7 +1752,8 @@ def train_one_update(runtime, update, force_two_pass=False):
         for index, loss in enumerate(losses):
             pass_sums[index] += loss.detach().float().item()
         total_sum += weighted.detach().float().item()
-        final_diagnostics = diagnostics[-1]
+        if final_micro:
+            final_diagnostics = final_pass_diagnostics
         del x, y, cpu_x, cpu_y, top1, top2, losses, weighted, scaled
     if not gradients_finite(model):
         raise SystemExit("NaN/Inf gradients")
