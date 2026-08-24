@@ -1,0 +1,37 @@
+{
+  "auxiliary_loss": false,
+  "base_architecture": "Standard GPT-2 124M",
+  "context": 1024,
+  "experiment": "2D1",
+  "full_attnres": false,
+  "fusion": {
+    "normalization": "affine-free RMSNorm",
+    "output": "value*token_gate",
+    "position_embedding_in_gate": false,
+    "token_gate": "2*sigmoid(W_g(token_embedding))",
+    "value": "W_u(RMSNorm(z_prev))"
+  },
+  "heads": 12,
+  "hidden_width": 768,
+  "layers": 12,
+  "pass_schedule": {
+    "three_pass_every": 32,
+    "two_pass_fraction": 0.96875
+  },
+  "position_embeddings": "learned absolute GPT-2",
+  "protocol": "exp2d1_triangle_recurrent_cotraining_v1",
+  "readers": false,
+  "recurrent_destination": "model input before learned positional embedding",
+  "recurrent_source": "ln_f(B12 output) from previous temporal pass at t-1",
+  "recurrent_state_shape": [
+    "B",
+    "T",
+    768
+  ],
+  "teacher": false,
+  "temporal_attnres": false,
+  "temporal_detach": false,
+  "vocab_size": 50304,
+  "weight_tying": "preserved",
+  "writer_adapters": false
+}
