@@ -1,0 +1,16 @@
+{
+  "branch": "experiment-2d0a-b11-extreme-window-sweep",
+  "commands": [
+    "CUDA_VISIBLE_DEVICES=0 python scripts/experiment_2d0a.py sentinel ...",
+    "four independent concurrent processes: CUDA_VISIBLE_DEVICES={0,1,2,3} python scripts/experiment_2d0a.py worker --window {384,256,128,1} ...",
+    "python scripts/experiment_2d0a.py assemble ...",
+    "python scripts/experiment_2d0a.py finalize ..."
+  ],
+  "ddp": false,
+  "hellaswag": false,
+  "implementation_commit": "37d2b5de25848058287d5afb0f36b1bfbded2598",
+  "nccl": false,
+  "platform": "Linux-6.8.0-52-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+  "training": false
+}

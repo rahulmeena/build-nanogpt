@@ -1,0 +1,176 @@
+{
+  "classification": "B11 EXPLICIT HISTORY MODERATELY REDUNDANT",
+  "combined_rows": {
+    "1": {
+      "b11_cosine": 0.9155252577760166,
+      "b11_rms": 0.9726895126639932,
+      "b12_cosine": 0.9160033359088174,
+      "b12_rms": 1.0861344004414577,
+      "damage_vs_1024": 0.2790367705631982,
+      "diagnostic_provenance": "Experiment 2D0A B12 post-block H12 state",
+      "historical_kv_retained": 0,
+      "kv_fraction": 0.0009765625,
+      "validation_loss": 3.3540805458947944,
+      "window": 1
+    },
+    "1024": {
+      "b11_cosine": 0.9999999916929937,
+      "b11_rms": 0.0,
+      "b12_cosine": 0.9999999915660738,
+      "b12_rms": 0.0,
+      "damage_vs_1024": 0.0,
+      "diagnostic_provenance": "Experiment 2D0 Phase A (B12 value is final normalized top state)",
+      "historical_kv_retained": 1023,
+      "kv_fraction": 1.0,
+      "validation_loss": 3.0750437753315962,
+      "window": 1024
+    },
+    "128": {
+      "b11_cosine": 0.9933011459002046,
+      "b11_rms": 0.22958646733166463,
+      "b12_cosine": 0.9935888583320776,
+      "b12_rms": 0.2538782505798331,
+      "damage_vs_1024": 0.018432115288033124,
+      "diagnostic_provenance": "Experiment 2D0A B12 post-block H12 state",
+      "historical_kv_retained": 127,
+      "kv_fraction": 0.125,
+      "validation_loss": 3.0934758906196294,
+      "window": 128
+    },
+    "256": {
+      "b11_cosine": 0.9968389391201071,
+      "b11_rms": 0.13549836504115906,
+      "b12_cosine": 0.9969480877103252,
+      "b12_rms": 0.15026320611459437,
+      "damage_vs_1024": 0.007685990346089966,
+      "diagnostic_provenance": "Experiment 2D0A B12 post-block H12 state",
+      "historical_kv_retained": 255,
+      "kv_fraction": 0.25,
+      "validation_loss": 3.082729765677686,
+      "window": 256
+    },
+    "384": {
+      "b11_cosine": 0.9981447150158147,
+      "b11_rms": 0.08962397677000905,
+      "b12_cosine": 0.998201515863957,
+      "b12_rms": 0.09965324271421835,
+      "damage_vs_1024": 0.004160310632778774,
+      "diagnostic_provenance": "Experiment 2D0A B12 post-block H12 state",
+      "historical_kv_retained": 383,
+      "kv_fraction": 0.375,
+      "validation_loss": 3.079204085964375,
+      "window": 384
+    },
+    "512": {
+      "b11_cosine": 0.9988526994446147,
+      "b11_rms": 0.0607526377382307,
+      "b12_cosine": 0.9988820829942597,
+      "b12_rms": 0.05892123513032543,
+      "damage_vs_1024": 0.002309064579458564,
+      "diagnostic_provenance": "Experiment 2D0 Phase A (B12 value is final normalized top state)",
+      "historical_kv_retained": 511,
+      "kv_fraction": 0.5,
+      "validation_loss": 3.077352839911055,
+      "window": 512
+    },
+    "768": {
+      "b11_cosine": 0.9996055235895256,
+      "b11_rms": 0.024919249991348494,
+      "b12_cosine": 0.9996199206193979,
+      "b12_rms": 0.024791650681208248,
+      "damage_vs_1024": 0.0006950885072001256,
+      "diagnostic_provenance": "Experiment 2D0 Phase A (B12 value is final normalized top state)",
+      "historical_kv_retained": 767,
+      "kv_fraction": 0.75,
+      "validation_loss": 3.0757388638387964,
+      "window": 768
+    },
+    "896": {
+      "b11_cosine": 0.9998283631969571,
+      "b11_rms": 0.012542553390820891,
+      "b12_cosine": 0.9998353501083329,
+      "b12_rms": 0.013270067997264373,
+      "damage_vs_1024": 0.00030259902223406243,
+      "diagnostic_provenance": "Experiment 2D0 Phase A (B12 value is final normalized top state)",
+      "historical_kv_retained": 895,
+      "kv_fraction": 0.875,
+      "validation_loss": 3.0753463743538303,
+      "window": 896
+    }
+  },
+  "damages": {
+    "1": 0.2790367705631982,
+    "1024": 0.0,
+    "128": 0.018432115288033124,
+    "256": 0.007685990346089966,
+    "384": 0.004160310632778774,
+    "512": 0.002309064579458564,
+    "768": 0.0006950885072001256,
+    "896": 0.00030259902223406243
+  },
+  "experiment": "2D0A",
+  "full_control_per_batch_max_absolute_deltas": {
+    "1": 0.0,
+    "128": 0.0,
+    "256": 0.0,
+    "384": 0.0
+  },
+  "integrity_pre_audit": {
+    "canonical_validation": true,
+    "finite": true,
+    "full_control_per_batch_regression": true,
+    "h10_identical": true,
+    "model_tensors_unchanged": true,
+    "no_distributed": true,
+    "passed": true,
+    "sentinel": true,
+    "source_exact": true,
+    "worker_results": true
+  },
+  "monotonic_nondecreasing": true,
+  "monotonicity_deviations": [],
+  "pareto": [
+    {
+      "allowed_damage": 0.001,
+      "kv_fraction": 0.75,
+      "smallest_b11_window": 768
+    },
+    {
+      "allowed_damage": 0.0025,
+      "kv_fraction": 0.5,
+      "smallest_b11_window": 512
+    },
+    {
+      "allowed_damage": 0.005,
+      "kv_fraction": 0.375,
+      "smallest_b11_window": 384
+    },
+    {
+      "allowed_damage": 0.01,
+      "kv_fraction": 0.25,
+      "smallest_b11_window": 256
+    },
+    {
+      "allowed_damage": 0.02,
+      "kv_fraction": 0.125,
+      "smallest_b11_window": 128
+    },
+    {
+      "allowed_damage": 0.05,
+      "kv_fraction": 0.125,
+      "smallest_b11_window": 128
+    },
+    {
+      "allowed_damage": 0.1,
+      "kv_fraction": 0.125,
+      "smallest_b11_window": 128
+    }
+  ],
+  "phase_b_recurrence_training_authorized": false,
+  "protocol": "exp2d0a_b11_extreme_window_sweep_v1",
+  "recommendation_executed": false,
+  "training_performed": false,
+  "windows_in_old_recurrence_reference_band_0.01_to_0.10": [
+    128
+  ]
+}
