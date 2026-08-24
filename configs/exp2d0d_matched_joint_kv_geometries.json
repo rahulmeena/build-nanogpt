@@ -1,0 +1,50 @@
+{
+  "experiment": "2D0D",
+  "protocol": "exp2d0d_matched_joint_kv_geometries_v1",
+  "branch": "experiment-2d0d-matched-joint-kv-geometries",
+  "frozen_2d0c_tag": "experiment-2d0c-layer-window-sensitivity-map-final",
+  "frozen_2d0c_commit": "752bdc8e0f1a8b0694692ad0b0ae37f4edbeead0",
+  "source_checkpoint_sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "geometries": {
+    "EMPIRICAL": [1024, 1024, 128, 256, 256, 64, 256, 1024, 512, 256, 256, 256],
+    "TOP_WIDE_TRIANGLE": [128, 152, 184, 224, 272, 328, 396, 480, 580, 700, 844, 1024],
+    "REVERSE_TRIANGLE": [1024, 844, 700, 580, 480, 396, 328, 272, 224, 184, 152, 128],
+    "UNIFORM_MATCHED": [443, 443, 442, 443, 442, 443, 443, 442, 443, 442, 443, 443]
+  },
+  "gpu_assignment": {
+    "0": "EMPIRICAL",
+    "1": "TOP_WIDE_TRIANGLE",
+    "2": "REVERSE_TRIANGLE",
+    "3": "UNIFORM_MATCHED"
+  },
+  "evaluation": {
+    "batch_size": 64,
+    "sequence_length": 1024,
+    "batches": 20,
+    "targets_per_candidate": 1310720,
+    "precision": "torch.autocast(cuda,bfloat16)",
+    "baseline_worker_batches": 2,
+    "sentinel_absolute_tolerance": 1e-8,
+    "clear_winner_loss_margin": 0.01,
+    "clear_winner_paired_wins": 15
+  },
+  "position_bins": [
+    ["1-64", 1, 64],
+    ["65-128", 65, 128],
+    ["129-256", 129, 256],
+    ["257-512", 257, 512],
+    ["513-768", 513, 768],
+    ["769-896", 769, 896],
+    ["897-1023", 897, 1023]
+  ],
+  "training": {
+    "optimizer_objects": 0,
+    "scheduler_objects": 0,
+    "grad_scaler_objects": 0,
+    "backward_calls": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "training_targets": 0
+  }
+}
