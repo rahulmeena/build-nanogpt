@@ -1,0 +1,32 @@
+{
+  "branch": "experiment-2d0d-matched-joint-kv-geometries",
+  "candidate_evaluations": 4,
+  "commands": [
+    "CUDA_VISIBLE_DEVICES=0 python scripts/experiment_2d0d.py preflight ...",
+    "four independent workers: GPU0 EMPIRICAL, GPU1 TOP_WIDE_TRIANGLE, GPU2 REVERSE_TRIANGLE, GPU3 UNIFORM_MATCHED",
+    "python scripts/experiment_2d0d.py assemble ...",
+    "python scripts/experiment_2d0d.py finalize ..."
+  ],
+  "ddp": false,
+  "implementation_commit": "234563545219a1e6a551dd50a0ea0bdcee828526",
+  "nccl": false,
+  "runtime": {
+    "autocast": "cuda bfloat16",
+    "cublas_workspace_config": ":4096:8",
+    "cuda_device_count_visible": 1,
+    "cuda_runtime": "12.8",
+    "cudnn": 91002,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "flash_sdp_enabled": true,
+    "float32_matmul_precision": "high",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "math_sdp_enabled": true,
+    "mem_efficient_sdp_enabled": true,
+    "platform": "Linux-6.8.0-52-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+    "torch": "2.8.0+cu128"
+  },
+  "training": false
+}

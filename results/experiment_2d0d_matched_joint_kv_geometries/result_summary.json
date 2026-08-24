@@ -1,0 +1,206 @@
+{
+  "best_geometry": "EMPIRICAL",
+  "best_minus_second_loss_margin": 0.2109783325004173,
+  "best_vs_second_paired": {
+    "a": "EMPIRICAL",
+    "a_wins": 20,
+    "b": "REVERSE_TRIANGLE",
+    "b_wins": 0,
+    "batch_count": 20,
+    "descriptive_95_percent_interval": [
+      -0.2185825805906712,
+      -0.20337407777267108
+    ],
+    "differences_a_minus_b": [
+      -0.18924689292907715,
+      -0.1854701042175293,
+      -0.21882343292236328,
+      -0.22988414764404297,
+      -0.20718908309936523,
+      -0.19899559020996094,
+      -0.2001359462738037,
+      -0.18013596534729004,
+      -0.2122211456298828,
+      -0.18984031677246094,
+      -0.2097029685974121,
+      -0.20898199081420898,
+      -0.24350976943969727,
+      -0.2123720645904541,
+      -0.2348158359527588,
+      -0.2170562744140625,
+      -0.21582889556884766,
+      -0.2099761962890625,
+      -0.2165381908416748,
+      -0.23884177207946777
+    ],
+    "interval_is_descriptive_not_formal_iid_inference": true,
+    "mean_a_minus_b": -0.21097832918167114,
+    "median_a_minus_b": -0.21109867095947266,
+    "sample_standard_deviation": 0.0173506357842068,
+    "standard_error": 0.0038797201066326776,
+    "ties": 0
+  },
+  "candidate_count": 4,
+  "clear_matched_budget_winner": true,
+  "empirical_interaction": {
+    "decomposition_scope": "controlled descriptive difference, not a formal interaction decomposition",
+    "empirical_joint_damage": 0.08920953218657823,
+    "empirical_joint_loss": 3.1642533075181745,
+    "full_loss": 3.0750437753315962,
+    "interaction_E_joint_minus_marginal_sum": 0.036309654274735426,
+    "interaction_ratio_joint_over_marginal_sum": 1.6863844626493307,
+    "other_geometry_interaction_decomposition": {
+      "REVERSE_TRIANGLE": "NOT DIRECTLY AVAILABLE",
+      "TOP_WIDE_TRIANGLE": "NOT DIRECTLY AVAILABLE",
+      "UNIFORM_MATCHED": "NOT DIRECTLY AVAILABLE"
+    },
+    "single_layer_marginal_terms": [
+      {
+        "block": "B1",
+        "damage": 0.0,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 1024
+      },
+      {
+        "block": "B2",
+        "damage": 0.0,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 1024
+      },
+      {
+        "block": "B3",
+        "damage": 0.00433178708708537,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 128
+      },
+      {
+        "block": "B4",
+        "damage": 0.0045203627258163515,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 256
+      },
+      {
+        "block": "B5",
+        "damage": 0.009068764194398948,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 256
+      },
+      {
+        "block": "B6",
+        "damage": 0.00859150391152097,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 64
+      },
+      {
+        "block": "B7",
+        "damage": 0.005069074806124618,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 256
+      },
+      {
+        "block": "B8",
+        "damage": 0.0,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 1024
+      },
+      {
+        "block": "B9",
+        "damage": 0.003021707249263539,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 512
+      },
+      {
+        "block": "B10",
+        "damage": 0.006211753865591252,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 256
+      },
+      {
+        "block": "B11",
+        "damage": 0.007685990346089966,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 256
+      },
+      {
+        "block": "B12",
+        "damage": 0.0043989337259517924,
+        "source": "2D0C authoritative validation_damage_matrix.json",
+        "window": 256
+      }
+    ],
+    "sum_single_layer_marginal_damages": 0.05289987791184281
+  },
+  "experiment": "2D0D",
+  "feed_forward_geometry_conclusion": "EMPIRICAL PROFILE IS BEST FEED-FORWARD GEOMETRY",
+  "integrity_pre_audit": {
+    "2d0c_frozen_tag_exact": true,
+    "all_losses_predictions_finite": true,
+    "all_workers_passed": true,
+    "budget_audit": true,
+    "canonical_validation_manifest_exact": true,
+    "causal_window_and_positions_exact": true,
+    "empirical_interaction_arithmetic_exact": true,
+    "empirical_terms_exact_2d0c_cells": true,
+    "exactly_four_candidates": true,
+    "exactly_four_scientific_candidate_evaluations": true,
+    "full_context_baseline_exact": true,
+    "geometry_manifest_frozen_before_compute": true,
+    "independent_processes_no_ddp_no_nccl": true,
+    "model_hashes_unchanged": true,
+    "paired_batch_accounting_exact": true,
+    "passed": true,
+    "same_bf16_runtime_targets_denominator": true,
+    "semantic_diff": true,
+    "single_layer_sentinels_exact": true,
+    "source_checkpoint_exact": true,
+    "standard_gpt2_exact_full_attnres_absent": true,
+    "worker_baseline_sentinels_identical": true,
+    "zero_training_and_forbidden_features": true
+  },
+  "joint_losses": {
+    "EMPIRICAL": {
+      "argmax_agreement_vs_full": 0.8556137084960938,
+      "damage_vs_full": 0.08920953218657823,
+      "fraction_full": 0.4322916666666667,
+      "rank": 1,
+      "sum_W": 5312,
+      "validation_loss": 3.1642533075181745
+    },
+    "FULL": {
+      "argmax_agreement_vs_full": 1.0,
+      "damage_vs_full": 0.0,
+      "fraction_full": 1.0,
+      "rank": null,
+      "sum_W": 12288,
+      "validation_loss": 3.0750437753315962
+    },
+    "REVERSE_TRIANGLE": {
+      "argmax_agreement_vs_full": 0.7691207885742187,
+      "damage_vs_full": 0.30018786468699554,
+      "fraction_full": 0.4322916666666667,
+      "rank": 2,
+      "sum_W": 5312,
+      "validation_loss": 3.3752316400185918
+    },
+    "TOP_WIDE_TRIANGLE": {
+      "argmax_agreement_vs_full": 0.43203048706054686,
+      "damage_vs_full": 1.939521469837473,
+      "fraction_full": 0.4322916666666667,
+      "rank": 4,
+      "sum_W": 5312,
+      "validation_loss": 5.014565245169069
+    },
+    "UNIFORM_MATCHED": {
+      "argmax_agreement_vs_full": 0.6573837280273438,
+      "damage_vs_full": 1.0421261008665175,
+      "fraction_full": 0.4322916666666667,
+      "rank": 3,
+      "sum_W": 5312,
+      "validation_loss": 4.117169876198114
+    }
+  },
+  "protocol": "exp2d0d_matched_joint_kv_geometries_v1",
+  "recurrence_active": false,
+  "second_best_geometry": "REVERSE_TRIANGLE",
+  "training_performed": false
+}
