@@ -1,0 +1,99 @@
+{
+  "experiment": "2D1",
+  "protocol": "exp2d1_triangle_recurrent_cotraining_v1",
+  "branch": "experiment-2d1-triangle-recurrent-cotraining",
+  "parent_commit": "7e45b77b8638d2923689d1d9074104a8f9f5baab",
+  "parent_tag": "experiment-2d0d-matched-joint-kv-final",
+  "source_checkpoint_sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+  "source_checkpoint_bytes": 497958271,
+  "validation_shard_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "canonical_parent_loss": 3.0750437753315962,
+  "seed": 1337,
+  "sequence_length": 1024,
+  "global_targets_per_update": 524288,
+  "optimizer_updates": 4769,
+  "adaptation_targets": 2500329472,
+  "passes": {
+    "three_pass_every": 32,
+    "two_pass_weights": [0.25, 0.75],
+    "three_pass_weights": [0.20, 0.40, 0.40]
+  },
+  "curriculum": [
+    {
+      "stage": "A",
+      "first_update": 1,
+      "last_update": 477,
+      "windows": [1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024],
+      "rho": {"kind": "linear", "start": 0.0, "end": 0.5}
+    },
+    {
+      "stage": "B",
+      "first_update": 478,
+      "last_update": 954,
+      "windows": [512, 545, 581, 618, 658, 702, 747, 796, 848, 903, 962, 1024],
+      "rho": {"kind": "constant", "value": 0.5}
+    },
+    {
+      "stage": "C",
+      "first_update": 955,
+      "last_update": 1908,
+      "windows": [256, 290, 329, 373, 423, 481, 545, 619, 702, 796, 903, 1024],
+      "rho": {"kind": "constant", "value": 0.75}
+    },
+    {
+      "stage": "D",
+      "first_update": 1909,
+      "last_update": 2862,
+      "windows": [128, 154, 187, 225, 272, 330, 398, 481, 581, 702, 848, 1024],
+      "rho": {"kind": "constant", "value": 1.0}
+    },
+    {
+      "stage": "E",
+      "first_update": 2863,
+      "last_update": 4769,
+      "windows": [64, 82, 106, 136, 175, 226, 290, 374, 481, 619, 796, 1024],
+      "rho": {"kind": "constant", "value": 1.0}
+    }
+  ],
+  "optimizer": {
+    "base_peak_lr": 0.00003,
+    "fusion_peak_lr": 0.0003,
+    "weight_decay": 0.1,
+    "fusion_weight_decay": 0.0,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8,
+    "gradient_clip": 1.0,
+    "warmup_updates": 100,
+    "constant_through_update": 4292,
+    "cooldown_first_update": 4293,
+    "cooldown_last_update": 4769,
+    "final_lr_fraction": 0.1
+  },
+  "validation": {
+    "batches": 20,
+    "batch_size": 64,
+    "sequence_length": 1024,
+    "milestones": [0, 48, 191, 477, 954, 1908, 2862, 3815, 4769],
+    "incremental_minimum_targets": 131072
+  },
+  "checkpoints": {
+    "scientific_updates": [48, 191, 477, 954, 1908, 2862, 3815, 4769],
+    "forced_restart_updates": [954, 2862],
+    "rolling_interval": 100,
+    "rolling_keep": 3
+  },
+  "hardware": {
+    "required_gpu": "NVIDIA A100-SXM4-80GB",
+    "supported_gpu_counts": [1, 2, 4],
+    "selected_gpu_count": 1
+  },
+  "forbidden": {
+    "teacher_reconstruction": true,
+    "auxiliary_loss": true,
+    "full_attnres": true,
+    "temporal_attnres": true,
+    "hellaswag": true,
+    "four_or_more_passes": true
+  }
+}
