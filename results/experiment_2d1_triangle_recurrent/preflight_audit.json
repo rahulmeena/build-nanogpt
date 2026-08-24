@@ -9,6 +9,7 @@
     "position_zero_source_exact_zero": true
   },
   "commands": {
+    "authorize_stop": "scripts/experiment_2d1.py authorize-stop --output-dir /workspace/build-nanogpt-exp2d1-result/results/experiment_2d1_triangle_recurrent --pod-id iacw1uhacgsq9f --stop-mechanism Local macOS Keychain service runpod-codex-pod-stopper plus local runpodctl pod stop iacw1uhacgsq9f --verification Account credential stopped exact test Pod e8nd7m6piw5km2 and local account API verified exact A100 Pod iacw1uhacgsq9f RUNNING with one GPU",
     "preflight": "scripts/experiment_2d1.py preflight --parent-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d1-result/results/experiment_2d1_triangle_recurrent --run-root /workspace/exp2d1_run --pod-id iacw1uhacgsq9f --stop-mechanism PID-1 RUNPOD_API_KEY plus REST POST /v1/pods/iacw1uhacgsq9f/stop; credential present but lifecycle request returned HTTP 403 --workspace-mount /workspace (RunPod volume disk) --network-volume-mount none"
   },
   "experiment": "2D1",
@@ -191,7 +192,7 @@
     "reason": "the base LR class is split only to preserve Standard GPT-2 decay/no-decay semantics"
   },
   "protocol": "exp2d1_triangle_recurrent_cotraining_v1",
-  "result_run_authorized": false,
+  "result_run_authorized": true,
   "rho_zero_identity": {
     "canonical_validation_exact": true,
     "dormant_validation_loss": 3.0750437753315962,
@@ -203,12 +204,13 @@
     "validation_absolute_delta": 0.0
   },
   "runpod_stop_audit": {
-    "authenticated": false,
-    "authentication_status": "unavailable",
-    "mechanism": "PID-1 RUNPOD_API_KEY plus REST POST /v1/pods/iacw1uhacgsq9f/stop; credential present but lifecycle request returned HTTP 403",
+    "authenticated": true,
+    "authentication_status": "authenticated",
+    "mechanism": "Local macOS Keychain service runpod-codex-pod-stopper plus local runpodctl pod stop iacw1uhacgsq9f",
     "network_volume_mount": "none",
     "pod_id": "iacw1uhacgsq9f",
-    "tested_at": 1787609266.8600268,
+    "tested_at": 1787609465.2512379,
+    "verification": "Account credential stopped exact test Pod e8nd7m6piw5km2 and local account API verified exact A100 Pod iacw1uhacgsq9f RUNNING with one GPU",
     "workspace_mount": "/workspace (RunPod volume disk)"
   },
   "science_checks": {
