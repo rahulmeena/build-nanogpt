@@ -1,0 +1,59 @@
+{
+  "protocol": "exp2d0_standard_b11_context_completion_v1",
+  "branch": "experiment-2d0-standard-b11-context-completion",
+  "parent_commit": "2135b5e03719cf0f9029cf1c371cc981a0af47ca",
+  "source_checkpoint_filename": "model_19072.pt",
+  "source_checkpoint_sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+  "source_checkpoint_step": 19072,
+  "source_processed_tokens": 9999745024,
+  "source_validation_loss": 3.0750441551208496,
+  "architecture": {
+    "residual_mode": "standard",
+    "block_size": 1024,
+    "vocab_size": 50304,
+    "n_layer": 12,
+    "n_head": 12,
+    "n_embd": 768,
+    "full_attnres_active_modules": 0,
+    "full_attnres_trainable_parameters": 0
+  },
+  "phase_a": {
+    "windows": [1024, 896, 768, 512],
+    "gpu_mapping": {"1024": 0, "896": 1, "768": 2, "512": 3},
+    "validation_batches": 20,
+    "validation_batch_size": 64,
+    "sequence_length": 1024,
+    "selection_damage_min": 0.01,
+    "selection_damage_max": 0.10,
+    "preferred_window": 768
+  },
+  "phase_b": {
+    "global_targets_per_update": 524288,
+    "world_size": 4,
+    "micro_batch_sequences_per_rank": 32,
+    "gradient_accumulation": 4,
+    "updates": 191,
+    "adaptation_targets": 100139008,
+    "milestones": [10, 48, 96, 144, 191],
+    "forced_restart_update": 96,
+    "lambda_consistency": 0.1,
+    "learning_rate": 0.0001,
+    "optimizer": "AdamW",
+    "betas": [0.9, 0.95],
+    "eps": 1e-8,
+    "weight_decay": 0.0,
+    "gradient_clip": 1.0,
+    "completion_trainable_parameters": 1179649,
+    "validation_batches": 20,
+    "validation_batch_size": 64,
+    "sequence_length": 1024
+  },
+  "forbidden": [
+    "full_attnres",
+    "base_weight_training",
+    "b10_context_reduction",
+    "temporal_bptt",
+    "hellaswag",
+    "training_beyond_100139008_targets"
+  ]
+}
