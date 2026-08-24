@@ -1,0 +1,16 @@
+{
+  "branch": "experiment-2d0b-b11-micro-window-sweep",
+  "commands": [
+    "CUDA_VISIBLE_DEVICES=0 python scripts/experiment_2d0b.py sentinel ...",
+    "wave 1: four independent workers for W64/W32/W16/W8",
+    "wave 2: two independent workers for W4/W2",
+    "python scripts/experiment_2d0b.py assemble ...",
+    "python scripts/experiment_2d0b.py finalize ..."
+  ],
+  "ddp": false,
+  "implementation_commit": "198ffee079c51a6259e8bf15d0d7cf7b110c2d9b",
+  "nccl": false,
+  "platform": "Linux-6.8.0-52-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+  "training": false
+}
