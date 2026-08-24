@@ -1137,12 +1137,14 @@ def generate_plots(output, summary):
     plt.close(fig)
 
     fig, axis = plt.subplots(figsize=(12, 8), constrained_layout=True)
+    curve_colors = plt.get_cmap("tab20").colors
     for layer in LAYERS:
         axis.plot(
             MATRIX_WINDOWS,
             [damages[f"B{layer}"][str(window)] for window in MATRIX_WINDOWS],
             marker="o",
             linewidth=1.6,
+            color=curve_colors[layer - 1],
             label=f"B{layer}",
         )
     axis.set_xscale("log", base=2)
