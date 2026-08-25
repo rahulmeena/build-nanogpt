@@ -18,10 +18,18 @@
   "failure_reason": "requested training terminated at preregistered recurrent-input RMS hard stop",
   "hard_stop_reproduced": true,
   "passed": false,
-  "pending_terminal_checks": [
-    "Git synchronized",
-    "persistent volume synchronized"
-  ],
+  "pending_terminal_checks": [],
   "pod_stop_authorized": false,
-  "pod_stop_reason": "successful-completion gate was not met"
+  "pod_stop_reason": "successful-completion gate was not met",
+  "terminal_seal": {
+    "all_retained_checkpoint_sha256_sidecars_verified": true,
+    "artifact_commit": "6082190cdbdf02b229ee2d521ae52d7b41cbe004",
+    "artifact_commit_pushed": true,
+    "local_head_matched_origin_after_artifact_push": true,
+    "persistent_workspace_sync_completed": true,
+    "remote_clean_clone_matched_artifact_commit": true,
+    "result_artifacts_persisted_under_workspace": true,
+    "source_checkpoint_sha256_reverified": true,
+    "validation_shard_sha256_reverified": true
+  }
 }
