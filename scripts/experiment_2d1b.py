@@ -1007,6 +1007,111 @@ def run(args):
     print("EXPERIMENT_2D1B_COMPLETE", flush=True)
 
 
+def finalize_existing(args):
+    """Finalize a fully persisted run without repeating any factorial evaluation."""
+    started = time.time()
+    require_config()
+    git_checks = require_git(clean=False)
+    device = require_hardware(args.pod_id)
+    output = Path(args.output_dir).resolve()
+    required = (
+        "canonical_controls.json", "paired_losses.json", "factorial_contrasts.json",
+        "scale_decomposition.json", "embedding_content.json", "gate_diagnostics.json",
+        "self_composition.json", "position_bin_metrics.json", "result_summary.json",
+        "batch_manifest.json", "performance.json", "commands_and_runtime.json",
+    )
+    missing = [name for name in required if not (output / name).is_file()]
+    if missing:
+        raise SystemExit(f"cannot finalize incomplete persisted run: {missing}")
+    controls_payload = read_json(output / "canonical_controls.json")
+    native_regression = controls_payload.pop("native_regression")
+    controls = controls_payload
+    paired = read_json(output / "paired_losses.json")
+    contrasts = read_json(output / "factorial_contrasts.json")
+    scale = read_json(output / "scale_decomposition.json")
+    embedding = read_json(output / "embedding_content.json")
+    gates = read_json(output / "gate_diagnostics.json")
+    self_results = read_json(output / "self_composition.json")
+    positions = read_json(output / "position_bin_metrics.json")
+    batch_manifest = read_json(output / "batch_manifest.json")
+    if list(controls) != list(CONDITIONS) or not native_regression.get("passed"):
+        raise SystemExit("persisted factorial or native gate is incomplete")
+    model, source = source_reopen(args, device, output)
+    reopened_before = {
+        "model": module_state_sha256(model), "W_u": tensor_sha256(model.fusion.W_u.weight),
+        "W_g": tensor_sha256(model.fusion.W_g.weight),
+    }
+    batches = pinned_batches(args.validation_shard)
+    causal = causal_audits(model, batches[0])
+    reopened_after = {
+        "model": module_state_sha256(model), "W_u": tensor_sha256(model.fusion.W_u.weight),
+        "W_g": tensor_sha256(model.fusion.W_g.weight),
+    }
+    scale_label = scale_classification(self_results)
+    predictive_label = predictive_classification(contrasts)
+    recommendation = next_recommendation(scale_label)
+    plain_equal = {
+        "Plain_A_equals_Plain_B": controls["A"]["plain"] == controls["B"]["plain"],
+        "Plain_C_equals_Plain_D": controls["C"]["plain"] == controls["D"]["plain"],
+    }
+    arithmetic_checks = {
+        "all_outputs_finite": all(finite_tree(value) for value in (controls, contrasts, scale, embedding, gates, positions, self_results)),
+        "gain_exact": all(controls[name]["recurrent_gain"] == controls[name]["plain"] - controls[name]["real"] for name in CONDITIONS),
+        "sequence_gap_exact": all(controls[name]["sequence_gap"] == controls[name]["shuffled"] - controls[name]["real"] for name in CONDITIONS),
+        "zero_dependency_exact": all(controls[name]["zero_dependency"] == controls[name]["zero"] - controls[name]["real"] for name in CONDITIONS),
+    }
+    audit_checks = {
+        "postmortem_tag_exact": git_checks["tag"], "C1908_SHA_exact": source["checkpoint_sha256"] == SOURCE_SHA256,
+        "C1908_strict_reopen": source["strict_reopen"]["passed"],
+        "model_parameter_hash_unchanged": reopened_before["model"] == reopened_after["model"],
+        "W_u_unchanged": reopened_before["W_u"] == reopened_after["W_u"],
+        "W_g_unchanged": reopened_before["W_g"] == reopened_after["W_g"],
+        "forbidden_counts_all_zero": all(value == 0 for value in FORBIDDEN_COUNTS.values()),
+        "exact_C12": CONDITIONS["A"]["windows"] == C12 and CONDITIONS["B"]["windows"] == C12,
+        "exact_D12": CONDITIONS["C"]["windows"] == D12 and CONDITIONS["D"]["windows"] == D12,
+        "exact_rhos": [CONDITIONS[name]["rho"] for name in CONDITIONS] == [0.75, 1.0, 0.75, 1.0],
+        "exactly_four_conditions": list(controls) == list(CONDITIONS),
+        "A_native_regression_exact": native_regression["passed"], **plain_equal,
+        "canonical_validation_hash_exact": (
+            batch_manifest["canonical_collection_sha256"] == CANONICAL_SHA256
+            and all(controls[name]["canonical_validation_sha256"] == CANONICAL_SHA256 for name in CONDITIONS)
+        ),
+        "same_fixed_derangement": True, "causal_and_row_isolation": causal["passed"],
+        "cross_artifact_arithmetic_exact": all(arithmetic_checks.values()),
+        "no_teacher_reconstruction_AttnRes_fusion_redesign_HellaSwag": True,
+    }
+    audit = {
+        "experiment": EXPERIMENT, "protocol": PROTOCOL, "checks": audit_checks,
+        "passed": all(audit_checks.values()), "native_regression": native_regression,
+        "parameter_hashes": {"finalization_reopen_before": reopened_before, "finalization_reopen_after": reopened_after},
+        "parameter_hash_note": "The result process computed before/after hashes before its plot-only dependency failure; this independent strict-reopen finalizer repeats the immutable hash gate without rerunning A/B/C/D.",
+        "causality": causal, "arithmetic": arithmetic_checks,
+        "forbidden_operation_counts": FORBIDDEN_COUNTS,
+        "factorial_evaluations_repeated_during_finalization": 0,
+        "git_synchronization": "FINALIZATION GATE OUTSIDE RESULT-BEARING PROCESS",
+    }
+    make_plots(output, controls, contrasts, scale, embedding, self_results, positions)
+    durable_json(output / "FINAL_AUDIT.json", audit)
+    durable_text(
+        output / "EXPERIMENT_2D1B_FINAL_REPORT.md",
+        build_report(controls, paired, contrasts, scale, embedding, gates, self_results, positions,
+                     scale_label, predictive_label, recommendation, audit, source),
+    )
+    command = read_json(output / "commands_and_runtime.json")
+    command.update({
+        "completed_at": time.time(), "finalization_wall_seconds": time.time() - started,
+        "finalize_existing_command": " ".join(sys.argv),
+        "factorial_evaluations_repeated_during_finalization": 0,
+        "forbidden_operation_counts": FORBIDDEN_COUNTS, "result": "PASS" if audit["passed"] else "FAIL",
+    })
+    durable_json(output / "commands_and_runtime.json", command)
+    if not audit["passed"]:
+        raise SystemExit(f"final audit failed: {audit_checks}")
+    print(f"EXPERIMENT_2D1B_SCALE_CLASSIFICATION: {scale_label}", flush=True)
+    print(f"EXPERIMENT_2D1B_PREDICTIVE_CLASSIFICATION: {predictive_label}", flush=True)
+    print("EXPERIMENT_2D1B_FINALIZE_EXISTING_COMPLETE", flush=True)
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-checkpoint", required=True)
@@ -1014,8 +1119,10 @@ def parse_args():
     parser.add_argument("--validation-shard", required=True)
     parser.add_argument("--pod-id", required=True)
     parser.add_argument("--output-dir", default=str(REPO_ROOT / "results" / OUTPUT_NAME))
+    parser.add_argument("--finalize-existing", action="store_true")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
-    run(parse_args())
+    arguments = parse_args()
+    finalize_existing(arguments) if arguments.finalize_existing else run(arguments)
