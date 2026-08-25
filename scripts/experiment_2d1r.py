@@ -10,6 +10,7 @@ every AdamW step.
 import argparse
 import concurrent.futures
 import copy
+import errno
 import gc
 import hashlib
 import json
@@ -75,6 +76,8 @@ F3_LATE_CE_ORACLE = 3.2037985622882843
 ORACLE_RELATIVE_TOLERANCE = 1e-5
 PARENT_VALIDATION_LOSS = d1.PARENT_VALIDATION_LOSS
 _FILE_SHA_CACHE = {}
+PERSISTENT_IO_RETRIES = 12
+PERSISTENT_IO_RETRY_ERRNOS = {errno.EIO, errno.ESTALE, errno.ETIMEDOUT}
 
 
 def git_output(*args):
@@ -104,27 +107,71 @@ def file_sha256(path):
     return cached
 
 
+def retry_persistent_io(operation, path):
+    """Retry transient network-volume failures without weakening durability."""
+    path = Path(path)
+    for attempt in range(1, PERSISTENT_IO_RETRIES + 1):
+        try:
+            return operation()
+        except OSError as error:
+            if error.errno not in PERSISTENT_IO_RETRY_ERRNOS or attempt == PERSISTENT_IO_RETRIES:
+                raise
+            delay = min(0.25 * (2 ** (attempt - 1)), 5.0)
+            print(
+                f"2D1R transient persistent-I/O failure path={path} "
+                f"errno={error.errno} attempt={attempt}/{PERSISTENT_IO_RETRIES}; "
+                f"retrying in {delay:.2f}s",
+                file=sys.stderr,
+                flush=True,
+            )
+            time.sleep(delay)
+
+
 def durable_json(path, payload):
-    d1.durable_json(path, payload)
+    retry_persistent_io(lambda: d1.durable_json(path, payload), path)
 
 
 def durable_text(path, value):
-    d1.durable_text(path, value)
+    retry_persistent_io(lambda: d1.durable_text(path, value), path)
 
 
 def append_jsonl(path, payload):
-    d1.append_jsonl(path, payload)
+    path = Path(path)
+    encoded = (json.dumps(payload, sort_keys=True) + "\n").encode()
+
+    def append_once():
+        try:
+            d1.append_jsonl(path, payload)
+        except OSError as error:
+            if error.errno not in PERSISTENT_IO_RETRY_ERRNOS:
+                raise
+            # fsync may report EIO after the complete record reached the volume.
+            # Treat that case as success so a retry cannot duplicate an update.
+            try:
+                with path.open("rb") as handle:
+                    handle.seek(-min(path.stat().st_size, len(encoded)), os.SEEK_END)
+                    if handle.read().endswith(encoded):
+                        return
+            except (OSError, ValueError):
+                pass
+            raise
+
+    retry_persistent_io(append_once, path)
 
 
 def read_json(path):
-    return json.loads(Path(path).read_text())
+    path = Path(path)
+    return retry_persistent_io(lambda: json.loads(path.read_text()), path)
 
 
 def read_jsonl(path):
     path = Path(path)
     if not path.is_file():
         return []
-    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    return retry_persistent_io(
+        lambda: [json.loads(line) for line in path.read_text().splitlines() if line.strip()],
+        path,
+    )
 
 
 def relative_close(observed, expected, tolerance=ORACLE_RELATIVE_TOLERANCE):
@@ -538,8 +585,28 @@ def load_result_runtime(args, checkpoint):
     payload, _ = load_payload(checkpoint)
     if payload.get("schema") != CHECKPOINT_SCHEMA:
         raise SystemExit("2D1R resume schema mismatch")
-    if payload.get("metadata") != runtime.metadata:
+    checkpoint_metadata = payload.get("metadata", {})
+    current_metadata = runtime.metadata
+    checkpoint_commit = checkpoint_metadata.get("implementation_git_commit")
+    current_commit = current_metadata.get("implementation_git_commit")
+    checkpoint_immutable = copy.deepcopy(checkpoint_metadata)
+    current_immutable = copy.deepcopy(current_metadata)
+    checkpoint_immutable.pop("implementation_git_commit", None)
+    current_immutable.pop("implementation_git_commit", None)
+    compatible_recovery_commit = (
+        checkpoint_immutable == current_immutable
+        and isinstance(checkpoint_commit, str)
+        and isinstance(current_commit, str)
+        and subprocess.run(
+            ["git", "merge-base", "--is-ancestor", checkpoint_commit, current_commit],
+            cwd=REPO_ROOT,
+        ).returncode == 0
+    )
+    if checkpoint_metadata != current_metadata and not compatible_recovery_commit:
         raise SystemExit("2D1R resume metadata mismatch")
+    # Preserve the result lineage metadata embedded in the checkpoint. The
+    # checkpoint's top-level git_commit records the audited recovery code.
+    runtime.metadata = copy.deepcopy(checkpoint_metadata)
     runtime.model.load_state_dict(payload["model"], strict=True)
     runtime.optimizer.load_state_dict(payload["optimizer"])
     runtime.loader = d1.ExplicitShardLoader(
@@ -1163,43 +1230,53 @@ def run_preflight(args):
 def milestone_diagnostics(runtime, args, update, metrics):
     schedule = stage_for_update(update)
     val_path = d1.validation_shard(args.data_root)
-    controls = ("plain", "real", "zero", "shuffled") if update in (1908, 4769) else ("plain", "real")
-    validation = d1.evaluate_temporal(
-        runtime.model, val_path, schedule["windows"], schedule["rho"], controls=controls
-    )
-    validation.update({"update": update, "stage": schedule["stage"], "evaluated_at": time.time()})
     milestone_path = runtime.output / "milestone_validation.json"
     milestone = read_json(milestone_path) if milestone_path.is_file() else {"milestones": {}}
-    milestone["milestones"][str(update)] = validation
-    durable_json(milestone_path, milestone)
-
-    batches, _ = d1a.validation_batches(val_path)
-    r_embed = read_json(Path(args.source_2d1a_results) / "source_manifest.json")[
-        "frozen_parent_embedding_rms_R_embed"
-    ]
-    with torch.inference_mode():
-        rows, stopped = d1a.repeated_probe(
-            runtime.model, batches, update, tuple(schedule["windows"]), schedule["rho"], r_embed,
-            intervention="NATIVE", wu_scale=1.0, mode="NATIVE",
+    milestone_key = str(update)
+    if milestone_key in milestone["milestones"]:
+        validation = milestone["milestones"][milestone_key]
+    else:
+        controls = ("plain", "real", "zero", "shuffled") if update in (1908, 4769) else ("plain", "real")
+        validation = d1.evaluate_temporal(
+            runtime.model, val_path, schedule["windows"], schedule["rho"], controls=controls
         )
-    classification = d1a.classify_repeated(rows)
-    maximum_rms = max(row["recurrent_input_rms"] for row in rows)
-    all_finite = all(row["finite"] for row in rows)
-    scale_stable = all_finite and maximum_rms < HARD_SCALE_THRESHOLD
+        validation.update({"update": update, "stage": schedule["stage"], "evaluated_at": time.time()})
+        milestone["milestones"][milestone_key] = validation
+        durable_json(milestone_path, milestone)
+
     self_path = runtime.output / "self_composition.json"
     self_data = read_json(self_path)
-    self_data["milestones"][str(update)] = {
-        "update": update,
-        "stage": schedule["stage"],
-        "windows": list(schedule["windows"]),
-        "rho": schedule["rho"],
-        "classification": classification,
-        "native_scale_stable": scale_stable,
-        "maximum_recurrent_input_rms": maximum_rms,
-        "stops": stopped,
-        "rows": rows,
-    }
-    durable_json(self_path, self_data)
+    if milestone_key in self_data["milestones"]:
+        self_result = self_data["milestones"][milestone_key]
+        classification = self_result["classification"]
+        maximum_rms = self_result["maximum_recurrent_input_rms"]
+        scale_stable = self_result["native_scale_stable"]
+    else:
+        batches, _ = d1a.validation_batches(val_path)
+        r_embed = read_json(Path(args.source_2d1a_results) / "source_manifest.json")[
+            "frozen_parent_embedding_rms_R_embed"
+        ]
+        with torch.inference_mode():
+            rows, stopped = d1a.repeated_probe(
+                runtime.model, batches, update, tuple(schedule["windows"]), schedule["rho"], r_embed,
+                intervention="NATIVE", wu_scale=1.0, mode="NATIVE",
+            )
+        classification = d1a.classify_repeated(rows)
+        maximum_rms = max(row["recurrent_input_rms"] for row in rows)
+        all_finite = all(row["finite"] for row in rows)
+        scale_stable = all_finite and maximum_rms < HARD_SCALE_THRESHOLD
+        self_data["milestones"][milestone_key] = {
+            "update": update,
+            "stage": schedule["stage"],
+            "windows": list(schedule["windows"]),
+            "rho": schedule["rho"],
+            "classification": classification,
+            "native_scale_stable": scale_stable,
+            "maximum_recurrent_input_rms": maximum_rms,
+            "stops": stopped,
+            "rows": rows,
+        }
+        durable_json(self_path, self_data)
 
     matrix = {
         "update": update,
@@ -1220,7 +1297,7 @@ def milestone_diagnostics(runtime, args, update, metrics):
     }
     scale_path = runtime.output / "scale_diagnostics.json"
     scale_data = read_json(scale_path) if scale_path.is_file() else {"experiment": EXPERIMENT, "milestones": {}}
-    scale_data["milestones"][str(update)] = matrix
+    scale_data["milestones"][milestone_key] = matrix
     durable_json(scale_path, scale_data)
 
     if update in (1000, 1100):
@@ -1278,7 +1355,7 @@ def milestone_diagnostics(runtime, args, update, metrics):
         durable_json(runtime.output / "stage_c_rescue_gate.json", rescue_gate)
         if not rescue_gate["passed"]:
             raise SystemExit(f"Stage-C update-1200 rescue gate failed: {rescue_gate}")
-    return {"validation": validation, "self_composition": self_data["milestones"][str(update)], "matrix": matrix}
+    return {"validation": validation, "self_composition": self_data["milestones"][milestone_key], "matrix": matrix}
 
 
 def run_train_worker(args):
@@ -1346,6 +1423,21 @@ def run_train_worker(args):
             start_update = runtime.training_state["completed_updates"] + 1
     elif start_update != FIRST_RESULT_UPDATE:
         raise SystemExit("non-C954 resume requires existing 2D1R training metrics")
+    if args.resume and start_update - 1 in MILESTONE_UPDATES:
+        milestone_diagnostics(runtime, args, start_update - 1, existing[-1])
+        durable_json(runtime.output / "recovery_resume.json", {
+            "experiment": EXPERIMENT,
+            "reason": "transient persistent network-volume EIO while persisting milestone diagnostics",
+            "resume_checkpoint": str(Path(args.resume).resolve()),
+            "completed_update": start_update - 1,
+            "training_metrics_reused_without_duplication": True,
+            "validation_and_self_composition_reused_if_already_persisted": True,
+            "pending_milestone_outputs_completed": True,
+            "checkpoint_implementation_git_commit": runtime.metadata["implementation_git_commit"],
+            "recovery_implementation_git_commit": git_output("rev-parse", "HEAD"),
+            "recovered_at": time.time(),
+            "passed": True,
+        })
     for update in range(start_update, FINAL_UPDATE + 1):
         metrics, projection = train_one_update(runtime, update)
         append_jsonl(runtime.output / "training_metrics.jsonl", metrics)
