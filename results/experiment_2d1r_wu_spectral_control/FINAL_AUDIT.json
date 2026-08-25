@@ -43,11 +43,16 @@
     "reason": "protocol-mandated terminal recurrent-scale hard stop at attempted update 1915",
     "result update range exactly 955-4769": false
   },
+  "passed_terminal_pre_stop_seal": true,
   "terminal_checks": {
-    "Git synchronized": false,
+    "Git synchronized": true,
     "RunPod stop is pending final lifecycle action": true,
-    "exact Pod ID reverified before stop": false,
-    "persistent volume synchronized": false
+    "exact Pod ID reverified before stop": true,
+    "persistent volume synchronized": true,
+    "result_commit synchronized before terminal seal": "fba7abf6e32beb5d37be1dfa2226f816e366334b",
+    "verified Pod ID": "n25nq03ap89d3t",
+    "verified Pod name": "present_cyan_goat",
+    "verified pre-stop runtime status": "running"
   },
   "valid_terminal_scientific_outcome": true
 }

@@ -18,6 +18,9 @@ Next recommendation: ADD SECONDARY RECURRENT STABILIZATION
 Terminal checkpoint: /workspace/exp2d1r_run/checkpoints/scientific_update_1908.pt
 Terminal checkpoint SHA: 1d8c5f96cfe5eadc0cdb458d7cdc40b8c8cb78b15ef91a142d1c6044cd6d3864
 Artifact path: results/experiment_2d1r_wu_spectral_control
-Git/persistence seal and Pod stop: pending final lifecycle gates
+Result commit synchronized before terminal seal: fba7abf6e32beb5d37be1dfa2226f816e366334b
+Git/persistence pre-stop seal: PASS
+Exact Pod ID reverified: n25nq03ap89d3t (present_cyan_goat)
+Pod stop: authorized as the final lifecycle action after the terminal-seal commit and final remote sync
 
 # EXPERIMENT 2D1R COMPLETE
