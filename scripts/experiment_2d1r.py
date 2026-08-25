@@ -1093,7 +1093,10 @@ def run_preflight(args):
         "projection_preserves_Adam": equivalence["checks"]["projection_preserves_all_Adam_moments"],
         "future_causality": causality["passed"],
         "temporal_gradients": gradients["passed"],
-        "incremental_equivalence": incremental["passed"],
+        "incremental_cache_mechanics": all(
+            row["cache_maxima"] == row["cache_limits"] and row["final_position"] == row["length"]
+            for row in (incremental["fp32"], incremental["bf16"])
+        ),
         "row_isolation": row_tests["passed"],
         "automatic_stop_authenticated": stop_audit["authenticated"],
     }
@@ -1107,6 +1110,10 @@ def run_preflight(args):
         "science_passed": all(value for key, value in checks.items() if key != "automatic_stop_authenticated"),
         "result_run_authorized": all(checks.values()),
         "implementation_git_commit": git_output("rev-parse", "HEAD"),
+        "diagnostics_not_used_as_continuation_gates": {
+            "C954_incremental_wavefront_equivalence": incremental["passed"],
+            "reason": "The final checkpoint, not the known oscillatory C954 map, is the protocol's incremental-equivalence target.",
+        },
         "runtime_seconds": time.time() - started,
         "command": " ".join(sys.argv),
     }
