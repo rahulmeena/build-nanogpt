@@ -1,0 +1,106 @@
+{
+  "checkpoint_repeated_classifications": {
+    "1000": {
+      "checkpoint_file_sha_after": "c5731cfd2534b7a9e05db82f3b0f9008d311db0c13dd6975a757006bec43585f",
+      "checkpoint_file_sha_before": "c5731cfd2534b7a9e05db82f3b0f9008d311db0c13dd6975a757006bec43585f",
+      "checkpoint_file_unchanged": true,
+      "common_c_classification": "CONTRACTIVE",
+      "common_c_stops": [],
+      "model_state_after": "c2e8281fa7dbf9e7d13773eb34cd00d24ea39602989db9669a41a71d5b62a55e",
+      "model_state_before": "c2e8281fa7dbf9e7d13773eb34cd00d24ea39602989db9669a41a71d5b62a55e",
+      "model_state_unchanged": true
+    },
+    "1100": {
+      "F1_classification": "CONTRACTIVE",
+      "F1_stops": [],
+      "F2_classification": "CONTRACTIVE",
+      "F2_stops": [],
+      "F3_classification": "OSCILLATORY",
+      "F3_functional_scale": 0.7477465082343131,
+      "F3_stops": [],
+      "checkpoint_file_sha_after": "6cca94e75ac4802f92df8c1e18d611eb875f42d4312146bb09cb43dfe6d67ad6",
+      "checkpoint_file_sha_before": "6cca94e75ac4802f92df8c1e18d611eb875f42d4312146bb09cb43dfe6d67ad6",
+      "checkpoint_file_unchanged": true,
+      "common_b_classification": "OSCILLATORY",
+      "common_b_stops": [],
+      "common_c_classification": "OSCILLATORY",
+      "common_c_stops": [],
+      "model_state_after": "a113fd6898324bd27a82fda933443bc990061b040567bc3b35cb2bda86a8d824",
+      "model_state_before": "a113fd6898324bd27a82fda933443bc990061b040567bc3b35cb2bda86a8d824",
+      "model_state_unchanged": true,
+      "post_fix_probe_model_state_unchanged": true
+    },
+    "954": {
+      "checkpoint_file_sha_after": "22abc6de4e49e27504b4d0e66ca0d2e3396ed6d76d7ee18e0e11cfb1eb3192c0",
+      "checkpoint_file_sha_before": "22abc6de4e49e27504b4d0e66ca0d2e3396ed6d76d7ee18e0e11cfb1eb3192c0",
+      "checkpoint_file_unchanged": true,
+      "common_c_classification": "OSCILLATORY",
+      "common_c_stops": [],
+      "model_state_after": "59b58113aa5b410a27ffb78dceda76837235e1bffd2716800e1b9bbc1ac7ea87",
+      "model_state_before": "59b58113aa5b410a27ffb78dceda76837235e1bffd2716800e1b9bbc1ac7ea87",
+      "model_state_unchanged": true
+    }
+  },
+  "classification": "W_U AMPLIFICATION DOMINATES",
+  "evidence": {
+    "W_u_spectral_ratio": 1.3373516144680424,
+    "abs_G_PRE_gt_5": {
+      "954": 0.0,
+      "1100": 0.0
+    },
+    "reason": "W_u operator growth is material; functional spectral rescaling bounds recurrent input below the hard threshold while gate saturation remains absent."
+  },
+  "experiment": "2D1A",
+  "gate_saturation": {
+    "1000": {
+      "G_gt_1_98": 0.0,
+      "G_lt_0_02": 0.0,
+      "abs_G_PRE_gt_10": 0.0,
+      "abs_G_PRE_gt_5": 0.0,
+      "sigmoid_gt_0_99": 0.0,
+      "sigmoid_lt_0_01": 0.0
+    },
+    "1100": {
+      "G_gt_1_98": 0.0,
+      "G_lt_0_02": 0.0,
+      "abs_G_PRE_gt_10": 0.0,
+      "abs_G_PRE_gt_5": 0.0,
+      "sigmoid_gt_0_99": 0.0,
+      "sigmoid_lt_0_01": 0.0
+    },
+    "954": {
+      "G_gt_1_98": 0.0,
+      "G_lt_0_02": 0.0,
+      "abs_G_PRE_gt_10": 0.0,
+      "abs_G_PRE_gt_5": 0.0,
+      "sigmoid_gt_0_99": 0.0,
+      "sigmoid_lt_0_01": 0.0
+    }
+  },
+  "matrix_ratios": {
+    "W_g_C1100_over_C954_spectral": 1.0222994535889247,
+    "W_u_C1100_over_C954_frobenius": 1.1660313802119815,
+    "W_u_C1100_over_C954_spectral": 1.3373516144680424
+  },
+  "perturbation_amplification": {
+    "954": {
+      "checkpoint": 954,
+      "fused_input_amplification_ratio": 0.12784839088088584,
+      "input_perturbation_rms": 0.002302651380887255,
+      "output_amplification_max": 86.65557349944635,
+      "output_amplification_min": 77.37313519772269,
+      "output_amplification_ratio": 82.84207745972545,
+      "output_top_perturbation_rms": 0.1907562930136919
+    },
+    "1100": {
+      "checkpoint": 1100,
+      "fused_input_amplification_ratio": 0.18107183234160162,
+      "input_perturbation_rms": 0.00231676796101965,
+      "output_amplification_max": 24.66296597817996,
+      "output_amplification_min": 23.86867460144215,
+      "output_amplification_ratio": 24.27548983793498,
+      "output_top_perturbation_rms": 0.05624069273471832
+    }
+  },
+  "scientific_boundary": "This diagnoses recurrent dynamical scale only; it does not show that triangle KV geometry fails or that one B12 state is insufficient."
+}
