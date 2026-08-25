@@ -1,0 +1,130 @@
+{
+  "all_new_diagnostic_values_finite": true,
+  "causality_and_shift": {
+    "one_position_shift_exact": true,
+    "passed": true,
+    "plain_prefix_future_independent": true,
+    "plain_prefix_max_abs_delta": 0.0,
+    "position_zero_recurrent_state_zero": true,
+    "recurrent_prefix_future_independent": true,
+    "recurrent_prefix_max_abs_delta": 0.0
+  },
+  "checkpoint_payload_metadata": {
+    "1000": {
+      "completed_updates": 1000,
+      "rho": 0.75,
+      "stage": "C",
+      "windows": [
+        256,
+        290,
+        329,
+        373,
+        423,
+        481,
+        545,
+        619,
+        702,
+        796,
+        903,
+        1024
+      ]
+    },
+    "1100": {
+      "completed_updates": 1100,
+      "rho": 0.75,
+      "stage": "C",
+      "windows": [
+        256,
+        290,
+        329,
+        373,
+        423,
+        481,
+        545,
+        619,
+        702,
+        796,
+        903,
+        1024
+      ]
+    },
+    "954": {
+      "completed_updates": 954,
+      "rho": 0.5,
+      "stage": "B",
+      "windows": [
+        512,
+        545,
+        581,
+        618,
+        658,
+        702,
+        747,
+        796,
+        848,
+        903,
+        962,
+        1024
+      ]
+    }
+  },
+  "checkpoint_state_audits": {
+    "1000": {
+      "checkpoint_file_sha_after": "c5731cfd2534b7a9e05db82f3b0f9008d311db0c13dd6975a757006bec43585f",
+      "checkpoint_file_sha_before": "c5731cfd2534b7a9e05db82f3b0f9008d311db0c13dd6975a757006bec43585f",
+      "checkpoint_file_unchanged": true,
+      "common_c_classification": "CONTRACTIVE",
+      "common_c_stops": [],
+      "model_state_after": "c2e8281fa7dbf9e7d13773eb34cd00d24ea39602989db9669a41a71d5b62a55e",
+      "model_state_before": "c2e8281fa7dbf9e7d13773eb34cd00d24ea39602989db9669a41a71d5b62a55e",
+      "model_state_unchanged": true
+    },
+    "1100": {
+      "F1_classification": "CONTRACTIVE",
+      "F1_stops": [],
+      "F2_classification": "CONTRACTIVE",
+      "F2_stops": [],
+      "F3_classification": "OSCILLATORY",
+      "F3_functional_scale": 0.7477465082343131,
+      "F3_stops": [],
+      "checkpoint_file_sha_after": "6cca94e75ac4802f92df8c1e18d611eb875f42d4312146bb09cb43dfe6d67ad6",
+      "checkpoint_file_sha_before": "6cca94e75ac4802f92df8c1e18d611eb875f42d4312146bb09cb43dfe6d67ad6",
+      "checkpoint_file_unchanged": true,
+      "common_b_classification": "OSCILLATORY",
+      "common_b_stops": [],
+      "common_c_classification": "OSCILLATORY",
+      "common_c_stops": [],
+      "model_state_after": "a113fd6898324bd27a82fda933443bc990061b040567bc3b35cb2bda86a8d824",
+      "model_state_before": "a113fd6898324bd27a82fda933443bc990061b040567bc3b35cb2bda86a8d824",
+      "model_state_unchanged": true,
+      "post_fix_probe_model_state_unchanged": true
+    },
+    "954": {
+      "checkpoint_file_sha_after": "22abc6de4e49e27504b4d0e66ca0d2e3396ed6d76d7ee18e0e11cfb1eb3192c0",
+      "checkpoint_file_sha_before": "22abc6de4e49e27504b4d0e66ca0d2e3396ed6d76d7ee18e0e11cfb1eb3192c0",
+      "checkpoint_file_unchanged": true,
+      "common_c_classification": "OSCILLATORY",
+      "common_c_stops": [],
+      "model_state_after": "59b58113aa5b410a27ffb78dceda76837235e1bffd2716800e1b9bbc1ac7ea87",
+      "model_state_before": "59b58113aa5b410a27ffb78dceda76837235e1bffd2716800e1b9bbc1ac7ea87",
+      "model_state_unchanged": true
+    }
+  },
+  "experiment": "2D1A",
+  "forbidden_operation_counts": {
+    "backward_calls": 0,
+    "gradscaler_objects": 0,
+    "optimizer_objects": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "scheduler_objects": 0,
+    "training_targets": 0
+  },
+  "grad_enabled_during_result_compute": false,
+  "model_eval": true,
+  "native_forward_equivalence": {
+    "exact": true,
+    "max_abs_delta": 0.0
+  },
+  "runtime_seconds": 179.66867446899414
+}
