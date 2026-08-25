@@ -36,13 +36,7 @@
   },
   "experiment": "2D1A",
   "passed": true,
-  "pending_terminal_checks": [
-    "results/report commits pushed",
-    "local/pod/origin synchronized",
-    "remote sync",
-    "GPU idle",
-    "exact Pod ID reverified"
-  ],
+  "pending_terminal_checks": [],
   "plot_checks": {
     "P1": true,
     "P2": true,
@@ -53,6 +47,26 @@
     "P7": true,
     "P8": true
   },
+  "pod_stop_authorized": true,
   "pod_stop_authorized_after_pending_terminal_checks": true,
-  "success_criterion_met": true
+  "success_criterion_met": true,
+  "terminal_seal": {
+    "exact_pod_id": "n25nq03ap89d3t",
+    "final_report_commit": "652cc539f214387aa15377335c4130edced45c46",
+    "final_report_commit_pushed": true,
+    "gpu_idle_memory_mb": 0,
+    "implementation_commit": "fa8a912d4ff2bbf161e32e175948546b097e133e",
+    "local_head_matched_origin_after_report_push": true,
+    "network_volume_id": "yhzyb27fb5",
+    "pod_clean_clone_matched_report_commit": true,
+    "pod_name": "present_cyan_goat",
+    "pod_runtime_status_before_stop": "running",
+    "preflight_commit": "5b47410de62b517af81c344d07d91564c7ff2af1",
+    "remote_gpu_compute_processes": 0,
+    "remote_strict_read_passed": true,
+    "remote_sync_completed": true,
+    "results_commit": "26d242f46509b4d354d5621753692c4c8f70a023",
+    "results_persisted_under_workspace": true,
+    "runpodctl_exact_id_reverified_locally": true
+  }
 }
