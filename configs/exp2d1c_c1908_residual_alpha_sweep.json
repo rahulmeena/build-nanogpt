@@ -1,0 +1,43 @@
+{
+  "experiment": "2D1C",
+  "protocol": "exp2d1c_c1908_residual_alpha_sweep_v1",
+  "branch": "experiment-2d1c-c1908-residual-alpha-sweep",
+  "frozen_2d1b_tag": "experiment-2d1b-rho-window-factorial-final",
+  "frozen_2d1b_commit": "e2197377d84991d5ff13eb059e203a25f143d18b",
+  "source_checkpoint": {
+    "path": "/workspace/exp2d1r_run/checkpoints/scientific_update_1908.pt",
+    "sha256": "1d8c5f96cfe5eadc0cdb458d7cdc40b8c8cb78b15ef91a142d1c6044cd6d3864",
+    "bytes": 1508096779,
+    "completed_updates": 1908,
+    "wu_cap_provenance": 1.0262317657470703
+  },
+  "validation": {
+    "path": "/workspace/edu_fineweb10B/edufineweb_val_000000.npy",
+    "sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+    "canonical_collection_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+    "batches": 20,
+    "batch_size": 64,
+    "sequence_length": 1024
+  },
+  "windows": [128, 154, 187, 225, 272, 330, 398, 481, 581, 702, 848, 1024],
+  "alphas": [0.0, 0.03125, 0.0625, 0.0827875253078167, 0.125, 0.25, 0.5, 0.75, 1.0],
+  "alpha_rms_match": {
+    "source_artifact": "results/experiment_2d1b_c1908_rho_window_factorial/scale_decomposition.json",
+    "source_condition": "C",
+    "E_RMS": 0.035749336006763825,
+    "F_RMS": 0.4318203240626207,
+    "value": 0.0827875253078167
+  },
+  "position_bins": [[1, 64], [65, 128], [129, 256], [257, 512], [513, 768], [769, 896], [897, 1023]],
+  "self_composition": {
+    "batches": 2,
+    "passes": 32,
+    "stage_a_rms_reference": 0.03550996296107769,
+    "hard_threshold": 0.3550996296107769,
+    "individual_stop_threshold": 3.550996296107769
+  },
+  "runpod": {
+    "pod_name": "fun_orange_kiwi",
+    "exact_pod_id": "iacw1uhacgsq9f"
+  }
+}
