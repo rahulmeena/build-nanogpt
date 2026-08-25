@@ -1,0 +1,26 @@
+{
+  "branch": "experiment-2d1a-recurrent-scale-forensics",
+  "checkpoints": {
+    "1000": "c5731cfd2534b7a9e05db82f3b0f9008d311db0c13dd6975a757006bec43585f",
+    "1100": "6cca94e75ac4802f92df8c1e18d611eb875f42d4312146bb09cb43dfe6d67ad6",
+    "954": "22abc6de4e49e27504b4d0e66ca0d2e3396ed6d76d7ee18e0e11cfb1eb3192c0"
+  },
+  "common_b": {
+    "rho": 0.5,
+    "windows": [512, 545, 581, 618, 658, 702, 747, 796, 848, 903, 962, 1024]
+  },
+  "common_c": {
+    "rho": 0.75,
+    "windows": [256, 290, 329, 373, 423, 481, 545, 619, 702, 796, 903, 1024]
+  },
+  "expensive_batches": 2,
+  "forensic_batches": 4,
+  "frozen_2d1_commit": "2d4be75e0568d5e2df80b8963c1260db4982ca70",
+  "frozen_2d1_tag": "experiment-2d1-unstable-final",
+  "position_bins": [[1, 64], [65, 128], [129, 256], [257, 512], [513, 768], [769, 896], [897, 1023]],
+  "protocol": "exp2d1a_recurrent_scale_forensics_v1",
+  "repeated_passes": 32,
+  "source_checkpoint_sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+  "stage_a_recurrent_input_rms": 0.03550996296107769,
+  "validation_shard_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f"
+}
