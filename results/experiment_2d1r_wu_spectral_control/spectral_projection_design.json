@@ -1,0 +1,45 @@
+{
+  "C954_identity": {
+    "checkpoint": 954,
+    "logits_bit_exact": true,
+    "loss_absolute_delta": 0.0,
+    "loss_after": 3.470021963119507,
+    "loss_before": 3.470021963119507,
+    "maximum_absolute_logit_delta": 0.0,
+    "passed": true,
+    "projection": {
+      "method": "torch.linalg.matrix_norm(ord=2), FP32, every update",
+      "projection_applied": false,
+      "projection_pressure": 0.0,
+      "projection_scale": 1.0,
+      "relative_tolerance": 1e-05,
+      "sigma_cap": 1.0262317657470703,
+      "sigma_post": 1.0262317657470703,
+      "sigma_raw": 1.0262317657470703
+    },
+    "sigma_ref": 1.0262317657470703,
+    "top_bit_exact": true,
+    "weight_bit_exact": true
+  },
+  "W_g_constrained": false,
+  "experiment": "2D1R",
+  "optimizer_moments_modified_by_projection": false,
+  "order": [
+    "optimizer.step",
+    "exact FP32 sigma_raw",
+    "W_u-only projection",
+    "exact FP32 sigma_post"
+  ],
+  "parameter": "fusion.W_u.weight",
+  "performance": {
+    "approximation_used": false,
+    "measurements": 10,
+    "method": "exact torch.linalg.matrix_norm(ord=2), FP32",
+    "selected_for_result_path": true,
+    "two_norm_calls_max_seconds": 0.11849454790353775,
+    "two_norm_calls_mean_seconds": 0.10300885960459709
+  },
+  "relative_tolerance": 1e-05,
+  "scale_formula": "min(1, sigma_cap / sigma_raw)",
+  "sigma_cap": 1.0262317657470703
+}

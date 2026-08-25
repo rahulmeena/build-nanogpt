@@ -1,0 +1,138 @@
+{
+  "archived_gradient_groups": {
+    "W_g": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 0.09745725989341736,
+      "tensors": 1
+    },
+    "W_u": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 9.822108268737793,
+      "tensors": 1
+    },
+    "base": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 13.655389785766602,
+      "tensors": 148
+    }
+  },
+  "archived_gradient_norm_before_clip": 16.821205139160156,
+  "archived_pass_losses": [
+    3.150455206632614,
+    3.3565419018268585
+  ],
+  "archived_prefix_lengths": [
+    [
+      825
+    ],
+    [
+      608
+    ],
+    [
+      990
+    ],
+    [
+      742
+    ],
+    [
+      360
+    ],
+    [
+      602
+    ],
+    [
+      880
+    ],
+    [
+      885
+    ]
+  ],
+  "archived_weighted_total_ce": 3.3050202429294586,
+  "checks": {
+    "gradient_groups_match": true,
+    "gradient_norm_match": true,
+    "optimizer_pre_step_exact": true,
+    "pass_losses_match": true,
+    "post_sigma_bounded": true,
+    "prefix_rng_exact": true,
+    "projection_only_mutates_W_u": true,
+    "projection_preserves_all_Adam_moments": true,
+    "weighted_loss_match": true
+  },
+  "gradient_groups": {
+    "W_g": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 0.09745725989341736,
+      "tensors": 1
+    },
+    "W_u": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 9.822108268737793,
+      "tensors": 1
+    },
+    "base": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 13.655389785766602,
+      "tensors": 148
+    }
+  },
+  "gradient_norm_before_clip": 16.821205139160156,
+  "gradient_sha256": "b5256c06c3c8a1478949cf0e9d58a8f4e24a495cd0a82464d5150fa3b2e2fe22",
+  "non_W_u_model_sha_after_projection": "1f0ebdadb6b332512feefab19b8cb1fa50bb9dae29e45e411808cb2e28e8d68f",
+  "non_W_u_model_sha_before_projection": "1f0ebdadb6b332512feefab19b8cb1fa50bb9dae29e45e411808cb2e28e8d68f",
+  "optimizer_sha_after_projection": "afef08d4395279f9ef9b87b65fca398ae90e7a4a1c4aed9f4619056540351cd4",
+  "optimizer_sha_before_projection": "afef08d4395279f9ef9b87b65fca398ae90e7a4a1c4aed9f4619056540351cd4",
+  "optimizer_state_exactly_loaded": true,
+  "pass_losses": [
+    3.150455206632614,
+    3.3565419018268585
+  ],
+  "passed": true,
+  "post_adam_W_u_sigma": 1.0280002355575562,
+  "prefix_lengths": [
+    [
+      825
+    ],
+    [
+      608
+    ],
+    [
+      990
+    ],
+    [
+      742
+    ],
+    [
+      360
+    ],
+    [
+      602
+    ],
+    [
+      880
+    ],
+    [
+      885
+    ]
+  ],
+  "projection": {
+    "method": "torch.linalg.matrix_norm(ord=2), FP32, every update",
+    "projection_applied": true,
+    "projection_pressure": 0.0017232655132228825,
+    "projection_scale": 0.9982796990221245,
+    "relative_tolerance": 1e-05,
+    "sigma_cap": 1.0262317657470703,
+    "sigma_post": 1.0262240171432495,
+    "sigma_raw": 1.0280002355575562
+  },
+  "source_checkpoint": "/workspace/exp2d1_run/checkpoints/scientific_update_0954.pt",
+  "source_checkpoint_sha256": "22abc6de4e49e27504b4d0e66ca0d2e3396ed6d76d7ee18e0e11cfb1eb3192c0",
+  "update": 955,
+  "weighted_total_ce": 3.3050202429294586
+}

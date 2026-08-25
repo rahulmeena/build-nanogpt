@@ -1,0 +1,295 @@
+{
+  "architecture": {
+    "auxiliary_loss": false,
+    "base_architecture": "Standard GPT-2 124M",
+    "context": 1024,
+    "experiment": "2D1",
+    "full_attnres": false,
+    "fusion": {
+      "normalization": "affine-free RMSNorm",
+      "output": "value*token_gate",
+      "position_embedding_in_gate": false,
+      "token_gate": "2*sigmoid(W_g(token_embedding))",
+      "value": "W_u(RMSNorm(z_prev))"
+    },
+    "heads": 12,
+    "hidden_width": 768,
+    "layers": 12,
+    "pass_schedule": {
+      "three_pass_every": 32,
+      "two_pass_fraction": 0.96875
+    },
+    "position_embeddings": "learned absolute GPT-2",
+    "protocol": "exp2d1_triangle_recurrent_cotraining_v1",
+    "readers": false,
+    "recurrent_destination": "model input before learned positional embedding",
+    "recurrent_source": "ln_f(B12 output) from previous temporal pass at t-1",
+    "recurrent_state_shape": [
+      "B",
+      "T",
+      768
+    ],
+    "teacher": false,
+    "temporal_attnres": false,
+    "temporal_detach": false,
+    "vocab_size": 50304,
+    "weight_tying": "preserved",
+    "writer_adapters": false
+  },
+  "causality": {
+    "cutoff": 8,
+    "no_wraparound": true,
+    "one_token_shift_exact": true,
+    "pass1_prefix_max_delta": 0.0,
+    "pass2_prefix_logit_max_delta": 0.0,
+    "passed": true,
+    "position_zero_source_exact_zero": true
+  },
+  "curriculum": {
+    "final_window_sum": 4373,
+    "final_windows": [
+      64,
+      82,
+      106,
+      136,
+      175,
+      226,
+      290,
+      374,
+      481,
+      619,
+      796,
+      1024
+    ],
+    "full_window_sum": 12288,
+    "nominal_fraction": 0.3558756510416667,
+    "nominal_removed_fraction": 0.6441243489583333,
+    "stages": [
+      {
+        "cumulative_targets": 250085376,
+        "first_update": 1,
+        "last_update": 477,
+        "rho": {
+          "first": 0.0,
+          "kind": "linear",
+          "last": 0.5
+        },
+        "stage": "A",
+        "updates": 477,
+        "window_sum": 12288,
+        "windows": [
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024,
+          1024
+        ]
+      },
+      {
+        "cumulative_targets": 500170752,
+        "first_update": 478,
+        "last_update": 954,
+        "rho": {
+          "kind": "constant",
+          "value": 0.5
+        },
+        "stage": "B",
+        "updates": 477,
+        "window_sum": 8896,
+        "windows": [
+          512,
+          545,
+          581,
+          618,
+          658,
+          702,
+          747,
+          796,
+          848,
+          903,
+          962,
+          1024
+        ]
+      },
+      {
+        "cumulative_targets": 1000341504,
+        "first_update": 955,
+        "last_update": 1908,
+        "rho": {
+          "kind": "constant",
+          "value": 0.75
+        },
+        "stage": "C",
+        "updates": 954,
+        "window_sum": 6741,
+        "windows": [
+          256,
+          290,
+          329,
+          373,
+          423,
+          481,
+          545,
+          619,
+          702,
+          796,
+          903,
+          1024
+        ]
+      },
+      {
+        "cumulative_targets": 1500512256,
+        "first_update": 1909,
+        "last_update": 2862,
+        "rho": {
+          "kind": "constant",
+          "value": 1.0
+        },
+        "stage": "D",
+        "updates": 954,
+        "window_sum": 5330,
+        "windows": [
+          128,
+          154,
+          187,
+          225,
+          272,
+          330,
+          398,
+          481,
+          581,
+          702,
+          848,
+          1024
+        ]
+      },
+      {
+        "cumulative_targets": 2500329472,
+        "first_update": 2863,
+        "last_update": 4769,
+        "rho": {
+          "kind": "constant",
+          "value": 1.0
+        },
+        "stage": "E",
+        "updates": 1907,
+        "window_sum": 4373,
+        "windows": [
+          64,
+          82,
+          106,
+          136,
+          175,
+          226,
+          290,
+          374,
+          481,
+          619,
+          796,
+          1024
+        ]
+      }
+    ]
+  },
+  "fusion_formula_implementation": "frozen scripts/experiment_2d1.py",
+  "incremental_equivalence": {
+    "bf16": {
+      "cache_limits": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "cache_maxima": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "final_position": 16,
+      "kernel_note": "BF16 full-sequence and one-token GEMM/SDPA reduction shapes differ",
+      "length": 16,
+      "maximum_absolute_logit_difference": 16.375,
+      "mean_absolute_logit_difference": 1.3460718393325806,
+      "passed": false,
+      "threshold": 0.3
+    },
+    "fp32": {
+      "cache_limits": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "cache_maxima": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "final_position": 16,
+      "kernel_note": "TF32 disabled for strict FP32 equivalence",
+      "length": 16,
+      "maximum_absolute_logit_difference": 0.381594181060791,
+      "mean_absolute_logit_difference": 0.012016131542623043,
+      "passed": false,
+      "threshold": 5e-05
+    },
+    "passed": false
+  },
+  "row_and_reset": {
+    "passed": true,
+    "reset_implementations_bit_exact": true,
+    "reset_max_logit_delta": 0.0,
+    "reset_position": 16,
+    "row_isolation_exact": true,
+    "row_isolation_max_logit_delta": 0.0
+  },
+  "temporal_gradients": {
+    "all_finite": true,
+    "pass2_direct_gradient_norm": 0.9869955778121948,
+    "pass2_future_gradient_norm": 0.0,
+    "pass3_future_gradient_norm": 0.0,
+    "pass3_two_transition_gradient_norm": 5.3654093742370605,
+    "passed": true
+  }
+}

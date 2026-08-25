@@ -1,0 +1,61 @@
+{
+  "checks": {
+    "C954_loader_RNG_exact": true,
+    "C954_optimizer_exact": true,
+    "F3_reproduction": true,
+    "archived_C1000_machine_artifact_exact": true,
+    "automatic_stop_authenticated": true,
+    "frozen_2D1A_tag_exact": true,
+    "future_causality": true,
+    "incremental_cache_mechanics": true,
+    "projection_deterministic_exact": true,
+    "projection_only_mutates_W_u": true,
+    "projection_preserves_Adam": true,
+    "row_isolation": true,
+    "sigma_ref_exact": true,
+    "source_hashes_exact": true,
+    "temporal_gradients": true
+  },
+  "command": "scripts/experiment_2d1r.py preflight --parent-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d1r-result/results/experiment_2d1r_wu_spectral_control --run-root /workspace/exp2d1r_run --source-c954 /workspace/exp2d1_run/checkpoints/scientific_update_0954.pt --checkpoint-1000 /workspace/exp2d1_run/checkpoints/recovery_update_1000.pt --checkpoint-1100 /workspace/exp2d1_run/checkpoints/recovery_update_1100.pt --source-2d1-results /workspace/build-nanogpt-exp2d1r-result/results/experiment_2d1_triangle_recurrent --source-2d1a-results /workspace/build-nanogpt-exp2d1r-result/results/experiment_2d1a_recurrent_scale_forensics --pod-id n25nq03ap89d3t --stop-mechanism Local macOS Keychain service runpod-codex-pod-stopper plus local runpodctl pod stop n25nq03ap89d3t --stop-authenticated",
+  "config": {
+    "additional_targets": 2000158720,
+    "additional_updates": 3815,
+    "branch": "experiment-2d1r-wu-spectral-control",
+    "c1000_sha256": "c5731cfd2534b7a9e05db82f3b0f9008d311db0c13dd6975a757006bec43585f",
+    "c1100_sha256": "6cca94e75ac4802f92df8c1e18d611eb875f42d4312146bb09cb43dfe6d67ad6",
+    "f3_late_ce": 3.2037985622882843,
+    "f3_max_recurrent_input_rms": 0.2808440625667572,
+    "f3_spectral_scale": 0.7477465082343131,
+    "frozen_2d1a_commit": "bd62e356132065f9d3a65924cde204a84b1bac0d",
+    "frozen_2d1a_tag": "experiment-2d1a-recurrent-scale-forensics-final",
+    "parent_validation_loss": 3.0750437753315962,
+    "projection_relative_tolerance": 1e-05,
+    "protocol": "exp2d1r_wu_spectral_control_v1",
+    "source_c954_bytes": 1508094603,
+    "source_c954_sha256": "22abc6de4e49e27504b4d0e66ca0d2e3396ed6d76d7ee18e0e11cfb1eb3192c0",
+    "source_checkpoint_sha256": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+    "stage_a_recurrent_input_rms": 0.03550996296107769,
+    "start_update": 954,
+    "terminal_update": 4769,
+    "total_targets": 2500329472,
+    "validation_shard_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+    "wu_sigma_reference": 1.0262317657470703
+  },
+  "diagnostics_not_used_as_continuation_gates": {
+    "C954_incremental_wavefront_equivalence": false,
+    "reason": "The final checkpoint, not the known oscillatory C954 map, is the protocol's incremental-equivalence target."
+  },
+  "experiment": "2D1R",
+  "hashes": {
+    "C1100": "6cca94e75ac4802f92df8c1e18d611eb875f42d4312146bb09cb43dfe6d67ad6",
+    "C954": "22abc6de4e49e27504b4d0e66ca0d2e3396ed6d76d7ee18e0e11cfb1eb3192c0",
+    "parent_checkpoint": "924ce6c8392c06ae24ab8f2ffd203787ee0022055c54554bac43bd9a34037871",
+    "validation_shard": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f"
+  },
+  "implementation_git_commit": "5604a18d0242417fa03d577848ede795746aa7c3",
+  "pod_id": "n25nq03ap89d3t",
+  "protocol": "exp2d1r_wu_spectral_control_v1",
+  "result_run_authorized": true,
+  "runtime_seconds": 108.16308450698853,
+  "science_passed": true
+}
