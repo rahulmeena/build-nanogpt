@@ -1,8 +1,10 @@
 {
   "commands": [
-    "scripts/experiment_2d1d.py preflight --parent-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d1c/results/experiment_2d1d_residual_recurrence_retrain_c954 --run-root /workspace/exp2d1d_run --source-c954 /workspace/exp2d1_run/checkpoints/scientific_update_0954.pt --pod-id iacw1uhacgsq9f --pod-name fun_orange_kiwi --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity runpod-volume-iacw1uhacgsq9f-dev-vdb --stop-mechanism local-macOS-Keychain-runpodctl --stop-authenticated"
+    "scripts/experiment_2d1d.py preflight --parent-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d1c/results/experiment_2d1d_residual_recurrence_retrain_c954 --run-root /workspace/exp2d1d_run --source-c954 /workspace/exp2d1_run/checkpoints/scientific_update_0954.pt --pod-id iacw1uhacgsq9f --pod-name fun_orange_kiwi --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity runpod-volume-iacw1uhacgsq9f-dev-vdb --stop-mechanism local-macOS-Keychain-runpodctl --stop-authenticated",
+    "scripts/experiment_2d1d.py finalize --parent-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d1c/results/experiment_2d1d_residual_recurrence_retrain_c954 --run-root /workspace/exp2d1d_run --source-c954 /workspace/exp2d1_run/checkpoints/scientific_update_0954.pt --pod-id iacw1uhacgsq9f --pod-name fun_orange_kiwi --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity runpod-volume-iacw1uhacgsq9f-dev-vdb --stop-mechanism local-macOS-Keychain-runpodctl --stop-authenticated --final-checkpoint /workspace/exp2d1d_run/checkpoints/scientific_local_0477_global_1431.pt"
   ],
   "experiment": "2D1D",
+  "finalize_completed_at": 1787691141.1703255,
   "hardware": {
     "autocast": "cuda bfloat16",
     "cublas_workspace_config": ":4096:8",
