@@ -1,0 +1,22 @@
+{
+  "commands": [
+    "scripts/experiment_2d1d.py preflight --parent-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d1c/results/experiment_2d1d_residual_recurrence_retrain_c954 --run-root /workspace/exp2d1d_run --source-c954 /workspace/exp2d1_run/checkpoints/scientific_update_0954.pt --pod-id iacw1uhacgsq9f --pod-name fun_orange_kiwi --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity runpod-volume-iacw1uhacgsq9f-dev-vdb --stop-mechanism local-macOS-Keychain-runpodctl --stop-authenticated"
+  ],
+  "experiment": "2D1D",
+  "hardware": {
+    "autocast": "cuda bfloat16",
+    "cublas_workspace_config": ":4096:8",
+    "cuda_device_count": 1,
+    "cuda_runtime": "12.8",
+    "cudnn": 91002,
+    "float32_matmul_precision": "high",
+    "git_branch": "experiment-2d1d-residual-recurrence-retrain-c954",
+    "git_commit": "bb84268775bb71bdf3eba5c494f6f2f6e53e8779",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "platform": "Linux-6.14.0-24-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+    "timestamp": 1787685282.2932382,
+    "torch": "2.8.0+cu128"
+  },
+  "started_at": 1787685186.497403
+}

@@ -1,0 +1,63 @@
+{
+  "B12": [
+    512,
+    545,
+    581,
+    618,
+    658,
+    702,
+    747,
+    796,
+    848,
+    903,
+    962,
+    1024
+  ],
+  "C12": [
+    256,
+    290,
+    329,
+    373,
+    423,
+    481,
+    545,
+    619,
+    702,
+    796,
+    903,
+    1024
+  ],
+  "F": "W_u(RMSNorm_noaffine(z_prev)) * (2*sigmoid(W_g(E)))",
+  "all_parameters_trainable": true,
+  "alpha": 0.03125,
+  "alpha_trainable": false,
+  "equation": "X = E + alpha * F",
+  "experiment": "2D1D",
+  "pass1": "plain X=E",
+  "pass2": "shifted pass1 top, no detach",
+  "pass3": "shifted pass2 top, no detach every 32nd global update",
+  "rho_present_in_result_path": false,
+  "three_pass_weights": [
+    0.2,
+    0.4,
+    0.4
+  ],
+  "two_pass_weights": [
+    0.25,
+    0.75
+  ],
+  "weight_tying": true,
+  "zero_identity": {
+    "F_exact_zero": true,
+    "W_g_zero": true,
+    "W_u_zero": true,
+    "X_equals_E": true,
+    "alphaF_exact_zero": true,
+    "logits_exact": true,
+    "loss_exact": true,
+    "passed": true,
+    "plain_loss": 3.7945785522460938,
+    "real_loss": 3.7945785522460938,
+    "top_states_exact": true
+  }
+}

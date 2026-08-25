@@ -1,0 +1,421 @@
+{
+  "all_losses_finite": true,
+  "alphaF_over_E_finite": true,
+  "causality": {
+    "cutoff": 8,
+    "no_wraparound": true,
+    "one_token_shift_exact": true,
+    "pass1_prefix_max_delta": 0.0,
+    "pass2_prefix_logit_max_delta": 0.0,
+    "passed": true,
+    "position_zero_source_exact_zero": true
+  },
+  "checkpoint_discarded": true,
+  "checkpoint_reload": true,
+  "checks": {
+    "alphaF_over_E_finite": true,
+    "causality": true,
+    "checkpoint_discarded": true,
+    "checkpoint_reload": true,
+    "losses_finite": true,
+    "projection": true,
+    "step1_W_u_changed": true,
+    "step1_W_u_gradient_nonzero": true,
+    "step1_base_gradient_nonzero": true,
+    "step2_W_g_gradient_nonzero": true,
+    "temporal_gradients": true
+  },
+  "disposable": true,
+  "passed": true,
+  "projection_passed": true,
+  "step1": {
+    "W_g_gradient": {
+      "finite": true,
+      "nonzero": false,
+      "norm": 0.0,
+      "tensors": 1
+    },
+    "W_u_became_nonzero": true,
+    "W_u_gradient": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 0.015507043339312077,
+      "tensors": 1
+    },
+    "base_gradient": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 0.5781305432319641,
+      "tensors": 148
+    },
+    "metrics": {
+      "additional_targets": 524288,
+      "all_gradients_finite": true,
+      "all_optimizer_moments_finite": true,
+      "all_parameters_finite": true,
+      "alpha": 0.03125,
+      "cumulative_targets": 500695040,
+      "explosion_consecutive": 0,
+      "global_update": 955,
+      "gradient_groups": {
+        "W_g": {
+          "finite": true,
+          "nonzero": false,
+          "norm": 0.0,
+          "tensors": 1
+        },
+        "W_u": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.015507043339312077,
+          "tensors": 1
+        },
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.5781305432319641,
+          "tensors": 148
+        }
+      },
+      "gradient_norm_before_clip": 0.5783382654190063,
+      "hard_rms_threshold": 0.3550996296107769,
+      "local_update": 1,
+      "lrs": {
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "fusion": 0.0003
+      },
+      "pass_count": 2,
+      "pass_losses": [
+        3.0953153669834137,
+        3.0953153669834137
+      ],
+      "peak_allocated_vram_mb": 39652.88232421875,
+      "peak_reserved_vram_mb": 56000.0,
+      "prefix_lengths": [
+        [
+          825
+        ],
+        [
+          608
+        ],
+        [
+          990
+        ],
+        [
+          742
+        ],
+        [
+          360
+        ],
+        [
+          602
+        ],
+        [
+          880
+        ],
+        [
+          885
+        ]
+      ],
+      "projection": {
+        "W_g_frobenius": 0.0,
+        "W_g_spectral": 0.0,
+        "W_u_frobenius": 0.22956079244613647,
+        "corrective_projection_count": 0,
+        "corrective_projection_scales": [],
+        "global_update": 955,
+        "local_update": 1,
+        "method": "torch.linalg.matrix_norm(ord=2), FP32, every update",
+        "primary_projection_scale": 1.0,
+        "projection_applied": false,
+        "projection_pressure": 0.0,
+        "projection_scale": 1.0,
+        "relative_tolerance": 1e-05,
+        "sigma_cap": 1.0262317657470703,
+        "sigma_post": 0.08567321300506592,
+        "sigma_raw": 0.08567321300506592,
+        "stage": "B-R",
+        "timestamp": 1787685256.5980837
+      },
+      "rho_disabled": true,
+      "scale_diagnostics": {
+        "E_rms": 0.035566315054893494,
+        "F_rms": 0.0,
+        "U_rms": 0.0,
+        "X_over_E": 1.0,
+        "X_rms": 0.035566315054893494,
+        "ZN_rms": 0.9995105862617493,
+        "alphaF_over_E": 0.0,
+        "alphaF_rms": 0.0,
+        "gate_mean": 1.0,
+        "gate_pre_mean": 0.0,
+        "gate_pre_std": 0.0,
+        "gate_saturation_fraction": 0.0,
+        "gate_std": 0.0,
+        "gate_variance": 0.0
+      },
+      "stage": "B-R",
+      "stage_a_ratio": 1.0015869375554565,
+      "state_diagnostics": {
+        "F_rms": 0.0,
+        "U_rms": 0.0,
+        "X_over_E": 1.0,
+        "ZN_rms": 0.9995105862617493,
+        "alpha": 0.03125,
+        "alphaF_over_E": 0.0,
+        "alphaF_rms": 0.0,
+        "embedding_rms": 0.035566315054893494,
+        "gate_mean": 1.0,
+        "gate_saturation_fraction": 0.0,
+        "gate_std": 0.0,
+        "gate_variance": 0.0,
+        "recurrent_fraction": 0.134765625,
+        "recurrent_input_rms": 0.035566315054893494,
+        "rho_disabled": true,
+        "shifted_top_rms": 2.2965660095214844,
+        "top_state_norm_mean": 63.65296936035156,
+        "top_state_norm_std": 1.6857675313949585,
+        "top_state_rms": 2.2976841926574707,
+        "top_temporal_cosine": 0.5264587998390198
+      },
+      "targets_per_second": 47867.69018786432,
+      "timestamp": 1787685256.5990937,
+      "wall_seconds": 10.952857719734311,
+      "weighted_total_ce": 3.0953153669834137,
+      "windows": [
+        512,
+        545,
+        581,
+        618,
+        658,
+        702,
+        747,
+        796,
+        848,
+        903,
+        962,
+        1024
+      ]
+    },
+    "projection": {
+      "W_g_frobenius": 0.0,
+      "W_g_spectral": 0.0,
+      "W_u_frobenius": 0.22956079244613647,
+      "corrective_projection_count": 0,
+      "corrective_projection_scales": [],
+      "global_update": 955,
+      "local_update": 1,
+      "method": "torch.linalg.matrix_norm(ord=2), FP32, every update",
+      "primary_projection_scale": 1.0,
+      "projection_applied": false,
+      "projection_pressure": 0.0,
+      "projection_scale": 1.0,
+      "relative_tolerance": 1e-05,
+      "sigma_cap": 1.0262317657470703,
+      "sigma_post": 0.08567321300506592,
+      "sigma_raw": 0.08567321300506592,
+      "stage": "B-R",
+      "timestamp": 1787685256.5980837
+    }
+  },
+  "step2": {
+    "W_g_gradient": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 2.9703531254199333e-05,
+      "tensors": 1
+    },
+    "W_u_gradient": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 0.09893669188022614,
+      "tensors": 1
+    },
+    "base_gradient": {
+      "finite": true,
+      "nonzero": true,
+      "norm": 0.42113909125328064,
+      "tensors": 148
+    },
+    "metrics": {
+      "additional_targets": 1048576,
+      "all_gradients_finite": true,
+      "all_optimizer_moments_finite": true,
+      "all_parameters_finite": true,
+      "alpha": 0.03125,
+      "cumulative_targets": 501219328,
+      "explosion_consecutive": 0,
+      "global_update": 956,
+      "gradient_groups": {
+        "W_g": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 2.9703531254199333e-05,
+          "tensors": 1
+        },
+        "W_u": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.09893669188022614,
+          "tensors": 1
+        },
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.42113909125328064,
+          "tensors": 148
+        }
+      },
+      "gradient_norm_before_clip": 0.43260443210601807,
+      "hard_rms_threshold": 0.3550996296107769,
+      "local_update": 2,
+      "lrs": {
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "fusion": 0.0003
+      },
+      "pass_count": 2,
+      "pass_losses": [
+        3.048740476369858,
+        3.0508684515953064
+      ],
+      "peak_allocated_vram_mb": 39663.44580078125,
+      "peak_reserved_vram_mb": 56000.0,
+      "prefix_lengths": [
+        [
+          382
+        ],
+        [
+          279
+        ],
+        [
+          606
+        ],
+        [
+          400
+        ],
+        [
+          648
+        ],
+        [
+          64
+        ],
+        [
+          367
+        ],
+        [
+          83
+        ]
+      ],
+      "projection": {
+        "W_g_frobenius": 0.08853526413440704,
+        "W_g_spectral": 0.06498393416404724,
+        "W_u_frobenius": 0.3061009645462036,
+        "corrective_projection_count": 0,
+        "corrective_projection_scales": [],
+        "global_update": 956,
+        "local_update": 2,
+        "method": "torch.linalg.matrix_norm(ord=2), FP32, every update",
+        "primary_projection_scale": 1.0,
+        "projection_applied": false,
+        "projection_pressure": 0.0,
+        "projection_scale": 1.0,
+        "relative_tolerance": 1e-05,
+        "sigma_cap": 1.0262317657470703,
+        "sigma_post": 0.10182017087936401,
+        "sigma_raw": 0.10182017087936401,
+        "stage": "B-R",
+        "timestamp": 1787685267.438917
+      },
+      "rho_disabled": true,
+      "scale_diagnostics": {
+        "E_rms": 0.03557325154542923,
+        "F_rms": 0.030786138027906418,
+        "U_rms": 0.030786138027906418,
+        "X_over_E": 1.0005651828513658,
+        "X_rms": 0.03559335693717003,
+        "ZN_rms": 0.999510645866394,
+        "alphaF_over_E": 0.027044669002029717,
+        "alphaF_rms": 0.0009620668133720756,
+        "gate_mean": 1.0,
+        "gate_pre_mean": 0.0,
+        "gate_pre_std": 0.0,
+        "gate_saturation_fraction": 0.0,
+        "gate_std": 0.0,
+        "gate_variance": 0.0
+      },
+      "stage": "B-R",
+      "stage_a_ratio": 1.0023484669973817,
+      "state_diagnostics": {
+        "F_rms": 0.030747612938284874,
+        "U_rms": 0.030747612938284874,
+        "X_over_E": 1.0005639261913295,
+        "ZN_rms": 0.999510645866394,
+        "alpha": 0.03125,
+        "alphaF_over_E": 0.027010825903679942,
+        "alphaF_rms": 0.0009608629043214023,
+        "embedding_rms": 0.03557325154542923,
+        "gate_mean": 1.0,
+        "gate_saturation_fraction": 0.0,
+        "gate_std": 0.0,
+        "gate_variance": 0.0,
+        "recurrent_fraction": 0.91796875,
+        "recurrent_input_rms": 0.03559331223368645,
+        "rho_disabled": true,
+        "shifted_top_rms": 2.301865339279175,
+        "top_state_norm_mean": 63.76753234863281,
+        "top_state_norm_std": 1.650200366973877,
+        "top_state_rms": 2.3017830848693848,
+        "top_temporal_cosine": 0.5236290693283081
+      },
+      "targets_per_second": 48371.497148524235,
+      "timestamp": 1787685267.4907808,
+      "wall_seconds": 10.838779672048986,
+      "weighted_total_ce": 3.050336480140686,
+      "windows": [
+        512,
+        545,
+        581,
+        618,
+        658,
+        702,
+        747,
+        796,
+        848,
+        903,
+        962,
+        1024
+      ]
+    },
+    "projection": {
+      "W_g_frobenius": 0.08853526413440704,
+      "W_g_spectral": 0.06498393416404724,
+      "W_u_frobenius": 0.3061009645462036,
+      "corrective_projection_count": 0,
+      "corrective_projection_scales": [],
+      "global_update": 956,
+      "local_update": 2,
+      "method": "torch.linalg.matrix_norm(ord=2), FP32, every update",
+      "primary_projection_scale": 1.0,
+      "projection_applied": false,
+      "projection_pressure": 0.0,
+      "projection_scale": 1.0,
+      "relative_tolerance": 1e-05,
+      "sigma_cap": 1.0262317657470703,
+      "sigma_post": 0.10182017087936401,
+      "sigma_raw": 0.10182017087936401,
+      "stage": "B-R",
+      "timestamp": 1787685267.438917
+    }
+  },
+  "temporal_gradients": {
+    "all_finite": true,
+    "pass2_direct_gradient_norm": 0.004369825124740601,
+    "pass2_future_gradient_norm": 0.0,
+    "pass3_future_gradient_norm": 0.0,
+    "pass3_two_transition_gradient_norm": 8.210870873881504e-05,
+    "passed": true
+  },
+  "updates": 2
+}
