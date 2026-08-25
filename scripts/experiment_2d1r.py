@@ -324,7 +324,28 @@ def load_source_runtime(args):
     optimizer.load_state_dict(payload["optimizer"])
     micro_batch = int(payload["loader_state"]["batch_size"])
     gradient_accumulation = d1.GLOBAL_TARGETS // (micro_batch * d1.T)
-    loader = d1.ExplicitShardLoader(shards, micro_batch, d1.T, state=payload["loader_state"])
+    loader_state = copy.deepcopy(payload["loader_state"])
+    frozen_shards = tuple(loader_state["shards"])
+    current_shards = tuple(str(Path(path).resolve()) for path in shards)
+    path_relocation = None
+    if frozen_shards != current_shards:
+        frozen_names = [Path(path).name for path in frozen_shards]
+        current_names = [Path(path).name for path in current_shards]
+        if frozen_names != current_names or len(frozen_shards) != 99:
+            raise SystemExit("C954 loader shard order cannot be safely relocated")
+        path_relocation = {
+            "reason": "restarted network volume resolves the restored dataset symlink to its persistent target",
+            "frozen_root": str(Path(frozen_shards[0]).parent),
+            "current_resolved_root": str(Path(current_shards[0]).parent),
+            "ordered_basenames_exact": True,
+            "shard_count": len(frozen_shards),
+            "cursor_unchanged": {
+                "current_shard": loader_state["current_shard"],
+                "current_position": loader_state["current_position"],
+            },
+        }
+        loader_state["shards"] = list(current_shards)
+    loader = d1.ExplicitShardLoader(shards, micro_batch, d1.T, state=loader_state)
     next_hash = d1.next_global_batch_hash(loader, gradient_accumulation)
     if next_hash != payload["next_global_batch_sha256"]:
         raise SystemExit(f"C954 next-global-batch mismatch: {next_hash}")
@@ -359,6 +380,7 @@ def load_source_runtime(args):
         source_payload=payload,
         source_checks=source_checks,
         source_sha=observed_sha,
+        path_relocation=path_relocation,
     )
     return result
 
@@ -964,6 +986,7 @@ def run_preflight(args):
         "validation_shard_sha256": hashes["validation_shard"],
         "training_shards": len(runtime.shards),
         "loader_state": runtime.source_payload["loader_state"],
+        "loader_path_relocation": runtime.path_relocation,
         "next_global_batch_sha256": runtime.source_payload["next_global_batch_sha256"],
         "optimizer_metadata": runtime.optimizer_report,
         "source_checks": runtime.source_checks,
