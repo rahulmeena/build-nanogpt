@@ -1,0 +1,97 @@
+{
+  "arithmetic": {
+    "all_outputs_finite": true,
+    "gain_exact": true,
+    "sequence_gap_exact": true,
+    "zero_dependency_exact": true
+  },
+  "causality": {
+    "one_position_shift_exact": true,
+    "passed": true,
+    "plain_prefix_future_independent": true,
+    "plain_prefix_max_abs_delta": 0.0,
+    "position_zero_recurrent_state_zero": true,
+    "recurrent_prefix_future_independent": true,
+    "recurrent_prefix_max_abs_delta": 0.0,
+    "row_isolation_other_rows_exact": true,
+    "row_zero_changed": true
+  },
+  "checks": {
+    "A_native_regression_exact": true,
+    "C1908_SHA_exact": true,
+    "C1908_strict_reopen": true,
+    "Plain_A_equals_Plain_B": true,
+    "Plain_C_equals_Plain_D": true,
+    "W_g_unchanged": true,
+    "W_u_unchanged": true,
+    "canonical_validation_hash_exact": true,
+    "causal_and_row_isolation": true,
+    "cross_artifact_arithmetic_exact": true,
+    "exact_C12": true,
+    "exact_D12": true,
+    "exact_rhos": true,
+    "exactly_four_conditions": true,
+    "forbidden_counts_all_zero": true,
+    "model_parameter_hash_unchanged": true,
+    "no_teacher_reconstruction_AttnRes_fusion_redesign_HellaSwag": true,
+    "postmortem_tag_exact": true,
+    "same_fixed_derangement": true
+  },
+  "experiment": "2D1B",
+  "factorial_evaluations_repeated_during_finalization": 0,
+  "forbidden_operation_counts": {
+    "backward_calls": 0,
+    "gradscaler_objects": 0,
+    "optimizer_objects": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "scheduler_objects": 0,
+    "training_dataloader_advancement": 0,
+    "training_targets": 0
+  },
+  "git_synchronization": "FINALIZATION GATE OUTSIDE RESULT-BEARING PROCESS",
+  "native_regression": {
+    "absolute_deltas": {
+      "plain": 3.2659652760003155e-11,
+      "real": 3.694378136742671e-11,
+      "recurrent_gain": 4.284031462908899e-12,
+      "sequence_gap": 4.2674808131693e-11,
+      "shuffled": 5.730971253115058e-12,
+      "zero": 8.65263416471862e-12
+    },
+    "maximum_absolute_delta": 4.2674808131693e-11,
+    "observed": {
+      "plain": 3.08158343086734,
+      "real": 3.175199738963056,
+      "recurrent_gain": -0.09361630809571597,
+      "sequence_gap": 0.19294023024267482,
+      "shuffled": 3.368139969205731,
+      "zero": 9.785113237891347
+    },
+    "oracle": {
+      "plain": 3.0815834309,
+      "real": 3.175199739,
+      "recurrent_gain": -0.0936163081,
+      "sequence_gap": 0.1929402302,
+      "shuffled": 3.3681399692,
+      "zero": 9.7851132379
+    },
+    "passed": true,
+    "tolerance": 1e-06
+  },
+  "parameter_hash_note": "The result process computed before/after hashes before its plot-only dependency failure; this independent strict-reopen finalizer repeats the immutable hash gate without rerunning A/B/C/D.",
+  "parameter_hashes": {
+    "finalization_reopen_after": {
+      "W_g": "9e0c5fdebf9c16a31b7a8e358a6bf6150f06f1075b21c259dd6847d3a22991e1",
+      "W_u": "dd80711819753cf3b5d5f92c0d5adac201cb89c47cefa0f9d48ba1f6f262d9b4",
+      "model": "f93d61d58fb42d982790bdb67ee80c9fd54ed78a04e9264106db096722c2652a"
+    },
+    "finalization_reopen_before": {
+      "W_g": "9e0c5fdebf9c16a31b7a8e358a6bf6150f06f1075b21c259dd6847d3a22991e1",
+      "W_u": "dd80711819753cf3b5d5f92c0d5adac201cb89c47cefa0f9d48ba1f6f262d9b4",
+      "model": "f93d61d58fb42d982790bdb67ee80c9fd54ed78a04e9264106db096722c2652a"
+    }
+  },
+  "passed": true,
+  "protocol": "exp2d1b_c1908_rho_window_factorial_v1"
+}

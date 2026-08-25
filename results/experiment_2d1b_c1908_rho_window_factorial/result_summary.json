@@ -1,0 +1,338 @@
+{
+  "conditions": {
+    "A": {
+      "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+      "condition": "A",
+      "description": "C windows, rho=.75 (native C1908)",
+      "performance": {
+        "peak_allocated_vram_mb": 26252.2138671875,
+        "peak_reserved_vram_mb": 27364.0,
+        "target_passes_per_second": 358417.85268300265,
+        "wall_seconds": 14.627842783927917
+      },
+      "plain": 3.08158343086734,
+      "real": 3.175199738963056,
+      "recurrent_gain": -0.09361630809571597,
+      "rho": 0.75,
+      "sequence_gap": 0.19294023024267482,
+      "shuffled": 3.368139969205731,
+      "windows": [
+        256,
+        290,
+        329,
+        373,
+        423,
+        481,
+        545,
+        619,
+        702,
+        796,
+        903,
+        1024
+      ],
+      "zero": 9.785113237891347,
+      "zero_dependency": 6.60991349892829
+    },
+    "B": {
+      "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+      "condition": "B",
+      "description": "C windows, rho=1",
+      "performance": {
+        "peak_allocated_vram_mb": 26252.2138671875,
+        "peak_reserved_vram_mb": 27364.0,
+        "target_passes_per_second": 359056.76337606186,
+        "wall_seconds": 14.601813793182373
+      },
+      "plain": 3.08158343086734,
+      "real": 3.4573128504059243,
+      "recurrent_gain": -0.3757294195385841,
+      "rho": 1.0,
+      "sequence_gap": 0.6898787456884747,
+      "shuffled": 4.147191596094399,
+      "windows": [
+        256,
+        290,
+        329,
+        373,
+        423,
+        481,
+        545,
+        619,
+        702,
+        796,
+        903,
+        1024
+      ],
+      "zero": 10.038849581871181,
+      "zero_dependency": 6.581536731465257
+    },
+    "C": {
+      "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+      "condition": "C",
+      "description": "D windows, rho=.75",
+      "performance": {
+        "peak_allocated_vram_mb": 26261.2138671875,
+        "peak_reserved_vram_mb": 27374.0,
+        "target_passes_per_second": 358904.343938333,
+        "wall_seconds": 14.608014889061451
+      },
+      "plain": 3.1001356740385746,
+      "real": 3.1871706691557846,
+      "recurrent_gain": -0.08703499511721002,
+      "rho": 0.75,
+      "sequence_gap": 0.21367539112015965,
+      "shuffled": 3.4008460602759443,
+      "windows": [
+        128,
+        154,
+        187,
+        225,
+        272,
+        330,
+        398,
+        481,
+        581,
+        702,
+        848,
+        1024
+      ],
+      "zero": 9.720289874169975,
+      "zero_dependency": 6.53311920501419
+    },
+    "D": {
+      "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+      "condition": "D",
+      "description": "D windows, rho=1",
+      "performance": {
+        "peak_allocated_vram_mb": 26261.2138671875,
+        "peak_reserved_vram_mb": 27374.0,
+        "target_passes_per_second": 359284.40799050755,
+        "wall_seconds": 14.592562002129853
+      },
+      "plain": 3.1001356740385746,
+      "real": 3.4835763178389243,
+      "recurrent_gain": -0.3834406438003497,
+      "rho": 1.0,
+      "sequence_gap": 0.73498206349268,
+      "shuffled": 4.218558381331604,
+      "windows": [
+        128,
+        154,
+        187,
+        225,
+        272,
+        330,
+        398,
+        481,
+        581,
+        702,
+        848,
+        1024
+      ],
+      "zero": 10.059015879128129,
+      "zero_dependency": 6.575439561289205
+    }
+  },
+  "factorial_contrasts": {
+    "max_recurrent_input_rms": {
+      "rho_effect_at_C_windows_B_minus_A": 0.10667842626571655,
+      "rho_effect_at_D_windows_D_minus_C": 0.10777083039283752,
+      "rho_x_window_interaction_D_minus_C_minus_B_plus_A": 0.0010924041271209717,
+      "values": {
+        "A": 0.3223922848701477,
+        "B": 0.42907071113586426,
+        "C": 0.32566046714782715,
+        "D": 0.4334312975406647
+      },
+      "window_effect_at_rho_075_C_minus_A": 0.0032681822776794434,
+      "window_effect_at_rho_100_D_minus_B": 0.004360586404800415
+    },
+    "real_validation_loss": {
+      "rho_effect_at_C_windows_B_minus_A": 0.2821131114428681,
+      "rho_effect_at_D_windows_D_minus_C": 0.2964056486831397,
+      "rho_x_window_interaction_D_minus_C_minus_B_plus_A": 0.014292537240271574,
+      "values": {
+        "A": 3.175199738963056,
+        "B": 3.4573128504059243,
+        "C": 3.1871706691557846,
+        "D": 3.4835763178389243
+      },
+      "window_effect_at_rho_075_C_minus_A": 0.011970930192728435,
+      "window_effect_at_rho_100_D_minus_B": 0.02626346743300001
+    },
+    "recurrent_gain": {
+      "rho_effect_at_C_windows_B_minus_A": -0.2821131114428681,
+      "rho_effect_at_D_windows_D_minus_C": -0.2964056486831397,
+      "rho_x_window_interaction_D_minus_C_minus_B_plus_A": -0.014292537240271574,
+      "values": {
+        "A": -0.09361630809571597,
+        "B": -0.3757294195385841,
+        "C": -0.08703499511721002,
+        "D": -0.3834406438003497
+      },
+      "window_effect_at_rho_075_C_minus_A": 0.006581312978505949,
+      "window_effect_at_rho_100_D_minus_B": -0.007711224261765626
+    }
+  },
+  "next_recommendation": "REDESIGN RECURRENT FUSION TO RETAIN AN EXPLICIT CURRENT-TOKEN CONTENT PATH",
+  "plain_equalities": {
+    "Plain_A_equals_Plain_B": true,
+    "Plain_C_equals_Plain_D": true
+  },
+  "predictive_classification": "RHO=1 IS PRIMARY PREDICTIVE BOTTLENECK",
+  "scale_classification": "RHO=1 DOMINATES STAGE-D SCALE FAILURE",
+  "stability": {
+    "A": {
+      "classification": "BOUNDED OSCILLATORY",
+      "hard_threshold": 0.3550996296107769,
+      "max_recurrent_input_rms": 0.3223922848701477,
+      "pass_32": [
+        {
+          "F_rms": 0.4008757770061493,
+          "X_over_E": 8.431452123281687,
+          "X_rms": 0.30125701427459717,
+          "batch": 0,
+          "ce": 3.169236421585083,
+          "condition": "A",
+          "finite": true,
+          "pass": 32,
+          "recurrent_input_rms": 0.30125701427459717,
+          "state_change_rms": 0.08093452453613281,
+          "state_cosine": 0.9994100332260132,
+          "top_state_rms": 2.34665846824646
+        },
+        {
+          "F_rms": 0.3967841863632202,
+          "X_over_E": 8.372269638058285,
+          "X_rms": 0.2981894314289093,
+          "batch": 1,
+          "ce": 3.176783561706543,
+          "condition": "A",
+          "finite": true,
+          "pass": 32,
+          "recurrent_input_rms": 0.2981894314289093,
+          "state_change_rms": 0.0834798663854599,
+          "state_cosine": 0.9993728399276733,
+          "top_state_rms": 2.3474574089050293
+        }
+      ],
+      "scale_bounded": true,
+      "stage_a_reference_rms": 0.03550996296107769,
+      "wall_seconds": 13.42248020786792
+    },
+    "B": {
+      "classification": "EXPANSIVE",
+      "hard_threshold": 0.3550996296107769,
+      "max_recurrent_input_rms": 0.42907071113586426,
+      "pass_32": [
+        {
+          "F_rms": 0.416429728269577,
+          "X_over_E": 11.654899190281796,
+          "X_rms": 0.4164312481880188,
+          "batch": 0,
+          "ce": 3.5569610595703125,
+          "condition": "B",
+          "finite": true,
+          "pass": 32,
+          "recurrent_input_rms": 0.4164312481880188,
+          "state_change_rms": 0.18514175713062286,
+          "state_cosine": 0.9969100952148438,
+          "top_state_rms": 2.3372950553894043
+        },
+        {
+          "F_rms": 0.4139523208141327,
+          "X_over_E": 11.622587214741875,
+          "X_rms": 0.4139537811279297,
+          "batch": 1,
+          "ce": 3.5944366455078125,
+          "condition": "B",
+          "finite": true,
+          "pass": 32,
+          "recurrent_input_rms": 0.4139537811279297,
+          "state_change_rms": 0.21328844130039215,
+          "state_cosine": 0.9959099292755127,
+          "top_state_rms": 2.3374552726745605
+        }
+      ],
+      "scale_bounded": false,
+      "stage_a_reference_rms": 0.03550996296107769,
+      "wall_seconds": 13.40240002144128
+    },
+    "C": {
+      "classification": "BOUNDED OSCILLATORY",
+      "hard_threshold": 0.3550996296107769,
+      "max_recurrent_input_rms": 0.32566046714782715,
+      "pass_32": [
+        {
+          "F_rms": 0.40421029925346375,
+          "X_over_E": 8.501389288848843,
+          "X_rms": 0.30375587940216064,
+          "batch": 0,
+          "ce": 3.180915355682373,
+          "condition": "C",
+          "finite": true,
+          "pass": 32,
+          "recurrent_input_rms": 0.30375587940216064,
+          "state_change_rms": 0.0861770510673523,
+          "state_cosine": 0.9993308782577515,
+          "top_state_rms": 2.345905065536499
+        },
+        {
+          "F_rms": 0.40025514364242554,
+          "X_over_E": 8.445301240507607,
+          "X_rms": 0.30079054832458496,
+          "batch": 1,
+          "ce": 3.1877031326293945,
+          "condition": "C",
+          "finite": true,
+          "pass": 32,
+          "recurrent_input_rms": 0.30079054832458496,
+          "state_change_rms": 0.08565913140773773,
+          "state_cosine": 0.9993382096290588,
+          "top_state_rms": 2.3463289737701416
+        }
+      ],
+      "scale_bounded": true,
+      "stage_a_reference_rms": 0.03550996296107769,
+      "wall_seconds": 13.365198517218232
+    },
+    "D": {
+      "classification": "EXPANSIVE",
+      "hard_threshold": 0.3550996296107769,
+      "max_recurrent_input_rms": 0.4334312975406647,
+      "pass_32": [
+        {
+          "F_rms": 0.42269033193588257,
+          "X_over_E": 11.830117446777987,
+          "X_rms": 0.42269182205200195,
+          "batch": 0,
+          "ce": 3.592780590057373,
+          "condition": "D",
+          "finite": true,
+          "pass": 32,
+          "recurrent_input_rms": 0.42269182205200195,
+          "state_change_rms": 0.21034981310367584,
+          "state_cosine": 0.9959754943847656,
+          "top_state_rms": 2.33528208732605
+        },
+        {
+          "F_rms": 0.42092156410217285,
+          "X_over_E": 11.818261937980791,
+          "X_rms": 0.42092299461364746,
+          "batch": 1,
+          "ce": 3.629852056503296,
+          "condition": "D",
+          "finite": true,
+          "pass": 32,
+          "recurrent_input_rms": 0.42092299461364746,
+          "state_change_rms": 0.2486904412508011,
+          "state_cosine": 0.9943827390670776,
+          "top_state_rms": 2.334833860397339
+        }
+      ],
+      "scale_bounded": false,
+      "stage_a_reference_rms": 0.03550996296107769,
+      "wall_seconds": 13.386421404778957
+    }
+  }
+}

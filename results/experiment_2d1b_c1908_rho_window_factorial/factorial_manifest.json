@@ -1,0 +1,128 @@
+{
+  "conditions": {
+    "A": {
+      "description": "C windows, rho=.75 (native C1908)",
+      "rho": 0.75,
+      "windows": [
+        256,
+        290,
+        329,
+        373,
+        423,
+        481,
+        545,
+        619,
+        702,
+        796,
+        903,
+        1024
+      ]
+    },
+    "B": {
+      "description": "C windows, rho=1",
+      "rho": 1.0,
+      "windows": [
+        256,
+        290,
+        329,
+        373,
+        423,
+        481,
+        545,
+        619,
+        702,
+        796,
+        903,
+        1024
+      ]
+    },
+    "C": {
+      "description": "D windows, rho=.75",
+      "rho": 0.75,
+      "windows": [
+        128,
+        154,
+        187,
+        225,
+        272,
+        330,
+        398,
+        481,
+        581,
+        702,
+        848,
+        1024
+      ]
+    },
+    "D": {
+      "description": "D windows, rho=1",
+      "rho": 1.0,
+      "windows": [
+        128,
+        154,
+        187,
+        225,
+        272,
+        330,
+        398,
+        481,
+        581,
+        702,
+        848,
+        1024
+      ]
+    }
+  },
+  "controls": [
+    "plain",
+    "real",
+    "shuffled",
+    "zero"
+  ],
+  "experiment": "2D1B",
+  "forbidden_operation_counts": {
+    "backward_calls": 0,
+    "gradscaler_objects": 0,
+    "optimizer_objects": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "scheduler_objects": 0,
+    "training_dataloader_advancement": 0,
+    "training_targets": 0
+  },
+  "hard_threshold": 0.3550996296107769,
+  "position_bins": [
+    [
+      1,
+      64
+    ],
+    [
+      65,
+      128
+    ],
+    [
+      129,
+      256
+    ],
+    [
+      257,
+      512
+    ],
+    [
+      513,
+      768
+    ],
+    [
+      769,
+      896
+    ],
+    [
+      897,
+      1023
+    ]
+  ],
+  "protocol": "exp2d1b_c1908_rho_window_factorial_v1",
+  "self_composition_batches": 2,
+  "self_composition_passes": 32,
+  "stage_a_reference_rms": 0.03550996296107769
+}

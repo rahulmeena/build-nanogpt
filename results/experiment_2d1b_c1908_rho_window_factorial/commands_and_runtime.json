@@ -1,0 +1,30 @@
+{
+  "command": "scripts/experiment_2d1b.py --source-checkpoint /workspace/exp2d1r_run/checkpoints/scientific_update_1908.pt --parent-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --validation-shard /workspace/edu_fineweb10B/edufineweb_val_000000.npy --pod-id iacw1uhacgsq9f",
+  "completed_at": 1787681780.696601,
+  "environment": {
+    "cuda": "12.8",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "gpu_bytes": 85095874560,
+    "numpy": "2.1.2",
+    "platform": "Linux-6.14.0-24-generic-x86_64-with-glibc2.39",
+    "pod_id": "iacw1uhacgsq9f",
+    "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+    "torch": "2.8.0+cu128"
+  },
+  "factorial_evaluations_repeated_during_finalization": 0,
+  "finalization_wall_seconds": 11.327067613601685,
+  "finalize_existing_command": "scripts/experiment_2d1b.py --source-checkpoint /workspace/exp2d1r_run/checkpoints/scientific_update_1908.pt --parent-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --validation-shard /workspace/edu_fineweb10B/edufineweb_val_000000.npy --pod-id iacw1uhacgsq9f --finalize-existing",
+  "forbidden_operation_counts": {
+    "backward_calls": 0,
+    "gradscaler_objects": 0,
+    "optimizer_objects": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "scheduler_objects": 0,
+    "training_dataloader_advancement": 0,
+    "training_targets": 0
+  },
+  "git_head": "77e17ded991be009341e175ad6709b0fabed3c60",
+  "result": "PASS",
+  "started_at": 1787681507.463876
+}
