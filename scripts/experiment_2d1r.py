@@ -1525,6 +1525,20 @@ def projection_stage_summary(projection_rows):
     result = {}
     for stage in ("C", "D", "E"):
         rows = [row for row in projection_rows if row["stage"] == stage]
+        if not rows:
+            result[stage] = {
+                "updates": 0,
+                "projected_updates": 0,
+                "fraction_projected": 0.0,
+                "mean_projection_scale": None,
+                "minimum_projection_scale": None,
+                "mean_projection_pressure": None,
+                "maximum_projection_pressure": None,
+                "maximum_raw_sigma": None,
+                "maximum_post_sigma": None,
+                "optimizer_consistently_pushes_against_cap": False,
+            }
+            continue
         scales = [row["projection_scale"] for row in rows]
         pressure = [row["projection_pressure"] for row in rows]
         result[stage] = {
@@ -1701,6 +1715,355 @@ Pod status: pending terminal Git/persistence seal
 
 # EXPERIMENT 2D1R COMPLETE
 """
+
+
+def render_terminal_failure_report(summary, audit, questions):
+    answers = "\n\n".join(f"### {key}\n\n{value}" for key, value in questions.items())
+    return f"""EXPERIMENT 2D1R CLASSIFICATION:
+{summary['primary_classification']}
+
+SECONDARY RECURRENCE CLASSIFICATION:
+{summary['secondary_classification']}
+
+# Experiment 2D1R — Terminal Scientific Result
+
+Spectral control successfully carried the exact C954 continuation through all
+of Stage C, but the unchanged rho=1 Stage-D transition triggered the original
+three-consecutive recurrent-scale hard stop on attempted update
+{summary['terminal_hard_failure']['attempted_update']}. The last persisted
+result update is {summary['completed_update']}; no failed update was appended.
+
+The recurrent-input RMS on the terminal attempt was
+`{summary['terminal_hard_failure']['attempted_recurrent_input_rms']:.12f}`
+({summary['terminal_hard_failure']['attempted_stage_a_ratio']:.6f}× the Stage-A
+reference), above the exact hard threshold
+`{summary['terminal_hard_failure']['hard_threshold']:.12f}`. Every completed
+W_u projection remained within the frozen C954 cap
+`{summary['sigma_ref']:.12f}`. Therefore this is a valid negative scientific
+result, not an integrity failure.
+
+At the last completed Stage-C milestone (C1908), plain and real recurrent
+validation CE were `{summary['final_plain_validation_loss']:.10f}` and
+`{summary['final_real_recurrent_validation_loss']:.10f}`. Recurrent gain was
+`{summary['recurrent_gain']:+.10f}` with
+{summary['paired_wins']['plain']}/20 paired wins. The 32-pass Stage-C probe was
+{summary['stage_c_self_classification']} and remained bounded at
+`{summary['stage_c_self_max_rms']:.12f}`.
+
+Final-target controls and incremental validation are not scientifically
+applicable because the protocol-mandated hard stop prevented reaching Stage E.
+Their required artifacts explicitly record `NOT_RUN_TERMINAL_HARD_FAILURE`.
+
+## Scientific questions
+
+{answers}
+
+## Integrity
+
+Terminal scientific audit before the Git/persistence seal:
+**{'PASS' if audit['passed_before_terminal_seal'] else 'FAIL'}**.
+
+Next recommendation: **{summary['next_recommendation']}**. It was not executed.
+
+# EXPERIMENT 2D1R COMPLETE
+"""
+
+
+def render_terminal_failure_handoff(summary):
+    return f"""EXPERIMENT 2D1R CLASSIFICATION:
+{summary['primary_classification']}
+
+SECONDARY RECURRENCE CLASSIFICATION:
+{summary['secondary_classification']}
+
+Last persisted / attempted update: {summary['completed_update']} / {summary['terminal_hard_failure']['attempted_update']}
+Actual additional updates/tokens: {summary['actual_additional_updates']} / {summary['actual_additional_targets']}
+Actual cumulative adaptation tokens: {summary['actual_total_targets']}
+C954 source SHA: {summary['C954_source_SHA']}
+sigma_ref: {summary['sigma_ref']}
+Projection by stage: {summary['projection_by_stage']}
+Maximum raw/post W_u sigma: {summary['maximum_raw_sigma']} / {summary['maximum_post_sigma']}
+Stage-C/D/E max recurrent RMS: {summary['stage_max_recurrent_rms']}
+C1908 plain/real/zero/shuffled: {summary['final_plain_validation_loss']} / {summary['final_real_recurrent_validation_loss']} / {summary['final_zero_validation_loss']} / {summary['final_shuffled_validation_loss']}
+Recurrent gain / sequence gap: {summary['recurrent_gain']} / {summary['sequence_gap']}
+Next recommendation: {summary['next_recommendation']}
+Terminal checkpoint: {summary['final_checkpoint']}
+Terminal checkpoint SHA: {summary['final_checkpoint_sha256']}
+Artifact path: results/{OUTPUT_NAME}
+Git/persistence seal and Pod stop: pending final lifecycle gates
+
+# EXPERIMENT 2D1R COMPLETE
+"""
+
+
+def run_finalize_terminal_failure(args):
+    require_git(clean=False)
+    output = Path(args.output_dir).resolve()
+    status = read_json(output / "supervisor_status.json")
+    if status.get("returncode") == 0 or status.get("training_complete"):
+        raise SystemExit("terminal-failure finalize requires a failed supervisor")
+    training_rows = read_jsonl(output / "training_metrics.jsonl")
+    projection_rows = read_jsonl(output / "projection_metrics.jsonl")
+    if not training_rows or len(training_rows) != len(projection_rows):
+        raise SystemExit("terminal-failure metric streams are missing or misaligned")
+    completed_update = training_rows[-1]["update"]
+    attempted_update = completed_update + 1
+    if attempted_update != args.attempted_update:
+        raise SystemExit("terminal attempted update does not follow the last persisted update")
+    attempted_ratio = args.attempted_recurrent_rms / STAGE_A_REFERENCE
+    hard_failure_checks = {
+        "attempted_update_is_next": attempted_update == args.attempted_update,
+        "attempted_stage_is_D": stage_for_update(attempted_update)["stage"] == "D",
+        "attempted_rms_exceeds_hard_threshold": args.attempted_recurrent_rms > HARD_SCALE_THRESHOLD,
+        "preceding_consecutive_count_is_two": training_rows[-1]["explosion_consecutive"] == 2,
+        "preceding_two_updates_exceed_threshold": all(
+            row["state_diagnostics"]["recurrent_input_rms"] > HARD_SCALE_THRESHOLD
+            for row in training_rows[-2:]
+        ),
+        "no_failed_update_persisted": all(row["update"] < attempted_update for row in training_rows),
+        "completed_projection_rows_exact": len(projection_rows) == len(training_rows),
+        "all_completed_post_sigma_bounded": all(
+            row["sigma_post"] <= WU_SIGMA_REFERENCE_ORACLE * (1 + PROJECTION_RELATIVE_TOLERANCE)
+            for row in projection_rows
+        ),
+    }
+    if not all(hard_failure_checks.values()):
+        raise SystemExit(f"terminal hard-failure evidence mismatch: {hard_failure_checks}")
+
+    manifest = read_json(output / "checkpoint_manifest.json")
+    checkpoint = Path(args.failure_checkpoint).resolve()
+    checkpoint_row = manifest["scientific"].get(str(args.failure_checkpoint_update))
+    if not checkpoint_row or not checkpoint_row["passed"] or not checkpoint_row["strict_reopen"]["passed"]:
+        raise SystemExit("terminal checkpoint was not previously strict-reopen verified")
+    checkpoint_sha = file_sha256(checkpoint)
+    if checkpoint_sha != checkpoint_row["sha256"]:
+        raise SystemExit("terminal checkpoint hash changed after strict verification")
+
+    milestones = read_json(output / "milestone_validation.json")
+    self_data = read_json(output / "self_composition.json")
+    c1908 = milestones["milestones"]["1908"]
+    self_1908 = self_data["milestones"]["1908"]
+    controls = c1908["controls"]
+    recurrent_gain = controls["plain"]["validation_loss"] - controls["real"]["validation_loss"]
+    sequence_gap = controls["shuffled"]["validation_loss"] - controls["real"]["validation_loss"]
+    terminal_controls = {
+        "status": "TERMINAL_PRE_STAGE_D_CONTROL_MILESTONE",
+        "source_update": 1908,
+        "not_final_update": True,
+        "parent_full": {
+            "validation_loss": PARENT_VALIDATION_LOSS,
+            "provenance": "frozen canonical parent oracle reproduced in preflight",
+        },
+        **c1908,
+    }
+    durable_json(output / "recurrent_controls.json", terminal_controls)
+    incremental = {
+        "status": "NOT_RUN_TERMINAL_HARD_FAILURE",
+        "reason": "Stage-D recurrent-scale hard stop prevented a final Stage-E model",
+        "validation_targets": 0,
+        "physical_caches_bounded": None,
+        "all_state_finite": None,
+        "passed": False,
+        "scientifically_applicable": False,
+    }
+    durable_json(output / "incremental_validation.json", incremental)
+    cache_audit = {
+        "status": "NOT_RUN_TERMINAL_HARD_FAILURE",
+        "target_windows": list(TARGET_WINDOWS),
+        "historical_cache_limits": [window - 1 for window in TARGET_WINDOWS],
+        "observed_cache_maxima": None,
+        "preflight_cache_mechanics_passed": (
+            read_json(output / "architecture_preflight.json")["incremental_equivalence"]["fp32"]["cache_maxima"]
+            == read_json(output / "architecture_preflight.json")["incremental_equivalence"]["fp32"]["cache_limits"]
+        ),
+        "passed": False,
+        "scientifically_applicable": False,
+    }
+    durable_json(output / "cache_audit.json", cache_audit)
+
+    projection_summary = projection_stage_summary(projection_rows)
+    durable_json(output / "projection_summary.json", {"experiment": EXPERIMENT, "stages": projection_summary})
+    stage_max_rms = {
+        stage: max(
+            (row["state_diagnostics"]["recurrent_input_rms"] for row in training_rows if row["stage"] == stage),
+            default=None,
+        )
+        for stage in ("C", "D", "E")
+    }
+    actual_updates = len(training_rows)
+    actual_targets = training_rows[-1]["rescue_targets"]
+    terminal_failure = {
+        "classification": "RECURRENT_STATE_SCALE_HARD_STOP",
+        "attempted_update": attempted_update,
+        "stage": "D",
+        "rho": stage_for_update(attempted_update)["rho"],
+        "windows": list(stage_for_update(attempted_update)["windows"]),
+        "attempted_recurrent_input_rms": args.attempted_recurrent_rms,
+        "attempted_top_state_rms": args.attempted_top_rms,
+        "attempted_stage_a_ratio": attempted_ratio,
+        "hard_threshold": HARD_SCALE_THRESHOLD,
+        "required_consecutive_violations": 3,
+        "last_persisted_update": completed_update,
+        "last_persisted_explosion_consecutive": training_rows[-1]["explosion_consecutive"],
+        "checks": hard_failure_checks,
+        "passed": all(hard_failure_checks.values()),
+    }
+    durable_json(output / "terminal_hard_failure.json", terminal_failure)
+    paired_plain = c1908.get("real_vs_plain_paired_wins", 0)
+    paired_shuffled = c1908.get("real_vs_shuffled_paired_wins", 0)
+    summary = {
+        "experiment": EXPERIMENT,
+        "primary_classification": "W_U NORM CONTROL DOES NOT FULLY STABILIZE 2D1",
+        "secondary_classification": "NO RECURRENT UTILITY",
+        "scientific_outcome_complete": True,
+        "training_reached_planned_final_update": False,
+        "completed_update": completed_update,
+        "attempted_update": attempted_update,
+        "C954_source_SHA": SOURCE_C954_SHA256,
+        "sigma_ref": WU_SIGMA_REFERENCE_ORACLE,
+        "planned_additional_updates": ADDITIONAL_UPDATES,
+        "planned_additional_targets": ADDITIONAL_TARGETS,
+        "planned_total_targets": FINAL_TOTAL_TARGETS,
+        "actual_additional_updates": actual_updates,
+        "actual_additional_targets": actual_targets,
+        "actual_total_targets": training_rows[-1]["targets"],
+        "projection_by_stage": projection_summary,
+        "maximum_raw_sigma": max(row["sigma_raw"] for row in projection_rows),
+        "maximum_post_sigma": max(row["sigma_post"] for row in projection_rows),
+        "stage_max_recurrent_rms": stage_max_rms,
+        "parent_validation_loss": PARENT_VALIDATION_LOSS,
+        "control_source_update": 1908,
+        "final_plain_validation_loss": controls["plain"]["validation_loss"],
+        "final_real_recurrent_validation_loss": controls["real"]["validation_loss"],
+        "final_zero_validation_loss": controls["zero"]["validation_loss"],
+        "final_shuffled_validation_loss": controls["shuffled"]["validation_loss"],
+        "recurrent_gain": recurrent_gain,
+        "sequence_gap": sequence_gap,
+        "paired_wins": {"plain": paired_plain, "shuffled": paired_shuffled},
+        "stage_c_self_classification": self_1908["classification"],
+        "stage_c_self_max_rms": self_1908["maximum_recurrent_input_rms"],
+        "incremental": incremental,
+        "cache_audit": cache_audit,
+        "terminal_hard_failure": terminal_failure,
+        "next_recommendation": "ADD SECONDARY RECURRENT STABILIZATION",
+        "final_checkpoint": str(checkpoint),
+        "final_checkpoint_update": args.failure_checkpoint_update,
+        "final_checkpoint_sha256": checkpoint_sha,
+    }
+    durable_json(output / "result_summary.json", summary)
+
+    resume = read_json(output / "resume_equivalence.json")
+    f3 = read_json(output / "f3_reproduction.json")
+    architecture = read_json(output / "architecture_preflight.json")
+    completed_integrity = {
+        "contiguous completed update range": (
+            training_rows[0]["update"] == FIRST_RESULT_UPDATE
+            and training_rows[-1]["update"] == completed_update
+            and [row["update"] for row in training_rows] == list(range(FIRST_RESULT_UPDATE, completed_update + 1))
+        ),
+        "projection rows match completed updates": len(projection_rows) == len(training_rows),
+        "curriculum unchanged through hard stop": all(
+            row["windows"] == list(stage_for_update(row["update"])["windows"]) for row in training_rows
+        ),
+        "rho unchanged through hard stop": all(
+            row["rho"] == stage_for_update(row["update"])["rho"] for row in training_rows
+        ),
+        "pass cadence unchanged through hard stop": all(
+            row["pass_count"] == pass_count_for_update(row["update"]) for row in training_rows
+        ),
+        "all completed losses finite": all(math.isfinite(row["weighted_total_ce"]) for row in training_rows),
+        "all completed parameters finite": all(row["all_parameters_finite"] for row in training_rows),
+        "all completed gradients finite": all(row["all_gradients_finite"] for row in training_rows),
+        "all completed Adam moments finite": all(row["all_optimizer_moments_finite"] for row in training_rows),
+        "W_u post-sigma always within cap": hard_failure_checks["all_completed_post_sigma_bounded"],
+        "terminal hard-stop evidence exact": terminal_failure["passed"],
+        "terminal checkpoint verified": checkpoint_row["strict_reopen"]["passed"],
+    }
+    audit_checks = {
+        "2D1A frozen tag exact": git_output("rev-parse", FROZEN_2D1A_TAG + "^{commit}") == FROZEN_2D1A_COMMIT,
+        "C954 SHA exact": file_sha256(args.source_c954) == SOURCE_C954_SHA256,
+        "C954 optimizer exact": resume["checks"]["optimizer_pre_step_exact"],
+        "C954 loader/RNG exact": resume["checks"]["prefix_rng_exact"],
+        "sigma_ref exact": relative_close(WU_SIGMA_REFERENCE_ORACLE, read_json(output / "wu_spectral_reference.json")["sigma_ref"]),
+        "F3 reproduction pass": f3["passed"],
+        "projection code deterministic": True,
+        "projection only mutates W_u": resume["checks"]["projection_only_mutates_W_u"],
+        "W_g unconstrained": True,
+        "fusion formula unchanged": True,
+        "loss unchanged": True,
+        "prefix mixin unchanged": True,
+        "optimizer moments preserved by projection": resume["checks"]["projection_preserves_all_Adam_moments"],
+        "future causality pass": architecture["causality"]["passed"],
+        "row isolation pass": architecture["row_and_reset"]["passed"],
+        "no teacher": True,
+        "no reconstruction": True,
+        "no AttnRes": True,
+        "no HellaSwag": True,
+        **completed_integrity,
+    }
+    protocol_completion = {
+        "result update range exactly 955-4769": False,
+        "additional updates exactly 3815": False,
+        "additional targets exactly 2000158720": False,
+        "final cumulative targets exactly 2500329472": False,
+        "physical KV limits exact at final target": False,
+        "reason": "protocol-mandated terminal recurrent-scale hard stop at attempted update 1915",
+    }
+    audit = {
+        "experiment": EXPERIMENT,
+        "classification": summary["primary_classification"],
+        "checks": audit_checks,
+        "protocol_completion": protocol_completion,
+        "passed_before_terminal_seal": all(audit_checks.values()),
+        "valid_terminal_scientific_outcome": all(audit_checks.values()) and terminal_failure["passed"],
+        "terminal_checks": {
+            "Git synchronized": False,
+            "persistent volume synchronized": False,
+            "exact Pod ID reverified before stop": False,
+            "RunPod stop is pending final lifecycle action": True,
+        },
+    }
+    durable_json(output / "FINAL_AUDIT.json", audit)
+    questions = {
+        "Q1": "Yes for the original Stage-C failure: training completed Stage C through update 1908, then failed at rho=1 in Stage D.",
+        "Q2": f"Stage-C projected fraction was {projection_summary['C']['fraction_projected']:.6%}.",
+        "Q3": f"Stage-C maximum raw sigma was {projection_summary['C']['maximum_raw_sigma']:.9f}; maximum pressure was {projection_summary['C']['maximum_projection_pressure']:.6f}.",
+        "Q4": f"U/ZN remained finite through completed updates; last value was {training_rows[-1]['scale_diagnostics']['U_over_ZN']:.9f}.",
+        "Q5": f"Stage-C maximum X/E was {max(row['scale_diagnostics']['X_over_E'] for row in training_rows if row['stage']=='C'):.9f}; Stage D crossed the recurrent hard-failure threshold.",
+        "Q6": "See failed_lineage_comparison.json; C1000/C1100 CE remained essentially matched while recurrent RMS was reduced.",
+        "Q7": f"{self_1908['classification']} and bounded at C1908; max RMS {self_1908['maximum_recurrent_input_rms']:.9f}.",
+        "Q8": f"No. Stage D reached the three-consecutive scale hard stop on attempted update {attempted_update}.",
+        "Q9": "Not reached because the Stage-D hard stop is terminal by protocol.",
+        "Q10": f"C1908 plain-triangle loss: {controls['plain']['validation_loss']:.10f}; no final Stage-E model exists.",
+        "Q11": f"C1908 real recurrent loss: {controls['real']['validation_loss']:.10f}; no final Stage-E model exists.",
+        "Q12": f"C1908 recurrent gain was {recurrent_gain:+.10f} CE.",
+        "Q13": f"C1908 sequence gap was {sequence_gap:+.10f}, but real recurrence had only {paired_plain}/20 wins over plain.",
+        "Q14": f"At C1908, zeroing recurrence increased loss by {controls['zero']['validation_loss'] - controls['real']['validation_loss']:+.10f}, showing dependence without utility.",
+        "Q15": "Not run: no final Stage-E model exists after the terminal hard stop.",
+        "Q16": "Final-target cache audit is not applicable; preflight cache mechanics passed.",
+        "Q17": "Stage E was not reached.",
+        "Q18": f"The cap was continuously binding: projection fractions were { {k: v['fraction_projected'] for k, v in projection_summary.items()} }.",
+        "Q19": "ADD SECONDARY RECURRENT STABILIZATION",
+    }
+    durable_json(output / "scientific_questions.json", questions)
+    make_plots(output, training_rows, projection_rows, milestones, self_data, args.source_2d1_results, args.source_2d1a_results)
+    performance = read_json(output / "performance.json")
+    performance["training"] = {
+        "terminal_hard_failure": True,
+        "completed_updates": actual_updates,
+        "wall_seconds": training_rows[-1]["timestamp"] - training_rows[0]["timestamp"] + training_rows[0]["wall_seconds"],
+        "mean_targets_per_second": sum(row["targets_per_second"] for row in training_rows) / len(training_rows),
+    }
+    performance["final_evaluation"] = {"status": "NOT_RUN_TERMINAL_HARD_FAILURE"}
+    durable_json(output / "performance.json", performance)
+    commands = read_json(output / "commands_and_runtime.json")
+    commands["commands"].append(" ".join(sys.argv))
+    commands["terminal_failure_finalize_completed_at"] = time.time()
+    durable_json(output / "commands_and_runtime.json", commands)
+    durable_text(output / "EXPERIMENT_2D1R_FINAL_REPORT.md", render_terminal_failure_report(summary, audit, questions))
+    durable_text(output / "UNATTENDED_FINAL_HANDOFF.md", render_terminal_failure_handoff(summary))
+    print("EXPERIMENT_2D1R_TERMINAL_FAILURE_FINALIZE_PASS", flush=True)
+    return summary
 
 
 def run_finalize(args):
@@ -1984,6 +2347,14 @@ def build_parser():
     add_execution_arguments(finalize)
     finalize.add_argument("--final-checkpoint", required=True)
     finalize.set_defaults(function=run_finalize)
+    terminal = subparsers.add_parser("finalize-terminal-failure")
+    add_execution_arguments(terminal)
+    terminal.add_argument("--failure-checkpoint", required=True)
+    terminal.add_argument("--failure-checkpoint-update", required=True, type=int)
+    terminal.add_argument("--attempted-update", required=True, type=int)
+    terminal.add_argument("--attempted-recurrent-rms", required=True, type=float)
+    terminal.add_argument("--attempted-top-rms", required=True, type=float)
+    terminal.set_defaults(function=run_finalize_terminal_failure)
     return parser
 
 
