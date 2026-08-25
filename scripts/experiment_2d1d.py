@@ -1204,6 +1204,25 @@ def run_train_worker(args):
             raise SystemExit("2D1D metrics require aligned explicit recovery checkpoint")
     elif start != FIRST_GLOBAL_UPDATE:
         raise SystemExit("non-source 2D1D start requires metrics")
+    if args.resume and local_update(start - 1) in MILESTONE_LOCAL:
+        # A terminal diagnostic can fail after the optimizer update, metrics,
+        # strict checkpoint, and canonical validation are already durable.
+        # Finish only the missing no-gradient milestone work before consuming
+        # the next training batch.
+        milestone_diagnostics(runtime, args, start - 1, metrics=existing[-1])
+        if local_update(start - 1) == 96:
+            milestone_diagnostics(runtime, args, start - 1, metrics=existing[-1], transition=True)
+        durable_json(output / "recovery_resume.json", {
+            "resume_checkpoint": str(Path(args.resume).resolve()),
+            "completed_local_update": local_update(start - 1),
+            "completed_global_update": start - 1,
+            "training_updates_repeated": 0,
+            "training_batches_repeated": 0,
+            "pending_no_gradient_milestone_diagnostics_completed": True,
+            "recovery_implementation_git_commit": git_output("rev-parse", "HEAD"),
+            "recovered_at": time.time(),
+            "passed": True,
+        })
     for update in range(start, FINAL_GLOBAL_UPDATE + 1):
         metrics, projection = train_one_update(runtime, update)
         append_jsonl(output / "training_metrics.jsonl", metrics)
