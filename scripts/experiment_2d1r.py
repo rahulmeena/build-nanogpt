@@ -8,6 +8,7 @@ every AdamW step.
 """
 
 import argparse
+import concurrent.futures
 import copy
 import gc
 import hashlib
@@ -73,6 +74,7 @@ F3_MAX_RMS_ORACLE = 0.2808440625667572
 F3_LATE_CE_ORACLE = 3.2037985622882843
 ORACLE_RELATIVE_TOLERANCE = 1e-5
 PARENT_VALIDATION_LOSS = d1.PARENT_VALIDATION_LOSS
+_FILE_SHA_CACHE = {}
 
 
 def git_output(*args):
@@ -92,7 +94,14 @@ def require_git(clean=True):
 
 
 def file_sha256(path):
-    return d1.file_sha256(path)
+    path = Path(path).resolve()
+    stat = path.stat()
+    key = (str(path), stat.st_size, stat.st_mtime_ns)
+    cached = _FILE_SHA_CACHE.get(key)
+    if cached is None:
+        cached = d1.file_sha256(path)
+        _FILE_SHA_CACHE[key] = cached
+    return cached
 
 
 def durable_json(path, payload):
@@ -913,13 +922,16 @@ def run_preflight(args):
     output = Path(args.output_dir).resolve()
     output.mkdir(parents=True, exist_ok=True)
     started = time.time()
-    hashes = {
-        "parent_checkpoint": file_sha256(args.parent_checkpoint),
-        "validation_shard": file_sha256(d1.validation_shard(args.data_root)),
-        "C954": file_sha256(args.source_c954),
-        "C1000": file_sha256(args.checkpoint_1000),
-        "C1100": file_sha256(args.checkpoint_1100),
+    hash_paths = {
+        "parent_checkpoint": args.parent_checkpoint,
+        "validation_shard": d1.validation_shard(args.data_root),
+        "C954": args.source_c954,
+        "C1000": args.checkpoint_1000,
+        "C1100": args.checkpoint_1100,
     }
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(hash_paths)) as executor:
+        futures = {name: executor.submit(file_sha256, path) for name, path in hash_paths.items()}
+        hashes = {name: future.result() for name, future in futures.items()}
     expected_hashes = {
         "parent_checkpoint": SOURCE_MODEL_SHA256,
         "validation_shard": VALIDATION_SHA256,
