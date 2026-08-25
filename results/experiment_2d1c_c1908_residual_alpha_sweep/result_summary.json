@@ -1,0 +1,42 @@
+{
+  "alpha_rms_match": 0.0827875253078167,
+  "best_any_alpha": 0.03125,
+  "best_bounded_alpha": 0.03125,
+  "decision": {
+    "any_positive_alpha_beats_plain": false,
+    "clear_specificity_definition": "sequence_gap > 0.01 and at least 15/20 real-vs-shuffled paired wins",
+    "first_clearly_sequence_specific_alpha": 0.0625,
+    "first_expansive_alpha": 1.0,
+    "first_expansive_answer": "The first tested expansive alpha is 1.",
+    "late_context_answer": "At best bounded alpha=0.03125, global gain is -0.0261040137 and positions 769-1023 gain is -0.0609216669. There is no global-negative/late-positive split.",
+    "local_real_slope_0": 0.8353284387092543,
+    "local_shuffled_slope_0": 1.0824170715262795,
+    "max_zero_plain_delta": 0.0,
+    "next_recommendation": "RETRAIN RESIDUAL RECURRENCE FROM AN EARLIER CLEAN CHECKPOINT",
+    "primary_classification": "RESIDUAL FUSION REDUCES RECURRENT HARM BUT DOES NOT YET CREATE UTILITY",
+    "stability_classification": "WIDE BOUNDED RESIDUAL-ALPHA RANGE",
+    "utility_specificity_interpretation": "At best-any alpha=0.03125, sequence gap is +0.0077215198 and recurrent gain is -0.0261040137; sequence-specificity does not imply positive utility at that operating point."
+  },
+  "frontier": {
+    "alpha_best_any": 0.03125,
+    "alpha_best_bounded": 0.03125,
+    "alpha_max_bounded": 0.75,
+    "bounded_positive_alphas": [
+      0.03125,
+      0.0625,
+      0.0827875253078167,
+      0.125,
+      0.25,
+      0.5,
+      0.75
+    ],
+    "hard_threshold": 0.3550996296107769,
+    "unbounded_positive_alphas": [
+      1.0
+    ]
+  },
+  "maximum_bounded_alpha": 0.75,
+  "plain_D12_loss": 3.1001356740385746,
+  "primary_classification": "RESIDUAL FUSION REDUCES RECURRENT HARM BUT DOES NOT YET CREATE UTILITY",
+  "stability_classification": "WIDE BOUNDED RESIDUAL-ALPHA RANGE"
+}
