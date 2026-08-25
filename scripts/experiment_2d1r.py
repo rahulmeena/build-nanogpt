@@ -1984,7 +1984,10 @@ def run_finalize_terminal_failure(args):
         "C954 SHA exact": file_sha256(args.source_c954) == SOURCE_C954_SHA256,
         "C954 optimizer exact": resume["checks"]["optimizer_pre_step_exact"],
         "C954 loader/RNG exact": resume["checks"]["prefix_rng_exact"],
-        "sigma_ref exact": relative_close(WU_SIGMA_REFERENCE_ORACLE, read_json(output / "wu_spectral_reference.json")["sigma_ref"]),
+        "sigma_ref exact": relative_close(
+            WU_SIGMA_REFERENCE_ORACLE,
+            read_json(output / "wu_spectral_reference.json")["W_u_spectral_norm"],
+        ),
         "F3 reproduction pass": f3["passed"],
         "projection code deterministic": True,
         "projection only mutates W_u": resume["checks"]["projection_only_mutates_W_u"],
