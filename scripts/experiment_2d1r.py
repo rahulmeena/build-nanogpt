@@ -926,7 +926,6 @@ def run_preflight(args):
         "parent_checkpoint": args.parent_checkpoint,
         "validation_shard": d1.validation_shard(args.data_root),
         "C954": args.source_c954,
-        "C1000": args.checkpoint_1000,
         "C1100": args.checkpoint_1100,
     }
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(hash_paths)) as executor:
@@ -936,13 +935,21 @@ def run_preflight(args):
         "parent_checkpoint": SOURCE_MODEL_SHA256,
         "validation_shard": VALIDATION_SHA256,
         "C954": SOURCE_C954_SHA256,
-        "C1000": C1000_SHA256,
         "C1100": C1100_SHA256,
     }
     if hashes != expected_hashes:
         raise SystemExit(f"source hash preflight failed: {hashes}")
     runtime = load_source_runtime(args)
     val_path = d1.validation_shard(args.data_root)
+    inventory_2d1a = read_json(Path(args.source_2d1a_results) / "checkpoint_inventory.json")
+    archived_c1000 = inventory_2d1a["investigated"]["1000"]
+    archived_c1000_exact = (
+        archived_c1000["sha256"] == C1000_SHA256
+        and archived_c1000["bytes"] == 1_508_093_515
+        and archived_c1000["strict_reopen_without_optimizer_object"]["passed"]
+    )
+    if not archived_c1000_exact:
+        raise SystemExit("frozen 2D1A C1000 artifact provenance failed")
     sigma_ref = runtime.sigma_ref
     if not relative_close(sigma_ref, WU_SIGMA_REFERENCE_ORACLE):
         raise SystemExit(f"C954 sigma_ref oracle mismatch: {sigma_ref}")
@@ -960,6 +967,15 @@ def run_preflight(args):
         "next_global_batch_sha256": runtime.source_payload["next_global_batch_sha256"],
         "optimizer_metadata": runtime.optimizer_report,
         "source_checks": runtime.source_checks,
+        "archived_C1000_provenance": archived_c1000,
+        "live_C1000_exclusion": {
+            "path": str(Path(args.checkpoint_1000).resolve()),
+            "observed_sha256_before_result_run": "4cc06a11cb4761150242b871673cffd8dd54cd74eceec18123430fdceda9c7af",
+            "expected_sha256": C1000_SHA256,
+            "mtime_observed_before_result_run": "1970-01-01T00:00:00Z",
+            "used_by_2D1R": False,
+            "reason": "Live diagnostic-only C1000 identity changed after 2D1A; matched comparisons use the frozen strict 2D1A machine artifacts.",
+        },
     }
     durable_json(output / "source_checkpoint_manifest.json", source_manifest)
     reference = {
@@ -1044,6 +1060,7 @@ def run_preflight(args):
     checks = {
         "frozen_2D1A_tag_exact": git_output("rev-parse", FROZEN_2D1A_TAG + "^{commit}") == FROZEN_2D1A_COMMIT,
         "source_hashes_exact": hashes == expected_hashes,
+        "archived_C1000_machine_artifact_exact": archived_c1000_exact,
         "C954_optimizer_exact": equivalence["checks"]["optimizer_pre_step_exact"],
         "C954_loader_RNG_exact": equivalence["checks"]["prefix_rng_exact"],
         "sigma_ref_exact": reference["passed"],
