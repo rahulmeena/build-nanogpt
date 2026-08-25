@@ -1,0 +1,204 @@
+{
+  "analysis_script_sha256": "5fe44b77eddb683b15b705a7f1a36da5204e42e28cf1e2c894c279c52a6713de",
+  "attempted_hard_stop_update": 1160,
+  "classification": "EXPERIMENT 2D1 UNSTABLE",
+  "experiment": "2D1",
+  "generated_at": 1787622713.6283257,
+  "healthy_reference": {
+    "recurrent_input_rms": 0.03550996296107769,
+    "top_state_rms": 2.3023874759674072
+  },
+  "integrity": {
+    "deterministic_retry_exact": true,
+    "disposable_smoke_passed_and_discarded": true,
+    "original_hard_stop_recorded": true,
+    "original_metrics_contiguous_through_1159": true,
+    "original_metrics_finite": true,
+    "requested_2500329472_targets_completed": false,
+    "requested_4769_updates_completed": false,
+    "result_run_was_authorized": true,
+    "retry_hard_stop_recorded": true,
+    "science_preflight_passed": true,
+    "top_state_remained_bounded": true,
+    "verified_update_1100_recovery_checkpoint": true
+  },
+  "interpretation": "The recurrent input exceeded ten times its frozen healthy Stage-A RMS for three consecutive updates while CE, gradients, parameters, optimizer moments, and the normalized top-state RMS remained finite. An isolated replay from the strictly verified update-1100 checkpoint reproduced every substantive metric through update 1159 and the same update-1160 hard stop. This is deterministic architecture/training instability under the frozen protocol, not an execution transient.",
+  "last_recorded_streak": 2,
+  "last_recorded_targets": 607649792,
+  "last_recorded_update": 1159,
+  "planned_targets": 2500329472,
+  "planned_updates": 4769,
+  "recommended_next_experiment": "REDUCE OR NORM-CAP THE RECURRENT FUSION BEFORE RETRAINING",
+  "recorded_threshold_crossings": [
+    {
+      "consecutive": 1,
+      "loss": 3.122319370508194,
+      "recurrent_input_rms": 0.35936057567596436,
+      "top_state_rms": 2.3123974800109863,
+      "update": 1091
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1410930454730988,
+      "recurrent_input_rms": 0.3639793395996094,
+      "top_state_rms": 2.3225674629211426,
+      "update": 1097
+    },
+    {
+      "consecutive": 1,
+      "loss": 2.9416442811489105,
+      "recurrent_input_rms": 0.37301772832870483,
+      "top_state_rms": 2.3230624198913574,
+      "update": 1100
+    },
+    {
+      "consecutive": 1,
+      "loss": 2.9394629895687103,
+      "recurrent_input_rms": 0.3935573995113373,
+      "top_state_rms": 2.3193531036376953,
+      "update": 1104
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1281621754169464,
+      "recurrent_input_rms": 0.36252808570861816,
+      "top_state_rms": 2.320672035217285,
+      "update": 1113
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1179964542388916,
+      "recurrent_input_rms": 0.3920760154724121,
+      "top_state_rms": 2.316277265548706,
+      "update": 1125
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.074584722518921,
+      "recurrent_input_rms": 0.3949310779571533,
+      "top_state_rms": 2.3214356899261475,
+      "update": 1128
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.157182276248932,
+      "recurrent_input_rms": 0.3821215331554413,
+      "top_state_rms": 2.317450523376465,
+      "update": 1130
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.13625031709671,
+      "recurrent_input_rms": 0.36212557554244995,
+      "top_state_rms": 2.3109169006347656,
+      "update": 1133
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1022441685199738,
+      "recurrent_input_rms": 0.3620709180831909,
+      "top_state_rms": 2.314195394515991,
+      "update": 1135
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1149662137031555,
+      "recurrent_input_rms": 0.374712735414505,
+      "top_state_rms": 2.32045841217041,
+      "update": 1137
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.159175544977188,
+      "recurrent_input_rms": 0.39532268047332764,
+      "top_state_rms": 2.314948320388794,
+      "update": 1140
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1126867532730103,
+      "recurrent_input_rms": 0.36952462792396545,
+      "top_state_rms": 2.3267898559570312,
+      "update": 1142
+    },
+    {
+      "consecutive": 2,
+      "loss": 3.139618009328842,
+      "recurrent_input_rms": 0.37363100051879883,
+      "top_state_rms": 2.318131446838379,
+      "update": 1143
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.109373241662979,
+      "recurrent_input_rms": 0.4020467698574066,
+      "top_state_rms": 2.3192098140716553,
+      "update": 1146
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.017385095357895,
+      "recurrent_input_rms": 0.37396040558815,
+      "top_state_rms": 2.322619915008545,
+      "update": 1148
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.039610803127289,
+      "recurrent_input_rms": 0.3773621916770935,
+      "top_state_rms": 2.319929599761963,
+      "update": 1152
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.06220144033432,
+      "recurrent_input_rms": 0.40170902013778687,
+      "top_state_rms": 2.3191370964050293,
+      "update": 1158
+    },
+    {
+      "consecutive": 2,
+      "loss": 3.028746396303177,
+      "recurrent_input_rms": 0.40526628494262695,
+      "top_state_rms": 2.319680690765381,
+      "update": 1159
+    }
+  ],
+  "recovery_checkpoint": {
+    "bytes": 1508093515,
+    "checkpoint": "/workspace/exp2d1_run/checkpoints/recovery_update_1100.pt",
+    "passed": true,
+    "sha256": "6cca94e75ac4802f92df8c1e18d611eb875f42d4312146bb09cb43dfe6d67ad6",
+    "strict_reopen": {
+      "completed_updates": true,
+      "fields": true,
+      "loader_state": true,
+      "model_finite_after_reload": true,
+      "model_keys": true,
+      "next_batch": true,
+      "optimizer_finite_after_reload": true,
+      "passed": true,
+      "processed_targets": true,
+      "rng_fields": true,
+      "schema": true,
+      "training_state": true,
+      "weight_tying_after_reload": true
+    }
+  },
+  "replay": {
+    "original_range_count": true,
+    "passed": true,
+    "retry_count": true,
+    "substantive_metrics_exact": true,
+    "update_sequence": true
+  },
+  "secondary_classification": "RECURRENT INPUT MAGNITUDE IS UNSTABLE",
+  "ten_x_recurrent_input_threshold": 0.3550996296107769,
+  "ten_x_top_state_threshold": 23.023874759674072,
+  "terminal_condition": "preregistered recurrent-state explosion hard stop",
+  "terminal_third_crossing": {
+    "recurrent_input_rms": 0.39886176586151123,
+    "top_state_rms": 2.323808193206787,
+    "update": 1160
+  }
+}
