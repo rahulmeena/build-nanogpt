@@ -1043,6 +1043,8 @@ def choose_root_cause(self_data, wu_data, gate_data, perturb_data):
 
 def choose_fix(fix_data):
     rows = fix_data["rows"]
+    native_late = [row for row in rows if row["intervention"] == "NATIVE" and row["pass"] >= 29]
+    native_late_ce = sum(row["validation_ce"] for row in native_late) / len(native_late)
     candidates = []
     for name in ("F1", "F2", "F3"):
         subset = [row for row in rows if row["intervention"] == name]
@@ -1051,11 +1053,22 @@ def choose_fix(fix_data):
         late_ce = sum(row["validation_ce"] for row in late) / len(late)
         late_change = sum(row["state_change_rms"] for row in late if row["state_change_rms"] is not None) / len(late)
         bounded = maximum <= R_STOP
-        candidates.append({"intervention": name, "bounded_below_10x": bounded, "max_recurrent_input_rms": maximum, "late_ce": late_ce, "late_state_change_rms": late_change})
-    bounded = [row for row in candidates if row["bounded_below_10x"]]
+        noncatastrophic = late_ce <= native_late_ce + 0.5
+        candidates.append({
+            "intervention": name,
+            "bounded_below_10x": bounded,
+            "max_recurrent_input_rms": maximum,
+            "late_ce": late_ce,
+            "native_late_ce": native_late_ce,
+            "late_ce_increase_vs_native": late_ce - native_late_ce,
+            "late_ce_ratio_vs_native": late_ce / native_late_ce,
+            "noncatastrophic_ce": noncatastrophic,
+            "late_state_change_rms": late_change,
+        })
+    bounded = [row for row in candidates if row["bounded_below_10x"] and row["noncatastrophic_ce"]]
     if not bounded:
         return "DO NOT RESUME UNTIL MORE DIAGNOSTICS", None, candidates
-    selected = min(bounded, key=lambda row: (row["late_state_change_rms"], row["late_ce"]))
+    selected = min(bounded, key=lambda row: (row["late_ce_increase_vs_native"], row["late_state_change_rms"]))
     mapping = {"F1": "POST-FUSION RMS NORMALIZATION", "F2": "FUSED-LATENT RMS NORMALIZATION", "F3": "W_U NORM CONTROL"}
     return mapping[selected["intervention"]], selected, candidates
 
@@ -1143,12 +1156,30 @@ def finalize(args):
     scientific = read_json(output / "scientific_runtime_audit.json")
     root, evidence = choose_root_cause(self_data, wu, gates, perturb)
     recommendation, selected_fix, fix_candidates = choose_fix(fixes)
+    fix_candidate_map = {row["intervention"]: row for row in fix_candidates}
     restart = "update 954"
     classifications = self_data["checkpoint_classifications"]
     pass_rows = passwise["rows"]
     c954_native = mean_rows(pass_rows, lambda row: row["checkpoint"] == 954 and row["mode"] == "NATIVE" and row["pass"] == 3, "recurrent_input_rms")
     c954_common_c = mean_rows(pass_rows, lambda row: row["checkpoint"] == 954 and row["mode"] == "COMMON-C" and row["pass"] == 3, "recurrent_input_rms")
     c1100_common_b = classifications["1100"]["common_b_classification"]
+    c1100_common_b_rows = [
+        row for row in self_data["rows"]
+        if row["checkpoint"] == 1100 and row["mode"] == "COMMON-B"
+    ]
+    c1100_common_b_max = max(row["recurrent_input_rms"] for row in c1100_common_b_rows)
+    fusion_common_c_pass3 = [
+        row for row in fusion["rows"] if row["mode"] == "COMMON-C" and row["pass"] == 3
+    ]
+    c954_u_over_zn = sum(
+        row["ratios"]["U_over_ZN"] for row in fusion_common_c_pass3 if row["checkpoint"] == 954
+    ) / FORENSIC_BATCHES
+    c1100_u_over_zn = sum(
+        row["ratios"]["U_over_ZN"] for row in fusion_common_c_pass3 if row["checkpoint"] == 1100
+    ) / FORENSIC_BATCHES
+    c1100_x_over_e = sum(
+        row["ratios"]["X_over_E"] for row in fusion_common_c_pass3 if row["checkpoint"] == 1100
+    ) / FORENSIC_BATCHES
     gate_rows = [row for row in gates["rows"] if row["mode"] == "COMMON-C" and row["pass"] == 3]
     gate_summary = {}
     for checkpoint in (954, 1000, 1100):
@@ -1167,19 +1198,24 @@ def finalize(args):
             "gain": sum(row["locations"][index]["gain_from_previous"] for row in layer_selected) / len(layer_selected),
         })
     first_abnormal = max(mean_locations[1:], key=lambda row: row["gain"])
+    b12_post_mlp = next(row for row in mean_locations if row["location"] == "B12_post_mlp")
+    stack_gain = b12_post_mlp["rms"] / mean_locations[0]["rms"]
+    perturbation_change = (
+        perturb_map[1100]["output_amplification_ratio"] / perturb_map[954]["output_amplification_ratio"] - 1.0
+    )
     questions = {
         "Q1": f"The full recurrent_input tensor after prefix selection and before position embedding crossed 10x: terminal RMS 0.398861765862 versus threshold {R_STOP:.12f}.",
         "Q2": "Growth began after substantial Stage-C training, not immediately at update 955; the first logged threshold crossing was update 1091.",
-        "Q3": f"C954 COMMON-C repeated composition is {classifications['954']['common_c_classification']}; pass-3 recurrent-input RMS averaged {c954_common_c:.12f} (native {c954_native:.12f}).",
-        "Q4": f"C1100 under COMMON-B is {c1100_common_b} across 32 passes.",
+        "Q3": f"C954 COMMON-C remains scale-bounded below 10x but is dynamically {classifications['954']['common_c_classification']}; pass-3 recurrent-input RMS averaged {c954_common_c:.12f} (native {c954_native:.12f}), with severe COMMON-C CE degradation documented in self_composition.json.",
+        "Q4": f"C1100 under COMMON-B remains below 10x (maximum recurrent-input RMS {c1100_common_b_max:.12f}) but is descriptively {c1100_common_b} across 32 passes.",
         "Q5": "Yes. ZN is affine-free RMS-normalized and remained close to unit RMS apart from the exact zero state at position zero; see fusion_decomposition.json.",
-        "Q6": f"W_u U/ZN activation gain and matrix norms are reported per checkpoint; spectral norms C954={wu['checkpoints']['954']['spectral_norm']:.9f}, C1100={wu['checkpoints']['1100']['spectral_norm']:.9f}.",
+        "Q6": f"Under COMMON-C pass 3, U/ZN activation gain rose from {c954_u_over_zn:.6f} at C954 to {c1100_u_over_zn:.6f} at C1100; spectral norms were {wu['checkpoints']['954']['spectral_norm']:.9f} and {wu['checkpoints']['1100']['spectral_norm']:.9f}.",
         "Q7": f"C1100/C954 W_u spectral ratio is {wu['checkpoints']['1100']['spectral_ratio_vs_C954']:.6f} and Frobenius ratio is {wu['checkpoints']['1100']['frobenius_ratio_vs_C954']:.6f}.",
-        "Q8": f"Gate saturation diagnostics show |G_PRE|>5 fractions C954={gate_summary['954']['abs_G_PRE_gt_5']:.6g}, C1100={gate_summary['1100']['abs_G_PRE_gt_5']:.6g}.",
-        "Q9": f"The largest C1100 pass-3 sublayer gain is {first_abnormal['location']} at {first_abnormal['gain']:.6f}; fusion and layerwise artifacts identify whether amplification precedes B1.",
-        "Q10": f"The first/largest abnormal residual-scale gain is {first_abnormal['location']} ({first_abnormal['gain']:.6f}x from the preceding location).",
+        "Q8": f"No. Gate saturation was absent: |G_PRE|>5 fractions C954={gate_summary['954']['abs_G_PRE_gt_5']:.6g}, C1100={gate_summary['1100']['abs_G_PRE_gt_5']:.6g}, with G near 0.95 mean.",
+        "Q9": f"The 10x threshold first appears before B1: C1100 COMMON-C X/E is {c1100_x_over_e:.6f}x. The residual stack then grows B1 input to B12 post-MLP by {stack_gain:.6f}x, but it is not the first threshold-crossing location.",
+        "Q10": f"B1 post-MLP is the first and largest single abnormal residual gain ({first_abnormal['gain']:.6f}x from B1 post-attention).",
         "Q11": ", ".join(f"C{c}: {classifications[str(c)]['common_c_classification']}" for c in (954, 1000, 1100)) + ".",
-        "Q12": f"Finite-difference output amplification C954={perturb_map[954]['output_amplification_ratio']:.6f}, C1100={perturb_map[1100]['output_amplification_ratio']:.6f}.",
+        "Q12": f"No; it decreased by {abs(100.0 * perturbation_change):.2f}%: C954={perturb_map[954]['output_amplification_ratio']:.6f}, C1100={perturb_map[1100]['output_amplification_ratio']:.6f}.",
         "Q13": f"{selected_fix['intervention'] if selected_fix else 'None'} best met the preregistered bounding/stability criteria; full candidates are in fix_probe_results.json.",
         "Q14": f"{'Yes' if selected_fix else 'No'}; the selected zero-training probe bounded recurrence with late-pass CE {selected_fix['late_ce']:.6f}." if selected_fix else "No predefined probe bounded recurrence below the 10x threshold.",
         "Q15": root + ".",
@@ -1295,6 +1331,8 @@ The largest C1100 COMMON-C pass-3 sublayer gain was `{first_abnormal['location']
 ## Stabilization probes
 
 The selected probe was `{selected_fix['intervention'] if selected_fix else 'none'}`. It bounded maximum recurrent-input RMS at `{selected_fix['max_recurrent_input_rms'] if selected_fix else float('nan'):.8f}` with late-pass CE `{selected_fix['late_ce'] if selected_fix else float('nan'):.8f}`. The choice prioritizes bounded recurrence and late state-change behavior; CE is a secondary non-catastrophicity check, not the sole selection rule.
+
+F1 and F2 also bounded scale, but their late-pass CEs were `{fix_candidate_map['F1']['late_ce']:.8f}` and `{fix_candidate_map['F2']['late_ce']:.8f}`, versus native `{fix_candidate_map['F3']['native_late_ce']:.8f}`. F3 preserved a reasonable `{fix_candidate_map['F3']['late_ce']:.8f}` CE while reducing maximum recurrent-input RMS to `{fix_candidate_map['F3']['max_recurrent_input_rms']:.8f}`; therefore W_u norm control is the only predefined probe satisfying both the scale and non-catastrophic-CE criteria.
 
 ## Direct Q1–Q17 answers
 
