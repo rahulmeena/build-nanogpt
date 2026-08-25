@@ -6,7 +6,7 @@ EXPERIMENT 2D1 UNSTABLE
 SECONDARY RECURRENCE CLASSIFICATION:
 RECURRENT INPUT MAGNITUDE IS UNSTABLE
 
-The frozen result run recorded 1,159 complete updates / 
+The frozen result run recorded 1,159 complete updates /
 607,649,792 targets. Update 1160 then triggered the
 preregistered recurrent-state explosion hard stop: recurrent-input RMS
 0.3988617659 exceeded the frozen 10x

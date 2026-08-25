@@ -254,7 +254,7 @@ EXPERIMENT 2D1 FINAL CLASSIFICATION:
 SECONDARY RECURRENCE CLASSIFICATION:
 {SECONDARY}
 
-The frozen result run recorded {original_rows[-1]['update']:,} complete updates / 
+The frozen result run recorded {original_rows[-1]['update']:,} complete updates /
 {original_rows[-1]['targets']:,} targets. Update {EXPECTED_STOP_UPDATE} then triggered the
 preregistered recurrent-state explosion hard stop: recurrent-input RMS
 {diagnosis['terminal_third_crossing']['recurrent_input_rms']:.10f} exceeded the frozen 10x
