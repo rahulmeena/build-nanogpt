@@ -1,0 +1,156 @@
+{
+  "R_stageA": 0.03550996296107769,
+  "R_stop": 0.3550996296107769,
+  "exact_tensor_crossing_terminal_threshold": "recurrent_input",
+  "logic": "exploded if recurrent_input_rms OR top_state_rms is >10x its frozen reference; increment consecutive count, otherwise reset to zero; stop at count >=3 before logging that update",
+  "recorded_violations": [
+    {
+      "consecutive": 1,
+      "loss": 3.122319370508194,
+      "recurrent_input_rms": 0.35936057567596436,
+      "top_state_rms": 2.3123974800109863,
+      "update": 1091
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1410930454730988,
+      "recurrent_input_rms": 0.3639793395996094,
+      "top_state_rms": 2.3225674629211426,
+      "update": 1097
+    },
+    {
+      "consecutive": 1,
+      "loss": 2.9416442811489105,
+      "recurrent_input_rms": 0.37301772832870483,
+      "top_state_rms": 2.3230624198913574,
+      "update": 1100
+    },
+    {
+      "consecutive": 1,
+      "loss": 2.9394629895687103,
+      "recurrent_input_rms": 0.3935573995113373,
+      "top_state_rms": 2.3193531036376953,
+      "update": 1104
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1281621754169464,
+      "recurrent_input_rms": 0.36252808570861816,
+      "top_state_rms": 2.320672035217285,
+      "update": 1113
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1179964542388916,
+      "recurrent_input_rms": 0.3920760154724121,
+      "top_state_rms": 2.316277265548706,
+      "update": 1125
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.074584722518921,
+      "recurrent_input_rms": 0.3949310779571533,
+      "top_state_rms": 2.3214356899261475,
+      "update": 1128
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.157182276248932,
+      "recurrent_input_rms": 0.3821215331554413,
+      "top_state_rms": 2.317450523376465,
+      "update": 1130
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.13625031709671,
+      "recurrent_input_rms": 0.36212557554244995,
+      "top_state_rms": 2.3109169006347656,
+      "update": 1133
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1022441685199738,
+      "recurrent_input_rms": 0.3620709180831909,
+      "top_state_rms": 2.314195394515991,
+      "update": 1135
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1149662137031555,
+      "recurrent_input_rms": 0.374712735414505,
+      "top_state_rms": 2.32045841217041,
+      "update": 1137
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.159175544977188,
+      "recurrent_input_rms": 0.39532268047332764,
+      "top_state_rms": 2.314948320388794,
+      "update": 1140
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.1126867532730103,
+      "recurrent_input_rms": 0.36952462792396545,
+      "top_state_rms": 2.3267898559570312,
+      "update": 1142
+    },
+    {
+      "consecutive": 2,
+      "loss": 3.139618009328842,
+      "recurrent_input_rms": 0.37363100051879883,
+      "top_state_rms": 2.318131446838379,
+      "update": 1143
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.109373241662979,
+      "recurrent_input_rms": 0.4020467698574066,
+      "top_state_rms": 2.3192098140716553,
+      "update": 1146
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.017385095357895,
+      "recurrent_input_rms": 0.37396040558815,
+      "top_state_rms": 2.322619915008545,
+      "update": 1148
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.039610803127289,
+      "recurrent_input_rms": 0.3773621916770935,
+      "top_state_rms": 2.319929599761963,
+      "update": 1152
+    },
+    {
+      "consecutive": 1,
+      "loss": 3.06220144033432,
+      "recurrent_input_rms": 0.40170902013778687,
+      "top_state_rms": 2.3191370964050293,
+      "update": 1158
+    },
+    {
+      "consecutive": 2,
+      "loss": 3.028746396303177,
+      "recurrent_input_rms": 0.40526628494262695,
+      "top_state_rms": 2.319680690765381,
+      "update": 1159
+    }
+  ],
+  "reference_tensor_formula": "where(position > prefix_length, (1-rho)*E + rho*(W_u(RMSNorm(shift(previous_top)))*(2*sigmoid(W_g(E)))), E)",
+  "reference_tensor_location": "final microbatch, final temporal pass: recurrent_input after prefix torch.where and before learned position embedding",
+  "rms_aggregation": "sqrt(mean(recurrent_input.float()**2)) over the complete B x T x 768 tensor",
+  "source_code": "scripts/experiment_2d1.py:TriangleRecurrentGPT.make_input/train_one_update",
+  "stage_a_reference": {
+    "recurrent_input_rms": 0.03550996296107769,
+    "top_state_rms": 2.3023874759674072
+  },
+  "stage_a_reference_aggregation": "arithmetic mean of the per-update final-microbatch health RMS values from updates 1 through 10",
+  "terminal_third_violation": {
+    "recurrent_input_rms": 0.39886176586151123,
+    "top_state_rms": 2.323808193206787,
+    "update": 1160
+  },
+  "top_state_stop_threshold": 23.023874759674072
+}
