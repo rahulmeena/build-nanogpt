@@ -827,7 +827,14 @@ def self_composition(runtime, windows, local):
     d1c.PROBE_STOP = 100.0 * STAGE_A_RMS
     d1c.SELF_BATCHES = 2
     d1c.PASSES = 32
-    result = d1c.self_composition(runtime.model, batches, ALPHA, runtime.device)
+    # The frozen 2D1C helper itself is not decorated with no_grad because its
+    # original caller supplied the context.  A 32-pass graph at validation
+    # batch size 64 exhausts even an 80GB A100, and would violate 2D1D's
+    # explicitly no-gradient diagnostic.  Make that contract local and hard.
+    runtime.model.eval()
+    torch.cuda.empty_cache()
+    with torch.inference_mode():
+        result = d1c.self_composition(runtime.model, batches, ALPHA, runtime.device)
     for row in result["rows"]:
         e_rms = row["X_rms"] / row["X_over_E"]
         row["alphaF_over_E"] = None if row["ALPHA_F_rms"] is None else row["ALPHA_F_rms"] / e_rms

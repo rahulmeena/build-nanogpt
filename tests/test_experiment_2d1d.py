@@ -54,3 +54,15 @@ def test_position_bins_partition_recurrent_suffix():
     for first, last in d1d.POSITION_BINS:
         positions.extend(range(first, last + 1))
     assert positions == list(range(1, 1024))
+
+
+def test_32_pass_diagnostic_is_forced_no_gradient():
+    tree = ast.parse(SCRIPT.read_text())
+    function = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "self_composition")
+    contexts = [item.context_expr for node in ast.walk(function) if isinstance(node, ast.With) for item in node.items]
+    assert any(
+        isinstance(context, ast.Call)
+        and isinstance(context.func, ast.Attribute)
+        and context.func.attr == "inference_mode"
+        for context in contexts
+    )
