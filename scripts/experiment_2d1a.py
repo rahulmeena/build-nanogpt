@@ -1026,7 +1026,11 @@ def choose_root_cause(self_data, wu_data, gate_data, perturb_data):
             "classes": {"954": c954, "1000": c1000, "1100": c1100},
         }
     if wu_ratio >= 1.20 and classes["1100"].get("F3_classification") not in ("EXPANSIVE", "NUMERICALLY DIVERGENT"):
-        return "W_U AMPLIFICATION DOMINATES", {"reason": "W_u operator growth is material and functional spectral rescaling removes expansion.", "W_u_spectral_ratio": wu_ratio}
+        return "W_U AMPLIFICATION DOMINATES", {
+            "reason": "W_u operator growth is material; functional spectral rescaling bounds recurrent input below the hard threshold while gate saturation remains absent.",
+            "W_u_spectral_ratio": wu_ratio,
+            "abs_G_PRE_gt_5": saturation,
+        }
     if saturation[1100] >= max(0.01, 2.0 * saturation[954]):
         return "TOKEN GATE SATURATION DOMINATES", {"reason": "Gate preactivation saturation materially increased.", "abs_G_PRE_gt_5": saturation}
     if perturb[1100]["output_amplification_ratio"] > 1.25 * perturb[954]["output_amplification_ratio"]:
@@ -1205,7 +1209,7 @@ def finalize(args):
     )
     questions = {
         "Q1": f"The full recurrent_input tensor after prefix selection and before position embedding crossed 10x: terminal RMS 0.398861765862 versus threshold {R_STOP:.12f}.",
-        "Q2": "Growth began after substantial Stage-C training, not immediately at update 955; the first logged threshold crossing was update 1091.",
+        "Q2": "Scale rose immediately with the Stage-B→C configuration change (RMS 0.063865 at C954, 0.096878 at update 955, and 0.222279 at update 956), then learned W_u growth pushed it to the first 10x crossing only at update 1091.",
         "Q3": f"C954 COMMON-C remains scale-bounded below 10x but is dynamically {classifications['954']['common_c_classification']}; pass-3 recurrent-input RMS averaged {c954_common_c:.12f} (native {c954_native:.12f}), with severe COMMON-C CE degradation documented in self_composition.json.",
         "Q4": f"C1100 under COMMON-B remains below 10x (maximum recurrent-input RMS {c1100_common_b_max:.12f}) but is descriptively {c1100_common_b} across 32 passes.",
         "Q5": "Yes. ZN is affine-free RMS-normalized and remained close to unit RMS apart from the exact zero state at position zero; see fusion_decomposition.json.",
@@ -1318,7 +1322,7 @@ RECOMMENDED RESTART CHECKPOINT:
 
 ## Exact failure trajectory
 
-The frozen Stage-A recurrent-input RMS reference was `{R_STAGE_A:.14f}` and the exact 10x hard threshold was `{R_STOP:.14f}`. The first logged crossing occurred at update 1091; updates 1158 and 1159 were the first two terminal consecutive crossings, and attempted update 1160 produced the third value `0.39886176586151123` before logging, triggering the preregistered stop.
+The frozen Stage-A recurrent-input RMS reference was `{R_STAGE_A:.14f}` and the exact 10x hard threshold was `{R_STOP:.14f}`. Scale responded immediately to the Stage-C transition (RMS `0.06386530` at C954, `0.09687792` at update 955, and `0.22227934` at update 956), but the first logged 10x crossing occurred only at update 1091. Updates 1158 and 1159 were the first two terminal consecutive crossings, and attempted update 1160 produced the third value `0.39886176586151123` before logging, triggering the preregistered stop.
 
 ## Checkpoint scale decomposition and learned matrices
 
