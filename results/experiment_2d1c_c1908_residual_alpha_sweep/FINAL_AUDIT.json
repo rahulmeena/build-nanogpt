@@ -1,0 +1,115 @@
+{
+  "alpha_zero_identity": {
+    "canonical_absolute_deltas": {
+      "real": 0.0,
+      "shuffled": 0.0,
+      "zero": 0.0
+    },
+    "deterministic_preflight": {
+      "passed": true,
+      "variants": {
+        "real": {
+          "logits_exact": true,
+          "loss_delta": 0.0,
+          "one_token_shift_exact": true,
+          "position_zero_state_zero": true,
+          "top_exact": true
+        },
+        "shuffled": {
+          "logits_exact": true,
+          "loss_delta": 0.0,
+          "one_token_shift_exact": true,
+          "position_zero_state_zero": true,
+          "top_exact": true
+        },
+        "zero": {
+          "logits_exact": true,
+          "loss_delta": 0.0,
+          "one_token_shift_exact": true,
+          "position_zero_state_zero": true,
+          "top_exact": true
+        }
+      }
+    },
+    "maximum_canonical_delta": 0.0,
+    "passed": true,
+    "tolerance": 1e-08
+  },
+  "arithmetic": {
+    "alpha_count": true,
+    "gains": true,
+    "sequence_gaps": true,
+    "zero_dependencies": true
+  },
+  "causality": {
+    "changed_row_responds": true,
+    "one_position_shift_exact": true,
+    "passed": true,
+    "plain_prefix_future_independent": true,
+    "position_zero_recurrent_state_zero": true,
+    "recurrent_prefix_future_independent": true,
+    "row_isolation_other_rows_exact": true
+  },
+  "checks": {
+    "2D1B_frozen_tag_exact": true,
+    "C1908_SHA_exact": true,
+    "C1908_parameter_hash_unchanged": true,
+    "C1908_strict_reopen": true,
+    "D12_exact": true,
+    "W_g_unchanged": true,
+    "W_u_unchanged": true,
+    "alpha_list_exact": true,
+    "alpha_nontrainable": true,
+    "alpha_rms_match_frozen_before_outcomes": true,
+    "alpha_zero_plain_and_control_identity": true,
+    "arithmetic_crosschecks": true,
+    "base_model_unchanged": true,
+    "canonical_hash_exact": true,
+    "causal_shift_position_zero_row_isolation": true,
+    "forbidden_counts_zero": true,
+    "fusion_exact_residual_equation": true,
+    "individual_divergence_isolated": true,
+    "legacy_D12_regression": true,
+    "no_new_alpha_window_fusion_Wu_variant": true,
+    "no_teacher_reconstruction_AttnRes_HellaSwag": true,
+    "same_shuffled_derangement": true,
+    "state_cache_reset_and_reverse_order_check": true,
+    "zero_state_residual_plain_identity": true
+  },
+  "experiment": "2D1C",
+  "forbidden_operation_counts": {
+    "backward_calls": 0,
+    "gradscaler_objects": 0,
+    "optimizer_objects": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "scheduler_objects": 0,
+    "training_dataloader_advances": 0,
+    "training_targets": 0
+  },
+  "git_synchronization": "FINALIZATION GATE OUTSIDE RESULT-BEARING PROCESS",
+  "parameter_hashes": {
+    "after": {
+      "W_g": "9e0c5fdebf9c16a31b7a8e358a6bf6150f06f1075b21c259dd6847d3a22991e1",
+      "W_u": "dd80711819753cf3b5d5f92c0d5adac201cb89c47cefa0f9d48ba1f6f262d9b4",
+      "base": "faad30dfabfb03230138f154017f8cd1c293ce0a37e4f5c1686d8da5d8d18e3c",
+      "model": "f93d61d58fb42d982790bdb67ee80c9fd54ed78a04e9264106db096722c2652a"
+    },
+    "before": {
+      "W_g": "9e0c5fdebf9c16a31b7a8e358a6bf6150f06f1075b21c259dd6847d3a22991e1",
+      "W_u": "dd80711819753cf3b5d5f92c0d5adac201cb89c47cefa0f9d48ba1f6f262d9b4",
+      "base": "faad30dfabfb03230138f154017f8cd1c293ce0a37e4f5c1686d8da5d8d18e3c",
+      "model": "f93d61d58fb42d982790bdb67ee80c9fd54ed78a04e9264106db096722c2652a"
+    }
+  },
+  "passed": true,
+  "protocol": "exp2d1c_c1908_residual_alpha_sweep_v1",
+  "reverse_order_contamination_check": {
+    "absolute_delta": 0.0,
+    "alpha": 0.125,
+    "original_batch_0_real_loss": 3.260664701461792,
+    "passed": true,
+    "reverse_order_rerun_batch_0_real_loss": 3.260664701461792,
+    "tolerance": 1e-08
+  }
+}
