@@ -1,0 +1,53 @@
+{
+  "checks": {
+    "2D1A frozen tag exact": true,
+    "C954 SHA exact": true,
+    "C954 loader/RNG exact": true,
+    "C954 optimizer exact": true,
+    "F3 reproduction pass": true,
+    "W_g unconstrained": true,
+    "W_u post-sigma always within cap": true,
+    "all completed Adam moments finite": true,
+    "all completed gradients finite": true,
+    "all completed losses finite": true,
+    "all completed parameters finite": true,
+    "contiguous completed update range": true,
+    "curriculum unchanged through hard stop": true,
+    "fusion formula unchanged": true,
+    "future causality pass": true,
+    "loss unchanged": true,
+    "no AttnRes": true,
+    "no HellaSwag": true,
+    "no reconstruction": true,
+    "no teacher": true,
+    "optimizer moments preserved by projection": true,
+    "pass cadence unchanged through hard stop": true,
+    "prefix mixin unchanged": true,
+    "projection code deterministic": true,
+    "projection only mutates W_u": true,
+    "projection rows match completed updates": true,
+    "rho unchanged through hard stop": true,
+    "row isolation pass": true,
+    "sigma_ref exact": true,
+    "terminal checkpoint verified": true,
+    "terminal hard-stop evidence exact": true
+  },
+  "classification": "W_U NORM CONTROL DOES NOT FULLY STABILIZE 2D1",
+  "experiment": "2D1R",
+  "passed_before_terminal_seal": true,
+  "protocol_completion": {
+    "additional targets exactly 2000158720": false,
+    "additional updates exactly 3815": false,
+    "final cumulative targets exactly 2500329472": false,
+    "physical KV limits exact at final target": false,
+    "reason": "protocol-mandated terminal recurrent-scale hard stop at attempted update 1915",
+    "result update range exactly 955-4769": false
+  },
+  "terminal_checks": {
+    "Git synchronized": false,
+    "RunPod stop is pending final lifecycle action": true,
+    "exact Pod ID reverified before stop": false,
+    "persistent volume synchronized": false
+  },
+  "valid_terminal_scientific_outcome": true
+}
