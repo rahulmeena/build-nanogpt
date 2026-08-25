@@ -46,6 +46,21 @@ def test_projection_only_mutates_requested_weight():
     assert torch.equal(untouched, before)
 
 
+def test_projection_corrects_an_inconsistent_post_svd_verification():
+    weight = torch.nn.Parameter(torch.eye(2) * 2)
+    observed = iter((2.0, 1.00005, 0.99994))
+    original = d1r.exact_spectral_norm
+    d1r.exact_spectral_norm = lambda unused: next(observed)
+    try:
+        report = d1r.project_weight_(weight, 1.0)
+    finally:
+        d1r.exact_spectral_norm = original
+    assert report["primary_projection_scale"] == 0.5
+    assert report["corrective_projection_count"] == 1
+    assert report["sigma_post"] <= 1.0 * (1.0 + d1r.PROJECTION_RELATIVE_TOLERANCE)
+    assert report["projection_scale"] < report["primary_projection_scale"]
+
+
 def test_schedule_and_pass_cadence_remain_frozen():
     assert d1r.stage_for_update(955) == d1.stage_for_update(955)
     assert d1r.stage_for_update(1909) == d1.stage_for_update(1909)

@@ -182,12 +182,31 @@ def project_weight_(weight, sigma_cap):
     sigma_raw = exact_spectral_norm(weight)
     if not math.isfinite(sigma_raw) or sigma_raw <= 0:
         raise SystemExit(f"invalid raw W_u spectral norm: {sigma_raw}")
-    scale = min(1.0, float(sigma_cap) / sigma_raw)
-    applied = scale < 1.0
-    if applied:
+    primary_scale = min(1.0, float(sigma_cap) / sigma_raw)
+    total_scale = primary_scale
+    if primary_scale < 1.0:
         with torch.no_grad():
-            weight.mul_(scale)
+            weight.mul_(primary_scale)
     sigma_post = exact_spectral_norm(weight)
+    corrective_scales = []
+    # CUDA's FP32 SVD can vary by several ulps between the raw and verification
+    # calls. Preserve the mandated first projection exactly, then contract only
+    # W_u slightly further until the independently recomputed norm is inside
+    # the same preregistered ball and tolerance.
+    for _ in range(5):
+        if sigma_post <= float(sigma_cap) * (1.0 + PROJECTION_RELATIVE_TOLERANCE):
+            break
+        correction = min(
+            1.0,
+            (float(sigma_cap) * (1.0 - 5.0 * PROJECTION_RELATIVE_TOLERANCE)) / sigma_post,
+        )
+        if correction >= 1.0:
+            break
+        with torch.no_grad():
+            weight.mul_(correction)
+        corrective_scales.append(correction)
+        total_scale *= correction
+        sigma_post = exact_spectral_norm(weight)
     if not math.isfinite(sigma_post) or sigma_post > float(sigma_cap) * (1.0 + PROJECTION_RELATIVE_TOLERANCE):
         raise SystemExit(
             f"W_u post-projection spectral hard stop: raw={sigma_raw} post={sigma_post} cap={sigma_cap}"
@@ -196,9 +215,12 @@ def project_weight_(weight, sigma_cap):
         "sigma_cap": float(sigma_cap),
         "sigma_raw": sigma_raw,
         "sigma_post": sigma_post,
-        "projection_scale": scale,
+        "projection_scale": total_scale,
+        "primary_projection_scale": primary_scale,
+        "corrective_projection_scales": corrective_scales,
+        "corrective_projection_count": len(corrective_scales),
         "projection_pressure": max(0.0, sigma_raw / float(sigma_cap) - 1.0),
-        "projection_applied": applied,
+        "projection_applied": total_scale < 1.0,
         "method": "torch.linalg.matrix_norm(ord=2), FP32, every update",
         "relative_tolerance": PROJECTION_RELATIVE_TOLERANCE,
     }
@@ -1270,8 +1292,58 @@ def run_train_worker(args):
     start_update = runtime.training_state["completed_updates"] + 1
     existing = read_jsonl(runtime.output / "training_metrics.jsonl")
     if existing:
-        if existing[-1]["update"] != start_update - 1:
-            raise SystemExit("training metrics do not align with resume checkpoint")
+        if args.resume:
+            if existing[-1]["update"] != start_update - 1:
+                raise SystemExit("training metrics do not align with resume checkpoint")
+        else:
+            if existing[0]["update"] != FIRST_RESULT_UPDATE:
+                raise SystemExit("C954 recovery replay metrics do not start at update 955")
+            existing_projection = read_jsonl(runtime.output / "projection_metrics.jsonl")
+            if len(existing_projection) != len(existing):
+                raise SystemExit("C954 recovery replay metric streams differ in length")
+            replay_checks = []
+            for archived_metrics, archived_projection in zip(existing, existing_projection):
+                update = archived_metrics["update"]
+                if update != runtime.training_state["completed_updates"] + 1:
+                    raise SystemExit("C954 recovery replay updates are not contiguous")
+                replayed_metrics, replayed_projection = train_one_update(runtime, update)
+                checks = {
+                    "update": replayed_metrics["update"] == archived_metrics["update"],
+                    "prefix_lengths": replayed_metrics["prefix_lengths"] == archived_metrics["prefix_lengths"],
+                    "pass_losses": all(
+                        abs(a - b) <= 1e-8
+                        for a, b in zip(replayed_metrics["pass_losses"], archived_metrics["pass_losses"])
+                    ),
+                    "weighted_total_ce": abs(
+                        replayed_metrics["weighted_total_ce"] - archived_metrics["weighted_total_ce"]
+                    ) <= 1e-8,
+                    "recurrent_input_rms": abs(
+                        replayed_metrics["state_diagnostics"]["recurrent_input_rms"]
+                        - archived_metrics["state_diagnostics"]["recurrent_input_rms"]
+                    ) <= 1e-8,
+                    "gradient_norm": abs(
+                        replayed_metrics["gradient_norm_before_clip"]
+                        - archived_metrics["gradient_norm_before_clip"]
+                    ) <= 1e-6,
+                    "sigma_raw": abs(replayed_projection["sigma_raw"] - archived_projection["sigma_raw"]) <= 1e-4,
+                    "sigma_post": abs(replayed_projection["sigma_post"] - archived_projection["sigma_post"]) <= 1e-4,
+                    "projection_scale": abs(
+                        replayed_projection["projection_scale"] - archived_projection["projection_scale"]
+                    ) <= 1e-4,
+                }
+                replay_checks.append({"update": update, "checks": checks, "passed": all(checks.values())})
+                if not replay_checks[-1]["passed"]:
+                    raise SystemExit(f"C954 deterministic recovery replay mismatch: {replay_checks[-1]}")
+            durable_json(runtime.output / "recovery_replay.json", {
+                "experiment": EXPERIMENT,
+                "reason": "attempted update 961 stopped on strict post-SVD verification before a recovery checkpoint existed",
+                "source_checkpoint": str(Path(args.source_c954).resolve()),
+                "replayed_update_range": [existing[0]["update"], existing[-1]["update"]],
+                "metrics_duplicated": False,
+                "checks": replay_checks,
+                "passed": all(row["passed"] for row in replay_checks),
+            })
+            start_update = runtime.training_state["completed_updates"] + 1
     elif start_update != FIRST_RESULT_UPDATE:
         raise SystemExit("non-C954 resume requires existing 2D1R training metrics")
     for update in range(start_update, FINAL_UPDATE + 1):
