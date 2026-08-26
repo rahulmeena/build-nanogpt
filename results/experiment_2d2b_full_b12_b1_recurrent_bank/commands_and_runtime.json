@@ -20,6 +20,13 @@
   "finalize_command": "scripts/experiment_2d2b.py finalize --source-checkpoint /workspace/exp2d2a_run/checkpoints/scientific_update_0096.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2b/results/experiment_2d2b_full_b12_b1_recurrent_bank --run-root /workspace/exp2d2b_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2b_run/control/runpod_stop_capability.json --final-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
   "finalized_at": 1787776334.511702,
   "planned_terminal_stop_command": "runpodctl pod stop e8nd7m6piw5km2 -o json",
+  "post_seal_external_actions": [
+    "commit and push sealed report artifacts",
+    "verify local/origin/pod commit equality and clean worktrees",
+    "verify no scientific process",
+    "runpodctl pod stop e8nd7m6piw5km2 -o json",
+    "verify stopped and not deleted"
+  ],
   "preflight_command": "scripts/experiment_2d2b.py preflight --source-checkpoint /workspace/exp2d2a_run/checkpoints/scientific_update_0096.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2b/results/experiment_2d2b_full_b12_b1_recurrent_bank --run-root /workspace/exp2d2b_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2b_run/control/runpod_stop_capability.json",
   "runpod_stop_capability_audit": {
     "audit_path": "/workspace/exp2d2b_run/control/runpod_stop_capability.json",
@@ -66,6 +73,7 @@
     "terminal_outcome_policy": "After successful persistent-volume and Git synchronization, stop only this exact GPU pod; never delete the pod or network volume.",
     "verified_at_utc": "2026-08-26T19:16:13Z"
   },
+  "seal_report_command": "scripts/experiment_2d2b.py seal-report --output-dir /workspace/build-nanogpt-exp2d2b/results/experiment_2d2b_full_b12_b1_recurrent_bank --results-commit c8cdc34639758ed4a94ffd8b7a7a0e60230651da",
   "smoke_command": "scripts/experiment_2d2b.py smoke --source-checkpoint /workspace/exp2d2a_run/checkpoints/scientific_update_0096.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2b/results/experiment_2d2b_full_b12_b1_recurrent_bank --run-root /workspace/exp2d2b_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2b_run/control/runpod_stop_capability.json",
   "training_segments": {
     "191": {

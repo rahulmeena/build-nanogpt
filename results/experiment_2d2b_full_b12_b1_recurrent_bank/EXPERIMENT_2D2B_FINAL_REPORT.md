@@ -205,12 +205,12 @@ false
 
 ## Integrity and artifacts
 
-- Final audit passed: False
+- Final audit passed: True
 - Final checkpoint: `/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt`
 - Final checkpoint SHA-256: `8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326`
 - Implementation commit: `072d9825119a9ca9954747fb3c7cc749ff230e55`
-- Results commit: `None`
+- Results commit: `c8cdc34639758ed4a94ffd8b7a7a0e60230651da`
 - Artifact directory: `/workspace/build-nanogpt-exp2d2b/results/experiment_2d2b_full_b12_b1_recurrent_bank`
-- GPU pod: `serious_indigo_swordfish` (`e8nd7m6piw5km2`), status `RUNNING_PENDING_FINAL_SYNC_AND_STOP`
+- GPU pod: `serious_indigo_swordfish` (`e8nd7m6piw5km2`), status `READY_TO_STOP_AFTER_SEAL_COMMIT_PUSH`
 
 # EXPERIMENT 2D2B COMPLETE
