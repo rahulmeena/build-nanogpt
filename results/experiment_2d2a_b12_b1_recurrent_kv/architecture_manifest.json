@@ -1,0 +1,44 @@
+{
+  "b1_local_window": 2,
+  "b2_b12_windows": [
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024
+  ],
+  "destination": "B1 attention",
+  "effective_gate": "tanh(g_rec)",
+  "experiment": "2D2A",
+  "forbidden_modules_absent": {
+    "attnres": true,
+    "mirrored_links": true,
+    "recurrent_projections": true,
+    "teacher": true
+  },
+  "incremental_b12_residual_ring_capacity": 3,
+  "incremental_b1_historical_kv_capacity": 1,
+  "incremental_b2_b12_historical_kv_capacity": 1023,
+  "local_positions": [
+    "t-1",
+    "t"
+  ],
+  "overall_context": 1024,
+  "overall_kv_savings_claimed": false,
+  "recurrent_lag": 2,
+  "recurrent_positions": [
+    "t-3",
+    "t-2"
+  ],
+  "recurrent_window": 2,
+  "separate_softmaxes": true,
+  "shared_b1_ln_qkv": true,
+  "single_b1_c_proj": true,
+  "source": "B12 post-MLP residual before final LayerNorm"
+}

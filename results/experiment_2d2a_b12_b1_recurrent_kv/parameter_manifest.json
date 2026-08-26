@@ -1,0 +1,37 @@
+{
+  "bias_configuration": {
+    "attention_output": true,
+    "attention_qkv": true,
+    "lm_head": false,
+    "mlp_fc": true,
+    "mlp_output": true
+  },
+  "block_size": 1024,
+  "checks": {
+    "all_trainable": true,
+    "new_exactly_one": true,
+    "new_only_scalar_gate": true,
+    "parent_exact": true,
+    "total_exact": true,
+    "tying": true
+  },
+  "embedding_lm_head_tied": true,
+  "n_embd": 768,
+  "n_head": 12,
+  "n_layer": 12,
+  "new_parameter_count": 1,
+  "new_parameters": [
+    {
+      "name": "g_rec",
+      "numel": 1,
+      "shape": []
+    }
+  ],
+  "parent_total_parameters": 124475904,
+  "parent_trainable_parameters": 124475904,
+  "passed": true,
+  "source_state_dict_entries": 149,
+  "total_2d2a_parameters": 124475905,
+  "total_trainable_parameters": 124475905,
+  "vocabulary_size": 50304
+}

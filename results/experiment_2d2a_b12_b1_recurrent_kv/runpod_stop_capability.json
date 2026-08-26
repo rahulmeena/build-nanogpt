@@ -1,0 +1,45 @@
+{
+  "audit_path": "/workspace/exp2d2a_run/control/runpod_stop_capability.json",
+  "audit_sha256": "07ebcabc03e9569bd63c7ba781d29ffc398353a932b51ec7dd0105bd11210953",
+  "authenticated_list_probe": true,
+  "authenticated_pod_identity_response": {
+    "costPerHr": 1.59,
+    "desiredStatus": "RUNNING",
+    "gpuCount": 1,
+    "id": "7kk5yyti00rnrp",
+    "imageName": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404",
+    "lastStatusChange": "Rented by User: Wed Aug 26 2026 09:24:51 GMT+0000 (Coordinated Universal Time)",
+    "name": "grand_amber_catshark",
+    "runtimeStatus": "running",
+    "uptimeSecondsAtProbe": 2025,
+    "volumeInGb": 0
+  },
+  "credential_source": {
+    "account": "rahul",
+    "kind": "macOS Keychain generic password",
+    "service": "runpod-codex-pod-stopper"
+  },
+  "driver_checks": {
+    "audit_passed": true,
+    "authenticated_probe": true,
+    "exact_stop_command": true,
+    "gpu_count": true,
+    "pod_id": true,
+    "pod_name": true,
+    "runtime_running": true,
+    "schema": true,
+    "secret_not_recorded": true,
+    "stop_credential_available": true
+  },
+  "driver_passed": true,
+  "exact_stop_command": "runpodctl pod stop 7kk5yyti00rnrp -o json",
+  "exact_stop_target": "7kk5yyti00rnrp",
+  "passed": true,
+  "probe_command": "runpodctl pod list -o json",
+  "probe_tool": "/opt/homebrew/bin/runpodctl",
+  "schema": "exp2d2a_runpod_stop_capability_v1",
+  "secret_recorded": false,
+  "stop_credential_available": true,
+  "terminal_outcome_policy": "The external Codex orchestrator must invoke the exact stop command after successful synchronization or any terminal hard failure; never delete the pod or network volume.",
+  "verified_at_utc": "2026-08-26T10:01:16Z"
+}

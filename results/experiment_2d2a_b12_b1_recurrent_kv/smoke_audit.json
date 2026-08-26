@@ -1,0 +1,612 @@
+{
+  "argv_sha256": "eea65987d0a04c95c58b005d91fd8004e6de9a5b3a39e4fa1976a84b46a3c7d5",
+  "checkpoint": {
+    "bytes": 1493929912,
+    "checkpoint": "/workspace/exp2d2a_run/smoke/smoke_update_0003.pt",
+    "next_global_batch_sha256": "664640c9e2ac930a184595895749533969cb7ac82f5252bf19575f124d8e6c7a",
+    "passed": true,
+    "sha256": "a1813a3965a4e09f3927136b9acc14f064dddd50b09742d9848992abc390efb8",
+    "strict_reopen": {
+      "architecture": true,
+      "fields_exact": true,
+      "gate_duplicate": true,
+      "loader_state": true,
+      "metadata": true,
+      "model_finite": true,
+      "model_keys": true,
+      "next_batch": true,
+      "optimizer_finite": true,
+      "passed": true,
+      "schema": true,
+      "targets": true,
+      "training_state": true,
+      "updates": true,
+      "weight_tying": true
+    }
+  },
+  "checks": {
+    "all_state_finite": true,
+    "base_gradients_finite": true,
+    "checkpoint_reopen": true,
+    "exactly_three_updates": true,
+    "finite_losses": true,
+    "gate_initial_gradient_finite_nonzero": true,
+    "gate_moves_from_zero": true,
+    "no_b1_hidden_full_cache": true,
+    "parameter_manifest": true,
+    "recurrent_attention_finite": true,
+    "result_source_will_reload_immutable_parent": true,
+    "temporal_writer_gradient": true
+  },
+  "command": "scripts/experiment_2d2a.py smoke --source-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2a/results/experiment_2d2a_b12_b1_recurrent_kv --run-root /workspace/exp2d2a_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2a_run/control/runpod_stop_capability.json",
+  "disposition": "Smoke model/optimizer are discarded. Scientific update 1 must freshly reload the immutable Standard checkpoint with g_rec=0.",
+  "experiment": "2D2A",
+  "incremental_cache_audit": {
+    "b1_historical_kv": 1,
+    "b1_historical_kv_limit": 1,
+    "b2_b12_historical_kv": [
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8
+    ],
+    "b2_b12_historical_kv_limit": 1023,
+    "cache_lengths": [
+      1,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8
+    ],
+    "cache_physical_storage": [
+      {
+        "block": 1,
+        "key": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 2,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 3,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 4,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 5,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 6,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 7,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 8,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 9,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 10,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 11,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 12,
+        "key": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 49152,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 49152,
+          "shape": [
+            2,
+            12,
+            8,
+            64
+          ],
+          "storage_offset": 0
+        }
+      }
+    ],
+    "h12_ring_length": 3,
+    "h12_ring_limit": 3,
+    "h12_ring_physical_storage": {
+      "actual_bytes": 18432,
+      "contiguous": true,
+      "exact": true,
+      "expected_bytes": 18432,
+      "shape": [
+        2,
+        3,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "h12_ring_positions": [
+      5,
+      6,
+      7
+    ],
+    "passed": true,
+    "physical_storage_exact": true,
+    "position": 8
+  },
+  "kind": "exactly three disposable optimizer updates",
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "fused": true,
+    "grouping_note": "The base LR class is split only to preserve Standard GPT-2 decay/no-decay semantics.",
+    "groups": [
+      {
+        "name": "base_decay",
+        "parameters": 124354560,
+        "peak_lr": 3e-05,
+        "tensors": 50,
+        "weight_decay": 0.1
+      },
+      {
+        "name": "base_nodecay",
+        "parameters": 121344,
+        "peak_lr": 3e-05,
+        "tensors": 98,
+        "weight_decay": 0.0
+      },
+      {
+        "name": "gate",
+        "parameters": 1,
+        "peak_lr": 0.0003,
+        "tensors": 1,
+        "weight_decay": 0.0
+      }
+    ],
+    "logical_parameter_groups": 2,
+    "physical_parameter_groups": 3,
+    "source_optimizer_restored": false
+  },
+  "passed": true,
+  "rows": [
+    {
+      "effective_gate_after": -2.9999970138305798e-05,
+      "gate_after": -2.9999970138305798e-05,
+      "gate_before": 0.0,
+      "gate_gradient": 0.4447603225708008,
+      "gradient_groups": {
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 42.7829475402832,
+          "tensors": 148
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.4447603225708008,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 42.785255432128906,
+      "gradients_finite": true,
+      "loss": 5.4798583984375,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        5.4798583984375,
+        5.4798583984375
+      ],
+      "precision": "fp32",
+      "recurrent_attention_finite": true,
+      "update": 1
+    },
+    {
+      "effective_gate_after": -6.289803422987461e-05,
+      "gate_after": -6.289803422987461e-05,
+      "gate_before": -2.9999970138305798e-05,
+      "gate_gradient": -0.059956490993499756,
+      "gradient_groups": {
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 35.430721282958984,
+          "tensors": 148
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.059956490993499756,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 35.43077087402344,
+      "gradients_finite": true,
+      "loss": 5.403583526611328,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        5.403633117675781,
+        5.403567314147949
+      ],
+      "precision": "fp32",
+      "recurrent_attention_finite": true,
+      "update": 2
+    },
+    {
+      "effective_gate_after": -0.00012985977809876204,
+      "gate_after": -0.00012985977809876204,
+      "gate_before": -6.289803422987461e-05,
+      "gate_gradient": 0.29645025730133057,
+      "gradient_groups": {
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 29.710464477539062,
+          "tensors": 148
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.29645025730133057,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 29.71194839477539,
+      "gradients_finite": true,
+      "loss": 4.767881393432617,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        4.768032073974609,
+        4.767831325531006
+      ],
+      "precision": "fp32",
+      "recurrent_attention_finite": true,
+      "update": 3
+    }
+  ],
+  "temporal_gradient_rows": [
+    {
+      "effective_gate": -2.9999970138305798e-05,
+      "finite": true,
+      "gate_raw": -2.9999970138305798e-05,
+      "gradient_norm": 3.918059064744739e-06,
+      "nonzero": true,
+      "precision": "fp32",
+      "writer_temporal_gradient_present": true
+    },
+    {
+      "effective_gate": -6.289803422987461e-05,
+      "finite": true,
+      "gate_raw": -6.289803422987461e-05,
+      "gradient_norm": 6.048278009984642e-06,
+      "nonzero": true,
+      "precision": "fp32",
+      "writer_temporal_gradient_present": true
+    },
+    {
+      "effective_gate": -0.00012985977809876204,
+      "finite": true,
+      "gate_raw": -0.00012985977809876204,
+      "gradient_norm": 1.8827218809747137e-05,
+      "nonzero": true,
+      "precision": "fp32",
+      "writer_temporal_gradient_present": true
+    }
+  ]
+}
