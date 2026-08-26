@@ -1,0 +1,310 @@
+{
+  "experiment": "2D2D",
+  "protocol": "exp2d2d_b2_w32_b11_recurrent_992_v1",
+  "branch": "experiment-2d2d-b2-w32-b11-recurrent-992",
+  "frozen_2d2b_tag": "experiment-2d2b-full-b12-b1-recurrent-bank-final",
+  "frozen_2d2b_commit": "976b92927e698afd27d68eabc78db5a0b6714fef",
+  "source_checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
+  "source_checkpoint_sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+  "source_checkpoint_bytes": 1493937033,
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "validation_shard_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+  "source_2d2b": {
+    "completed_updates": 191,
+    "completed_targets": 150470656,
+    "raw_g_rec_b1": 0.07656901329755783,
+    "tanh_g_rec_b1": 0.07641972601413727,
+    "next_global_batch_sha256": "e1d96ca0106f21badeb0004025e80abc562509fb6299a63eb8662a3da3c17a52",
+    "next_global_batch_stream_sha256": "fc01029471dfe8674e900dd3d1e20a34e235853d44c68ede1b67f5b1a61e44f0",
+    "checkpoint_schema": "exp2d2b_full_b12_b1_recurrent_bank_checkpoint_v1",
+    "restore_model": true,
+    "restore_optimizer": true,
+    "restore_loader_state": true,
+    "restore_python_rng": true,
+    "restore_numpy_rng": true,
+    "restore_torch_cpu_rng": true,
+    "restore_torch_cuda_rng": true,
+    "restore_counters": true
+  },
+  "frozen_2d2c_tag": "experiment-2d2c-b2-w2-second-mirrored-link-final",
+  "frozen_2d2c_commit": "d948d200c3e70a5256c0d6a3d3cfa4c6818e2569",
+  "frozen_2d2c_checkpoint": "/workspace/exp2d2c_run/checkpoints/scientific_update_0191.pt",
+  "frozen_2d2c_checkpoint_sha256": "5f024fa69ab9473414d570b5649f3050c9694706bf4bc4c9f8bf4764b4034ded",
+  "matched_2d2c_reference": {
+    "relationship": "sibling experiment independently branched from the same finalized 2D2B source",
+    "comparison_only_not_training_target": true,
+    "initial_b2_w2_compression_damage": 1.3484903198741445,
+    "final_parallel_b2_recurrent_gain": 0.000043220880979522036,
+    "final_parallel_b2_sequence_gap": 0.000019802669885216062,
+    "final_true_incremental_b2_recurrent_gain": 0.00001448861861552686,
+    "final_true_incremental_b2_sequence_gap": 0.000050281635568971694,
+    "true_incremental_paired_wins": {
+      "vs_b2_off": {
+        "wins": 64,
+        "sequences": 128
+      },
+      "vs_b2_shuffled": {
+        "wins": 71,
+        "sequences": 128
+      }
+    },
+    "final_tanh_g_rec_b2": -0.018238622695207596,
+    "parallel_b2_recurrent_gain_trajectory": [
+      {
+        "local_update": 20,
+        "additional_targets": 10485760,
+        "gain": 0.000009905812202948283
+      },
+      {
+        "local_update": 48,
+        "additional_targets": 25165824,
+        "gain": -0.000013947896059018916
+      },
+      {
+        "local_update": 96,
+        "additional_targets": 50331648,
+        "gain": 0.0000624980799330821
+      },
+      {
+        "local_update": 143,
+        "additional_targets": 74973184,
+        "gain": 0.00005743728142970639
+      },
+      {
+        "local_update": 191,
+        "additional_targets": 100139008,
+        "gain": 0.000043220880979522036
+      }
+    ]
+  },
+  "architecture": {
+    "base": {
+      "blocks": 12,
+      "hidden_size": 768,
+      "attention_heads": 12,
+      "maximum_sequence_length": 1024
+    },
+    "b1": {
+      "local_window": 2,
+      "window_includes_current_position": true,
+      "local_positions": "max(0,t-1)...t",
+      "maximum_historical_local_kv_entries": 1,
+      "recurrent_source_block": 12,
+      "recurrent_source_state": "B12 post-MLP residual immediately before final LayerNorm",
+      "recurrent_min_lag": 2,
+      "recurrent_max_lag": 1023,
+      "maximum_recurrent_entries": 1022,
+      "recurrent_positions": "max(0,t-1023)...t-2",
+      "gate": "inherited tanh(g_rec)",
+      "existing_gate_reset": false
+    },
+    "b2": {
+      "local_window": 32,
+      "window_includes_current_position": true,
+      "local_positions": "max(0,t-31)...t",
+      "maximum_historical_local_kv_entries": 31,
+      "recurrent_source_block": 11,
+      "recurrent_source_state": "B11 post-MLP residual immediately before B12",
+      "recurrent_min_lag": 32,
+      "recurrent_max_lag": 1023,
+      "maximum_recurrent_entries": 992,
+      "recurrent_positions": "max(0,t-1023)...t-32",
+      "local_recurrent_temporal_overlap": false,
+      "gate": "new tanh(g_rec_b2)",
+      "gate_initial_raw": 0.0
+    },
+    "b3_b12_window": 1024,
+    "separate_local_and_recurrent_softmaxes": true,
+    "shared_destination_ln_qkv": true,
+    "recurrent_kv_projection": "existing destination B2 ln_1 and K/V projection slices",
+    "single_destination_output_projection": true,
+    "new_parameters_vs_2d2b": [
+      "g_rec_b2"
+    ],
+    "new_parameter_count_vs_2d2b": 1,
+    "total_parameters": 124475906
+  },
+  "training": {
+    "additional_updates": 191,
+    "targets_per_update": 524288,
+    "additional_targets": 100139008,
+    "cumulative_2d2_targets": 250609664,
+    "sequence_length": 1024,
+    "activation_checkpointing": true,
+    "two_pass_weights": [
+      0.25,
+      0.75
+    ],
+    "three_pass_weights": [
+      0.2,
+      0.4,
+      0.4
+    ],
+    "three_pass_every_local_updates": 32,
+    "maximum_passes": 3,
+    "local_milestones": [
+      0,
+      20,
+      48,
+      96,
+      143,
+      191
+    ],
+    "scientific_checkpoint_updates": [
+      96,
+      191
+    ],
+    "milestone_evaluation_only_updates": [
+      20,
+      48,
+      143
+    ],
+    "recovery_checkpoint_updates": [],
+    "maximum_rotating_recovery_checkpoints": 1,
+    "forced_fresh_process_restart_after_local_update": 96,
+    "optimizer": {
+      "name": "AdamW",
+      "base_lr": 0.00003,
+      "existing_b1_gate_lr": 0.0003,
+      "new_b2_gate_lr": 0.0003,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-8,
+      "base_weight_decay": 0.1,
+      "gate_weight_decay": 0.0,
+      "gradient_clip": 1.0,
+      "source_optimizer_restored": true,
+      "new_b2_gate_state_fresh": true,
+      "new_b2_gate_group_matches_frozen_2d2c": true,
+      "warmup_restarted": false
+    },
+    "objective": "next-token cross entropy only",
+    "all_parameters_trainable": true,
+    "recurrent_sources_detached": false,
+    "quality_based_early_stop": false,
+    "permitted_early_stop_reasons": [
+      "integrity failure",
+      "numerical instability",
+      "hardware failure",
+      "storage failure"
+    ]
+  },
+  "data_continuation": {
+    "matched_to_frozen_2d2c": true,
+    "matched_result_updates": 191,
+    "matched_result_targets": 100139008,
+    "restore_source_loader_state": true,
+    "restore_python_rng": true,
+    "restore_numpy_rng": true,
+    "restore_torch_cpu_rng": true,
+    "restore_torch_cuda_rng": true,
+    "require_next_global_batch_hash": "e1d96ca0106f21badeb0004025e80abc562509fb6299a63eb8662a3da3c17a52",
+    "require_next_global_batch_stream_hash": "fc01029471dfe8674e900dd3d1e20a34e235853d44c68ede1b67f5b1a61e44f0",
+    "per_update_hash_audit": "compare every corresponding frozen 2D2C hash that exists; never fabricate absent hashes"
+  },
+  "validation": {
+    "batch_size": 64,
+    "sequence_length": 1024,
+    "batches": 20,
+    "initial_controls": [
+      "source_2d2b",
+      "b2_w32_off",
+      "b2_w32_real_zero_gate",
+      "b2_w32_shuffled_zero_gate"
+    ],
+    "milestone_controls": [
+      "real_w32",
+      "b2_off_w32",
+      "b2_shuffled_w32",
+      "b2_full_counterfactual"
+    ],
+    "combined_final_controls": [
+      "both_real",
+      "b1_real_b2_off",
+      "b1_off_b2_real",
+      "both_shuffled",
+      "b1_shuffled_b2_real",
+      "b1_real_b2_shuffled"
+    ],
+    "fixed_derangement": "batch row roll(+1)",
+    "both_shuffled_same_donor_permutation": true,
+    "paired_parallel_differences": 20,
+    "incremental_minimum_targets_per_control": 131072,
+    "incremental_batches": 2,
+    "incremental_paired_sequences": 128,
+    "incremental_controls": [
+      "real_w32",
+      "b2_off_w32",
+      "b2_shuffled_w32",
+      "b2_full_counterfactual",
+      "both_shuffled"
+    ],
+    "full_prefix_recomputation": false
+  },
+  "diagnostics": {
+    "record_gate_raw_effective_and_gradient_every_update": true,
+    "b1_recurrent_lag_bins": [
+      "2-7",
+      "8-15",
+      "16-31",
+      "32-63",
+      "64-127",
+      "128-255",
+      "256-511",
+      "512-1023"
+    ],
+    "b2_local_lag_bins": [
+      "0-3",
+      "4-7",
+      "8-15",
+      "16-31"
+    ],
+    "b2_recurrent_lag_bins": [
+      "32-63",
+      "64-127",
+      "128-255",
+      "256-511",
+      "512-1023"
+    ],
+    "b2_per_head_diagnostics": true,
+    "attached_writer_gradient_diagnostics": true
+  },
+  "incremental_cache_bounds": {
+    "b1_historical_local_kv_entries": 1,
+    "b2_historical_local_kv_entries": 31,
+    "b12_recurrent_raw_state_ring": 1023,
+    "b11_recurrent_raw_state_ring": 1023,
+    "b3_b12_historical_kv_entries_per_layer": 1023,
+    "hidden_full_b1_or_b2_cache_allowed": false
+  },
+  "hardware": {
+    "pod_id": "7kk5yyti00rnrp",
+    "pod_name": "grand_amber_catshark",
+    "gpu_count": 1,
+    "gpu_type": "NVIDIA A100-SXM4-80GB",
+    "persistent_volume": "yhzyb27fb5",
+    "ddp": false,
+    "nccl": false,
+    "distributed_equivalence_required": false,
+    "authenticated_exact_pod_stop_required_before_unattended_training": true,
+    "exact_stop_command": "runpodctl pod stop 7kk5yyti00rnrp -o json"
+  },
+  "forbidden": [
+    "branching from or resuming the frozen 2D2C result checkpoint",
+    "teacher model or teacher memory",
+    "AttnRes",
+    "dedicated recurrent Q/K/V projections",
+    "detached recurrent sources in result training",
+    "B2 recurrent lags 2 through 31",
+    "B10-to-B3 or any additional recurrent link",
+    "auxiliary objective",
+    "more than three training passes",
+    "more than one GPU",
+    "quality-based early stopping",
+    "training the no-B2-recurrence matched control",
+    "complete-prefix recomputation in incremental evaluation",
+    "hidden full B1 or B2 ordinary K/V cache"
+  ]
+}
