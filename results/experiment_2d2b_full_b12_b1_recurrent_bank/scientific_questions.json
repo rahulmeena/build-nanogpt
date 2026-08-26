@@ -1,0 +1,242 @@
+{
+  "Q1": {
+    "answer": false,
+    "evidence": -0.0006322577072754854,
+    "question": "Did frozen 2D2A weights benefit zero-shot from widening the bank?"
+  },
+  "Q10": {
+    "answer": 0.4632356339761837,
+    "question": "What fraction went to lags 128-511?"
+  },
+  "Q11": {
+    "answer": 0.14341029945658437,
+    "question": "What fraction went to lags 512-1023?"
+  },
+  "Q12": {
+    "answer": "2-7",
+    "question": "Which lag range had strongest normalized density?"
+  },
+  "Q13": {
+    "answer": true,
+    "head_mean_lag_range": [
+      241.76371313915547,
+      260.1296868696695
+    ],
+    "question": "Did heads specialize by temporal distance?",
+    "std": 5.463802661579986
+  },
+  "Q14": {
+    "answer": false,
+    "delta": -0.0011000649415109365,
+    "question": "Did masking old memory hurt validation?"
+  },
+  "Q15": {
+    "answer": true,
+    "delta": 0.004044190359854483,
+    "question": "Does OLD_ONLY contain positive utility?"
+  },
+  "Q16": {
+    "answer": {
+      "128-255": {
+        "available_recurrent_history": [
+          127,
+          254
+        ],
+        "bank_width_gain": 0.004579019076481932,
+        "full_bank_gain": 0.005914081013179397,
+        "full_real_loss": 3.1200333284257793,
+        "full_shuffled_loss": 3.123508109262912,
+        "plain_loss": 3.1259474094389588,
+        "sequence_gap": 0.0034747808371321277,
+        "two_slot_real_loss": 3.1246123475022616
+      },
+      "16-31": {
+        "available_recurrent_history": [
+          15,
+          30
+        ],
+        "bank_width_gain": -0.0015823743829970482,
+        "full_bank_gain": 0.009107509872410352,
+        "full_real_loss": 3.5789951870101504,
+        "full_shuffled_loss": 3.5817593803280037,
+        "plain_loss": 3.5881026968825607,
+        "sequence_gap": 0.002764193317852881,
+        "two_slot_real_loss": 3.5774128126271534
+      },
+      "2-15": {
+        "available_recurrent_history": [
+          1,
+          14
+        ],
+        "bank_width_gain": -0.0009358887560664909,
+        "full_bank_gain": 0.005626631727708276,
+        "full_real_loss": 4.075986236200801,
+        "full_shuffled_loss": 4.076402031071484,
+        "plain_loss": 4.081612867928509,
+        "sequence_gap": 0.0004157948706831695,
+        "two_slot_real_loss": 4.075050347444735
+      },
+      "256-511": {
+        "available_recurrent_history": [
+          255,
+          510
+        ],
+        "bank_width_gain": 0.006550782494014109,
+        "full_bank_gain": 0.005202295103299547,
+        "full_real_loss": 3.0602922424550343,
+        "full_shuffled_loss": 3.063170183787588,
+        "plain_loss": 3.065494537558334,
+        "sequence_gap": 0.002877941332553738,
+        "two_slot_real_loss": 3.066843024949048
+      },
+      "32-63": {
+        "available_recurrent_history": [
+          31,
+          62
+        ],
+        "bank_width_gain": -0.0009920385928125774,
+        "full_bank_gain": 0.008378771995194295,
+        "full_real_loss": 3.346979861613363,
+        "full_shuffled_loss": 3.3503289654210677,
+        "plain_loss": 3.355358633608557,
+        "sequence_gap": 0.003349103807704562,
+        "two_slot_real_loss": 3.3459878230205504
+      },
+      "512-767": {
+        "available_recurrent_history": [
+          511,
+          766
+        ],
+        "bank_width_gain": 0.0028266275672649433,
+        "full_bank_gain": 0.004411290667485456,
+        "full_real_loss": 3.0347560631165837,
+        "full_shuffled_loss": 3.0375484342592247,
+        "plain_loss": 3.0391673537840687,
+        "sequence_gap": 0.0027923711426410674,
+        "two_slot_real_loss": 3.0375826906838483
+      },
+      "64-127": {
+        "available_recurrent_history": [
+          63,
+          126
+        ],
+        "bank_width_gain": 0.0010519819188630347,
+        "full_bank_gain": 0.006255002661782791,
+        "full_real_loss": 3.2093032869859597,
+        "full_shuffled_loss": 3.212139166910492,
+        "plain_loss": 3.215558289647743,
+        "sequence_gap": 0.0028358799245325195,
+        "two_slot_real_loss": 3.2103552689048227
+      },
+      "768-1023": {
+        "available_recurrent_history": [
+          767,
+          1022
+        ],
+        "bank_width_gain": 0.00041594191061450174,
+        "full_bank_gain": 0.0035618591391539927,
+        "full_real_loss": 3.0317461840564643,
+        "full_shuffled_loss": 3.033998392415742,
+        "plain_loss": 3.0353080431956188,
+        "sequence_gap": 0.0022522083592775768,
+        "two_slot_real_loss": 3.032162125967079
+      }
+    },
+    "question": "Does benefit grow with current position?"
+  },
+  "Q17": {
+    "answer": true,
+    "question": "Did writer gradients reach hundreds of tokens back?"
+  },
+  "Q18": {
+    "answer": 56.91631937731549,
+    "long_rms": 2.633080384839559e-07,
+    "question": "How did long-lag gradient compare with short-lag?",
+    "short_rms": 4.62623095387471e-09
+  },
+  "Q19": {
+    "answer": "grew",
+    "final": 0.07656901329755783,
+    "question": "Did the gate grow or shrink?",
+    "source": 0.02386544458568096
+  },
+  "Q2": {
+    "answer": 0.0016949093378570979,
+    "question": "What was zero-shot full-bank gain?"
+  },
+  "Q20": {
+    "answer": true,
+    "question": "Did parallel gain transfer to true incremental inference?",
+    "retention_fraction": 0.750801791974978
+  },
+  "Q21": {
+    "answer": 0.003682778211103077,
+    "question": "Final true-self FullReal vs Plain gain?"
+  },
+  "Q22": {
+    "answer": 0.004046077382548585,
+    "question": "Final true-self sequence gap?"
+  },
+  "Q23": {
+    "answer": 0.0023854059530723504,
+    "question": "Final true-self bank-width gain?"
+  },
+  "Q24": {
+    "answer": {
+      "B1_B12_raw_BF16_bytes_B1": 1571328,
+      "B1_B12_raw_BF16_bytes_B64": 100564992,
+      "B1_historical_KV": 1,
+      "raw_B12_states": 1023
+    },
+    "question": "How much recurrent state is stored?"
+  },
+  "Q25": {
+    "answer": true,
+    "question": "Does the result justify mirrored links?"
+  },
+  "Q26": {
+    "answer": false,
+    "question": "Does it justify dedicated projections?"
+  },
+  "Q27": {
+    "answer": "EXTEND FULL-BANK RECURRENT K/V TO MIRRORED HIGH\u2192LOW LAYER PAIRS",
+    "question": "What exactly one experiment should run next?"
+  },
+  "Q3": {
+    "answer": -0.0006322577072754854,
+    "question": "What was zero-shot bank-width gain versus two-slot?"
+  },
+  "Q4": {
+    "answer": {
+      "0": 0.0016949093378570979,
+      "143": 0.004081544944801951,
+      "191": 0.004905127092751815,
+      "20": 0.002181393742921589,
+      "48": 0.002273339939256047,
+      "96": 0.0032954346372204846
+    },
+    "question": "How did full-bank recurrent gain evolve?"
+  },
+  "Q5": {
+    "answer": 0,
+    "question": "At what milestone did FullReal beat Plain?"
+  },
+  "Q6": {
+    "answer": 96,
+    "question": "At what milestone did FullReal beat TwoSlotReal?"
+  },
+  "Q7": {
+    "2d2a_gap": 0.0019076712274910257,
+    "2d2b_gap": 0.002745755018622731,
+    "answer": true,
+    "question": "Did sequence-specificity strengthen with bank width?"
+  },
+  "Q8": {
+    "answer": 0.1402054201535483,
+    "question": "What fraction of recurrent mass remained at lags 2-31?"
+  },
+  "Q9": {
+    "answer": 0.2531486464136836,
+    "question": "What fraction went to lags 32-127?"
+  }
+}

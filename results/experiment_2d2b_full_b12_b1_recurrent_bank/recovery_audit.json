@@ -1,0 +1,92 @@
+{
+  "audit_created_at_utc": "2026-08-26T20:33:20Z",
+  "experiment": "2D2B",
+  "incident": {
+    "stage": "scientific checkpoint save after completing local update 191",
+    "failure": "PyTorchStreamWriter file write failed while writing the atomic temporary checkpoint",
+    "cause": "persistent-volume quota pressure from retained scientific, recovery, smoke, and incomplete checkpoint binaries",
+    "incomplete_temporary_checkpoint": "/workspace/exp2d2b_run/checkpoints/.scientific_update_0191.pt.4424.incomplete",
+    "incomplete_temporary_bytes": 1275068416,
+    "scientific_metrics_through_update_191_had_been_written": true,
+    "final_checkpoint_had_not_been_committed": true
+  },
+  "recovery": {
+    "resume_checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0096.pt",
+    "resume_checkpoint_sha256": "05b439b5f79c1c082050f1917c886e0dea4d88a5a7c04a7c40dd8e7794b0f6f3",
+    "fresh_process_restart_used": true,
+    "active_metrics_truncated_to_verified_update": 96,
+    "updates_replayed": [97, 191],
+    "removed_nonfinal_binaries": [
+      {
+        "path": "/workspace/exp2d2b_run/checkpoints/.scientific_update_0191.pt.4424.incomplete",
+        "reason": "invalid incomplete atomic temporary file"
+      },
+      {
+        "path": "/workspace/exp2d2b_run/smoke/smoke_update_0003.pt",
+        "reason": "explicitly disposable smoke checkpoint; SHA sidecar, strict verification, and smoke audit retained"
+      },
+      {
+        "paths": [
+          "/workspace/exp2d2b_run/checkpoints/recovery_update_0100.pt",
+          "/workspace/exp2d2b_run/checkpoints/scientific_update_0143.pt",
+          "/workspace/exp2d2b_run/checkpoints/recovery_update_0150.pt"
+        ],
+        "reason": "verified first-attempt checkpoint binaries cleared so deterministic replay could regenerate the preregistered paths"
+      }
+    ],
+    "immutable_scientific_checkpoints_retained_during_recovery": [48, 96],
+    "regenerated_checkpoint_updates": [100, 143, 150, 191],
+    "final_checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
+    "final_checkpoint_sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+    "final_checkpoint_sha_sidecar_passed": true,
+    "final_checkpoint_strict_reopen_passed": true
+  },
+  "deterministic_replay_comparison_updates_97_191": {
+    "archived_first_attempt_metrics": "failed_attempt_training_metrics_through_update_0191.jsonl",
+    "archived_first_attempt_metrics_sha256": "248e4e844e1c2764b5b87ed449e6951f8c8a13e75d041ca36150713739b49e97",
+    "archived_first_attempt_checkpoint_manifest": "failed_attempt_checkpoint_manifest_before_replay.json",
+    "archived_first_attempt_checkpoint_manifest_sha256": "076e0fd3c5816551e90eed2cc38e2e05f8b8312992a2bc978d2040d674ffda31",
+    "final_training_metrics_sha256": "1cee059f7517d2082a86da9dc1b0255e6f72b3a7b37f73a3402572281fd5d065",
+    "identical_scientific_fields": [
+      "additional_targets",
+      "all_gradients_finite",
+      "all_optimizer_moments_finite",
+      "all_parameters_finite",
+      "b12_memory_rms",
+      "b1_recurrent_output_rms",
+      "cumulative_2d2_targets",
+      "g_rec_raw",
+      "gate_gradient_preclip",
+      "gradient_groups",
+      "gradient_norm_before_clip",
+      "local_update",
+      "lrs",
+      "pass_count",
+      "pass_losses",
+      "pass_weights",
+      "recurrent_source_detached",
+      "source_plus_local_update",
+      "tanh_g_rec",
+      "weighted_total_ce"
+    ],
+    "expected_different_telemetry_fields": [
+      "aggregate_backward_seconds",
+      "pass_forward_seconds",
+      "peak_allocated_vram_mb",
+      "peak_reserved_vram_mb",
+      "targets_per_second",
+      "timestamp",
+      "wall_seconds"
+    ],
+    "all_nontelemetry_fields_identical": true
+  },
+  "scientific_effect": {
+    "training_data_changed": false,
+    "training_schedule_changed": false,
+    "model_or_optimizer_semantics_changed": false,
+    "checkpoint_or_metric_selected_from_failed_unsaved_state": false,
+    "final_metrics_recomputed_from_final_verified_checkpoint": true,
+    "scientific_result_changed_by_recovery": false
+  },
+  "passed": true
+}

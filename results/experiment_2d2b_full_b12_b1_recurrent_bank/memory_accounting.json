@@ -1,0 +1,31 @@
+{
+  "B1": {
+    "b12_recurrent_raw_state_bytes": 1571328,
+    "b1_local_kv_bytes": 3072,
+    "b2_b12_ordinary_kv_bytes": 34569216,
+    "batch_size": 1,
+    "mib": {
+      "b12_recurrent_raw_state": 1.49853515625,
+      "b1_local_kv": 0.0029296875,
+      "b2_b12_ordinary_kv": 32.9677734375,
+      "total": 34.46923828125
+    },
+    "total_experimental_inference_state_bytes": 36143616
+  },
+  "B64": {
+    "b12_recurrent_raw_state_bytes": 100564992,
+    "b1_local_kv_bytes": 196608,
+    "b2_b12_ordinary_kv_bytes": 2212429824,
+    "batch_size": 64,
+    "mib": {
+      "b12_recurrent_raw_state": 95.90625,
+      "b1_local_kv": 0.1875,
+      "b2_b12_ordinary_kv": 2109.9375,
+      "total": 2206.03125
+    },
+    "total_experimental_inference_state_bytes": 2313191424
+  },
+  "bytes_per_element": 2,
+  "dtype": "BF16",
+  "prominent_limitation": "2D2B is a mechanism experiment and does not claim whole-model KV savings because B2-B12 remain full-context."
+}

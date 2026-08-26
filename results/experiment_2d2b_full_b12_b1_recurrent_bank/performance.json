@@ -1,27 +1,77 @@
 {
-  "preflight_benchmark": {
-    "microbatch_probe": [
-      {
-        "loss": 3.2120046615600586,
-        "micro_batch_sequences": 32,
-        "passed": true,
-        "peak_allocated_vram_mb": 49758.9296875,
-        "peak_reserved_vram_mb": 50556.0,
-        "source_optimizer_state_resident": true
-      }
-    ],
-    "recurrent_attention": {
-      "backward_seconds_mean": 0.002468707039952278,
-      "backward_seconds_median": 0.002352636307477951,
-      "batch_size": 4,
-      "forward_seconds_mean": 0.00041820605595906574,
-      "forward_seconds_median": 0.0003954358398914337,
-      "heads": 12,
-      "kernel": "torch.scaled_dot_product_attention boolean offset-causal mask",
-      "recurrent_entries_max": 1022,
-      "repeats": 3,
-      "sequence_length": 1024
+  "milestone_validation": {
+    "0": {
+      "condition_target_passes_per_second": 199825.44148925444,
+      "peak_allocated_vram_mb": 47292.56005859375,
+      "peak_reserved_vram_mb": 49740.0,
+      "wall_seconds": 26.237299719825387
     },
-    "source_2d2a_training_targets_per_second": 59269
+    "143": {
+      "condition_target_passes_per_second": 184008.47981869272,
+      "peak_allocated_vram_mb": 47766.14794921875,
+      "peak_reserved_vram_mb": 50472.0,
+      "wall_seconds": 28.492599934339523
+    },
+    "191": {
+      "condition_target_passes_per_second": 184119.83884651377,
+      "peak_allocated_vram_mb": 47765.08544921875,
+      "peak_reserved_vram_mb": 50500.0,
+      "wall_seconds": 28.475367091596127
+    },
+    "20": {
+      "condition_target_passes_per_second": 192318.8282917608,
+      "peak_allocated_vram_mb": 47769.02294921875,
+      "peak_reserved_vram_mb": 50296.0,
+      "wall_seconds": 27.261397371068597
+    },
+    "48": {
+      "condition_target_passes_per_second": 172819.46644187323,
+      "peak_allocated_vram_mb": 47767.89794921875,
+      "peak_reserved_vram_mb": 50098.0,
+      "wall_seconds": 30.33732314966619
+    },
+    "96": {
+      "condition_target_passes_per_second": 187300.67181753542,
+      "peak_allocated_vram_mb": 47767.71044921875,
+      "peak_reserved_vram_mb": 52648.0,
+      "wall_seconds": 27.991784274578094
+    }
+  },
+  "recurrent_attention_microbenchmark": {
+    "backward_seconds_mean": 0.002468707039952278,
+    "backward_seconds_median": 0.002352636307477951,
+    "batch_size": 4,
+    "forward_seconds_mean": 0.00041820605595906574,
+    "forward_seconds_median": 0.0003954358398914337,
+    "heads": 12,
+    "kernel": "torch.scaled_dot_product_attention boolean offset-causal mask",
+    "recurrent_entries_max": 1022,
+    "repeats": 3,
+    "sequence_length": 1024
+  },
+  "training": {
+    "2d2a_reference_targets_per_second": 59269,
+    "aggregate_backward_seconds_total": 1154.028691953048,
+    "aggregate_targets_per_second": 60047.876864829625,
+    "changed_kernel_geometry_caveat": true,
+    "mean_seconds_per_update": 8.731166318839133,
+    "mean_update_targets_per_second": 60363.7230976069,
+    "median_seconds_per_update": 8.579003255814314,
+    "pass_forward_seconds_total": [
+      237.2849510665983,
+      248.256373828277,
+      6.5361228454858065
+    ],
+    "peak_allocated_vram_mb": 54993.0283203125,
+    "peak_reserved_vram_mb": 62516.0,
+    "throughput_ratio_vs_2d2a": 1.0131413869785153,
+    "total_wall_seconds": 1667.6527668982744,
+    "updates": 191
+  },
+  "true_incremental": {
+    "condition_target_passes_per_second": 3607.3228420643127,
+    "peak_allocated_vram_mb": 7382.8603515625,
+    "peak_reserved_vram_mb": 38918.0,
+    "wall_seconds": 145.339916318655
   }
 }
