@@ -83,5 +83,430 @@
     },
     "precision": "bf16",
     "probe_only": true
+  },
+  "143": {
+    "additional_targets": 74973184,
+    "b2_gate_override": null,
+    "bins": {
+      "128-255": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.3576934634329518e-06,
+        "mean_gradient_rms": 2.552788203047385e-07,
+        "source_positions": 128
+      },
+      "16-31": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 4.21560386598685e-08,
+        "mean_gradient_rms": 1.7414004460647448e-08,
+        "source_positions": 16
+      },
+      "2-7": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.0683673440657913e-08,
+        "mean_gradient_rms": 1.2417282313492706e-08,
+        "source_positions": 6
+      },
+      "256-511": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.8546172668720828e-06,
+        "mean_gradient_rms": 2.090936703780244e-07,
+        "source_positions": 256
+      },
+      "32-63": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 4.845365424444026e-07,
+        "mean_gradient_rms": 9.626722885514027e-08,
+        "source_positions": 32
+      },
+      "512-1023": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.0407318768557161e-05,
+        "mean_gradient_rms": 6.657492122030817e-07,
+        "source_positions": 512
+      },
+      "64-127": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 4.61638023807609e-07,
+        "mean_gradient_rms": 1.276803089922396e-07,
+        "source_positions": 64
+      },
+      "8-15": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 3.2997593990558016e-08,
+        "mean_gradient_rms": 1.5438471834272605e-08,
+        "source_positions": 8
+      }
+    },
+    "cumulative_2d2_targets": 225443840,
+    "effective_gate": -0.014996225945651531,
+    "finite": true,
+    "gate_raw": -0.014997350051999092,
+    "gradient_norm": 0.0004362554755061865,
+    "link": "B11->B2",
+    "local_update": 143,
+    "long_lag_writer_gradient_present": true,
+    "loss": 3.5919179916381836,
+    "method": "Pass-2 CE gradient into attached Pass-1 B11 post-MLP states. Source positions are indexed by their lag from receiver t=1023; each source gradient also includes all eligible earlier receivers.",
+    "nonzero": true,
+    "pinned_batch": {
+      "combined_sha256": "9bab8fb42f79d53edfc866f6f5f96b1e6fd1b004fad9c670b0344f9a37299de2",
+      "input_sha256": "9009687299d202872afd60478b7ee15ed16b123d962ccd1633b259bb0553e6e1",
+      "target_sha256": "ed6f5bcd6f2921d8fa643c284bb9cba1ceb0954104a6f468a98d5ed3331a095e"
+    },
+    "position_probes": {
+      "early_old_position_0": 1.0407318768557161e-05,
+      "ineligible_t_minus_1_position_1022": 0.0,
+      "middle_position_512": 8.695403863612228e-08,
+      "recent_eligible_position_1021": 3.794470515572357e-09
+    },
+    "precision": "bf16"
+  },
+  "191": {
+    "additional_targets": 100139008,
+    "b2_gate_override": null,
+    "bins": {
+      "128-255": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.8080720565194497e-06,
+        "mean_gradient_rms": 3.081250383729639e-07,
+        "source_positions": 128
+      },
+      "16-31": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 3.959850047863256e-08,
+        "mean_gradient_rms": 1.87280697616643e-08,
+        "source_positions": 16
+      },
+      "2-7": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.4677508037029838e-08,
+        "mean_gradient_rms": 1.4052499608396829e-08,
+        "source_positions": 6
+      },
+      "256-511": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.612553089420544e-06,
+        "mean_gradient_rms": 2.5738003728292824e-07,
+        "source_positions": 256
+      },
+      "32-63": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 5.296572567203839e-07,
+        "mean_gradient_rms": 1.0664420102557415e-07,
+        "source_positions": 32
+      },
+      "512-1023": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.224493644258473e-05,
+        "mean_gradient_rms": 7.642434525223507e-07,
+        "source_positions": 512
+      },
+      "64-127": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 5.108324216962501e-07,
+        "mean_gradient_rms": 1.6587249263011472e-07,
+        "source_positions": 64
+      },
+      "8-15": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 3.9915253324807054e-08,
+        "mean_gradient_rms": 1.83743740223008e-08,
+        "source_positions": 8
+      }
+    },
+    "cumulative_2d2_targets": 250609664,
+    "effective_gate": -0.018238622695207596,
+    "finite": true,
+    "gate_raw": -0.01824064552783966,
+    "gradient_norm": 0.0005036480142734945,
+    "link": "B11->B2",
+    "local_update": 191,
+    "long_lag_writer_gradient_present": true,
+    "loss": 3.5923542976379395,
+    "method": "Pass-2 CE gradient into attached Pass-1 B11 post-MLP states. Source positions are indexed by their lag from receiver t=1023; each source gradient also includes all eligible earlier receivers.",
+    "nonzero": true,
+    "pinned_batch": {
+      "combined_sha256": "9bab8fb42f79d53edfc866f6f5f96b1e6fd1b004fad9c670b0344f9a37299de2",
+      "input_sha256": "9009687299d202872afd60478b7ee15ed16b123d962ccd1633b259bb0553e6e1",
+      "target_sha256": "ed6f5bcd6f2921d8fa643c284bb9cba1ceb0954104a6f468a98d5ed3331a095e"
+    },
+    "position_probes": {
+      "early_old_position_0": 1.224493644258473e-05,
+      "ineligible_t_minus_1_position_1022": 0.0,
+      "middle_position_512": 9.800985623087399e-08,
+      "recent_eligible_position_1021": 4.321880187063698e-09
+    },
+    "precision": "bf16"
+  },
+  "20": {
+    "additional_targets": 10485760,
+    "b2_gate_override": null,
+    "bins": {
+      "128-255": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 5.193701326788869e-07,
+        "mean_gradient_rms": 9.135074208188598e-08,
+        "source_positions": 128
+      },
+      "16-31": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.1619364076741476e-08,
+        "mean_gradient_rms": 1.1569869506899977e-08,
+        "source_positions": 16
+      },
+      "2-7": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.3175324831138369e-08,
+        "mean_gradient_rms": 6.402356866885839e-09,
+        "source_positions": 6
+      },
+      "256-511": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.600631603399961e-07,
+        "mean_gradient_rms": 5.774127842528287e-08,
+        "source_positions": 256
+      },
+      "32-63": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 6.981077405043834e-08,
+        "mean_gradient_rms": 2.3181705444130785e-08,
+        "source_positions": 32
+      },
+      "512-1023": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 9.301756108470727e-06,
+        "mean_gradient_rms": 5.176449917598802e-07,
+        "source_positions": 512
+      },
+      "64-127": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.2208941174994834e-07,
+        "mean_gradient_rms": 5.928377078134872e-08,
+        "source_positions": 64
+      },
+      "8-15": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.3467419179846729e-08,
+        "mean_gradient_rms": 6.456373213836741e-09,
+        "source_positions": 8
+      }
+    },
+    "cumulative_2d2_targets": 160956416,
+    "effective_gate": 0.0013218846870586276,
+    "finite": true,
+    "gate_raw": 0.0013218855019658804,
+    "gradient_norm": 0.00032715225825086236,
+    "link": "B11->B2",
+    "local_update": 20,
+    "long_lag_writer_gradient_present": true,
+    "loss": 3.71058988571167,
+    "method": "Pass-2 CE gradient into attached Pass-1 B11 post-MLP states. Source positions are indexed by their lag from receiver t=1023; each source gradient also includes all eligible earlier receivers.",
+    "nonzero": true,
+    "pinned_batch": {
+      "combined_sha256": "9bab8fb42f79d53edfc866f6f5f96b1e6fd1b004fad9c670b0344f9a37299de2",
+      "input_sha256": "9009687299d202872afd60478b7ee15ed16b123d962ccd1633b259bb0553e6e1",
+      "target_sha256": "ed6f5bcd6f2921d8fa643c284bb9cba1ceb0954104a6f468a98d5ed3331a095e"
+    },
+    "position_probes": {
+      "early_old_position_0": 9.301756108470727e-06,
+      "ineligible_t_minus_1_position_1022": 0.0,
+      "middle_position_512": 6.659946905074321e-08,
+      "recent_eligible_position_1021": 1.850067987696491e-09
+    },
+    "precision": "bf16"
+  },
+  "48": {
+    "additional_targets": 25165824,
+    "b2_gate_override": null,
+    "bins": {
+      "128-255": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 6.86678220063186e-07,
+        "mean_gradient_rms": 1.1259948706765499e-07,
+        "source_positions": 128
+      },
+      "16-31": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.355846007162654e-08,
+        "mean_gradient_rms": 1.0879730893975648e-08,
+        "source_positions": 16
+      },
+      "2-7": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.4302097284257798e-08,
+        "mean_gradient_rms": 6.862678425534341e-09,
+        "source_positions": 6
+      },
+      "256-511": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 3.1613055284651637e-07,
+        "mean_gradient_rms": 6.854983780613111e-08,
+        "source_positions": 256
+      },
+      "32-63": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 7.528760903596776e-08,
+        "mean_gradient_rms": 2.7621156917234657e-08,
+        "source_positions": 32
+      },
+      "512-1023": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 7.085761353664566e-06,
+        "mean_gradient_rms": 4.7072211373233586e-07,
+        "source_positions": 512
+      },
+      "64-127": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.6701118827077153e-07,
+        "mean_gradient_rms": 7.725883932607758e-08,
+        "source_positions": 64
+      },
+      "8-15": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.6140388581220577e-08,
+        "mean_gradient_rms": 7.218417419352363e-09,
+        "source_positions": 8
+      }
+    },
+    "cumulative_2d2_targets": 175636480,
+    "effective_gate": -0.0021486254408955574,
+    "finite": true,
+    "gate_raw": -0.0021486287005245686,
+    "gradient_norm": 0.0002993541129399091,
+    "link": "B11->B2",
+    "local_update": 48,
+    "long_lag_writer_gradient_present": true,
+    "loss": 3.648775100708008,
+    "method": "Pass-2 CE gradient into attached Pass-1 B11 post-MLP states. Source positions are indexed by their lag from receiver t=1023; each source gradient also includes all eligible earlier receivers.",
+    "nonzero": true,
+    "pinned_batch": {
+      "combined_sha256": "9bab8fb42f79d53edfc866f6f5f96b1e6fd1b004fad9c670b0344f9a37299de2",
+      "input_sha256": "9009687299d202872afd60478b7ee15ed16b123d962ccd1633b259bb0553e6e1",
+      "target_sha256": "ed6f5bcd6f2921d8fa643c284bb9cba1ceb0954104a6f468a98d5ed3331a095e"
+    },
+    "position_probes": {
+      "early_old_position_0": 7.085761353664566e-06,
+      "ineligible_t_minus_1_position_1022": 0.0,
+      "middle_position_512": 6.603056590392953e-08,
+      "recent_eligible_position_1021": 1.5490712046428712e-09
+    },
+    "precision": "bf16"
+  },
+  "96": {
+    "additional_targets": 50331648,
+    "b2_gate_override": null,
+    "bins": {
+      "128-255": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.1021044201697805e-06,
+        "mean_gradient_rms": 1.9841994003400032e-07,
+        "source_positions": 128
+      },
+      "16-31": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 3.723881292216902e-08,
+        "mean_gradient_rms": 1.5507957584759424e-08,
+        "source_positions": 16
+      },
+      "2-7": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.88110664822716e-08,
+        "mean_gradient_rms": 1.0337800837589839e-08,
+        "source_positions": 6
+      },
+      "256-511": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.2024548823319492e-06,
+        "mean_gradient_rms": 1.4603614317820757e-07,
+        "source_positions": 256
+      },
+      "32-63": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 3.3484545269857335e-07,
+        "mean_gradient_rms": 6.970498134251102e-08,
+        "source_positions": 32
+      },
+      "512-1023": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 8.46947750687832e-06,
+        "mean_gradient_rms": 5.421361493063159e-07,
+        "source_positions": 512
+      },
+      "64-127": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 3.919968207810598e-07,
+        "mean_gradient_rms": 1.1488114637359104e-07,
+        "source_positions": 64
+      },
+      "8-15": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.557078815357272e-08,
+        "mean_gradient_rms": 1.215508937946197e-08,
+        "source_positions": 8
+      }
+    },
+    "cumulative_2d2_targets": 200802304,
+    "effective_gate": -0.009678013622760773,
+    "finite": true,
+    "gate_raw": -0.009678315371274948,
+    "gradient_norm": 0.00035271295928396285,
+    "link": "B11->B2",
+    "local_update": 96,
+    "long_lag_writer_gradient_present": true,
+    "loss": 3.6131863594055176,
+    "method": "Pass-2 CE gradient into attached Pass-1 B11 post-MLP states. Source positions are indexed by their lag from receiver t=1023; each source gradient also includes all eligible earlier receivers.",
+    "nonzero": true,
+    "pinned_batch": {
+      "combined_sha256": "9bab8fb42f79d53edfc866f6f5f96b1e6fd1b004fad9c670b0344f9a37299de2",
+      "input_sha256": "9009687299d202872afd60478b7ee15ed16b123d962ccd1633b259bb0553e6e1",
+      "target_sha256": "ed6f5bcd6f2921d8fa643c284bb9cba1ceb0954104a6f468a98d5ed3331a095e"
+    },
+    "position_probes": {
+      "early_old_position_0": 8.46947750687832e-06,
+      "ineligible_t_minus_1_position_1022": 0.0,
+      "middle_position_512": 7.765564902229016e-08,
+      "recent_eligible_position_1021": 2.633000262264318e-09
+    },
+    "precision": "bf16"
   }
 }

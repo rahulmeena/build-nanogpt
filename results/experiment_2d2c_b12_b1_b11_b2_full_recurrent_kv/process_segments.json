@@ -1,0 +1,20 @@
+{
+  "191": {
+    "checkpoint": "/workspace/exp2d2c_run/checkpoints/scientific_update_0191.pt",
+    "command": "/tmp/exp2d2c_nommap_launcher.py train --source-checkpoint /tmp/exp2d2c_resume_0096/source_scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2c/results/experiment_2d2c_b12_b1_b11_b2_full_recurrent_kv --run-root /workspace/exp2d2c_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2c_run/control/runpod_stop_capability.json --end-update 191 --resume /tmp/exp2d2c_resume_0096/scientific_update_0096.pt",
+    "completed_at": 1787786150.4326727,
+    "end_local_update": 191,
+    "process_id": 9731,
+    "start_local_update": 96,
+    "started_at": 1787785053.0186026
+  },
+  "96": {
+    "checkpoint": "/workspace/exp2d2c_run/checkpoints/scientific_update_0096.pt",
+    "command": "scripts/experiment_2d2c.py train --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2c/results/experiment_2d2c_b12_b1_b11_b2_full_recurrent_kv --run-root /workspace/exp2d2c_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2c_run/control/runpod_stop_capability.json --end-update 96",
+    "completed_at": 1787783495.965176,
+    "end_local_update": 96,
+    "process_id": 1518,
+    "start_local_update": 0,
+    "started_at": 1787782367.9345868
+  }
+}

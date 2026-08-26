@@ -1,0 +1,47 @@
+{
+  "experiment": "2D2C",
+  "incident": "The GPU pod's FUSE network-volume mount repeatedly blocked in folio_wait_bit_common while tearing down checkpoint and NumPy shard mappings after the mandatory update-96 restart.",
+  "scientific_state_at_incident": {
+    "checkpoint": "/workspace/exp2d2c_run/checkpoints/scientific_update_0096.pt",
+    "checkpoint_sha256": "47086782c5f651f0a7acf2635e5a2616f1bffbeb1387de4c0fd69449708a3a3b",
+    "completed_updates": 96,
+    "next_global_batch_sha256": "313c1cd86d1924914e395df1bddf98fcb9ab351592c014b3b1357ecbbab33c97",
+    "next_global_batch_stream_sha256": "6a870df86881ba3def08dbbe7bbb5554b959780d788d509c578558b52dd19f31"
+  },
+  "mitigation": {
+    "description": "Exact-byte checkpoint, active training-shard, and validation-shard copies were read through the independent CPU-pod mount and staged on the GPU pod's container disk. A temporary launcher changed checkpoint and NumPy I/O from mmap to ordinary reads and redirected only those staged paths. The frozen 2D2C driver, model math, optimizer, RNG, loader cursor, token order, validation rows, and implementation fingerprint were unchanged.",
+    "gpu_pod": {
+      "id": "e8nd7m6piw5km2",
+      "name": "serious_indigo_swordfish"
+    },
+    "temporary_cpu_helper_pod": {
+      "id": "7kk5yyti00rnrp",
+      "name": "grand_amber_catshark",
+      "gpu_count": 0,
+      "stopped_after_transfer": true
+    },
+    "staged_inputs": {
+      "source_2d2b_checkpoint_sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+      "update_96_checkpoint_sha256": "47086782c5f651f0a7acf2635e5a2616f1bffbeb1387de4c0fd69449708a3a3b",
+      "training_shard": "edufineweb_train_000002.npy",
+      "training_shard_sha256": "8c4a96a209f29c2b7478e0605fe1ffa6bc06dd97af1047473f23a6f46ee03836",
+      "validation_shard": "edufineweb_val_000000.npy",
+      "validation_shard_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+      "final_2d2c_checkpoint_sha256": "5f024fa69ab9473414d570b5649f3050c9694706bf4bc4c9f8bf4764b4034ded"
+    },
+    "successful_training_process_id": 9731,
+    "successful_finalize_process_id": 14148
+  },
+  "post_mitigation_verification": {
+    "mandatory_fresh_process": true,
+    "checkpoint_strict_reopen": true,
+    "optimizer_state_exact": true,
+    "rng_state_exact": true,
+    "next_global_batch_exact": true,
+    "next_global_batch_stream_exact": true,
+    "191_updates_completed": true,
+    "100139008_additional_targets_completed": true,
+    "final_checkpoint_strict_reopen": true,
+    "scientific_integrity_passed": true
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "B1": {
+    "b11_recurrent_raw_state_bytes": 1571328,
+    "b12_recurrent_raw_state_bytes": 1571328,
+    "b1_local_kv_bytes": 3072,
+    "b2_local_kv_bytes": 3072,
+    "b3_b12_ordinary_kv_bytes": 31426560,
+    "batch_size": 1,
+    "delta_bytes_vs_final_2d2b": -1568256,
+    "delta_bytes_vs_standard_gpt2": -3136512,
+    "final_2d2b_inference_state_bytes": 36143616,
+    "mib": {
+      "b11_recurrent_raw_state": 1.49853515625,
+      "b12_recurrent_raw_state": 1.49853515625,
+      "b1_local_kv": 0.0029296875,
+      "b2_local_kv": 0.0029296875,
+      "b3_b12_ordinary_kv": 29.970703125,
+      "delta_vs_final_2d2b": -1.49560546875,
+      "delta_vs_standard_gpt2": -2.9912109375,
+      "total": 32.9736328125
+    },
+    "standard_gpt2_w1024_kv_bytes": 37711872,
+    "total_experimental_inference_state_bytes": 34575360
+  },
+  "B64": {
+    "b11_recurrent_raw_state_bytes": 100564992,
+    "b12_recurrent_raw_state_bytes": 100564992,
+    "b1_local_kv_bytes": 196608,
+    "b2_local_kv_bytes": 196608,
+    "b3_b12_ordinary_kv_bytes": 2011299840,
+    "batch_size": 64,
+    "delta_bytes_vs_final_2d2b": -100368384,
+    "delta_bytes_vs_standard_gpt2": -200736768,
+    "final_2d2b_inference_state_bytes": 2313191424,
+    "mib": {
+      "b11_recurrent_raw_state": 95.90625,
+      "b12_recurrent_raw_state": 95.90625,
+      "b1_local_kv": 0.1875,
+      "b2_local_kv": 0.1875,
+      "b3_b12_ordinary_kv": 1918.125,
+      "delta_vs_final_2d2b": -95.71875,
+      "delta_vs_standard_gpt2": -191.4375,
+      "total": 2110.3125
+    },
+    "standard_gpt2_w1024_kv_bytes": 2413559808,
+    "total_experimental_inference_state_bytes": 2212823040
+  },
+  "bytes_per_element": 2,
+  "comparison_note": "Exact BF16 inference-state comparison at a full 1024-token context.",
+  "dtype": "BF16",
+  "state_limits": {
+    "B1 ordinary historical KV": 1,
+    "B11 raw recurrent states": 1023,
+    "B12 raw recurrent states": 1023,
+    "B2 ordinary historical KV": 1,
+    "B3-B12 ordinary historical KV each": 1023
+  }
+}

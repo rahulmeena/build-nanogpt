@@ -1,0 +1,90 @@
+{
+  "environment": {
+    "autocast": "cuda bfloat16",
+    "cublas_workspace_config": ":4096:8",
+    "cuda": "12.8",
+    "cuda_device_count": 1,
+    "cudnn": 91002,
+    "experiment": "2D2C",
+    "float32_matmul_precision": "high",
+    "git_branch": "experiment-2d2c-b12-b1-b11-b2-full-recurrent-kv",
+    "git_commit": "d64fbdd872b96fd42c6371a4d0cfb8e3f57b6907",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "matplotlib": "3.10.5",
+    "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+    "timestamp": 1787786402.6392243,
+    "torch": "2.8.0+cu128"
+  },
+  "experiment": "2D2C",
+  "finalize_command": "/tmp/exp2d2c_nommap_launcher.py finalize --source-checkpoint /tmp/exp2d2c_resume_0096/source_scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2c/results/experiment_2d2c_b12_b1_b11_b2_full_recurrent_kv --run-root /workspace/exp2d2c_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2c_run/control/runpod_stop_capability.json --final-checkpoint /tmp/exp2d2c_resume_0096/final_scientific_update_0191.pt",
+  "finalized_at": 1787786402.6392198,
+  "planned_terminal_stop_command": "runpodctl pod stop e8nd7m6piw5km2 -o json",
+  "preflight_command": "scripts/experiment_2d2c.py preflight --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2c/results/experiment_2d2c_b12_b1_b11_b2_full_recurrent_kv --run-root /workspace/exp2d2c_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2c_run/control/runpod_stop_capability.json",
+  "runpod_stop_capability_audit": {
+    "audit_path": "/workspace/exp2d2c_run/control/runpod_stop_capability.json",
+    "audit_sha256": "c4d94f81b4c10f8693c47eaf0d0b7929feab1a28656c593125ea18f7ca589f27",
+    "authenticated_list_probe": true,
+    "authenticated_pod_identity_response": {
+      "costPerHr": 1.59,
+      "desiredStatus": "RUNNING",
+      "gpuCount": 1,
+      "id": "e8nd7m6piw5km2",
+      "imageName": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404",
+      "lastStatusChange": "Resumed by user: Wed Aug 26 2026 21:50:02 GMT+0000 (Coordinated Universal Time)",
+      "name": "serious_indigo_swordfish",
+      "networkVolumeId": "yhzyb27fb5",
+      "runtimeStatus": "running"
+    },
+    "credential_source": {
+      "account": "rahul",
+      "kind": "macOS Keychain generic password",
+      "service": "runpod-codex-pod-stopper"
+    },
+    "driver_checks": {
+      "authenticated_probe": true,
+      "cli_authorized": true,
+      "credential_available": true,
+      "exact_stop_target": true,
+      "gpu_count": true,
+      "passed": true,
+      "pod_id": true,
+      "pod_name": true,
+      "runtime_running": true,
+      "schema": true,
+      "secret_not_recorded": true
+    },
+    "driver_passed": true,
+    "exact_stop_command": "runpodctl pod stop e8nd7m6piw5km2 -o json",
+    "exact_stop_target": "e8nd7m6piw5km2",
+    "passed": true,
+    "probe_command": "runpodctl pod get e8nd7m6piw5km2 -o json",
+    "probe_tool": "/opt/homebrew/bin/runpodctl",
+    "schema": "exp2d2c_runpod_stop_capability_v1",
+    "secret_recorded": false,
+    "stop_credential_available": true,
+    "terminal_outcome_policy": "After successful persistent-volume, local-backup, and Git synchronization, stop only this exact GPU pod; never delete the pod or network volume.",
+    "verified_at_utc": "2026-08-26T22:06:15Z"
+  },
+  "smoke_command": "scripts/experiment_2d2c.py smoke --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2c/results/experiment_2d2c_b12_b1_b11_b2_full_recurrent_kv --run-root /workspace/exp2d2c_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2c_run/control/runpod_stop_capability.json",
+  "training_segments": {
+    "191": {
+      "checkpoint": "/workspace/exp2d2c_run/checkpoints/scientific_update_0191.pt",
+      "command": "/tmp/exp2d2c_nommap_launcher.py train --source-checkpoint /tmp/exp2d2c_resume_0096/source_scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2c/results/experiment_2d2c_b12_b1_b11_b2_full_recurrent_kv --run-root /workspace/exp2d2c_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2c_run/control/runpod_stop_capability.json --end-update 191 --resume /tmp/exp2d2c_resume_0096/scientific_update_0096.pt",
+      "completed_at": 1787786150.4326727,
+      "end_local_update": 191,
+      "process_id": 9731,
+      "start_local_update": 96,
+      "started_at": 1787785053.0186026
+    },
+    "96": {
+      "checkpoint": "/workspace/exp2d2c_run/checkpoints/scientific_update_0096.pt",
+      "command": "scripts/experiment_2d2c.py train --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2c/results/experiment_2d2c_b12_b1_b11_b2_full_recurrent_kv --run-root /workspace/exp2d2c_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2c_run/control/runpod_stop_capability.json --end-update 96",
+      "completed_at": 1787783495.965176,
+      "end_local_update": 96,
+      "process_id": 1518,
+      "start_local_update": 0,
+      "started_at": 1787782367.9345868
+    }
+  }
+}
