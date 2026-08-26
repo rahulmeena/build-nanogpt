@@ -1,0 +1,112 @@
+{
+  "experiment": "2D2B",
+  "protocol": "exp2d2b_full_b12_b1_recurrent_bank_v1",
+  "branch": "experiment-2d2b-full-b12-b1-recurrent-bank",
+  "frozen_2d2a_tag": "experiment-2d2a-b12-b1-recurrent-kv-final",
+  "frozen_2d2a_commit": "4101c180646f30d3cde9bd7854be682393761c6d",
+  "source_checkpoint": "/workspace/exp2d2a_run/checkpoints/scientific_update_0096.pt",
+  "source_checkpoint_sha256": "24fd2481e220ec504db3a6e912054d0ad502cdb3a6fc497b22dd32ec682e3afb",
+  "source_checkpoint_bytes": 1493936841,
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "validation_shard_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+  "source_2d2a": {
+    "completed_updates": 96,
+    "completed_targets": 50331648,
+    "raw_g_rec": 0.02386544458568096,
+    "tanh_g_rec": 0.023860914632678032,
+    "next_global_batch_sha256": "9c8de21606769f3e0a38a64a7beecb9de8c6b99b4842d6c909f2f42dd251b7ff",
+    "checkpoint_schema": "exp2d2a_b12_b1_recurrent_kv_checkpoint_v1",
+    "audit_correction": {
+      "artifact": "results/experiment_2d2a_b12_b1_recurrent_kv/POST_TRAINING_AUDIT_CORRECTION.json",
+      "wrapper": "results/experiment_2d2a_b12_b1_recurrent_kv/POST_TRAINING_AUDIT_CORRECTION_WRAPPER.py",
+      "failed_log": "results/experiment_2d2a_b12_b1_recurrent_kv/POST_TRAINING_AUDIT_FAILED_FINALIZE.log",
+      "bf16_active_prefix_max_atol": 1.25,
+      "fp32_thresholds_unchanged": true
+    }
+  },
+  "architecture": {
+    "source_block": 12,
+    "destination_block": 1,
+    "b1_local_window": 2,
+    "b2_b12_window": 1024,
+    "recurrent_min_lag": 2,
+    "recurrent_max_lag": 1023,
+    "maximum_recurrent_entries": 1022,
+    "recurrent_positions": "max(0,t-1023)...t-2",
+    "source_state": "B12 post-MLP residual immediately before final LayerNorm",
+    "separate_local_and_recurrent_softmaxes": true,
+    "shared_b1_ln_qkv": true,
+    "single_b1_output_projection": true,
+    "gate": "tanh(g_rec)",
+    "new_parameters_vs_2d2a": [],
+    "new_parameter_count_vs_2d2a": 0,
+    "total_parameters": 124475905
+  },
+  "training": {
+    "additional_updates": 191,
+    "targets_per_update": 524288,
+    "additional_targets": 100139008,
+    "cumulative_2d2_targets": 150470656,
+    "sequence_length": 1024,
+    "activation_checkpointing": true,
+    "two_pass_weights": [0.25, 0.75],
+    "three_pass_weights": [0.2, 0.4, 0.4],
+    "three_pass_every_global_updates": 32,
+    "local_milestones": [0, 20, 48, 96, 143, 191],
+    "scientific_checkpoint_updates": [48, 96, 143, 191],
+    "recovery_checkpoint_updates": [50, 100, 150],
+    "forced_fresh_process_restart_after_local_update": 96,
+    "optimizer": {
+      "name": "AdamW",
+      "base_lr": 0.00003,
+      "gate_lr": 0.0003,
+      "betas": [0.9, 0.95],
+      "eps": 1e-8,
+      "base_weight_decay": 0.1,
+      "gate_weight_decay": 0.0,
+      "gradient_clip": 1.0,
+      "source_optimizer_restored": true,
+      "warmup_restarted": false
+    },
+    "objective": "next-token cross entropy only",
+    "all_parameters_trainable": true,
+    "recurrent_source_detached": false
+  },
+  "data_continuation": {
+    "restore_source_loader_state": true,
+    "restore_python_rng": true,
+    "restore_numpy_rng": true,
+    "restore_torch_cpu_rng": true,
+    "restore_torch_cuda_rng": true,
+    "require_next_global_batch_hash": "9c8de21606769f3e0a38a64a7beecb9de8c6b99b4842d6c909f2f42dd251b7ff"
+  },
+  "validation": {
+    "batch_size": 64,
+    "sequence_length": 1024,
+    "batches": 20,
+    "controls": ["plain", "full_real", "full_shuffled", "two_slot_real"],
+    "fixed_derangement": "batch row roll(+1)",
+    "incremental_minimum_targets": 131072,
+    "incremental_batches": 2,
+    "old_memory_controls": ["recent_only", "old_only"]
+  },
+  "hardware": {
+    "pod_id": "e8nd7m6piw5km2",
+    "pod_name": "serious_indigo_swordfish",
+    "gpu_count": 1,
+    "gpu_type": "NVIDIA A100-SXM4-80GB",
+    "ddp": false,
+    "nccl": false
+  },
+  "forbidden": [
+    "teacher model or teacher memory",
+    "AttnRes",
+    "dedicated recurrent Q/K/V projections",
+    "detached result-training arm",
+    "mirrored high-to-low links beyond B12-to-B1",
+    "auxiliary objective",
+    "more than three training passes",
+    "more than one GPU",
+    "complete-prefix recomputation in incremental evaluation"
+  ]
+}
