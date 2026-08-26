@@ -1140,7 +1140,7 @@ def legacy_2d2a_regressions(model, source_payload, val_path) -> dict:
         ),
         "parallel_canonical": parallel["canonical_validation_sha256"]
         == CANONICAL_VALIDATION_SHA256,
-        "incremental_targets": incremental["targets"] >= 131_072,
+        "incremental_targets": incremental["targets_per_control"] >= 131_072,
     }
     report = {
         "expected_parallel": expected_parallel,
