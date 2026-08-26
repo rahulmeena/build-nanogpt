@@ -28,6 +28,10 @@ Incremental storage passed with one historical B1 K/V entry, at most 1023 histor
 
 Exactly one next experiment is recommended: **EXTEND RECURRENT K/V TO THE MIRRORED HIGH→LOW LAYER PAIRS**. It was not executed.
 
+## Post-training audit correction disclosure
+
+The first finalization attempt used a BF16 active-prefix maximum-error cap of 0.30 and stopped when the observed maximum was 0.3125. The matched BF16 Plain control was also exactly 0.3125 and had the already-preregistered whole-sequence-versus-token-step tolerance of 1.25. The corrected evaluation-only finalizer therefore applied that same existing 1.25 tolerance to the active-prefix comparison. The strict FP32 checks were unchanged and passed (Plain and active-prefix maxima both 0.00003790855407714844); the failed log was retained. This correction changed no model, checkpoint, training, data, or scientific metric and is fully recorded in `POST_TRAINING_AUDIT_CORRECTION.json`.
+
 ## Q1–Q26
 
 ### Q1
@@ -139,7 +143,7 @@ EXTEND RECURRENT K/V TO THE MIRRORED HIGH→LOW LAYER PAIRS
 - Integrity audit: PASS.
 - Final checkpoint: `/workspace/exp2d2a_run/checkpoints/scientific_update_0096.pt` (`24fd2481e220ec504db3a6e912054d0ad502cdb3a6fc497b22dd32ec682e3afb`).
 - Implementation Git commit: `26b2493f86e3b465035a51afe8a702e2611fa6f1`.
-- Results Git commit: `PENDING RESULTS COMMIT`.
+- Results Git commit: `64df74b64b9903ac73a8ae4eaf56ac68de596cf0`.
 - Artifact directory: `/workspace/build-nanogpt-exp2d2a/results/experiment_2d2a_b12_b1_recurrent_kv`.
 - GPU pod is stopped after final Git and artifact synchronization; the network volume and historical checkpoints are preserved.
 

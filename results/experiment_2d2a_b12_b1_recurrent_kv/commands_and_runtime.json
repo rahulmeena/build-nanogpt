@@ -19,6 +19,13 @@
     "torch": "2.8.0+cu128"
   },
   "planned_terminal_stop_command": "runpodctl pod stop 7kk5yyti00rnrp -o json",
+  "post_seal_external_actions": [
+    "commit and push sealed report artifacts",
+    "verify local/origin/pod commit equality and clean worktrees",
+    "verify no GPU compute process",
+    "runpodctl pod stop 7kk5yyti00rnrp -o json",
+    "verify stopped and not deleted"
+  ],
   "preflight_command": "scripts/experiment_2d2a.py preflight --source-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2a/results/experiment_2d2a_b12_b1_recurrent_kv --run-root /workspace/exp2d2a_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2a_run/control/runpod_stop_capability.json",
   "process_segments": {
     "48": {
@@ -87,6 +94,8 @@
     "terminal_outcome_policy": "The external Codex orchestrator must invoke the exact stop command after successful synchronization or any terminal hard failure; never delete the pod or network volume.",
     "verified_at_utc": "2026-08-26T10:01:16Z"
   },
+  "seal_report_argv_sha256": "5cb6c974c8f8bcb926d7af73caa8980144c6290097b7fe4bdffc70c24561f8c3",
+  "seal_report_command": "scripts/experiment_2d2a.py seal-report --output-dir /workspace/build-nanogpt-exp2d2a/results/experiment_2d2a_b12_b1_recurrent_kv --results-commit 64df74b64b9903ac73a8ae4eaf56ac68de596cf0",
   "smoke_command": "scripts/experiment_2d2a.py smoke --source-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2a/results/experiment_2d2a_b12_b1_recurrent_kv --run-root /workspace/exp2d2a_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2a_run/control/runpod_stop_capability.json",
   "training_commands": {
     "48": "scripts/experiment_2d2a.py train --source-checkpoint /workspace/exp2d1_assets/runs/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt --data-root /workspace/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2a/results/experiment_2d2a_b12_b1_recurrent_kv --run-root /workspace/exp2d2a_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2a_run/control/runpod_stop_capability.json --end-update 48",
