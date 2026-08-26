@@ -1,16 +1,34 @@
 {
   "artifact_inventory": {
     "passed": true,
+    "supplemental_audit_artifacts": {
+      "POST_TRAINING_AUDIT_CORRECTION.json": {
+        "bytes": 2686,
+        "exists_nonempty": true,
+        "purpose": "Evaluation-only BF16 audit-correction disclosure",
+        "sha256": "7834587d0049f9b00c65b9ff77b786e6d2655ad6bc5d3ac0d2ec09ac5f3c16f1"
+      },
+      "POST_TRAINING_AUDIT_CORRECTION_WRAPPER.py": {
+        "bytes": 1605,
+        "exists_nonempty": true,
+        "sha256": "f3972df46d827418f81dfa9083486201afe71835f7a6078802939926b23a004f"
+      },
+      "POST_TRAINING_AUDIT_FAILED_FINALIZE.log": {
+        "bytes": 1318,
+        "exists_nonempty": true,
+        "sha256": "9d377aea28339b316e0af44aeda0da5ce18eedc975947e3bc0481be9f3359179"
+      }
+    },
     "required_artifact_count": 22,
     "required_artifacts": {
       "EXPERIMENT_2D2A_FINAL_REPORT.md": {
-        "bytes": 4606,
+        "bytes": 4861,
         "exists_nonempty": true,
         "hash_deferred_self_referential": true,
         "sha256": null
       },
       "FINAL_AUDIT.json": {
-        "bytes": 2446,
+        "bytes": 10205,
         "exists_nonempty": true,
         "hash_deferred_self_referential": true,
         "sha256": null
@@ -22,7 +40,7 @@
         "sha256": "d7de71e75722e2e94648ee29f949f64c1a522735a9cff2d3ac82f14cd353a314"
       },
       "UNATTENDED_FINAL_HANDOFF.md": {
-        "bytes": 4694,
+        "bytes": 4949,
         "exists_nonempty": true,
         "hash_deferred_self_referential": true,
         "sha256": null
@@ -46,7 +64,7 @@
         "sha256": "b8d46c73f8e91169592cbd8a472ad160abbbf69b5a4a01b70c2ce039b99d02d3"
       },
       "commands_and_runtime.json": {
-        "bytes": 7853,
+        "bytes": 8441,
         "exists_nonempty": true,
         "hash_deferred_self_referential": true,
         "sha256": null
@@ -106,7 +124,7 @@
         "sha256": "8bb8cea6b637834b33ef87f7c61c38b003edd6d6bf0c8e6163a37ed58080f6d2"
       },
       "result_summary.json": {
-        "bytes": 113281,
+        "bytes": 113389,
         "exists_nonempty": true,
         "hash_deferred_self_referential": true,
         "sha256": null

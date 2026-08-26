@@ -30,7 +30,7 @@ Exactly one next experiment is recommended: **EXTEND RECURRENT K/V TO THE MIRROR
 
 ## Post-training audit correction disclosure
 
-The first finalization attempt used a BF16 active-prefix maximum-error cap of 0.30 and stopped when the observed maximum was 0.3125. The matched BF16 Plain control was also exactly 0.3125 and had the already-preregistered whole-sequence-versus-token-step tolerance of 1.25. The corrected evaluation-only finalizer therefore applied that same existing 1.25 tolerance to the active-prefix comparison. The strict FP32 checks were unchanged and passed (Plain and active-prefix maxima both 0.00003790855407714844); the failed log was retained. This correction changed no model, checkpoint, training, data, or scientific metric and is fully recorded in `POST_TRAINING_AUDIT_CORRECTION.json`.
+The first finalization attempt used a BF16 active-prefix maximum-error cap of 0.30 and stopped when the observed maximum was 0.3125. The matched BF16 Plain control was also exactly 0.3125 and had the already-preregistered whole-sequence-versus-token-step tolerance of 1.25. The corrected evaluation-only finalizer therefore applied that same existing 1.25 tolerance to the active-prefix comparison. The strict FP32 checks were unchanged and passed (Plain and active-prefix maxima both 0.00003790855407714844); the failed log was retained. This correction changed no model, checkpoint, training, data, or scientific metric and is fully recorded in `POST_TRAINING_AUDIT_CORRECTION.json`. The exact recovery wrapper and original failed-finalization log are committed as `POST_TRAINING_AUDIT_CORRECTION_WRAPPER.py` and `POST_TRAINING_AUDIT_FAILED_FINALIZE.log`, with hashes matching the preserved volume copies.
 
 ## Q1–Q26
 
@@ -88,7 +88,7 @@ Final parallel Real-vs-Shuffled wins: 20/20; gap +0.0019076712.
 
 ### Q14
 
-t-2 (0.491357 vs 0.508643).
+t-2 received more: t-2=0.5086432892 versus t-3=0.4913567125.
 
 ### Q15
 
