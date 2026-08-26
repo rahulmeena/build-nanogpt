@@ -14,6 +14,8 @@ import copy
 import gc
 import hashlib
 import inspect
+import importlib.metadata
+import importlib.util
 import json
 import math
 import os
@@ -76,6 +78,7 @@ BF16_INCREMENTAL_PLAIN_MAX_ATOL = 1.25
 BF16_INCREMENTAL_ACTIVE_PREFIX_MAX_ATOL = 0.30
 STABILITY_RMS_HARD_LIMIT = 1_000.0
 STABILITY_LOSS_HARD_LIMIT = 100.0
+MATPLOTLIB_VERSION = "3.10.5"
 
 T = 1024
 N_LAYER = 12
@@ -454,6 +457,11 @@ def environment_payload():
         "platform": platform.platform(),
         "python": sys.version,
         "torch": torch.__version__,
+        "matplotlib": (
+            importlib.metadata.version("matplotlib")
+            if importlib.util.find_spec("matplotlib") is not None
+            else None
+        ),
         "cuda": torch.version.cuda,
         "cudnn": torch.backends.cudnn.version(),
         "cuda_device_count": torch.cuda.device_count(),
@@ -1743,6 +1751,8 @@ def run_preflight(args):
         "zero_gate_canonical": all(update_zero_checks.values()),
         "safe_microbatch": selected_microbatch > 0 and selected_microbatch * T * accumulation == GLOBAL_TARGETS,
         "persistent_workspace": mount["passed"],
+        "plot_dependency": environment_payload()["matplotlib"]
+        == MATPLOTLIB_VERSION,
         "stop_authenticated": stop["driver_passed"],
     }
     preflight = {
