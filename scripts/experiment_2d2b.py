@@ -1125,7 +1125,8 @@ def legacy_2d2a_regressions(model, source_payload, val_path) -> dict:
         for name in expected_parallel
     }
     observed_incremental = {
-        name: incremental["controls"][name]["loss"] for name in expected_incremental
+        name: incremental["controls"][name]["validation_loss"]
+        for name in expected_incremental
     }
     tolerance = 5e-7
     checks = {
