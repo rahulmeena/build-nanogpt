@@ -1,0 +1,119 @@
+{
+  "experiment": "2D2C",
+  "protocol": "exp2d2c_b12_b1_b11_b2_full_recurrent_kv_v1",
+  "branch": "experiment-2d2c-b12-b1-b11-b2-full-recurrent-kv",
+  "frozen_2d2b_tag": "experiment-2d2b-full-b12-b1-recurrent-bank-final",
+  "frozen_2d2b_commit": "976b92927e698afd27d68eabc78db5a0b6714fef",
+  "source_checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
+  "source_checkpoint_sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+  "source_checkpoint_bytes": 1493937033,
+  "canonical_validation_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb",
+  "validation_shard_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+  "source_2d2b": {
+    "completed_updates": 191,
+    "completed_targets": 150470656,
+    "raw_g_rec_b1": 0.07656901329755783,
+    "tanh_g_rec_b1": 0.07641972601413727,
+    "next_global_batch_sha256": "e1d96ca0106f21badeb0004025e80abc562509fb6299a63eb8662a3da3c17a52",
+    "next_global_batch_stream_sha256": "fc01029471dfe8674e900dd3d1e20a34e235853d44c68ede1b67f5b1a61e44f0",
+    "checkpoint_schema": "exp2d2b_full_b12_b1_recurrent_bank_checkpoint_v1"
+  },
+  "architecture": {
+    "b1": {
+      "local_window": 2,
+      "recurrent_source_block": 12,
+      "recurrent_source_state": "B12 post-MLP residual immediately before final LayerNorm",
+      "recurrent_positions": "max(0,t-1023)...t-2",
+      "gate": "inherited tanh(g_rec)",
+      "existing_gate_reset": false
+    },
+    "b2": {
+      "local_window": 2,
+      "recurrent_source_block": 11,
+      "recurrent_source_state": "B11 post-MLP residual immediately before B12",
+      "recurrent_positions": "max(0,t-1023)...t-2",
+      "gate": "new tanh(g_rec_b2)",
+      "gate_initial_raw": 0.0
+    },
+    "b3_b12_window": 1024,
+    "recurrent_min_lag": 2,
+    "recurrent_max_lag": 1023,
+    "maximum_recurrent_entries_per_link": 1022,
+    "separate_local_and_recurrent_softmaxes": true,
+    "shared_destination_ln_qkv": true,
+    "single_destination_output_projection": true,
+    "new_parameters_vs_2d2b": ["g_rec_b2"],
+    "new_parameter_count_vs_2d2b": 1,
+    "total_parameters": 124475906
+  },
+  "training": {
+    "additional_updates": 191,
+    "targets_per_update": 524288,
+    "additional_targets": 100139008,
+    "cumulative_2d2_targets": 250609664,
+    "sequence_length": 1024,
+    "activation_checkpointing": true,
+    "two_pass_weights": [0.25, 0.75],
+    "three_pass_weights": [0.2, 0.4, 0.4],
+    "three_pass_every_local_updates": 32,
+    "local_milestones": [0, 20, 48, 96, 143, 191],
+    "scientific_checkpoint_updates": [48, 96, 143, 191],
+    "recovery_checkpoint_updates": [50, 100, 150],
+    "forced_fresh_process_restart_after_local_update": 96,
+    "optimizer": {
+      "name": "AdamW",
+      "base_lr": 0.00003,
+      "existing_b1_gate_lr": 0.0003,
+      "new_b2_gate_lr": 0.0003,
+      "betas": [0.9, 0.95],
+      "eps": 1e-8,
+      "base_weight_decay": 0.1,
+      "gate_weight_decay": 0.0,
+      "gradient_clip": 1.0,
+      "source_optimizer_restored": true,
+      "new_b2_gate_state_fresh": true,
+      "warmup_restarted": false
+    },
+    "objective": "next-token cross entropy only",
+    "all_parameters_trainable": true,
+    "recurrent_sources_detached": false
+  },
+  "data_continuation": {
+    "restore_source_loader_state": true,
+    "restore_python_rng": true,
+    "restore_numpy_rng": true,
+    "restore_torch_cpu_rng": true,
+    "restore_torch_cuda_rng": true,
+    "require_next_global_batch_hash": "e1d96ca0106f21badeb0004025e80abc562509fb6299a63eb8662a3da3c17a52"
+  },
+  "validation": {
+    "batch_size": 64,
+    "sequence_length": 1024,
+    "batches": 20,
+    "milestone_controls": ["new_real", "b2_recurrence_off", "b2_shuffled", "b2_full_counterfactual"],
+    "combined_final_controls": ["both_real", "both_shuffled", "b1_off_b2_real", "b1_real_b2_off"],
+    "fixed_derangement": "batch row roll(+1)",
+    "incremental_minimum_targets": 131072,
+    "incremental_batches": 2
+  },
+  "hardware": {
+    "pod_id": "e8nd7m6piw5km2",
+    "pod_name": "serious_indigo_swordfish",
+    "gpu_count": 1,
+    "gpu_type": "NVIDIA A100-SXM4-80GB",
+    "persistent_volume": "yhzyb27fb5",
+    "ddp": false,
+    "nccl": false
+  },
+  "forbidden": [
+    "teacher model or teacher memory",
+    "AttnRes",
+    "dedicated recurrent Q/K/V projections",
+    "detached result-training arm",
+    "B10-to-B3 or any additional mirrored link",
+    "auxiliary objective",
+    "more than three training passes",
+    "more than one GPU",
+    "complete-prefix recomputation in incremental evaluation"
+  ]
+}
