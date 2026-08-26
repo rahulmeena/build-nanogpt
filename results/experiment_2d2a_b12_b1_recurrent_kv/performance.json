@@ -1,0 +1,66 @@
+{
+  "incremental_validation": {
+    "condition_target_passes_per_second": 3658.5827441115766,
+    "peak_allocated_vram_mb": 6327.0595703125,
+    "peak_reserved_vram_mb": 80530.0,
+    "wall_seconds": 107.47768398374319
+  },
+  "ordinary_reference_note": "Historical mature Standard steady-state aggregate 168,188.756084 targets/s divided by four A100 GPUs; research implementation comparison only, not a matched benchmark.",
+  "ordinary_standard_single_a100_reference_targets_per_second": 42047.189021,
+  "parallel_validation": {
+    "0": {
+      "condition_target_passes_per_second": 163612.97818502286,
+      "peak_allocated_vram_mb": 39675.32958984375,
+      "peak_reserved_vram_mb": 40632.0,
+      "wall_seconds": 24.0333012919873
+    },
+    "10": {
+      "condition_target_passes_per_second": 188432.2964269129,
+      "peak_allocated_vram_mb": 41099.9169921875,
+      "peak_reserved_vram_mb": 43218.0,
+      "wall_seconds": 20.86776032857597
+    },
+    "20": {
+      "condition_target_passes_per_second": 187914.64126636862,
+      "peak_allocated_vram_mb": 41100.6044921875,
+      "peak_reserved_vram_mb": 42882.0,
+      "wall_seconds": 20.92524549178779
+    },
+    "48": {
+      "condition_target_passes_per_second": 185151.87873980202,
+      "peak_allocated_vram_mb": 41100.7919921875,
+      "peak_reserved_vram_mb": 42738.0,
+      "wall_seconds": 21.237483663484454
+    },
+    "96": {
+      "condition_target_passes_per_second": 184189.03171874137,
+      "peak_allocated_vram_mb": 41104.2919921875,
+      "peak_reserved_vram_mb": 45912.0,
+      "wall_seconds": 21.348502477630973
+    }
+  },
+  "recurrent_attention_overhead": {
+    "b1_local_entries_per_warm_receiver": 2,
+    "b1_recurrent_attention_score_overhead_vs_local": 1.0,
+    "extra_attention_entries_per_warm_receiver": 2,
+    "model_level_compute_note": "The recurrent score/value work is tiny relative to 11 full-context upper blocks; two attached Transformer passes dominate training cost.",
+    "optimized_serving_claim": false
+  },
+  "relative_training_throughput_vs_ordinary_standard": 1.4195597886975118,
+  "training": {
+    "mean_aggregate_backward_seconds": 6.104470157355536,
+    "mean_pass_forward_seconds": [
+      1.2283716557042983,
+      1.3325522929274787,
+      1.3399119917303324
+    ],
+    "mean_targets_per_second": 59688.4987619751,
+    "mean_wall_seconds_per_update": 8.84588863037061,
+    "peak_allocated_vram_mb": 51997.06787109375,
+    "peak_reserved_vram_mb": 55622.0,
+    "three_pass_mean_wall_seconds": 13.210461905846993,
+    "timing_note": "Attached temporal graph permits exact per-pass forward and aggregate backward timing; backward is not separable by pass.",
+    "two_pass_mean_wall_seconds": 8.70509594406492,
+    "wall_seconds": 849.2053085155785
+  }
+}
