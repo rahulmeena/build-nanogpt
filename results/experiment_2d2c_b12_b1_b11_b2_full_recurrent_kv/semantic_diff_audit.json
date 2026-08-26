@@ -1,0 +1,34 @@
+{
+  "architecture_changes": [
+    {
+      "field": "B2 ordinary local window",
+      "new": 2,
+      "old": 1024
+    },
+    {
+      "field": "new recurrent link",
+      "new": "B11->B2 full bank",
+      "old": null
+    },
+    {
+      "field": "new learnable tensor",
+      "new": "scalar g_rec_b2",
+      "old": null
+    }
+  ],
+  "baseline": "final Experiment 2D2B",
+  "memory_efficient_source_storage": true,
+  "new_learnable_tensors": [
+    "g_rec_b2"
+  ],
+  "passed": true,
+  "source_checkpoint_state_dict_keys_preserved": true,
+  "unchanged": {
+    "b1_destination": true,
+    "b1_gate_name_and_state": true,
+    "b1_local_window": true,
+    "b1_recurrent_geometry": true,
+    "b1_source": true,
+    "source_parameter_names": true
+  }
+}

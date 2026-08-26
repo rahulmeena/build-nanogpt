@@ -1,0 +1,45 @@
+{
+  "audit_path": "/workspace/exp2d2c_run/control/runpod_stop_capability.json",
+  "audit_sha256": "c4d94f81b4c10f8693c47eaf0d0b7929feab1a28656c593125ea18f7ca589f27",
+  "authenticated_list_probe": true,
+  "authenticated_pod_identity_response": {
+    "costPerHr": 1.59,
+    "desiredStatus": "RUNNING",
+    "gpuCount": 1,
+    "id": "e8nd7m6piw5km2",
+    "imageName": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404",
+    "lastStatusChange": "Resumed by user: Wed Aug 26 2026 21:50:02 GMT+0000 (Coordinated Universal Time)",
+    "name": "serious_indigo_swordfish",
+    "networkVolumeId": "yhzyb27fb5",
+    "runtimeStatus": "running"
+  },
+  "credential_source": {
+    "account": "rahul",
+    "kind": "macOS Keychain generic password",
+    "service": "runpod-codex-pod-stopper"
+  },
+  "driver_checks": {
+    "authenticated_probe": true,
+    "cli_authorized": true,
+    "credential_available": true,
+    "exact_stop_target": true,
+    "gpu_count": true,
+    "passed": true,
+    "pod_id": true,
+    "pod_name": true,
+    "runtime_running": true,
+    "schema": true,
+    "secret_not_recorded": true
+  },
+  "driver_passed": true,
+  "exact_stop_command": "runpodctl pod stop e8nd7m6piw5km2 -o json",
+  "exact_stop_target": "e8nd7m6piw5km2",
+  "passed": true,
+  "probe_command": "runpodctl pod get e8nd7m6piw5km2 -o json",
+  "probe_tool": "/opt/homebrew/bin/runpodctl",
+  "schema": "exp2d2c_runpod_stop_capability_v1",
+  "secret_recorded": false,
+  "stop_credential_available": true,
+  "terminal_outcome_policy": "After successful persistent-volume, local-backup, and Git synchronization, stop only this exact GPU pod; never delete the pod or network volume.",
+  "verified_at_utc": "2026-08-26T22:06:15Z"
+}

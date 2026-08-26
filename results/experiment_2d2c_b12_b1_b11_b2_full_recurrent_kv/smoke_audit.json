@@ -1,0 +1,780 @@
+{
+  "checkpoint": {
+    "bytes": 1493934541,
+    "checkpoint": "/workspace/exp2d2c_run/smoke/smoke_update_0003.pt",
+    "completed_2d2c_updates": 3,
+    "cumulative_2d2_targets": 150476800,
+    "next_global_batch_sha256": "21c53a755edf7bd190baccb5a6caa74dccac806fc820ab1c989186a5f47da3c7",
+    "next_global_batch_stream_sha256": "2ae7c1ec4b17592115b88a9666f84a50a4292a512735d22f449e07ef0f339c1f",
+    "passed": true,
+    "sha256": "74b201b690d876639c3876feffd735e51c4eb4c7a4400b8c596fa751719fc913",
+    "strict_reopen": {
+      "additional_targets": true,
+      "architecture": true,
+      "b2_gate_duplicate": true,
+      "cumulative_targets": true,
+      "fields_exact": true,
+      "gate_duplicate": true,
+      "loader_state": true,
+      "metadata": true,
+      "model_finite": true,
+      "model_keys": true,
+      "next_batch": true,
+      "next_stream": true,
+      "optimizer_finite": true,
+      "passed": true,
+      "schema": true,
+      "source": true,
+      "training_state": true,
+      "updates": true,
+      "weight_tying": true
+    }
+  },
+  "checks": {
+    "attention_finite": true,
+    "b1_gate_gradient": true,
+    "b1_long_lag_writer_gradient": true,
+    "b2_gate_gradient": true,
+    "b2_gate_moved": true,
+    "b2_long_lag_writer_gradient": true,
+    "base_gradient": true,
+    "cache": true,
+    "checkpoint": true,
+    "finite_losses": true,
+    "finite_state": true,
+    "scientific_source_discarded": true,
+    "three_updates": true
+  },
+  "command": "scripts/experiment_2d2c.py smoke --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2c/results/experiment_2d2c_b12_b1_b11_b2_full_recurrent_kv --run-root /workspace/exp2d2c_run --pod-id e8nd7m6piw5km2 --pod-name serious_indigo_swordfish --gpu-type NVIDIA_A100_SXM4_80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism macos-keychain-runpodctl --stop-authenticated --stop-audit-path /workspace/exp2d2c_run/control/runpod_stop_capability.json",
+  "disposition": "Discarded; scientific local update 1 reloads the immutable 2D2B update-191 checkpoint.",
+  "experiment": "2D2C",
+  "incremental_cache_audit": {
+    "b1_historical_kv": 1,
+    "b1_historical_kv_limit": 1,
+    "b2_full_counterfactual": false,
+    "b2_historical_kv": 1,
+    "b2_historical_kv_limit": 1,
+    "b3_b12_historical_kv": [
+      16,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16
+    ],
+    "b3_b12_historical_kv_limit": 1023,
+    "cache_lengths": [
+      1,
+      1,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16
+    ],
+    "cache_physical_storage": [
+      {
+        "block": 1,
+        "key": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 2,
+        "key": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 3,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 4,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 5,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 6,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 7,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 8,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 9,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 10,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 11,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 12,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            2,
+            12,
+            16,
+            64
+          ],
+          "storage_offset": 0
+        }
+      }
+    ],
+    "h11_ring_length": 16,
+    "h11_ring_limit": 1023,
+    "h11_ring_physical_storage": {
+      "actual_bytes": 98304,
+      "contiguous": true,
+      "exact": true,
+      "expected_bytes": 98304,
+      "shape": [
+        2,
+        16,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "h11_ring_positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "h12_ring_length": 16,
+    "h12_ring_limit": 1023,
+    "h12_ring_physical_storage": {
+      "actual_bytes": 98304,
+      "contiguous": true,
+      "exact": true,
+      "expected_bytes": 98304,
+      "shape": [
+        2,
+        16,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "h12_ring_positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "passed": true,
+    "physical_storage_exact": true,
+    "position": 16
+  },
+  "kind": "exactly three disposable optimizer updates",
+  "long_lag_temporal_gradient": {
+    "b1": {
+      "b2_gate_override": null,
+      "bins": {
+        "128-255": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 3.4305020335523295e-07,
+          "mean_gradient_rms": 7.775656030162281e-08,
+          "source_positions": 128
+        },
+        "16-31": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 2.0489467900119962e-08,
+          "mean_gradient_rms": 1.0556815865925273e-08,
+          "source_positions": 16
+        },
+        "2-7": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 1.1562769408612894e-08,
+          "mean_gradient_rms": 6.2779372811405665e-09,
+          "source_positions": 6
+        },
+        "256-511": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 3.3924408171515097e-07,
+          "mean_gradient_rms": 7.474370988802548e-08,
+          "source_positions": 256
+        },
+        "32-63": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 3.37539241002105e-08,
+          "mean_gradient_rms": 1.5841242984038217e-08,
+          "source_positions": 32
+        },
+        "512-1023": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 5.5741274991305545e-06,
+          "mean_gradient_rms": 4.7031136318764766e-07,
+          "source_positions": 512
+        },
+        "64-127": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 1.1754559636756312e-07,
+          "mean_gradient_rms": 3.821527272407366e-08,
+          "source_positions": 64
+        },
+        "8-15": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 1.0269243233551606e-08,
+          "mean_gradient_rms": 4.239790740712124e-09,
+          "source_positions": 8
+        }
+      },
+      "effective_gate": 0.0771384909749031,
+      "finite": true,
+      "gate_raw": 0.07729203999042511,
+      "gradient_norm": 0.0002979074779432267,
+      "link": "B12->B1",
+      "long_lag_writer_gradient_present": true,
+      "loss": 4.295253276824951,
+      "method": "Pass-2 CE gradient into attached Pass-1 B12 post-MLP states. Source positions are indexed by their lag from receiver t=1023; each source gradient also includes all eligible earlier receivers.",
+      "nonzero": true,
+      "pinned_batch": {
+        "combined_sha256": "9bab8fb42f79d53edfc866f6f5f96b1e6fd1b004fad9c670b0344f9a37299de2",
+        "input_sha256": "9009687299d202872afd60478b7ee15ed16b123d962ccd1633b259bb0553e6e1",
+        "target_sha256": "ed6f5bcd6f2921d8fa643c284bb9cba1ceb0954104a6f468a98d5ed3331a095e"
+      },
+      "position_probes": {
+        "early_old_position_0": 5.5741274991305545e-06,
+        "ineligible_t_minus_1_position_1022": 0.0,
+        "middle_position_512": 1.1232990715370761e-07,
+        "recent_eligible_position_1021": 1.5879328962853378e-09
+      },
+      "precision": "bf16"
+    },
+    "b2": {
+      "b2_gate_override": null,
+      "bins": {
+        "128-255": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 4.222074778681417e-07,
+          "mean_gradient_rms": 1.0309208420267169e-07,
+          "source_positions": 128
+        },
+        "16-31": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 3.2164553687152875e-08,
+          "mean_gradient_rms": 1.3380349273006686e-08,
+          "source_positions": 16
+        },
+        "2-7": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 1.4471204679011862e-08,
+          "mean_gradient_rms": 8.366771275802876e-09,
+          "source_positions": 6
+        },
+        "256-511": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 4.027407669582317e-07,
+          "mean_gradient_rms": 9.641726705922338e-08,
+          "source_positions": 256
+        },
+        "32-63": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 3.897538647379406e-08,
+          "mean_gradient_rms": 2.0049089499707407e-08,
+          "source_positions": 32
+        },
+        "512-1023": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 1.1686804100463632e-05,
+          "mean_gradient_rms": 7.382705575764703e-07,
+          "source_positions": 512
+        },
+        "64-127": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 1.3798681663956813e-07,
+          "mean_gradient_rms": 4.516982343716336e-08,
+          "source_positions": 64
+        },
+        "8-15": {
+          "fraction_nonzero_elements": 1.0,
+          "fraction_nonzero_positions": 1.0,
+          "max_gradient_rms": 1.4508962919990154e-08,
+          "mean_gradient_rms": 5.79357939400893e-09,
+          "source_positions": 8
+        }
+      },
+      "effective_gate": 0.0008155650575645268,
+      "finite": true,
+      "gate_raw": 0.0008155652321875095,
+      "gradient_norm": 0.0004661600396502763,
+      "link": "B11->B2",
+      "long_lag_writer_gradient_present": true,
+      "loss": 4.295253276824951,
+      "method": "Pass-2 CE gradient into attached Pass-1 B11 post-MLP states. Source positions are indexed by their lag from receiver t=1023; each source gradient also includes all eligible earlier receivers.",
+      "nonzero": true,
+      "pinned_batch": {
+        "combined_sha256": "9bab8fb42f79d53edfc866f6f5f96b1e6fd1b004fad9c670b0344f9a37299de2",
+        "input_sha256": "9009687299d202872afd60478b7ee15ed16b123d962ccd1633b259bb0553e6e1",
+        "target_sha256": "ed6f5bcd6f2921d8fa643c284bb9cba1ceb0954104a6f468a98d5ed3331a095e"
+      },
+      "position_probes": {
+        "early_old_position_0": 1.1686804100463632e-05,
+        "ineligible_t_minus_1_position_1022": 0.0,
+        "middle_position_512": 1.3580726943018817e-07,
+        "recent_eligible_position_1021": 2.63025468072442e-09
+      },
+      "precision": "bf16"
+    }
+  },
+  "passed": true,
+  "rows": [
+    {
+      "g_rec_b1_after": 0.07682129740715027,
+      "g_rec_b1_before": 0.07656901329755783,
+      "g_rec_b1_gradient": -0.09514421969652176,
+      "g_rec_b2_after": 0.00029999870457686484,
+      "g_rec_b2_before": 0.0,
+      "g_rec_b2_gradient": -0.0498046875,
+      "gradient_groups": {
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 21.55398941040039,
+          "tensors": 149
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.09514421969652176,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 21.55419921875,
+      "gradients_finite": true,
+      "loss": 4.404775619506836,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        4.414349555969238,
+        4.401584625244141
+      ],
+      "precision": "bf16 autocast",
+      "recurrent_attention_finite": true,
+      "tanh_g_rec_b1_after": 0.07667053490877151,
+      "tanh_g_rec_b2_after": 0.00029999870457686484,
+      "update": 1
+    },
+    {
+      "g_rec_b1_after": 0.07705312222242355,
+      "g_rec_b1_before": 0.07682129740715027,
+      "g_rec_b1_gradient": 0.016018562018871307,
+      "g_rec_b2_after": 0.0005971366772428155,
+      "g_rec_b2_before": 0.00029999870457686484,
+      "g_rec_b2_gradient": -0.0427246056497097,
+      "gradient_groups": {
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 23.248531341552734,
+          "tensors": 149
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.016018562018871307,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 23.248537063598633,
+      "gradients_finite": true,
+      "loss": 4.489296913146973,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        4.492239952087402,
+        4.488315582275391
+      ],
+      "precision": "bf16 autocast",
+      "recurrent_attention_finite": true,
+      "tanh_g_rec_b1_after": 0.07690099626779556,
+      "tanh_g_rec_b2_after": 0.0005971366190351546,
+      "update": 2
+    },
+    {
+      "g_rec_b1_after": 0.07729203999042511,
+      "g_rec_b1_before": 0.07705312222242355,
+      "g_rec_b1_gradient": -0.40190598368644714,
+      "g_rec_b2_after": 0.0008155652321875095,
+      "g_rec_b2_before": 0.0005971366772428155,
+      "g_rec_b2_gradient": 0.004425047431141138,
+      "gradient_groups": {
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 21.391725540161133,
+          "tensors": 149
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.40190598368644714,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 21.39550018310547,
+      "gradients_finite": true,
+      "loss": 4.6578216552734375,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        4.699573040008545,
+        4.643904685974121
+      ],
+      "precision": "bf16 autocast",
+      "recurrent_attention_finite": true,
+      "tanh_g_rec_b1_after": 0.0771384909749031,
+      "tanh_g_rec_b2_after": 0.0008155650575645268,
+      "update": 3
+    }
+  ]
+}
