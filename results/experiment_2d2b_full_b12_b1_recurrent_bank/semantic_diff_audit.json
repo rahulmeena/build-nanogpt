@@ -1,0 +1,27 @@
+{
+  "baseline": "final Experiment 2D2A",
+  "memory_efficient_source_storage": true,
+  "new_learnable_tensors": [],
+  "only_architecture_change": {
+    "field": "eligible recurrent B12 source positions",
+    "new": "max(0,t-1023)...t-2",
+    "old": [
+      "t-3",
+      "t-2"
+    ]
+  },
+  "passed": true,
+  "same_parameter_state_dict_keys": true,
+  "source_checkpoint_state_dict_keys_equal": true,
+  "unchanged": {
+    "destination": true,
+    "gate": true,
+    "local_window": true,
+    "parameter_names": true,
+    "separate_softmax": true,
+    "shared_projection": true,
+    "single_c_proj": true,
+    "source_representation": true,
+    "upper_windows": true
+  }
+}

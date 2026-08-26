@@ -1,0 +1,27 @@
+{
+  "preflight_benchmark": {
+    "microbatch_probe": [
+      {
+        "loss": 3.2120046615600586,
+        "micro_batch_sequences": 32,
+        "passed": true,
+        "peak_allocated_vram_mb": 49758.9296875,
+        "peak_reserved_vram_mb": 50556.0,
+        "source_optimizer_state_resident": true
+      }
+    ],
+    "recurrent_attention": {
+      "backward_seconds_mean": 0.002468707039952278,
+      "backward_seconds_median": 0.002352636307477951,
+      "batch_size": 4,
+      "forward_seconds_mean": 0.00041820605595906574,
+      "forward_seconds_median": 0.0003954358398914337,
+      "heads": 12,
+      "kernel": "torch.scaled_dot_product_attention boolean offset-causal mask",
+      "recurrent_entries_max": 1022,
+      "repeats": 3,
+      "sequence_length": 1024
+    },
+    "source_2d2a_training_targets_per_second": 59269
+  }
+}
