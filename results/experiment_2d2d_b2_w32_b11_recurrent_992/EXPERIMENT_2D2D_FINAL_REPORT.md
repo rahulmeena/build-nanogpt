@@ -273,14 +273,14 @@ false
 
 ## Integrity and artifacts
 
-- Final audit passed: False
+- Final audit passed: True
 - Final checkpoint: `/workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt`
 - Final checkpoint SHA-256: `d38e8282cca4df395204b860d17e2cd9b89ff7ad07319fe744bbdc46fb945063`
 - Implementation commit: `ee98bbe2eb900cb07f0cb523bb53d6302b8c5a0d`
 - Results commit: `fa236e1d8e221989acf968d9d5fbe5b057fc907d`
-- Sealed-report commit: `None`
+- Sealed-report commit: `493b847b50ea86f9f7e14fcf443d21ef99bd4a50`
 - Artifact directory: `/workspace/build-nanogpt-exp2d2d-runtime/results/experiment_2d2d_b2_w32_b11_recurrent_992`
-- GPU pod: `grand_amber_catshark` (`7kk5yyti00rnrp`), status `AWAITING_SEALED_REPORT_COMMIT_PUSH_AND_ATTESTATION`
+- GPU pod: `grand_amber_catshark` (`7kk5yyti00rnrp`), status `READY_TO_STOP_AFTER_ATTESTATION_COMMIT_PUSH`
 - Persistent volume: `yhzyb27fb5`, status `PRESERVED_MOUNTED`
 
 # EXPERIMENT 2D2D COMPLETE
