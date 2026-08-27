@@ -11,6 +11,7 @@ import platform
 import shutil
 import subprocess
 import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -291,11 +292,37 @@ def git_manifest(repo: Path) -> dict:
     return {"created_utc": utc_now(), "repository": str(repo.resolve()), "branches": rows, "checks": checks, "passed": all(checks.values())}
 
 
-def initialize_master_files(root: Path) -> None:
+def stale_legacy_execution_markers(root: Path) -> list[Path]:
+    """Return unscoped markers that could be mistaken for the new run.
+
+    Historical run directories are intentionally retained.  New orchestration
+    only consumes artifacts below ``runs/<run_id>``; old top-level execution
+    markers are therefore rejected rather than silently deleted or reused.
+    """
+    paths = []
+    for pattern in (
+        "lane_gpu*.error.json",
+        "lane_gpu*.science_complete.json",
+        "lane_gpu*.terminal.json",
+        "MASTER_ALL_LANES_TERMINAL*",
+        "MASTER_FINALIZATION_COMPLETE*",
+        "MASTER_TERMINAL_STATUS.json",
+        "MASTER_SUPERVISOR.json",
+    ):
+        paths.extend(sorted(root.glob(pattern)))
+    return paths
+
+
+def initialize_master_files(root: Path, run_id: str) -> Path:
     (root / "locks").mkdir(parents=True, exist_ok=True)
     for name in ("checkpoint_persist.lock", "finalize.lock", "git_push.lock"):
         (root / "locks" / name).touch(exist_ok=True)
+    run_root = (root / "runs" / run_id).resolve()
+    run_root.mkdir(parents=True, exist_ok=False)
     status = {
+        "schema_version": 1,
+        "run_id": run_id,
+        "run_root": str(run_root),
         "created_utc": utc_now(),
         "pod": {"id": POD_ID, "name": POD_NAME, "gpu_count": 4, "volume_id": VOLUME_ID},
         "lanes": {
@@ -306,10 +333,13 @@ def initialize_master_files(root: Path) -> None:
         },
     }
     durable_json(root / "MASTER_STATUS.json", status)
-    durable_json(root / "MASTER_HEARTBEAT.json", {**status, "heartbeat_utc": utc_now()})
-    commands = root / "MASTER_COMMANDS.log"
-    if not commands.exists():
-        commands.write_text("")
+    durable_json(run_root / "MASTER_STATUS.json", status)
+    initial_heartbeat = {**status, "heartbeat_utc": utc_now(), "status": "PREFLIGHT"}
+    durable_json(root / "MASTER_HEARTBEAT.json", initial_heartbeat)
+    durable_json(run_root / "MASTER_HEARTBEAT.json", initial_heartbeat)
+    commands = run_root / "MASTER_COMMANDS.log"
+    commands.touch(exist_ok=False)
+    return run_root
 
 
 def preflight(args) -> dict:
@@ -321,7 +351,39 @@ def preflight(args) -> dict:
     stop = json.loads(Path(args.stop_audit).read_text())
     if args.pod_id != POD_ID or args.pod_name != POD_NAME or args.volume_id != VOLUME_ID:
         raise SystemExit("master pod/volume identity does not match preregistration")
-    initialize_master_files(root)
+    root.mkdir(parents=True, exist_ok=True)
+    stale = stale_legacy_execution_markers(root)
+    if stale:
+        raise SystemExit(
+            "refusing unscoped stale execution markers: "
+            + ", ".join(str(path) for path in stale)
+        )
+    run_id = str(uuid.uuid4())
+    run_root = initialize_master_files(root, run_id)
+    # Invalidate any earlier passing top-level preflight before expensive
+    # hashing begins.  A supervisor can therefore never launch from an older
+    # run while this new preflight is still in progress or after it crashes.
+    pending = {
+        "schema_version": 1,
+        "created_utc": utc_now(),
+        "run_id": run_id,
+        "run_root": str(run_root),
+        "pod": {"id": POD_ID, "name": POD_NAME, "gpu_count": 4, "volume_id": VOLUME_ID},
+        "checks": {
+            "hardware": False,
+            "storage": False,
+            "sources": False,
+            "dataset": False,
+            "git": False,
+            "authenticated_stop": False,
+        },
+        "passed": False,
+        "status": "PREFLIGHT_RUNNING",
+        "execution_markers_are_run_scoped": True,
+        "pod_stop_automated_by_supervisor": False,
+    }
+    durable_json(root / "MASTER_PREFLIGHT.json", pending)
+    durable_json(run_root / "MASTER_PREFLIGHT.json", pending)
     hardware = hardware_manifest()
     storage = storage_manifest(workspace, ephemeral)
     sources = source_manifest(repo)
@@ -342,6 +404,12 @@ def preflight(args) -> dict:
     durable_json(root / "shared_dataset_manifest.json", dataset)
     durable_json(root / "git_worktree_manifest.json", git)
     durable_json(root / "AUTO_STOP_PREFLIGHT.json", stop_record)
+    durable_json(run_root / "hardware_manifest.json", hardware)
+    durable_json(run_root / "storage_preflight.json", storage)
+    durable_json(run_root / "source_checkpoint_manifest.json", sources)
+    durable_json(run_root / "shared_dataset_manifest.json", dataset)
+    durable_json(run_root / "git_worktree_manifest.json", git)
+    durable_json(run_root / "AUTO_STOP_PREFLIGHT.json", stop_record)
     checks = {
         "hardware": hardware["passed"],
         "storage": storage["passed"],
@@ -350,11 +418,22 @@ def preflight(args) -> dict:
         "git": git["passed"],
         "authenticated_stop": stop_record["passed"],
     }
-    result = {"created_utc": utc_now(), "checks": checks, "passed": all(checks.values())}
+    result = {
+        "schema_version": 1,
+        "created_utc": utc_now(),
+        "run_id": run_id,
+        "run_root": str(run_root),
+        "pod": {"id": POD_ID, "name": POD_NAME, "gpu_count": 4, "volume_id": VOLUME_ID},
+        "checks": checks,
+        "passed": all(checks.values()),
+        "execution_markers_are_run_scoped": True,
+        "pod_stop_automated_by_supervisor": False,
+    }
     durable_json(root / "MASTER_PREFLIGHT.json", result)
+    durable_json(run_root / "MASTER_PREFLIGHT.json", result)
     if not result["passed"]:
         raise SystemExit(f"master preflight failed: {checks}")
-    print("PARALLEL_2D2_MASTER_PREFLIGHT_PASS", flush=True)
+    print(f"PARALLEL_2D2_MASTER_PREFLIGHT_PASS run_id={run_id}", flush=True)
     return result
 
 
