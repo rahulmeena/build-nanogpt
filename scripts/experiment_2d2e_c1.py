@@ -302,7 +302,7 @@ def reconstruct_subsets(validation: Path, prior_incremental: Path):
 
 
 @torch.no_grad()
-def evaluate_controls(model, batches) -> dict:
+def evaluate_controls(model, batches, heartbeat_path: Path | None = None) -> dict:
     device = next(model.parameters()).device
     rows = {
         name: {"loss_sum": 0.0, "targets": 0, "per_batch_losses": [], "per_sequence_losses": [], "cache_audits": []}
@@ -345,6 +345,20 @@ def evaluate_controls(model, batches) -> dict:
             del state, losses, logits, sequence_sum
             torch.cuda.empty_cache()
         print(f"2D2E-C1 incremental batch={batch_index:02d}/{CONFIRM_BATCHES}", flush=True)
+        if heartbeat_path is not None:
+            durable_json(
+                heartbeat_path,
+                {
+                    "experiment": EXPERIMENT,
+                    "status": "ACTIVE",
+                    "phase": "frozen_true_incremental_confirmation",
+                    "completed_batches": batch_index,
+                    "total_batches": CONFIRM_BATCHES,
+                    "targets_per_control_completed": batch_index * B * T,
+                    "pid": os.getpid(),
+                    "timestamp": time.time(),
+                },
+            )
         del x, y
     controls = {}
     for name, row in rows.items():
@@ -413,7 +427,20 @@ def run(args) -> dict:
     model, model_manifest = load_model(checkpoint, torch.device("cuda", 0))
     subset, batches = reconstruct_subsets(validation, prior)
     durable_json(output / "subset_manifest.json", subset)
-    evaluation = evaluate_controls(model, batches)
+    durable_json(
+        output / "HEARTBEAT.json",
+        {
+            "experiment": EXPERIMENT,
+            "status": "ACTIVE",
+            "phase": "frozen_true_incremental_confirmation",
+            "completed_batches": 0,
+            "total_batches": CONFIRM_BATCHES,
+            "targets_per_control_completed": 0,
+            "pid": os.getpid(),
+            "timestamp": time.time(),
+        },
+    )
+    evaluation = evaluate_controls(model, batches, output / "HEARTBEAT.json")
     off_effects = evaluation["off_minus_real"]["differences_comparator_minus_real"]
     shuffled_effects = evaluation["shuffled_minus_real"]["differences_comparator_minus_real"]
     bootstrap = {
