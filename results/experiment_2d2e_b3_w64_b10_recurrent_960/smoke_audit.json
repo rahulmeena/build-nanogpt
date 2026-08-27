@@ -1,0 +1,885 @@
+{
+  "checks": {
+    "all_gradient_groups_nonzero": true,
+    "b3_gradient_update1_nonzero": true,
+    "cache_geometry": true,
+    "exactly_three_updates": true,
+    "finite": true,
+    "source_checkpoint_untouched": true
+  },
+  "command": "scripts/experiment_2d2e.py smoke --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2e/results/experiment_2d2e_b3_w64_b10_recurrent_960 --run-root /workspace/exp2d2e_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl pod stop 7kk5yyti00rnrp -o json --stop-authenticated --stop-audit-path /workspace/exp2d2e_run/runpod_stop_capability_preflight.json",
+  "disposition": "Discarded; scientific update 1 reloads exact finalized 2D2D.",
+  "experiment": "2D2E",
+  "incremental_cache_audit": {
+    "b1_historical_kv": 1,
+    "b1_historical_kv_limit": 1,
+    "b2_historical_kv": 31,
+    "b2_historical_kv_limit": 31,
+    "b3_full_counterfactual": false,
+    "b3_historical_kv": 63,
+    "b3_historical_kv_limit": 63,
+    "b4_b12_historical_kv": [
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72
+    ],
+    "b4_b12_historical_kv_limit": 1023,
+    "cache_lengths": [
+      1,
+      31,
+      63,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72
+    ],
+    "cache_physical_storage": [
+      {
+        "block": 1,
+        "key": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 2,
+        "key": {
+          "actual_bytes": 190464,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 190464,
+          "shape": [
+            2,
+            12,
+            31,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 190464,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 190464,
+          "shape": [
+            2,
+            12,
+            31,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 3,
+        "key": {
+          "actual_bytes": 387072,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 387072,
+          "shape": [
+            2,
+            12,
+            63,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 387072,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 387072,
+          "shape": [
+            2,
+            12,
+            63,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 4,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 5,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 6,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 7,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 8,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 9,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 10,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 11,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 12,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      }
+    ],
+    "h10_ring_length": 72,
+    "h10_ring_limit": 1023,
+    "h10_ring_physical_storage": {
+      "actual_bytes": 442368,
+      "contiguous": true,
+      "dtype": "torch.float32",
+      "element_size_bytes": 4,
+      "exact": true,
+      "expected_bytes": 442368,
+      "shape": [
+        2,
+        72,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "h10_ring_positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "h11_ring_length": 72,
+    "h11_ring_limit": 1023,
+    "h11_ring_physical_storage": {
+      "actual_bytes": 442368,
+      "contiguous": true,
+      "dtype": "torch.float32",
+      "element_size_bytes": 4,
+      "exact": true,
+      "expected_bytes": 442368,
+      "shape": [
+        2,
+        72,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "h11_ring_positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "h12_ring_length": 72,
+    "h12_ring_limit": 1023,
+    "h12_ring_physical_storage": {
+      "actual_bytes": 442368,
+      "contiguous": true,
+      "dtype": "torch.float32",
+      "element_size_bytes": 4,
+      "exact": true,
+      "expected_bytes": 442368,
+      "shape": [
+        2,
+        72,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "h12_ring_positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "passed": true,
+    "physical_storage_exact": true,
+    "position": 72
+  },
+  "kind": "exactly three disposable optimizer updates",
+  "passed": true,
+  "rows": [
+    {
+      "gate_gradients": {
+        "b1": 0.08500199019908905,
+        "b2": -0.029782749712467194,
+        "b3": 0.007781982421875
+      },
+      "gate_raw_after": {
+        "b1": 0.1292719841003418,
+        "b2": 0.009030650369822979,
+        "b3": -0.0002999968419317156
+      },
+      "gate_raw_before": {
+        "b1": 0.12906356155872345,
+        "b2": 0.008991487324237823,
+        "b3": 0.0
+      },
+      "gradient_groups": {
+        "b2_gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.029782749712467194,
+          "tensors": 1
+        },
+        "b3_gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.007781982421875,
+          "tensors": 1
+        },
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 8.118402481079102,
+          "tensors": 148
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.08500199019908905,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 8.11890697479248,
+      "gradients_finite": true,
+      "loss": 2.9645273685455322,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        2.963003396987915,
+        2.9650354385375977
+      ],
+      "recurrent_states_finite": true,
+      "update": 1
+    },
+    {
+      "gate_gradients": {
+        "b1": 0.026171527802944183,
+        "b2": -0.019407596439123154,
+        "b3": 0.0027618405874818563
+      },
+      "gate_raw_after": {
+        "b1": 0.12944716215133667,
+        "b2": 0.009129142388701439,
+        "b3": -0.0005828553112223744
+      },
+      "gate_raw_before": {
+        "b1": 0.1292719841003418,
+        "b2": 0.009030650369822979,
+        "b3": -0.0002999968419317156
+      },
+      "gradient_groups": {
+        "b2_gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.019407596439123154,
+          "tensors": 1
+        },
+        "b3_gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.0027618405874818563,
+          "tensors": 1
+        },
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 5.61595344543457,
+          "tensors": 148
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.026171527802944183,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 5.616048336029053,
+      "gradients_finite": true,
+      "loss": 2.8260178565979004,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        2.8263862133026123,
+        2.825895071029663
+      ],
+      "recurrent_states_finite": true,
+      "update": 2
+    },
+    {
+      "gate_gradients": {
+        "b1": 0.00047268689377233386,
+        "b2": 0.009703781455755234,
+        "b3": -0.016723627224564552
+      },
+      "gate_raw_after": {
+        "b1": 0.1296086609363556,
+        "b2": 0.009187406860291958,
+        "b3": -0.0004873744328506291
+      },
+      "gate_raw_before": {
+        "b1": 0.12944716215133667,
+        "b2": 0.009129142388701439,
+        "b3": -0.0005828553112223744
+      },
+      "gradient_groups": {
+        "b2_gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.009703781455755234,
+          "tensors": 1
+        },
+        "b3_gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.016723627224564552,
+          "tensors": 1
+        },
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 6.217752456665039,
+          "tensors": 148
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.00047268689377233386,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 6.217782974243164,
+      "gradients_finite": true,
+      "loss": 2.7182483673095703,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        2.7220518589019775,
+        2.7169806957244873
+      ],
+      "recurrent_states_finite": true,
+      "update": 3
+    }
+  ]
+}
