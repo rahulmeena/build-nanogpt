@@ -10,6 +10,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import parallel_2d2_recovery_preflight as recovery
 
@@ -74,7 +75,25 @@ class RecoveryPreflightTests(unittest.TestCase):
         )
         self.assertIsNone(gpu2["base_sha256"])
         self.assertIn("default TF32", gpu2["recovery_reason"])
-        self.assertIn("artifact publication failed", recovery.LANES["GPU0"]["recovery_reason"])
+        gpu0 = recovery.LANES["GPU0"]
+        self.assertIn("artifact publication failed", gpu0["recovery_reason"])
+        self.assertIn("preflight-only 2D2F diagnostic", gpu0["recovery_reason"])
+        self.assertEqual(len(gpu0["dependent_worktree_patches"]), 1)
+        patch = gpu0["dependent_worktree_patches"][0]
+        self.assertEqual(
+            patch["branch"], "experiment-2d2f-no-b2-recurrence-b3-w64"
+        )
+        self.assertEqual(
+            patch["allowed_changed_files"],
+            {
+                "scripts/experiment_2d2f.py",
+                "tests/test_experiment_2d2f_core.py",
+            },
+        )
+        self.assertEqual(
+            patch["allowed_untracked_result_roots"],
+            {"results/experiment_2d2f_no_b2_recurrence_b3_w64"},
+        )
 
     def test_command_plan_is_independent_and_matches_bash_percent_q(self) -> None:
         root = Path("/workspace/parallel_2d2_master")
@@ -98,6 +117,25 @@ class RecoveryPreflightTests(unittest.TestCase):
         self.assertEqual(len(rows["GPU0"]["expected_resumed_command_records"]), 6)
         self.assertEqual(len(rows["GPU1"]["expected_resumed_command_records"]), 6)
         self.assertEqual(len(rows["GPU2"]["expected_resumed_command_records"]), 2)
+
+        fresh_attempt3 = recovery.recovery_command_plan(
+            root,
+            run_root,
+            ["GPU0", "GPU1", "GPU2"],
+            [],
+            3,
+            schemas,
+        )
+        self.assertEqual(fresh_attempt3["recovery_attempt"], 3)
+        self.assertEqual(
+            set(fresh_attempt3["recovered_lanes"]), {"GPU0", "GPU1", "GPU2"}
+        )
+        self.assertTrue(
+            all(
+                row["recovery_evidence_schema"] == "v2_with_recovery_reason"
+                for row in fresh_attempt3["recovered_lanes"].values()
+            )
+        )
 
         gpu1 = rows["GPU1"]["expected_resumed_command_records"]
         self.assertIn(" preflight ", gpu1[0])
@@ -177,6 +215,97 @@ class RecoveryPreflightTests(unittest.TestCase):
             self.assertFalse(dirty["checks"]["tracked_worktree_clean"])
             self.assertTrue(dirty["checks"]["untracked_only_in_exact_result_roots"])
 
+    def test_dependent_worktree_patch_requires_narrow_pushed_history(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            origin = root / "origin.git"
+            worktree = root / "worktree"
+            subprocess.run(["git", "init", "-q", "--bare", origin], check=True)
+            subprocess.run(["git", "init", "-q", worktree], check=True)
+            for key, value in (
+                ("user.email", "test@example.invalid"),
+                ("user.name", "Recovery Test"),
+            ):
+                subprocess.run(
+                    ["git", "config", key, value], cwd=worktree, check=True
+                )
+            subprocess.run(
+                ["git", "remote", "add", "origin", str(origin)],
+                cwd=worktree,
+                check=True,
+            )
+            (worktree / ".gitignore").write_text(
+                ".pytest_cache/\n__pycache__/\n"
+            )
+            (worktree / "implementation.py").write_text("VALUE = 1\n")
+            tests = worktree / "tests"
+            tests.mkdir()
+            (tests / "test_smoke.py").write_text(
+                "def test_smoke():\n    assert True\n"
+            )
+            subprocess.run(["git", "add", "."], cwd=worktree, check=True)
+            subprocess.run(
+                ["git", "commit", "-qm", "baseline"], cwd=worktree, check=True
+            )
+            branch = "experiment-recovery-fixture"
+            subprocess.run(
+                ["git", "branch", "-M", branch], cwd=worktree, check=True
+            )
+            subprocess.run(
+                ["git", "push", "-qu", "origin", branch],
+                cwd=worktree,
+                check=True,
+            )
+            old = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=worktree, text=True
+            ).strip()
+            (worktree / "implementation.py").write_text("VALUE = 2\n")
+            subprocess.run(
+                ["git", "add", "implementation.py"], cwd=worktree, check=True
+            )
+            subprocess.run(
+                ["git", "commit", "-qm", "narrow fix"], cwd=worktree, check=True
+            )
+            subprocess.run(
+                ["git", "push", "-q", "origin", branch],
+                cwd=worktree,
+                check=True,
+            )
+            result = worktree / "results" / "experiment_exact" / "audit.json"
+            result.parent.mkdir(parents=True)
+            result.write_text("{}\n")
+            spec = {
+                "branch": branch,
+                "worktree": str(worktree),
+                "allowed_changed_files": {"implementation.py"},
+                "allowed_untracked_result_roots": {"results/experiment_exact"},
+                "tests": ["tests/test_smoke.py"],
+            }
+            original_git = {"branches": {branch: {"local": old}}}
+            original_run = subprocess.run
+
+            def run_with_focused_test(command, *args, **kwargs):
+                if command[1:3] == ["-m", "pytest"]:
+                    return subprocess.CompletedProcess(
+                        command, 0, stdout="1 passed", stderr=""
+                    )
+                return original_run(command, *args, **kwargs)
+
+            with mock.patch.object(
+                recovery.subprocess, "run", side_effect=run_with_focused_test
+            ):
+                audit = recovery.audit_patched_worktree(spec, original_git)
+            self.assertTrue(audit["passed"])
+            self.assertEqual(audit["changed_files"], ["implementation.py"])
+
+            (worktree / "implementation.py").write_text("VALUE = 3\n")
+            with mock.patch.object(
+                recovery.subprocess, "run", side_effect=run_with_focused_test
+            ):
+                dirty = recovery.audit_patched_worktree(spec, original_git)
+            self.assertFalse(dirty["checks"]["tracked_worktree_clean"])
+            self.assertFalse(dirty["passed"])
+
     def test_original_terminal_recovery_requires_exact_explicit_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             master_root = Path(directory) / "master"
@@ -253,6 +382,93 @@ class RecoveryPreflightTests(unittest.TestCase):
             self.assertTrue(recovery.audit_checkpoint_sidecars(checkpoint, None)["passed"])
             checkpoint.with_suffix(".pt.sha256").write_text(f"{digest}  wrong.pt\n")
             self.assertFalse(recovery.audit_checkpoint_sidecars(checkpoint, None)["passed"])
+
+    def test_gpu0_failed_science_archive_moves_exact_c1_and_partial_f(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            master_root = Path(directory) / "master"
+            run_root = master_root / "runs/44444444-4444-4444-8444-444444444444"
+            run_root.mkdir(parents=True)
+            c1 = (
+                master_root
+                / "worktrees/master/results/experiment_2d2e_c1_large_true_self_confirmation"
+            )
+            partial_f = (
+                master_root
+                / "worktrees/2d2f/results/experiment_2d2f_no_b2_recurrence_b3_w64"
+            )
+            c1.mkdir(parents=True)
+            partial_f.mkdir(parents=True)
+            for name in recovery.GPU0_COMPLETED_C1_FILES:
+                payload = (
+                    {"passed": True, "classification": "DIRECTIONAL CONFIRMATION"}
+                    if name == "FINAL_AUDIT.json"
+                    else {"fixture": name}
+                )
+                (c1 / name).write_text(json.dumps(payload) + "\n")
+            for name in recovery.GPU0_FAILED_F_PREFLIGHT_FILES:
+                payload = (
+                    {"passed": True}
+                    if name == "semantic_diff_audit.json"
+                    else {"fixture": name}
+                )
+                (partial_f / name).write_text(json.dumps(payload) + "\n")
+
+            plan = {
+                "schema_version": 1,
+                "run_id": run_root.name,
+                "recovery_attempt": 2,
+                "recovered_lanes": {
+                    "GPU0": {
+                        "expected_resumed_command_records": ["c1", "f-preflight"]
+                    }
+                },
+            }
+            recovery.preserve_exact_json(
+                recovery.versioned_plan_path(run_root, 2), plan
+            )
+            (run_root / "lane_gpu0.recovery_commands.jsonl").write_text(
+                json.dumps("c1") + "\n"
+            )
+            failure = {
+                "run_id": run_root.name,
+                "lane": "GPU0",
+                "status": "HARD_FAILURE",
+                "phase": "2D2F_PREFLIGHT",
+                "exit_code": 1,
+                "command": "f-preflight",
+            }
+            recovery.durable_json(run_root / "lane_gpu0.error.json", failure)
+            recovery.durable_json(run_root / "lane_gpu0.status.json", failure)
+            (run_root / "lane_gpu0.log").write_text("failed preflight\n")
+            (run_root / "lane_gpu0.recovery.console.log").write_text(
+                "Traceback\nKeyError: 'local_attention_weights'\n"
+            )
+            prior_manifest = run_root / "prior.json"
+            recovery.durable_json(prior_manifest, {"passed": True})
+            prior = {
+                "failed_recovery_attempt": 2,
+                "manifest_path": str(prior_manifest),
+                "manifest_sha256": recovery.file_sha256(prior_manifest),
+            }
+
+            archived = recovery.archive_gpu0_attempt2_science(
+                master_root, run_root, 3, prior
+            )
+            self.assertTrue(archived["passed"])
+            self.assertFalse(c1.exists())
+            self.assertFalse(partial_f.exists())
+            self.assertTrue(
+                Path(archived["completed_c1"]["archive_path"]).is_dir()
+            )
+            self.assertTrue(
+                Path(archived["partial_2d2f_preflight"]["archive_path"]).is_dir()
+            )
+            repeated = recovery.archive_gpu0_attempt2_science(
+                master_root, run_root, 3, prior
+            )
+            self.assertEqual(
+                repeated["manifest_sha256"], archived["manifest_sha256"]
+            )
 
     def test_lane1_shell_is_stage_b_only_and_marks_complete(self) -> None:
         path = Path(__file__).with_name("parallel_2d2_lane1_stage_b_recovery.sh")
@@ -332,7 +548,7 @@ class RecoveryPreflightTests(unittest.TestCase):
                         "recovery_reason": "attempt one",
                         "recovery_evidence_schema": "v2_with_recovery_reason",
                     }
-                    for lane in ("GPU1", "GPU2")
+                    for lane in ("GPU0", "GPU1", "GPU2")
                 },
             }
             recovery.preserve_exact_json(plan_path, plan)
@@ -341,11 +557,11 @@ class RecoveryPreflightTests(unittest.TestCase):
                 "schema_version": 1,
                 "run_id": run_root.name,
                 "passed": True,
-                "authorized_lanes": ["GPU1", "GPU2"],
+                "authorized_lanes": ["GPU0", "GPU1", "GPU2"],
                 "recovery_command_plan": {
                     "path": str(plan_path),
                     "sha256": plan_sha,
-                    "authorized_lanes": ["GPU1", "GPU2"],
+                    "authorized_lanes": ["GPU0", "GPU1", "GPU2"],
                 },
             }
             recovery.durable_json(run_root / "RECOVERY_PREFLIGHT.json", preflight)
@@ -399,6 +615,39 @@ class RecoveryPreflightTests(unittest.TestCase):
                 )["manifest_sha256"],
                 evidence["manifest_sha256"],
             )
+
+            lane = "GPU0"
+            lower = lane.lower()
+            for kind in ("error", "status"):
+                recovery.durable_json(
+                    run_root / f"lane_{lower}.{kind}.json",
+                    {
+                        "run_id": run_root.name,
+                        "lane": lane,
+                        "status": "HARD_FAILURE",
+                        "exit_code": 19,
+                    },
+                )
+            (run_root / f"lane_{lower}.recovery_commands.jsonl").write_text(
+                json.dumps(f"python {lane}.py") + "\n"
+            )
+            expanded = recovery.prepare_prior_attempt_evidence(
+                run_root, ["GPU0", "GPU1", "GPU2"], 2
+            )
+            expanded_manifest = json.loads(
+                Path(expanded["manifest_path"]).read_text()
+            )
+            self.assertEqual(
+                expanded_manifest["retried_lanes"], ["GPU0", "GPU1", "GPU2"]
+            )
+            self.assertEqual(len(expanded_manifest["components"]), 2)
+            self.assertEqual(
+                json.loads(Path(evidence["manifest_path"]).read_text())[
+                    "retried_lanes"
+                ],
+                ["GPU1", "GPU2"],
+            )
+
             (run_root / "lane_gpu1.status.json").write_text("{}\n")
             with self.assertRaisesRegex(RuntimeError, "prior recovery outcome"):
                 recovery.prepare_prior_attempt_evidence(

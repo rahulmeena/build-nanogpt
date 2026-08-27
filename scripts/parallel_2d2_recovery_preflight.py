@@ -17,6 +17,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 
@@ -41,10 +42,29 @@ LANES = {
         "allowed_untracked_result_roots": {
             "results/experiment_2d2e_c1_large_true_self_confirmation",
         },
+        "dependent_worktree_patches": [
+            {
+                "branch": "experiment-2d2f-no-b2-recurrence-b3-w64",
+                "worktree": "/workspace/parallel_2d2_master/worktrees/2d2f",
+                "allowed_changed_files": {
+                    "scripts/experiment_2d2f.py",
+                    "tests/test_experiment_2d2f_core.py",
+                },
+                "allowed_untracked_result_roots": {
+                    "results/experiment_2d2f_no_b2_recurrence_b3_w64",
+                },
+                "tests": [
+                    "tests/test_experiment_2d2f_core.py",
+                    "tests/test_experiment_2d2f_driver.py",
+                ],
+            }
+        ],
         "recovery_reason": (
             "2D2E-C1 completed its evaluation but artifact publication failed on "
-            "non-JSON CUDA UUID metadata; deterministically rerun frozen C1 from "
-            "the exact 2D2E checkpoint, then execute the unchanged 2D2F sequence"
+            "non-JSON CUDA UUID metadata; its exact recovery rerun then exposed a "
+            "preflight-only 2D2F diagnostic assumption that inherited B1 supplies "
+            "local-attention weights, so deterministically rerun frozen C1 and the "
+            "audited diagnostic-corrected 2D2F sequence from exact checkpoints"
         ),
         "tests": [
             "tests/test_experiment_2d2e_c1.py",
@@ -112,6 +132,24 @@ EXPECTED_POD = {
     "name": "empirical_tan_panda",
     "gpu_count": 4,
     "volume_id": "yhzyb27fb5",
+}
+
+GPU0_FAILED_F_PREFLIGHT_FILES = {
+    "2d2d_reference_manifest.json",
+    "architecture_manifest.json",
+    "parameter_manifest.json",
+    "semantic_diff_audit.json",
+    "source_manifest.json",
+}
+GPU0_COMPLETED_C1_FILES = {
+    "C1_FINAL_REPORT.md",
+    "FINAL_AUDIT.json",
+    "HEARTBEAT.json",
+    "bootstrap_results.json",
+    "c1_validation_subset_manifest.json",
+    "paired_results.json",
+    "result_summary.json",
+    "subset_manifest.json",
 }
 
 
@@ -489,15 +527,290 @@ def prepare_prior_attempt_evidence(
     manifest_path = run_root / (
         f"RECOVERY_ATTEMPT_{previous_attempt:04d}_EVIDENCE.json"
     )
-    preserve_exact_json(manifest_path, manifest)
+    effective_manifest_path = manifest_path
+    if manifest_path.exists() and read_json(manifest_path) != manifest:
+        # A failed preflight-generation command may already have sealed a
+        # strict subset of the lanes before discovering that another retained
+        # lane also exited.  Preserve that immutable first manifest and add a
+        # separately sealed supplement; never replace either set of bytes.
+        existing = read_json(manifest_path)
+        existing_lanes = existing.get("retried_lanes")
+        requested = list(lanes)
+        existing_set = set(existing_lanes or [])
+        requested_set = set(requested)
+        common_exact = (
+            existing.get("schema_version") == manifest["schema_version"]
+            and existing.get("run_id") == manifest["run_id"]
+            and existing.get("failed_recovery_attempt")
+            == manifest["failed_recovery_attempt"]
+            and existing.get("next_recovery_attempt")
+            == manifest["next_recovery_attempt"]
+            and existing.get("prior_preflight") == manifest["prior_preflight"]
+            and existing.get("prior_command_plan")
+            == manifest["prior_command_plan"]
+            and isinstance(existing_lanes, list)
+            and existing_set < requested_set
+            and all(
+                existing.get("lane_failure_evidence", {}).get(lane)
+                == lane_files[lane]
+                for lane in existing_lanes
+            )
+        )
+        if not common_exact:
+            raise RuntimeError(
+                "existing prior-attempt evidence is not an exact subset"
+            )
+        supplemented_lanes = [lane for lane in requested if lane not in existing_set]
+        supplement = {
+            "schema_version": 1,
+            "run_id": run_root.name,
+            "failed_recovery_attempt": previous_attempt,
+            "next_recovery_attempt": recovery_attempt,
+            "base_manifest": {
+                "path": str(manifest_path),
+                "sha256": file_sha256(manifest_path),
+                "retried_lanes": existing_lanes,
+            },
+            "supplemented_lanes": supplemented_lanes,
+            "prior_preflight": manifest["prior_preflight"],
+            "prior_command_plan": manifest["prior_command_plan"],
+            "lane_failure_evidence": {
+                lane: lane_files[lane] for lane in supplemented_lanes
+            },
+        }
+        supplement_path = run_root / (
+            f"RECOVERY_ATTEMPT_{previous_attempt:04d}_EVIDENCE_"
+            f"SUPPLEMENT_FOR_ATTEMPT_{recovery_attempt:04d}.json"
+        )
+        preserve_exact_json(supplement_path, supplement)
+        index = {
+            "schema_version": 1,
+            "run_id": run_root.name,
+            "failed_recovery_attempt": previous_attempt,
+            "next_recovery_attempt": recovery_attempt,
+            "retried_lanes": requested,
+            "components": [
+                {
+                    "path": str(manifest_path),
+                    "sha256": file_sha256(manifest_path),
+                    "lanes": existing_lanes,
+                },
+                {
+                    "path": str(supplement_path),
+                    "sha256": file_sha256(supplement_path),
+                    "lanes": supplemented_lanes,
+                },
+            ],
+            "prior_preflight": manifest["prior_preflight"],
+            "prior_command_plan": manifest["prior_command_plan"],
+        }
+        effective_manifest_path = run_root / (
+            f"RECOVERY_ATTEMPT_{previous_attempt:04d}_EVIDENCE_"
+            f"INDEX_FOR_ATTEMPT_{recovery_attempt:04d}.json"
+        )
+        preserve_exact_json(effective_manifest_path, index)
+    else:
+        preserve_exact_json(manifest_path, manifest)
     return {
         "failed_recovery_attempt": previous_attempt,
-        "manifest_path": str(manifest_path),
-        "manifest_sha256": file_sha256(manifest_path),
+        "manifest_path": str(effective_manifest_path),
+        "manifest_sha256": file_sha256(effective_manifest_path),
+        "base_manifest_path": str(manifest_path),
+        "base_manifest_sha256": file_sha256(manifest_path),
         "prior_command_plan_path": str(prior_plan_path),
         "prior_command_plan_sha256": prior_plan_sha,
         "prior_preflight_path": str(archived_preflight),
         "prior_preflight_sha256": hashlib.sha256(previous_preflight_bytes).hexdigest(),
+    }
+
+
+def exact_tree_inventory(root: Path, expected_files: set[str]) -> dict:
+    if not root.is_dir() or root.is_symlink():
+        raise RuntimeError(f"exact archived tree is unavailable: {root}")
+    paths = list(root.rglob("*"))
+    if any(path.is_symlink() for path in paths):
+        raise RuntimeError(f"archived tree contains a symlink: {root}")
+    relative_files = {
+        path.relative_to(root).as_posix() for path in paths if path.is_file()
+    }
+    if relative_files != set(expected_files):
+        raise RuntimeError(
+            f"archived tree file set differs: {root}: {sorted(relative_files)}"
+        )
+    return {
+        relative: {
+            "bytes": (root / relative).stat().st_size,
+            "sha256": file_sha256(root / relative),
+        }
+        for relative in sorted(relative_files)
+    }
+
+
+def move_or_verify_exact_tree(
+    source: Path, destination: Path, expected_files: set[str]
+) -> dict:
+    if source.exists() and destination.exists():
+        raise RuntimeError(
+            f"refusing ambiguous source and archive trees: {source}, {destination}"
+        )
+    if source.exists():
+        exact_tree_inventory(source, expected_files)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        os.replace(source, destination)
+        for parent in {source.parent, destination.parent}:
+            descriptor = os.open(parent, os.O_RDONLY)
+            try:
+                os.fsync(descriptor)
+            finally:
+                os.close(descriptor)
+    return exact_tree_inventory(destination, expected_files)
+
+
+def archive_gpu0_attempt2_science(
+    master_root: Path,
+    run_root: Path,
+    recovery_attempt: int,
+    prior_attempt_evidence: dict,
+) -> dict:
+    """Move completed C1 and partial F bytes into immutable attempt-2 evidence."""
+
+    if recovery_attempt != 3 or prior_attempt_evidence.get(
+        "failed_recovery_attempt"
+    ) != 2:
+        raise RuntimeError("GPU0 failed-science archive is attempt-3 specific")
+    previous_attempt = 2
+    plan_path = versioned_plan_path(run_root, previous_attempt)
+    plan = read_json(plan_path)
+    expected = plan["recovered_lanes"]["GPU0"][
+        "expected_resumed_command_records"
+    ]
+    command_path = run_root / "lane_gpu0.recovery_commands.jsonl"
+    completed = [
+        json.loads(line)
+        for line in command_path.read_text().splitlines()
+        if line
+    ]
+    error_path = run_root / "lane_gpu0.error.json"
+    status_path = run_root / "lane_gpu0.status.json"
+    error = read_json(error_path)
+    status = read_json(status_path)
+    checks = {
+        "expected_plan_has_remaining_command": 0 <= len(completed) < len(expected),
+        "successful_commands_are_exact_prefix": completed
+        == expected[: len(completed)],
+        "failed_command_is_exact_next_command": error.get("command")
+        == expected[len(completed)]
+        if len(completed) < len(expected)
+        else False,
+        "status_command_matches_error": status.get("command")
+        == error.get("command"),
+        "failure_identity_exact": error.get("run_id") == run_root.name
+        and status.get("run_id") == run_root.name
+        and error.get("lane") == status.get("lane") == "GPU0"
+        and error.get("status") == status.get("status") == "HARD_FAILURE"
+        and error.get("phase") == status.get("phase") == "2D2F_PREFLIGHT"
+        and error.get("exit_code") == status.get("exit_code") == 1,
+        "prior_attempt_evidence_present": Path(
+            prior_attempt_evidence["manifest_path"]
+        ).is_file()
+        and file_sha256(Path(prior_attempt_evidence["manifest_path"]))
+        == prior_attempt_evidence["manifest_sha256"],
+    }
+    if not all(checks.values()):
+        raise RuntimeError(f"GPU0 attempt-2 command lineage is not exact: {checks}")
+
+    archive_root = (
+        run_root
+        / "failed_science_attempts"
+        / "gpu0_recovery_attempt_0002"
+    )
+    archive_root.mkdir(parents=True, exist_ok=True)
+    c1_source = (
+        master_root
+        / "worktrees/master/results/experiment_2d2e_c1_large_true_self_confirmation"
+    )
+    f_source = (
+        master_root
+        / "worktrees/2d2f/results/experiment_2d2f_no_b2_recurrence_b3_w64"
+    )
+    c1_destination = archive_root / "completed_c1"
+    f_destination = archive_root / "partial_2d2f_preflight"
+    c1_inventory = move_or_verify_exact_tree(
+        c1_source, c1_destination, GPU0_COMPLETED_C1_FILES
+    )
+    f_inventory = move_or_verify_exact_tree(
+        f_source, f_destination, GPU0_FAILED_F_PREFLIGHT_FILES
+    )
+    c1_audit = read_json(c1_destination / "FINAL_AUDIT.json")
+    f_semantic = read_json(f_destination / "semantic_diff_audit.json")
+
+    logs = {}
+    logs_root = archive_root / "logs"
+    logs_root.mkdir(parents=True, exist_ok=True)
+    for name in ("lane_gpu0.log", "lane_gpu0.recovery.console.log"):
+        source = run_root / name
+        destination = logs_root / name
+        preserve_exact_bytes(destination, source.read_bytes())
+        logs[name] = {
+            "source": str(source),
+            "preserved_path": str(destination),
+            "bytes": destination.stat().st_size,
+            "sha256": file_sha256(destination),
+        }
+    console = (logs_root / "lane_gpu0.recovery.console.log").read_text()
+    checks.update(
+        {
+            "completed_c1_audit_passed": c1_audit.get("passed") is True,
+            "completed_c1_classification_exact": c1_audit.get("classification")
+            == "DIRECTIONAL CONFIRMATION",
+            "partial_f_semantic_diff_passed": f_semantic.get("passed") is True,
+            "diagnostic_failure_trace_exact": "KeyError: 'local_attention_weights'"
+            in console,
+            "source_output_roots_moved_not_deleted": not c1_source.exists()
+            and not f_source.exists(),
+        }
+    )
+    if not all(checks.values()):
+        raise RuntimeError(f"GPU0 failed-science archive is not exact: {checks}")
+    payload = {
+        "schema_version": 1,
+        "run_id": run_root.name,
+        "lane": "GPU0",
+        "failed_recovery_attempt": previous_attempt,
+        "next_recovery_attempt": recovery_attempt,
+        "phase": "2D2F_PREFLIGHT",
+        "successful_command_records": completed,
+        "failed_command_record": error["command"],
+        "prior_attempt_evidence": prior_attempt_evidence,
+        "error_marker": {
+            "path": str(error_path),
+            "sha256": file_sha256(error_path),
+        },
+        "status_marker": {
+            "path": str(status_path),
+            "sha256": file_sha256(status_path),
+        },
+        "completed_c1": {
+            "original_path": str(c1_source),
+            "archive_path": str(c1_destination),
+            "files": c1_inventory,
+        },
+        "partial_2d2f_preflight": {
+            "original_path": str(f_source),
+            "archive_path": str(f_destination),
+            "files": f_inventory,
+        },
+        "logs": logs,
+        "moved_not_deleted": True,
+        "checks": checks,
+        "passed": True,
+    }
+    manifest_path = run_root / "GPU0_FAILED_SCIENCE_RECOVERY_ATTEMPT_0002.json"
+    preserve_exact_json(manifest_path, payload)
+    return {
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": file_sha256(manifest_path),
+        **payload,
     }
 
 
@@ -700,6 +1013,60 @@ def audit_worktree_artifacts(worktree: Path, allowed_roots) -> dict:
     }
 
 
+def audit_patched_worktree(spec: dict, original_git: dict) -> dict:
+    """Seal one additional lane worktree whose implementation needed recovery."""
+
+    worktree = Path(spec["worktree"]).resolve()
+    branch = spec["branch"]
+    old = original_git["branches"][branch]["local"]
+    current = git_output(worktree, "rev-parse", "HEAD")
+    origin = git_output(worktree, "rev-parse", f"origin/{branch}")
+    ancestor = subprocess.call(
+        ["git", "merge-base", "--is-ancestor", old, current], cwd=worktree
+    ) == 0
+    changed = set(
+        filter(
+            None,
+            git_output(
+                worktree, "diff", "--name-only", f"{old}..{current}"
+            ).splitlines(),
+        )
+    )
+    worktree_audit = audit_worktree_artifacts(
+        worktree, spec["allowed_untracked_result_roots"]
+    )
+    test_command = [sys.executable, "-m", "pytest", "-q", *spec["tests"]]
+    test = subprocess.run(
+        test_command, cwd=worktree, text=True, capture_output=True
+    )
+    checks = {
+        "old_commit_is_ancestor": ancestor,
+        "current_commit_pushed": current == origin,
+        "tracked_worktree_clean": worktree_audit["checks"][
+            "tracked_worktree_clean"
+        ],
+        "untracked_only_in_exact_result_roots": worktree_audit["checks"][
+            "untracked_only_in_exact_result_roots"
+        ],
+        "changed_files_narrow": changed == set(spec["allowed_changed_files"]),
+        "focused_tests_passed": test.returncode == 0,
+    }
+    return {
+        "branch": branch,
+        "worktree": str(worktree),
+        "old_commit": old,
+        "current_commit": current,
+        "origin_commit": origin,
+        "changed_files": sorted(changed),
+        "worktree_artifact_audit": worktree_audit,
+        "focused_test_command": test_command,
+        "focused_test_stdout": test.stdout,
+        "focused_test_stderr": test.stderr,
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
 def audit_checkpoint_sidecars(checkpoint: Path, expected_sha: str | None) -> dict:
     sha_path = checkpoint.with_suffix(checkpoint.suffix + ".sha256")
     verification_path = checkpoint.with_suffix(
@@ -787,8 +1154,12 @@ def audit_lane(
     worktree_audit = audit_worktree_artifacts(
         worktree, spec["allowed_untracked_result_roots"]
     )
-    test_command = ["python", "-m", "pytest", "-q", *spec["tests"]]
+    test_command = [sys.executable, "-m", "pytest", "-q", *spec["tests"]]
     test = subprocess.run(test_command, cwd=worktree, text=True, capture_output=True)
+    dependent_worktree_patches = [
+        audit_patched_worktree(patch_spec, original_git)
+        for patch_spec in spec.get("dependent_worktree_patches", [])
+    ]
     checks = {
         "prior_failure_exact": error.get("run_id") == run_root.name
         and error.get("lane") == lane
@@ -810,6 +1181,9 @@ def audit_lane(
         "changed_files_narrow": changed == set(spec["allowed_changed_files"]),
         "base_checkpoint_and_sidecars_exact": checkpoint_audit["passed"],
         "focused_tests_passed": test.returncode == 0,
+        "dependent_worktree_patches_exact": all(
+            row["passed"] for row in dependent_worktree_patches
+        ),
     }
     idle = gpu_idle(int(lane.removeprefix("GPU")))
     checks["assigned_gpu_idle"] = idle["passed"]
@@ -838,6 +1212,7 @@ def audit_lane(
         "focused_test_command": test_command,
         "focused_test_stdout": test.stdout,
         "focused_test_stderr": test.stderr,
+        "dependent_worktree_patches": dependent_worktree_patches,
         "assigned_gpu": idle,
         "checks": checks,
         "passed": all(checks.values()),
@@ -871,6 +1246,14 @@ def run(args) -> dict:
     prior_attempt_evidence = prepare_prior_attempt_evidence(
         run_root, lanes, recovery_attempt, original_terminal_gate
     )
+    failed_science_archives = {}
+    if recovery_attempt == 3 and "GPU0" in lanes:
+        failed_science_archives["GPU0"] = archive_gpu0_attempt2_science(
+            master_root,
+            run_root,
+            recovery_attempt,
+            prior_attempt_evidence,
+        )
     top_preflight = read_json(master_root / "MASTER_PREFLIGHT.json")
     scoped_preflight = read_json(run_root / "MASTER_PREFLIGHT.json")
     original_git = read_json(run_root / "git_worktree_manifest.json")
@@ -1012,6 +1395,8 @@ def run(args) -> dict:
     }
     if prior_attempt_evidence is not None:
         payload["prior_attempt_evidence"] = prior_attempt_evidence
+    if failed_science_archives:
+        payload["failed_science_archives"] = failed_science_archives
     plan = recovery_command_plan(
         master_root,
         run_root,
