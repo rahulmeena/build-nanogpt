@@ -622,7 +622,7 @@ class RecoveryPreflightTests(unittest.TestCase):
             recovery.durable_json(run_root / "lane_gpu1.error.json", failure)
             recovery.durable_json(run_root / "lane_gpu1.status.json", failure)
             (run_root / "lane_gpu1.log").write_text("failed smoke\n")
-            (run_root / "lane_gpu1.recovery.console.log").write_text(
+            (run_root / "lane_gpu1.recovery_attempt3.console.log").write_text(
                 "Traceback: torch.equal compared cpu and cuda tensors\n"
             )
             prior_manifest = run_root / "attempt3_prior_evidence.json"

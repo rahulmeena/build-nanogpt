@@ -1305,7 +1305,10 @@ def archive_gpu1_attempt3_smoke(
                 **metadata,
             }
         logs_root = archive_root / "logs"
-        for name in ("lane_gpu1.log", "lane_gpu1.recovery.console.log"):
+        for name in (
+            "lane_gpu1.log",
+            "lane_gpu1.recovery_attempt3.console.log",
+        ):
             source = run_root / name
             destination = logs_root / name
             metadata = durable_copy_exact(source, destination)
@@ -1314,7 +1317,9 @@ def archive_gpu1_attempt3_smoke(
                 "preserved_path": str(destination),
                 **metadata,
             }
-        console = (logs_root / "lane_gpu1.recovery.console.log").read_text()
+        console = (
+            logs_root / "lane_gpu1.recovery_attempt3.console.log"
+        ).read_text()
         trace_exact = (
             "torch.equal" in console and "cpu" in console.lower() and "cuda" in console.lower()
         )
