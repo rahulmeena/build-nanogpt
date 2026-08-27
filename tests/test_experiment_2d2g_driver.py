@@ -88,3 +88,59 @@ def test_memory_accounting_has_no_b11_ring():
     assert report["B1"]["b11_ring_bytes"] == 0
     assert report["B64"]["b11_ring_bytes"] == 0
     assert report["B64"]["total_inference_state_bytes"] == 64 * report["B1"]["total_inference_state_bytes"]
+
+
+def test_final_persistence_requires_ephemeral_to_workspace_and_exact_shared_lock():
+    valid = exp.validate_final_persistence_paths(
+        "/tmp/parallel_2d2_ephemeral/2d2g/stage_b_scientific_update_0191.pt",
+        "/workspace/exp2d2g_run/checkpoints",
+        "/workspace/parallel_2d2_master/locks/checkpoint_persist.lock",
+    )
+    assert valid["passed"]
+    assert not exp.validate_final_persistence_paths(
+        "/workspace/unsafe_local.pt",
+        "/workspace/exp2d2g_run/checkpoints",
+        "/workspace/parallel_2d2_master/locks/checkpoint_persist.lock",
+    )["passed"]
+    assert not exp.validate_final_persistence_paths(
+        "/tmp/parallel_2d2_ephemeral/2d2g/local.pt",
+        "/workspace/exp2d2g_run/checkpoints",
+        "/tmp/private.lock",
+    )["passed"]
+
+
+def test_required_artifact_inventory_is_strict(tmp_path):
+    for name in exp.REQUIRED_TRAINING_ARTIFACTS:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("x")
+    assert exp.required_artifact_inventory(tmp_path)["passed"]
+    (tmp_path / "FINAL_REPORT.md").write_text("")
+    assert not exp.required_artifact_inventory(tmp_path)["passed"]
+
+
+def test_smoke_cli_requires_explicit_ephemeral_checkpoint_directory():
+    parser = exp.build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(
+            [
+                "smoke-b",
+                "--output-dir", "/workspace/results",
+                "--pod-id", "pod",
+                "--pod-name", "name",
+                "--stage-a-checkpoint", "/tmp/stage-a.pt",
+                "--data-root", "/workspace/data",
+            ]
+        )
+    args = parser.parse_args(
+        [
+            "smoke-b",
+            "--output-dir", "/workspace/results",
+            "--pod-id", "pod",
+            "--pod-name", "name",
+            "--stage-a-checkpoint", "/tmp/stage-a.pt",
+            "--data-root", "/workspace/data",
+            "--checkpoint-dir", "/tmp/parallel_2d2_ephemeral/2d2g/smoke",
+        ]
+    )
+    assert args.checkpoint_dir.endswith("/2d2g/smoke")

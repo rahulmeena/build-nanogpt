@@ -8,6 +8,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import experiment_2d2b_core as stage_a_core  # noqa: E402
+import experiment_2d2g as driver  # noqa: E402
 import experiment_2d2g_core as core  # noqa: E402
 import smoke_test as support  # noqa: E402
 
@@ -116,6 +117,21 @@ def test_writer_path_attached_and_causal():
     gradient = torch.autograd.grad(second["logits"][:, -1].square().sum(), first["h10"])[0]
     assert gradient[:, : TEST_LENGTH - 64].count_nonzero() > 0
     assert gradient[:, TEST_LENGTH - 64 :].count_nonzero() == 0
+
+
+def test_runtime_causality_and_post_open_writer_audits():
+    current = model().train()
+    with torch.no_grad():
+        current.g_rec_b3.fill_(0.02)
+    tokens = torch.randint(0, 32, (2, TEST_LENGTH))
+    targets = torch.randint(0, 32, (2, TEST_LENGTH))
+    causality = driver.b3_causality_audit(current, TEST_LENGTH, tokens.device)
+    writer = driver.b3_writer_gradient_audit(current, tokens, targets)
+    assert causality["passed"]
+    assert writer["checks"]["gate_open"]
+    assert writer["checks"]["gradient_finite"]
+    assert writer["checks"]["eligible_writer_gradient_nonzero"]
+    assert writer["checks"]["ineligible_last_64_exact_zero"]
 
 
 def test_no_future_leakage_or_row_cross_talk():

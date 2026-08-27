@@ -86,8 +86,15 @@ MILESTONES = (0, 20, 48, 96, 143, 191)
 VALIDATION_BATCHES = 20
 VALIDATION_B = 64
 INCREMENTAL_BATCHES = 4
+SMOKE_UPDATES = 3
 SEED = 2026_0221
 VALIDATION_SHARD_SHA256 = "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f"
+
+EPHEMERAL_ROOT = Path("/tmp/parallel_2d2_ephemeral")
+PERSISTENT_ROOT = Path("/workspace")
+CHECKPOINT_PERSIST_LOCK = (
+    PERSISTENT_ROOT / "parallel_2d2_master" / "locks" / "checkpoint_persist.lock"
+)
 
 SOURCE_NEXT_BATCH = "e1d96ca0106f21badeb0004025e80abc562509fb6299a63eb8662a3da3c17a52"
 SOURCE_NEXT_STREAM = "fc01029471dfe8674e900dd3d1e20a34e235853d44c68ede1b67f5b1a61e44f0"
@@ -112,6 +119,31 @@ IMPLEMENTATION_FILES = (
     "scripts/experiment_2d2g_core.py",
     "tests/test_experiment_2d2g_core.py",
     "tests/test_experiment_2d2g_driver.py",
+)
+
+REQUIRED_TRAINING_ARTIFACTS = (
+    "FINAL_REPORT.md",
+    "FINAL_AUDIT.json",
+    "result_summary.json",
+    "source_manifest.json",
+    "architecture_manifest.json",
+    "parameter_manifest.json",
+    "training_metrics.jsonl",
+    "milestone_validation.json",
+    "paired_controls.json",
+    "gate_diagnostics.json",
+    "attention_diagnostics.json",
+    "temporal_gradient_diagnostics.json",
+    "incremental_validation.json",
+    "incremental_cache_audit.json",
+    "memory_accounting.json",
+    "stability_8pass.json",
+    "performance.json",
+    "checkpoint_manifest.json",
+    "commands_and_runtime.json",
+    "storage_cleanup_manifest.json",
+    "HEARTBEAT.json",
+    "UNATTENDED_FINAL_HANDOFF.md",
 )
 
 
@@ -168,6 +200,73 @@ def append_jsonl(path: Path | str, value) -> None:
         os.fsync(handle.fileno())
 
 
+def is_relative_to(path: Path | str, parent: Path | str) -> bool:
+    try:
+        Path(path).resolve().relative_to(Path(parent).resolve())
+    except ValueError:
+        return False
+    return True
+
+
+def checkpoint_sidecar_audit(path: Path | str, expected_sha: str | None = None) -> dict:
+    path = Path(path).resolve()
+    sha_path = path.with_suffix(path.suffix + ".sha256")
+    verification_path = path.with_suffix(path.suffix + ".verification.json")
+    observed_sha = file_sha256(path)
+    recorded_sha = sha_path.read_text().split()[0] if sha_path.is_file() else None
+    verification = read_json(verification_path) if verification_path.is_file() else {}
+    checks = {
+        "sha_sidecar_present": sha_path.is_file(),
+        "verification_sidecar_present": verification_path.is_file(),
+        "sha_sidecar_matches": recorded_sha == observed_sha,
+        "expected_sha_matches": expected_sha is None or observed_sha == expected_sha,
+        "verification_passed": verification.get("passed") is True,
+    }
+    return {
+        "checkpoint": str(path),
+        "sha256": observed_sha,
+        "sha_sidecar": str(sha_path),
+        "verification_sidecar": str(verification_path),
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
+def append_command_runtime(output: Path | str, row: dict) -> None:
+    path = Path(output) / "commands_and_runtime.json"
+    payload = read_json(path) if path.exists() else {"commands": []}
+    payload.setdefault("commands", []).append(row)
+    durable_json(path, payload)
+
+
+def record_cleanup(output: Path | str, actions: list[dict]) -> None:
+    path = Path(output) / "storage_cleanup_manifest.json"
+    payload = read_json(path) if path.exists() else {
+        "scientific_source_removed": False,
+        "cleanup_actions": [],
+    }
+    payload.setdefault("cleanup_actions", []).extend(actions)
+    payload["scientific_source_removed"] = False
+    durable_json(path, payload)
+
+
+def required_artifact_inventory(output: Path | str) -> dict:
+    output = Path(output).resolve()
+    rows = {}
+    for name in REQUIRED_TRAINING_ARTIFACTS:
+        path = output / name
+        rows[name] = {
+            "path": str(path),
+            "present": path.is_file(),
+            "bytes": path.stat().st_size if path.is_file() else 0,
+        }
+    return {
+        "required": list(REQUIRED_TRAINING_ARTIFACTS),
+        "artifacts": rows,
+        "passed": all(row["present"] and row["bytes"] > 0 for row in rows.values()),
+    }
+
+
 def git_output(*args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=REPO_ROOT, text=True).strip()
 
@@ -179,8 +278,8 @@ def require_git(clean: bool = True) -> None:
         ["git", "merge-base", "--is-ancestor", SOURCE_COMMIT, "HEAD"], cwd=REPO_ROOT
     ):
         raise SystemExit("frozen 2D2B commit is not an ancestor")
-    if clean and git_output("status", "--porcelain"):
-        raise SystemExit("result-bearing 2D2G worktree must be clean")
+    if clean and git_output("status", "--porcelain", "--untracked-files=no"):
+        raise SystemExit("tracked 2D2G implementation files must be clean")
 
 
 def implementation_fingerprint() -> dict:
@@ -212,6 +311,16 @@ def require_config() -> dict:
         "geometry": config["stage_b"]["architecture"]["b2_local_window"] == 1024
         and config["stage_b"]["architecture"]["b3_local_window"] == 64
         and config["stage_b"]["architecture"]["b3_max_recurrent_entries"] == 960,
+        "checkpoint_policy": config["checkpoint_policy"]["stage_b_smoke"]
+        == "ephemeral_disposable_strict_reopen_then_delete"
+        and config["checkpoint_policy"]["stage_a_update_96"] == "ephemeral"
+        and config["checkpoint_policy"]["stage_a_final"]
+        == "ephemeral_until_stage_b_sealed"
+        and config["checkpoint_policy"]["stage_b_update_96"] == "ephemeral"
+        and config["checkpoint_policy"]["stage_b_final"]
+        == "persistent_after_checkpoint_lock"
+        and config["checkpoint_policy"]["serialize_persistent_final_with"]
+        == str(CHECKPOINT_PERSIST_LOCK),
     }
     if not all(checks.values()):
         raise SystemExit(f"2D2G config mismatch: {checks}")
@@ -358,14 +467,9 @@ def model_finite(model) -> bool:
 
 def load_2d2b_source(path: Path | str, device: torch.device, restore_rng: bool = False):
     path = Path(path).resolve()
-    if file_sha256(path) != SOURCE_SHA256:
-        raise SystemExit("2D2B source SHA mismatch")
-    sha_sidecar = path.with_suffix(path.suffix + ".sha256")
-    verification_sidecar = path.with_suffix(path.suffix + ".verification.json")
-    if not sha_sidecar.is_file() or not verification_sidecar.is_file():
-        raise SystemExit("2D2B source checkpoint sidecars missing")
-    if sha_sidecar.read_text().split()[0] != SOURCE_SHA256:
-        raise SystemExit("2D2B source SHA sidecar mismatch")
+    sidecars = checkpoint_sidecar_audit(path, SOURCE_SHA256)
+    if not sidecars["passed"]:
+        raise SystemExit(f"2D2B source checkpoint/sidecar mismatch: {sidecars}")
     payload = d0.torch_load(path, mmap=False)
     if payload.get("schema") != SOURCE_SCHEMA:
         raise SystemExit(f"2D2B source schema mismatch: {payload.get('schema')}")
@@ -398,6 +502,7 @@ def load_2d2b_source(path: Path | str, device: torch.device, restore_rng: bool =
     return model, optimizer, loader, payload, {
         "checkpoint": str(path),
         "sha256": SOURCE_SHA256,
+        "sidecar_audit": sidecars,
         "checks": checks,
         "next_global_batch_sha256": observed_batch,
         "next_global_batch_stream_sha256": observed_stream,
@@ -423,12 +528,39 @@ def transplant_stage_a_to_b(stage_a_model, stage_a_optimizer, device: torch.devi
         for key in ("lr", "betas", "eps", "weight_decay", "amsgrad", "maximize", "capturable", "differentiable"):
             if key in source:
                 group[key] = source[key]
+
+    def state_value_equal(left, right):
+        if torch.is_tensor(left) or torch.is_tensor(right):
+            return torch.is_tensor(left) and torch.is_tensor(right) and torch.equal(left, right)
+        return left == right
+
+    optimizer_state_exact = True
+    for parameter in shared:
+        left = stage_a_optimizer.state.get(parameter, {})
+        right = optimizer.state.get(parameter, {})
+        if set(left) != set(right) or any(
+            not state_value_equal(left[key], right[key]) for key in left
+        ):
+            optimizer_state_exact = False
+            break
+    optimizer_groups_exact = True
+    for name, source in source_groups.items():
+        destination = next(group for group in optimizer.param_groups if group["name"] == name)
+        if set(source["params"]) != set(destination["params"]):
+            optimizer_groups_exact = False
+            break
+        for key in ("lr", "betas", "eps", "weight_decay", "amsgrad", "maximize", "capturable", "differentiable"):
+            if key in source and source[key] != destination.get(key):
+                optimizer_groups_exact = False
+                break
     checks = {
         "parameters": sum(p.numel() for p in model.parameters()) == STAGE_B_PARAMETERS,
         "no_b2_gate": not hasattr(model, "g_rec_b2"),
         "new_b3_zero": model.g_rec_b3.detach().float().item() == 0.0,
         "new_b3_state_absent": model.g_rec_b3 not in optimizer.state,
         "source_state_entries_preserved": len(optimizer.state) == len(stage_a_optimizer.state),
+        "optimizer_state_exact": optimizer_state_exact,
+        "optimizer_groups_exact": optimizer_groups_exact,
         "weight_tying": model.base.transformer.wte.weight is model.base.lm_head.weight,
     }
     if not all(checks.values()):
@@ -587,11 +719,55 @@ def strict_reopen_checkpoint(path, stage, completed, metadata):
     return checks
 
 
+def loaded_stage_checkpoint_audit(
+    path: Path | str,
+    stage: str,
+    model,
+    optimizer,
+    loader,
+    payload: dict,
+) -> dict:
+    expected_schema = STAGE_A_SCHEMA if stage == "a" else STAGE_B_SCHEMA
+    completed = int(payload.get("completed_local_updates", -1))
+    expected = expected_cursor(stage, completed)
+    model_keys = set(payload.get("model", {}))
+    checks = {
+        "sidecars": checkpoint_sidecar_audit(path)["passed"],
+        "schema": payload.get("schema") == expected_schema,
+        "stage": payload.get("stage") == stage,
+        "targets": payload.get("processed_stage_targets") == completed * GLOBAL_TARGETS,
+        "targets_per_update": payload.get("targets_per_update") == GLOBAL_TARGETS,
+        "architecture": payload.get("architecture_manifest") == stage_architecture(stage),
+        "model_keys": ("g_rec_b3" in model_keys) == (stage == "b"),
+        "no_b2_gate": "g_rec_b2" not in model_keys and not hasattr(model, "g_rec_b2"),
+        "parameters": sum(parameter.numel() for parameter in model.parameters())
+        == (STAGE_A_PARAMETERS if stage == "a" else STAGE_B_PARAMETERS),
+        "model_finite": model_finite(model),
+        "optimizer_finite": optimizer_finite(optimizer),
+        "next_batch_reproduced": next_global_batch_hash(
+            loader, payload["gradient_accumulation"]
+        )
+        == payload.get("next_global_batch_sha256"),
+        "next_stream_reproduced": global_batch_stream_hash(
+            loader, payload["gradient_accumulation"]
+        )
+        == payload.get("next_global_batch_stream_sha256"),
+        "rng_complete": set(payload.get("rng_state", {}))
+        == {"python", "numpy", "torch_cpu", "torch_cuda"},
+    }
+    if expected is not None:
+        checks["preregistered_cursor"] = (
+            payload.get("next_global_batch_sha256"),
+            payload.get("next_global_batch_stream_sha256"),
+        ) == expected
+    return {"checks": checks, "passed": all(checks.values())}
+
+
 def load_stage_a_checkpoint(path, device, restore_rng=False):
     path = Path(path).resolve()
-    sidecar = path.with_suffix(path.suffix + ".sha256")
-    if not sidecar.is_file() or sidecar.read_text().split()[0] != file_sha256(path):
-        raise SystemExit("Stage A checkpoint SHA sidecar mismatch")
+    sidecars = checkpoint_sidecar_audit(path)
+    if not sidecars["passed"]:
+        raise SystemExit(f"Stage A checkpoint sidecar mismatch: {sidecars}")
     payload = d0.torch_load(path, mmap=False)
     if payload.get("schema") != STAGE_A_SCHEMA:
         raise SystemExit("not a 2D2G-A checkpoint")
@@ -606,10 +782,9 @@ def load_stage_a_checkpoint(path, device, restore_rng=False):
         payload["loader_state"]["sequence_length"],
         state=payload["loader_state"],
     )
-    if next_global_batch_hash(loader, payload["gradient_accumulation"]) != payload["next_global_batch_sha256"]:
-        raise SystemExit("Stage A next batch failed to reproduce")
-    if global_batch_stream_hash(loader, payload["gradient_accumulation"]) != payload["next_global_batch_stream_sha256"]:
-        raise SystemExit("Stage A next stream failed to reproduce")
+    audit = loaded_stage_checkpoint_audit(path, "a", model, optimizer, loader, payload)
+    if not audit["passed"]:
+        raise SystemExit(f"Stage A strict load failed: {audit}")
     if restore_rng:
         restore_rng_state(payload["rng_state"])
     return model, optimizer, loader, payload
@@ -617,9 +792,9 @@ def load_stage_a_checkpoint(path, device, restore_rng=False):
 
 def load_stage_b_checkpoint(path, device, restore_rng=False):
     path = Path(path).resolve()
-    sidecar = path.with_suffix(path.suffix + ".sha256")
-    if not sidecar.is_file() or sidecar.read_text().split()[0] != file_sha256(path):
-        raise SystemExit("Stage B checkpoint SHA sidecar mismatch")
+    sidecars = checkpoint_sidecar_audit(path)
+    if not sidecars["passed"]:
+        raise SystemExit(f"Stage B checkpoint sidecar mismatch: {sidecars}")
     payload = d0.torch_load(path, mmap=False)
     if payload.get("schema") != STAGE_B_SCHEMA:
         raise SystemExit("not a 2D2G-B checkpoint")
@@ -634,10 +809,9 @@ def load_stage_b_checkpoint(path, device, restore_rng=False):
         payload["loader_state"]["sequence_length"],
         state=payload["loader_state"],
     )
-    if next_global_batch_hash(loader, payload["gradient_accumulation"]) != payload["next_global_batch_sha256"]:
-        raise SystemExit("Stage B next batch failed to reproduce")
-    if global_batch_stream_hash(loader, payload["gradient_accumulation"]) != payload["next_global_batch_stream_sha256"]:
-        raise SystemExit("Stage B next stream failed to reproduce")
+    audit = loaded_stage_checkpoint_audit(path, "b", model, optimizer, loader, payload)
+    if not audit["passed"]:
+        raise SystemExit(f"Stage B strict load failed: {audit}")
     if restore_rng:
         restore_rng_state(payload["rng_state"])
     return model, optimizer, loader, payload
@@ -650,18 +824,54 @@ def persist_checkpoint(local_path, persistent_dir, lock_path) -> dict:
     lock_path = Path(lock_path).resolve()
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     destination = persistent_dir / local_path.name
+
+    local_sidecars = checkpoint_sidecar_audit(local_path)
+    if not local_sidecars["passed"]:
+        raise SystemExit(f"local final checkpoint is not strictly verified: {local_sidecars}")
+    local_sha = local_sidecars["sha256"]
+    persistent_sha = None
+    reused_existing = False
     with open(lock_path, "a+") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        temporary = destination.with_suffix(destination.suffix + f".tmp.{os.getpid()}")
-        shutil.copy2(local_path, temporary)
-        os.replace(temporary, destination)
-        for suffix in (".sha256", ".verification.json"):
-            source_sidecar = local_path.with_suffix(local_path.suffix + suffix)
-            if source_sidecar.exists():
-                shutil.copy2(source_sidecar, destination.with_suffix(destination.suffix + suffix))
-        fcntl.flock(lock, fcntl.LOCK_UN)
-    local_sha = file_sha256(local_path)
-    persistent_sha = file_sha256(destination)
+        try:
+            if destination.exists():
+                persistent_sha = file_sha256(destination)
+                if persistent_sha != local_sha:
+                    raise SystemExit(
+                        "refusing to overwrite a different persistent scientific checkpoint"
+                    )
+                reused_existing = True
+            else:
+                temporary = destination.with_suffix(
+                    destination.suffix + f".tmp.{os.getpid()}"
+                )
+                shutil.copy2(local_path, temporary)
+                temporary_sha = file_sha256(temporary)
+                if temporary_sha != local_sha:
+                    temporary.unlink(missing_ok=True)
+                    raise SystemExit("temporary persistent checkpoint copy SHA mismatch")
+                os.replace(temporary, destination)
+                persistent_sha = file_sha256(destination)
+            for suffix in (".sha256", ".verification.json"):
+                source_sidecar = local_path.with_suffix(local_path.suffix + suffix)
+                destination_sidecar = destination.with_suffix(destination.suffix + suffix)
+                if destination_sidecar.exists() and file_sha256(
+                    destination_sidecar
+                ) != file_sha256(source_sidecar):
+                    raise SystemExit(
+                        f"refusing to overwrite different persistent sidecar {destination_sidecar}"
+                    )
+                if not destination_sidecar.exists():
+                    temporary_sidecar = destination_sidecar.with_suffix(
+                        destination_sidecar.suffix + f".tmp.{os.getpid()}"
+                    )
+                    shutil.copy2(source_sidecar, temporary_sidecar)
+                    os.replace(temporary_sidecar, destination_sidecar)
+            persistent_sidecars = checkpoint_sidecar_audit(destination, local_sha)
+            if persistent_sha != local_sha or not persistent_sidecars["passed"]:
+                raise SystemExit("persistent checkpoint copy/sidecar verification failed")
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
     report = {
         "local": str(local_path),
         "persistent": str(destination),
@@ -669,11 +879,48 @@ def persist_checkpoint(local_path, persistent_dir, lock_path) -> dict:
         "persistent_sha256": persistent_sha,
         "bytes": destination.stat().st_size,
         "lock": str(lock_path),
-        "passed": local_sha == persistent_sha,
+        "local_sidecar_audit": local_sidecars,
+        "persistent_sidecar_audit": persistent_sidecars,
+        "persistent_sha_verified_while_lock_held": True,
+        "reused_existing_exact_checkpoint": reused_existing,
+        "passed": local_sha == persistent_sha and persistent_sidecars["passed"],
     }
     if not report["passed"]:
         raise SystemExit("persistent checkpoint copy SHA mismatch")
     return report
+
+
+def validate_final_persistence_paths(local_path, persistent_dir, lock_path) -> dict:
+    local_path = Path(local_path).resolve()
+    persistent_dir = Path(persistent_dir).resolve()
+    lock_path = Path(lock_path).resolve()
+    checks = {
+        "local_checkpoint_is_ephemeral": is_relative_to(local_path, EPHEMERAL_ROOT),
+        "persistent_directory_is_workspace": is_relative_to(
+            persistent_dir, PERSISTENT_ROOT
+        ),
+        "persistent_directory_not_ephemeral": not is_relative_to(
+            persistent_dir, EPHEMERAL_ROOT
+        ),
+        "shared_lock_exact": lock_path == CHECKPOINT_PERSIST_LOCK.resolve(),
+    }
+    return {
+        "local_checkpoint": str(local_path),
+        "persistent_directory": str(persistent_dir),
+        "lock_path": str(lock_path),
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
+def require_ephemeral_checkpoint_dir(path: Path | str) -> Path:
+    path = Path(path).resolve()
+    if not is_relative_to(path, EPHEMERAL_ROOT):
+        raise SystemExit(
+            f"disposable/update checkpoints must be under node-local {EPHEMERAL_ROOT}"
+        )
+    path.mkdir(parents=True, exist_ok=True)
+    return path
 
 
 def training_metadata(args, stage, accumulation):
@@ -842,6 +1089,7 @@ def initialize_stage_a(args, device):
         restore_rng_state(payload["rng_state"])
         completed = 0
         metadata = training_metadata(args, "a", accumulation)
+        metadata["immutable_source_checkpoint_sha256"] = SOURCE_SHA256
         saved_pid = None
         del source_loader
     return model, optimizer, loader, completed, accumulation, metadata, saved_pid
@@ -866,7 +1114,9 @@ def initialize_stage_b(args, device):
             raise SystemExit("Stage B requires exact final Stage A checkpoint")
         if payload["next_global_batch_sha256"] != STAGE_A_FINAL_BATCH:
             raise SystemExit("Stage A final is not at matched Stage B cursor")
-        model, optimizer, _ = transplant_stage_a_to_b(stage_a, stage_a_optimizer, device)
+        model, optimizer, transplant = transplant_stage_a_to_b(
+            stage_a, stage_a_optimizer, device
+        )
         micro_batch = int(args.micro_batch or payload["loader_state"]["batch_size"])
         if GLOBAL_TARGETS % (micro_batch * T):
             raise SystemExit("microbatch does not divide logical global batch")
@@ -877,6 +1127,19 @@ def initialize_stage_b(args, device):
         restore_rng_state(payload["rng_state"])
         completed = 0
         metadata = training_metadata(args, "b", accumulation)
+        metadata["immutable_stage_a_checkpoint_sha256"] = file_sha256(
+            args.stage_a_checkpoint
+        )
+        metadata["stage_a_completed_local_updates"] = int(
+            payload["completed_local_updates"]
+        )
+        metadata["stage_a_next_global_batch_sha256"] = payload[
+            "next_global_batch_sha256"
+        ]
+        metadata["stage_a_next_global_batch_stream_sha256"] = payload[
+            "next_global_batch_stream_sha256"
+        ]
+        metadata["optimizer_transplant_checks"] = transplant
         saved_pid = None
         del stage_a, stage_a_optimizer, stage_a_loader
     return model, optimizer, loader, completed, accumulation, metadata, saved_pid
@@ -896,27 +1159,64 @@ def run_train_stage(args, stage):
         smoke = read_json(output / "smoke_audit.json")
         if not smoke.get("passed"):
             raise SystemExit("Stage B training requires passing disposable smoke")
-    checkpoint_dir = Path(args.checkpoint_dir).resolve()
-    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+    checkpoint_dir = require_ephemeral_checkpoint_dir(args.checkpoint_dir)
     if stage == "a":
         runtime = initialize_stage_a(args, device)
     else:
         runtime = initialize_stage_b(args, device)
     model, optimizer, loader, completed, accumulation, metadata, saved_pid = runtime
+    if stage == "b":
+        smoke = read_json(output / "smoke_audit.json")
+        stage_a_sha = metadata.get("immutable_stage_a_checkpoint_sha256")
+        if smoke.get("immutable_stage_a_sha256") != stage_a_sha:
+            raise SystemExit("Stage B smoke and scientific Stage A checkpoint differ")
+        transition_checks = {
+            "stage_a_update_191": metadata.get("stage_a_completed_local_updates")
+            == UPDATES_PER_STAGE,
+            "stage_a_batch_cursor": metadata.get("stage_a_next_global_batch_sha256")
+            == STAGE_A_FINAL_BATCH,
+            "stage_a_stream_cursor": metadata.get(
+                "stage_a_next_global_batch_stream_sha256"
+            )
+            == STAGE_A_FINAL_STREAM,
+            "optimizer_transplant": all(
+                metadata.get("optimizer_transplant_checks", {}).values()
+            ),
+            "smoke_same_stage_a_sha": smoke.get("immutable_stage_a_sha256")
+            == stage_a_sha,
+        }
+        transition = {
+            "immutable_stage_a_checkpoint_sha256": stage_a_sha,
+            "checks": transition_checks,
+            "passed": all(transition_checks.values()),
+        }
+        durable_json(output / "stage_b_transition_audit.json", transition)
+        if not transition["passed"]:
+            raise SystemExit(f"Stage B transition audit failed: {transition}")
     require_segment_boundary(completed, int(args.end_update), saved_pid)
     if completed == 96:
-        durable_json(
-            output / f"stage_{stage}_forced_restart_update_96.json",
-            {
+        restart = {
                 "checkpoint_process_id": saved_pid,
                 "resumed_process_id": os.getpid(),
                 "fresh_process": saved_pid != os.getpid(),
                 "next_global_batch_sha256": next_global_batch_hash(loader, accumulation),
                 "expected_next_global_batch_sha256": expected_cursor(stage, 96)[0],
+                "next_global_batch_stream_sha256": global_batch_stream_hash(
+                    loader, accumulation
+                ),
+                "expected_next_global_batch_stream_sha256": expected_cursor(stage, 96)[1],
                 "passed": saved_pid != os.getpid()
-                and next_global_batch_hash(loader, accumulation) == expected_cursor(stage, 96)[0],
-            },
+                and next_global_batch_hash(loader, accumulation)
+                == expected_cursor(stage, 96)[0]
+                and global_batch_stream_hash(loader, accumulation)
+                == expected_cursor(stage, 96)[1],
+            }
+        durable_json(
+            output / f"stage_{stage}_forced_restart_update_96.json",
+            restart,
         )
+        if not restart["passed"]:
+            raise SystemExit(f"Stage {stage.upper()} forced-restart audit failed")
     metrics_path = output / f"stage_{stage}_training_metrics.jsonl"
     if completed == 0:
         durable_text(metrics_path, "")
@@ -997,6 +1297,8 @@ def run_train_stage(args, stage):
     }
     if stage == "b":
         match["pending_stage_a"] = False
+    if final_update == UPDATES_PER_STAGE:
+        match["passed"] = match[f"update_{final_update}"]["exact"]
     durable_json(match_path, match)
     write_heartbeat(output, stage, final_update, row, verification["checkpoint"])
     runtime_path = output / "commands_and_runtime.json"
@@ -1063,6 +1365,7 @@ def run_preflight(args):
             b1_gate_override=0.0,
             b3_gate_override=0.0,
         )
+    causality = b3_causality_audit(stage_b, short.size(1), device)
     val = validation_path(args.data_root)
     data = {
         "training_shards": [str(path.resolve()) for path in training_shards(args.data_root)],
@@ -1071,6 +1374,7 @@ def run_preflight(args):
     }
     checks = {
         "source": all(source["checks"].values()),
+        "source_sidecars": source["sidecar_audit"]["passed"],
         "stage_a_parameters": sum(p.numel() for p in source_model.parameters()) == STAGE_A_PARAMETERS,
         "stage_b_parameters": sum(p.numel() for p in stage_b.parameters()) == STAGE_B_PARAMETERS,
         "transplant": all(transplant.values()),
@@ -1078,6 +1382,7 @@ def run_preflight(args):
         "no_b11_gate": not hasattr(stage_b, "g_rec_b2"),
         "no_b11_ring": not hasattr(cache["state"], "h11_ring"),
         "cache": cache["cache_audit"]["passed"],
+        "causality": causality["passed"],
         "data": bool(data["training_shards"]),
     }
     audit = {
@@ -1088,6 +1393,7 @@ def run_preflight(args):
         "stage_a_architecture": stage_architecture("a"),
         "stage_b_architecture": stage_architecture("b"),
         "transplant": transplant,
+        "causality": causality,
         "data": data,
         "config": config,
         "implementation_fingerprint": implementation_fingerprint(),
@@ -1109,7 +1415,8 @@ def run_preflight(args):
     })
     durable_json(output / "stage_a_data_match.json", {
         "reference": "2D2D", "source_batch": SOURCE_NEXT_BATCH,
-        "source_stream": SOURCE_NEXT_STREAM, "passed": source["checks"]["next_batch"]
+        "source_stream": SOURCE_NEXT_STREAM,
+        "passed": source["checks"]["next_batch"] and source["checks"]["next_stream"]
     })
     durable_json(output / "stage_b_data_match.json", {
         "reference": "2D2E", "expected_start_batch": STAGE_A_FINAL_BATCH,
@@ -1126,12 +1433,125 @@ def run_preflight(args):
     return audit
 
 
+def b3_causality_audit(model, length: int, device: torch.device) -> dict:
+    length = int(length)
+    recurrent = model.b3_recurrent_mask(length, length, device)
+    local = model.b3_local_mask(length, device)
+    query = torch.arange(length, device=device).view(length, 1)
+    source = torch.arange(length, device=device).view(1, length)
+    lag = query - source
+    expected_recurrent = (lag >= B3_RECURRENT_MIN_LAG) & (
+        lag <= RECURRENT_MAX_LAG
+    )
+    expected_local = (lag >= 0) & (lag < B3_LOCAL_WINDOW)
+    union_expected = (lag >= 0) & (lag <= RECURRENT_MAX_LAG)
+    selected_lags = lag[recurrent]
+    checks = {
+        "recurrent_mask_exact": torch.equal(recurrent, expected_recurrent),
+        "local_mask_exact": torch.equal(local, expected_local),
+        "no_native_local_overlap": not bool((recurrent & local).any()),
+        "no_future_access": not bool((recurrent & source.gt(query)).any()),
+        "minimum_lag_64": bool(selected_lags.numel())
+        and int(selected_lags.min().item()) == B3_RECURRENT_MIN_LAG,
+        "maximum_lag_at_most_1023": not bool(
+            (selected_lags > RECURRENT_MAX_LAG).any()
+        ),
+        "full_nonoverlapping_temporal_coverage": torch.equal(
+            recurrent | local, union_expected
+        ),
+    }
+    return {
+        "length": length,
+        "eligibility": "max(0,t-1023) <= j <= t-64",
+        "selected_entries": int(recurrent.sum().item()),
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
+@torch.no_grad()
+def future_leakage_audit(model, tokens: torch.Tensor) -> dict:
+    model.eval()
+    reference = model.forward_multi_pass(tokens, num_passes=2)["logits"]
+    future = tokens.clone()
+    future[0, -1] = (future[0, -1] + 1) % int(model.config.vocab_size)
+    future_result = model.forward_multi_pass(future, num_passes=2)["logits"]
+    other_row = tokens.clone()
+    other_row[1] = (other_row[1] + 3) % int(model.config.vocab_size)
+    other_row_result = model.forward_multi_pass(other_row, num_passes=2)["logits"]
+    checks = {
+        "future_token_cannot_change_past_logits": torch.equal(
+            reference[0, :-1], future_result[0, :-1]
+        ),
+        "other_row_cannot_change_reference_row": torch.equal(
+            reference[0], other_row_result[0]
+        ),
+    }
+    return {"checks": checks, "passed": all(checks.values())}
+
+
+def b3_writer_gradient_audit(model, x: torch.Tensor, y: torch.Tensor) -> dict:
+    model.train()
+    first = model.forward_pass(x, targets=y)
+    source = first["h10"]
+    second = model.forward_pass(
+        x,
+        targets=y,
+        b1_recurrent_source=first["h12"].detach(),
+        b3_recurrent_source=source,
+    )
+    gradient = torch.autograd.grad(second["loss"], source, retain_graph=False)[0]
+    gradient = gradient.detach().float()
+    length = gradient.size(1)
+    eligible_end = max(0, length - B3_RECURRENT_MIN_LAG)
+    eligible = gradient[:, :eligible_end]
+    forbidden = gradient[:, eligible_end:]
+    by_lag = {}
+    for name, low, high in B3_RECURRENT_LAG_BINS:
+        start = max(0, length - high - 1)
+        end = max(0, length - low)
+        values = gradient[:, start:end]
+        rms = values.square().mean(-1).sqrt() if values.numel() else gradient.new_zeros((0,))
+        by_lag[name] = {
+            "source_position_interval": [start, end],
+            "mean_gradient_rms": rms.mean().item() if rms.numel() else 0.0,
+            "max_gradient_rms": rms.max().item() if rms.numel() else 0.0,
+            "fraction_nonzero": (rms > 0).float().mean().item() if rms.numel() else 0.0,
+            "finite": bool(torch.isfinite(rms).all()),
+        }
+    gate = model.recurrent_scale_b3.detach().float().item()
+    checks = {
+        "gate_open": gate != 0.0,
+        "gradient_finite": bool(torch.isfinite(gradient).all()),
+        "eligible_writer_gradient_nonzero": bool(eligible.count_nonzero())
+        if eligible.numel()
+        else False,
+        "ineligible_last_64_exact_zero": not bool(forbidden.count_nonzero()),
+        "all_lag_bins_nonzero": all(
+            row["fraction_nonzero"] > 0 for row in by_lag.values()
+        ),
+    }
+    return {
+        "source": "B10 post-MLP residual before B11",
+        "b1_source_detached_for_b3_path_isolation": True,
+        "actual_tanh_g_rec_b3": gate,
+        "eligible_source_positions": [0, eligible_end],
+        "ineligible_source_positions": [eligible_end, length],
+        "lag_bins": by_lag,
+        "checks": checks,
+        "attached": checks["eligible_writer_gradient_nonzero"],
+        "passed": all(checks.values()),
+    }
+
+
 def run_smoke_b(args):
+    started = time.monotonic()
     require_git(clean=False)
     require_config()
     device = require_assigned_a100()
     output = Path(args.output_dir).resolve()
     require_fingerprint(output)
+    checkpoint_dir = require_ephemeral_checkpoint_dir(args.checkpoint_dir)
     stage_a, stage_a_optimizer, _, payload = load_stage_a_checkpoint(
         args.stage_a_checkpoint, device, restore_rng=False
     )
@@ -1156,34 +1576,177 @@ def run_smoke_b(args):
         },
     )
     restore_rng_state(saved_rng)
-    loader = loader_at_cursor(payload["loader_state"], 2)
+    smoke_micro_batch = int(args.micro_batch or payload["loader_state"]["batch_size"])
+    if GLOBAL_TARGETS % (smoke_micro_batch * T):
+        raise SystemExit("smoke microbatch does not divide logical global batch")
+    smoke_accumulation = GLOBAL_TARGETS // (smoke_micro_batch * T)
+    loader = loader_at_cursor(payload["loader_state"], smoke_micro_batch)
     restore_rng_state(payload["rng_state"])
     rows = []
-    for update in range(1, 4):
+    for update in range(1, SMOKE_UPDATES + 1):
         before = model.g_rec_b3.detach().float().item()
-        row = train_update(model, optimizer, loader, 1, "b", update, device)
+        row = train_update(
+            model, optimizer, loader, smoke_accumulation, "b", update, device
+        )
         after = model.g_rec_b3.detach().float().item()
         rows.append({**row, "g_rec_b3_before": before, "g_rec_b3_after": after})
-    cache_x, _ = loader.clone().next_batch()
+    cache_x, cache_y = loader.clone().next_batch()
     cache = model.incremental_logits(cache_x[:, :72].to(device), control="real")["cache_audit"]
+
+    audit_x = cache_x[:2].to(device)
+    audit_y = cache_y[:2].to(device)
+    causality = b3_causality_audit(model, audit_x.size(1), device)
+    leakage = future_leakage_audit(model, audit_x[:, :72])
+    writer = b3_writer_gradient_audit(model, audit_x, audit_y)
+
+    smoke_checkpoint = checkpoint_dir / (
+        f"stage_b_disposable_smoke_update_{SMOKE_UPDATES:04d}_pid_{os.getpid()}.pt"
+    )
+    smoke_metadata = training_metadata(args, "b", smoke_accumulation)
+    smoke_metadata.update(
+        {
+            "disposable_smoke": True,
+            "immutable_stage_a_sha256": source_sha_before,
+        }
+    )
+    checkpoint_verification = save_checkpoint(
+        smoke_checkpoint,
+        "b",
+        model,
+        optimizer,
+        loader,
+        SMOKE_UPDATES,
+        smoke_accumulation,
+        smoke_metadata,
+    )
+    reopened_model, reopened_optimizer, reopened_loader, reopened_payload = (
+        load_stage_b_checkpoint(smoke_checkpoint, device, restore_rng=True)
+    )
+    reload_checks = {
+        "strict_reopen": checkpoint_verification["strict_reopen"]["passed"],
+        "completed_updates": reopened_payload["completed_local_updates"] == SMOKE_UPDATES,
+        "next_batch": next_global_batch_hash(reopened_loader, smoke_accumulation)
+        == checkpoint_verification["next_global_batch_sha256"],
+        "next_stream": global_batch_stream_hash(reopened_loader, smoke_accumulation)
+        == checkpoint_verification["next_global_batch_stream_sha256"],
+        "model_finite": model_finite(reopened_model),
+        "optimizer_finite": optimizer_finite(reopened_optimizer),
+        "gate_exact": torch.equal(reopened_model.g_rec_b3, model.g_rec_b3),
+    }
+    checkpoint_reload = {
+        "checkpoint": checkpoint_verification,
+        "checks": reload_checks,
+        "passed": all(reload_checks.values()),
+    }
+    del reopened_model, reopened_optimizer, reopened_loader, reopened_payload
+    gc.collect()
+    torch.cuda.empty_cache()
+
+    disposable_paths = [
+        smoke_checkpoint,
+        smoke_checkpoint.with_suffix(smoke_checkpoint.suffix + ".sha256"),
+        smoke_checkpoint.with_suffix(smoke_checkpoint.suffix + ".verification.json"),
+    ]
+    cleanup_actions = []
+    for path in disposable_paths:
+        existed = path.is_file()
+        size = path.stat().st_size if existed else 0
+        if existed:
+            path.unlink()
+        cleanup_actions.append(
+            {
+                "path": str(path),
+                "bytes": size,
+                "kind": "disposable_smoke_checkpoint_or_sidecar",
+                "removed": existed and not path.exists(),
+            }
+        )
+    record_cleanup(output, cleanup_actions)
+
+    clean_stage_a, clean_stage_a_optimizer, clean_loader, clean_payload = (
+        load_stage_a_checkpoint(args.stage_a_checkpoint, device, restore_rng=False)
+    )
+    clean_stage_b, clean_stage_b_optimizer, clean_transplant = transplant_stage_a_to_b(
+        clean_stage_a, clean_stage_a_optimizer, device
+    )
+    clean_reload_checks = {
+        "immutable_stage_a_sha_unchanged": file_sha256(args.stage_a_checkpoint)
+        == source_sha_before,
+        "stage_a_final_update": clean_payload["completed_local_updates"]
+        == UPDATES_PER_STAGE,
+        "stage_a_final_batch": next_global_batch_hash(
+            clean_loader, clean_payload["gradient_accumulation"]
+        )
+        == STAGE_A_FINAL_BATCH,
+        "stage_a_final_stream": global_batch_stream_hash(
+            clean_loader, clean_payload["gradient_accumulation"]
+        )
+        == STAGE_A_FINAL_STREAM,
+        "fresh_b3_gate_zero": clean_stage_b.g_rec_b3.detach().float().item() == 0.0,
+        "fresh_b3_optimizer_state_absent": clean_stage_b.g_rec_b3
+        not in clean_stage_b_optimizer.state,
+        "transplant_exact": all(clean_transplant.values()),
+    }
+    clean_reload = {"checks": clean_reload_checks, "passed": all(clean_reload_checks.values())}
     checks = {
-        "three_updates": len(rows) == 3,
+        "three_updates": len(rows) == SMOKE_UPDATES,
         "finite": all(math.isfinite(row["pass_losses"][-1]) for row in rows),
+        "finite_gradients": all(
+            all(group["finite"] for group in row["gradient_groups"].values())
+            for row in rows
+        ),
         "gate_changed": rows[0]["g_rec_b3_after"] != rows[0]["g_rec_b3_before"],
         "b3_gradient": rows[0]["gradient_groups"]["b3_gate"]["nonzero"],
+        "writer_gradient_after_gate_open": writer["passed"],
+        "causality": causality["passed"],
+        "no_future_leakage": leakage["passed"],
         "cache": cache["passed"] and cache["has_b11_ring"] is False,
         "source_untouched": file_sha256(args.stage_a_checkpoint) == source_sha_before,
         "transplant": all(transplant.values()),
+        "checkpoint_reload": checkpoint_reload["passed"],
+        "disposable_checkpoint_removed": all(
+            row["removed"] for row in cleanup_actions
+        ),
+        "exact_source_reloaded_for_science": clean_reload["passed"],
     }
     audit = {
         "kind": "three disposable Stage B updates",
+        "immutable_stage_a_checkpoint": str(Path(args.stage_a_checkpoint).resolve()),
+        "immutable_stage_a_sha256": source_sha_before,
+        "micro_batch": smoke_micro_batch,
+        "gradient_accumulation": smoke_accumulation,
+        "targets_per_disposable_update": GLOBAL_TARGETS,
         "rows": rows,
         "incremental_cache_audit": cache,
+        "causality_audit": causality,
+        "future_leakage_audit": leakage,
+        "post_open_writer_gradient_audit": writer,
+        "disposable_checkpoint_reload_audit": checkpoint_reload,
+        "science_source_reload_audit": clean_reload,
+        "cleanup_actions": cleanup_actions,
         "checks": checks,
         "passed": all(checks.values()),
         "disposition": "discarded; scientific Stage B reloads exact Stage A final",
     }
+    durable_json(output / "causality_audit.json", {
+        "mask": causality,
+        "future_leakage": leakage,
+        "passed": causality["passed"] and leakage["passed"],
+    })
     durable_json(output / "smoke_audit.json", audit)
+    append_command_runtime(
+        output,
+        {
+            "command": " ".join(sys.argv),
+            "kind": "disposable_stage_b_smoke",
+            "pid": os.getpid(),
+            "wall_seconds": time.monotonic() - started,
+        },
+    )
+    del clean_stage_a, clean_stage_a_optimizer, clean_loader, clean_payload
+    del clean_stage_b, clean_stage_b_optimizer
+    gc.collect()
+    torch.cuda.empty_cache()
     if not audit["passed"]:
         raise SystemExit(f"2D2G smoke failed: {checks}")
     print("EXPERIMENT_2D2G_STAGE_B_SMOKE_PASS", flush=True)
@@ -1432,33 +1995,11 @@ def attention_diagnostics(model, val_path) -> dict:
 
 
 def temporal_gradient_diagnostics(model, val_path) -> dict:
-    model.train()
     device = next(model.parameters()).device
     loader = d1.ExplicitShardLoader([val_path], 2, T)
     x, y = loader.next_batch()
     x, y = x.to(device), y.to(device)
-    first = model.forward_pass(x, targets=y)
-    source = first["h10"]
-    second = model.forward_pass(
-        x,
-        targets=y,
-        b1_recurrent_source=first["h12"],
-        b3_recurrent_source=source,
-        b3_gate_override=max(abs(model.recurrent_scale_b3.detach().item()), 0.05),
-    )
-    gradient = torch.autograd.grad(second["loss"], source)[0].detach().float().cpu()
-    by_lag = {}
-    for name, low, high in B3_RECURRENT_LAG_BINS:
-        end = T - low
-        start = max(0, T - high - 1)
-        values = gradient[:, start:end]
-        rms = values.square().mean(-1).sqrt()
-        by_lag[name] = {
-            "mean_gradient_rms": rms.mean().item(),
-            "max_gradient_rms": rms.max().item(),
-            "fraction_nonzero": (rms > 0).float().mean().item(),
-        }
-    return {"lag_bins": by_lag, "source": "B10 post-MLP residual", "attached": True}
+    return b3_writer_gradient_audit(model, x, y)
 
 
 @torch.no_grad()
@@ -1569,6 +2110,7 @@ def render_report(summary, audit) -> str:
 
 
 def run_finalize(args):
+    started = time.monotonic()
     require_git(clean=False)
     require_config()
     device = require_assigned_a100()
@@ -1579,6 +2121,12 @@ def run_finalize(args):
         args.stage_b_checkpoint
     ):
         raise SystemExit("finalize requires SHA-verified persistent final checkpoint")
+    persistent_checkpoint = Path(persisted["persistent"]).resolve()
+    persistent_sidecars = checkpoint_sidecar_audit(
+        persistent_checkpoint, persisted["local_sha256"]
+    )
+    if not persistent_sidecars["passed"]:
+        raise SystemExit("finalize persistent checkpoint re-verification failed")
     model, optimizer, _, payload = load_stage_b_checkpoint(
         args.stage_b_checkpoint, device, restore_rng=False
     )
@@ -1597,6 +2145,15 @@ def run_finalize(args):
     memory = memory_accounting()
     classification = classify_result(incremental, stability["passed"], True)
     cache = incremental["controls"]["real"]["cache_rows"][-1]
+    stage_a_match = read_json(output / "stage_a_data_match.json")
+    stage_b_match = read_json(output / "stage_b_data_match.json")
+    smoke = read_json(output / "smoke_audit.json")
+    causality = read_json(output / "causality_audit.json")
+    transition = read_json(output / "stage_b_transition_audit.json")
+    restart_a = read_json(output / "stage_a_forced_restart_update_96.json")
+    restart_b = read_json(output / "stage_b_forced_restart_update_96.json")
+    checkpoint_manifest = read_json(output / "checkpoint_manifest.json")
+    milestones = read_json(output / "milestone_validation.json")
     checks = {
         "final_checkpoint_update_191": payload["completed_local_updates"] == 191,
         "final_cursor_matched_2d2e": (
@@ -1609,7 +2166,25 @@ def run_finalize(args):
         "paired_sequences": incremental["paired_sequences"] == 256,
         "cache_audit": cache["passed"],
         "stability": stability["passed"],
-        "writer_gradient": temporal["attached"],
+        "writer_gradient": temporal["passed"],
+        "causality": causality["passed"],
+        "disposable_smoke": smoke["passed"],
+        "stage_a_data_match": stage_a_match.get("passed") is True,
+        "stage_b_data_match": stage_b_match.get("passed") is True,
+        "stage_b_transition": transition["passed"],
+        "stage_a_fresh_process_update_96": restart_a["passed"],
+        "stage_b_fresh_process_update_96": restart_b["passed"],
+        "all_milestones": all(str(update) in milestones for update in MILESTONES),
+        "stage_a_checkpoints": all(
+            key in checkpoint_manifest["stage_a"] for key in ("96", "191")
+        ),
+        "stage_b_checkpoints": all(
+            key in checkpoint_manifest["stage_b"]
+            for key in ("96", "191", "191_persistent")
+        ),
+        "persistent_checkpoint_reverified": persistent_sidecars["passed"],
+        "persistent_sha_matches_local": persisted["persistent_sha256"]
+        == file_sha256(args.stage_b_checkpoint),
         "model_finite": model_finite(model),
         "optimizer_finite": optimizer_finite(optimizer),
     }
@@ -1617,7 +2192,11 @@ def run_finalize(args):
     summary = {
         "experiment": EXPERIMENT,
         "primary_classification": classification,
-        "source_checkpoint": str(Path(args.stage_b_checkpoint).resolve()),
+        "source_2d2b_checkpoint": read_json(output / "source_manifest.json")[
+            "checkpoint"
+        ],
+        "local_final_checkpoint": str(Path(args.stage_b_checkpoint).resolve()),
+        "final_checkpoint": str(persistent_checkpoint),
         "final_checkpoint_sha256": file_sha256(args.stage_b_checkpoint),
         "parameters": STAGE_B_PARAMETERS,
         "architecture": stage_architecture("b"),
@@ -1647,39 +2226,85 @@ def run_finalize(args):
             "real_vs_shuffled": incremental["real_vs_shuffled_sequences"],
         },
     })
-    durable_json(output / "gate_diagnostics.json", summary["final_gates"])
+    gate_trajectory = read_json(output / "gate_diagnostics.json")
+    gate_trajectory["final"] = summary["final_gates"]
+    durable_json(output / "gate_diagnostics.json", gate_trajectory)
     durable_json(output / "attention_diagnostics.json", attention)
     durable_json(output / "temporal_gradient_diagnostics.json", temporal)
     durable_json(output / "incremental_validation.json", incremental)
     durable_json(output / "incremental_cache_audit.json", cache)
     durable_json(output / "memory_accounting.json", memory)
     durable_json(output / "stability_8pass.json", stability)
+    command_runtime = read_json(output / "commands_and_runtime.json")
+    training_wall_seconds = sum(
+        float(row.get("wall_seconds", 0.0))
+        for row in command_runtime.get("commands", [])
+        if row.get("kind") != "preflight"
+    )
+    finalize_wall_seconds = time.monotonic() - started
     durable_json(output / "performance.json", {
         "incremental": incremental["performance"],
         "stage_a_metrics": str(output / "stage_a_training_metrics.jsonl"),
         "stage_b_metrics": str(output / "stage_b_training_metrics.jsonl"),
+        "recorded_pre_finalize_wall_seconds": training_wall_seconds,
+        "finalization_wall_seconds": finalize_wall_seconds,
+        "recorded_lane_gpu_hours": (training_wall_seconds + finalize_wall_seconds) / 3600.0,
     })
     durable_json(output / "result_summary.json", summary)
+    append_command_runtime(
+        output,
+        {
+            "command": " ".join(sys.argv),
+            "kind": "finalize",
+            "pid": os.getpid(),
+            "wall_seconds": finalize_wall_seconds,
+        },
+    )
     durable_json(output / "FINAL_AUDIT.json", audit)
     durable_text(output / "FINAL_REPORT.md", render_report(summary, audit))
     durable_text(output / "UNATTENDED_FINAL_HANDOFF.md", render_report(summary, audit))
     durable_json(output / "HEARTBEAT.json", {
-        "experiment": EXPERIMENT, "phase": "FINALIZED_PENDING_PERSIST_AND_GIT",
+        "experiment": EXPERIMENT, "phase": "FINALIZED_PENDING_GIT",
         "timestamp": time.time(), "pid": os.getpid()
     })
+    inventory = required_artifact_inventory(output)
+    checks["required_artifacts"] = inventory["passed"]
+    audit["checks"] = checks
+    audit["passed"] = all(checks.values())
+    durable_json(output / "artifact_inventory.json", inventory)
+    durable_json(output / "FINAL_AUDIT.json", audit)
+    durable_text(output / "FINAL_REPORT.md", render_report(summary, audit))
+    durable_text(output / "UNATTENDED_FINAL_HANDOFF.md", render_report(summary, audit))
     if not audit["passed"]:
         raise SystemExit(f"2D2G final audit failed: {checks}")
-    print("EXPERIMENT_2D2G_FINALIZED_PENDING_PERSIST_AND_GIT", flush=True)
+    print("EXPERIMENT_2D2G_FINALIZED_PENDING_GIT", flush=True)
     return summary
 
 
 def run_persist_final(args):
+    started = time.monotonic()
+    paths = validate_final_persistence_paths(
+        args.local_checkpoint, args.persistent_dir, args.lock_path
+    )
+    if not paths["passed"]:
+        raise SystemExit(f"invalid local-to-persistent checkpoint paths: {paths}")
     report = persist_checkpoint(args.local_checkpoint, args.persistent_dir, args.lock_path)
+    report["path_audit"] = paths
     output = Path(args.output_dir).resolve()
     durable_json(output / "persistent_final_checkpoint.json", report)
     manifest = read_json(output / "checkpoint_manifest.json")
     manifest["stage_b"]["191_persistent"] = report
     durable_json(output / "checkpoint_manifest.json", manifest)
+    append_command_runtime(
+        output,
+        {
+            "command": " ".join(sys.argv),
+            "kind": "persist_final_checkpoint",
+            "pid": os.getpid(),
+            "wall_seconds": time.monotonic() - started,
+            "lock": str(CHECKPOINT_PERSIST_LOCK),
+        },
+    )
     print("EXPERIMENT_2D2G_FINAL_CHECKPOINT_PERSISTED", flush=True)
     return report
 
@@ -1703,6 +2328,8 @@ def build_parser():
     add_common(smoke)
     smoke.add_argument("--stage-a-checkpoint", required=True)
     smoke.add_argument("--data-root", required=True)
+    smoke.add_argument("--checkpoint-dir", required=True)
+    smoke.add_argument("--micro-batch", type=int)
     smoke.set_defaults(function=run_smoke_b)
 
     train_a = sub.add_parser("train-a")
