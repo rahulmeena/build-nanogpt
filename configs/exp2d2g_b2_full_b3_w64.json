@@ -1,0 +1,105 @@
+{
+  "experiment": "2D2G",
+  "protocol": "master_parallel_2d2g_b2_full_b3_w64_v1",
+  "branch": "experiment-2d2g-b2-full-b3-w64",
+  "hardware": {
+    "assigned_cuda_device": 1,
+    "visible_device_count": 1,
+    "physical_gpu_count": 4,
+    "gpu_type": "NVIDIA A100-SXM4-80GB",
+    "ddp": false,
+    "nccl_multi_rank": false
+  },
+  "source_2d2b": {
+    "checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
+    "sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+    "frozen_commit": "976b92927e698afd27d68eabc78db5a0b6714fef",
+    "next_global_batch_sha256": "e1d96ca0106f21badeb0004025e80abc562509fb6299a63eb8662a3da3c17a52",
+    "next_global_batch_stream_sha256": "fc01029471dfe8674e900dd3d1e20a34e235853d44c68ede1b67f5b1a61e44f0"
+  },
+  "stage_a": {
+    "architecture": {
+      "b1_local_window": 2,
+      "b12_to_b1_recurrence": true,
+      "b2_local_window": 1024,
+      "b11_to_b2_recurrence": false,
+      "b3_b12_local_window": 1024,
+      "parameters": 124475905
+    },
+    "updates": 191,
+    "targets": 100139008,
+    "matched_reference": "2D2D training data segment",
+    "update_96_next_global_batch_sha256": "313c1cd86d1924914e395df1bddf98fcb9ab351592c014b3b1357ecbbab33c97",
+    "update_96_next_global_batch_stream_sha256": "6a870df86881ba3def08dbbe7bbb5554b959780d788d509c578558b52dd19f31",
+    "final_next_global_batch_sha256": "39808d08e7e15e9f160e32ba838fd28839067827095b023d4f475b30df392086",
+    "final_next_global_batch_stream_sha256": "110e232ab330611a8d23cddc6e914c8a2d912fd8191873ae67488b0d52f48daa",
+    "mandatory_fresh_process_restart_update": 96
+  },
+  "stage_b": {
+    "architecture": {
+      "b1_local_window": 2,
+      "b12_to_b1_recurrence": true,
+      "b2_local_window": 1024,
+      "b11_to_b2_recurrence": false,
+      "b3_local_window": 64,
+      "b10_to_b3_recurrence": true,
+      "b3_recurrent_min_lag": 64,
+      "b3_recurrent_max_lag": 1023,
+      "b3_max_recurrent_entries": 960,
+      "new_parameters": ["g_rec_b3"],
+      "parameters": 124475906,
+      "b11_raw_ring_present": false
+    },
+    "updates": 191,
+    "targets": 100139008,
+    "matched_reference": "2D2E training data segment",
+    "update_96_next_global_batch_sha256": "1fce24bac89d50b68868e689d246ea08e784d738db29bb68c5166d0339347109",
+    "update_96_next_global_batch_stream_sha256": "8dfb91e0d6022f092a67045540ce5bb9e90d9554a4d8610afa123251ff7f8703",
+    "final_next_global_batch_sha256": "91fa2cae4e6e52cfddd2b470175ec704f0548b447f02861917ec548736fe18e7",
+    "final_next_global_batch_stream_sha256": "4da6fed71755e523030a2d8e9e7cc96d19691a8c9b3ac8c490426bafe3d44e82",
+    "mandatory_fresh_process_restart_update": 96,
+    "smoke_updates": 3,
+    "milestones": [0, 20, 48, 96, 143, 191],
+    "incremental_targets_per_control": 262144,
+    "incremental_paired_sequences": 256
+  },
+  "training": {
+    "targets_per_update": 524288,
+    "sequence_length": 1024,
+    "two_pass_weights": [0.25, 0.75],
+    "three_pass_weights": [0.2, 0.4, 0.4],
+    "three_pass_every_local_updates": 32,
+    "base_lr": 0.00003,
+    "gate_lr": 0.0003,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8,
+    "base_weight_decay": 0.1,
+    "gate_weight_decay": 0.0,
+    "gradient_clip": 1.0,
+    "objective": "next-token cross entropy only",
+    "all_parameters_trainable": true,
+    "recurrent_sources_detached": false
+  },
+  "stage_b_controls": [
+    "real",
+    "b3_off",
+    "b3_shuffled",
+    "b3_full_counterfactual"
+  ],
+  "classification": {
+    "positive_requires_gain_gt_zero": true,
+    "positive_requires_sequence_gap_gt_zero": true,
+    "positive_requires_wins_vs_off": 129,
+    "positive_requires_wins_vs_shuffled": 129,
+    "strong_gain_threshold": 0.001,
+    "strong_requires_wins_each": 166
+  },
+  "checkpoint_policy": {
+    "stage_a_update_96": "ephemeral",
+    "stage_a_final": "ephemeral_until_stage_b_sealed",
+    "stage_b_update_96": "ephemeral",
+    "stage_b_final": "persistent_after_checkpoint_lock",
+    "rotating_recovery_per_lane": 1,
+    "serialize_persistent_final_with": "/workspace/parallel_2d2_master/locks/checkpoint_persist.lock"
+  }
+}
