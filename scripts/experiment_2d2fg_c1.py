@@ -478,7 +478,7 @@ def cache_limits(label: str) -> dict:
 def validate_cache_audit(label: str, audit: dict) -> bool:
     limits = cache_limits(label)
     lengths = audit.get("cache_lengths")
-    if not isinstance(lengths, list) or len(lengths) != 12:
+    if not isinstance(lengths, (list, tuple)) or len(lengths) != 12:
         return False
     expected = [limits["b1"], limits["b2"], limits["b3"]] + [limits["b4_b12"]] * 9
     if any(int(value) > cap for value, cap in zip(lengths, expected)):

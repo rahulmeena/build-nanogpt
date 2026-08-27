@@ -46,6 +46,17 @@ class FrozenHeadToHeadTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             exp.unpack_incremental_step((logits,))
 
+    def test_live_cache_audit_accepts_tuple_lengths(self):
+        audit = {
+            "cache_lengths": (1, 31, 63) + (1023,) * 9,
+            "h10_ring_length": 1023,
+            "h12_ring_length": 1023,
+            "b11_recurrent_ring_present": False,
+            "physical_storage_exact": True,
+            "passed": True,
+        }
+        self.assertTrue(exp.validate_cache_audit("F", audit))
+
     def test_absolute_classification_boundaries(self):
         self.assertEqual(
             exp.absolute_classification(0.001, {"lower": 0.0001}),
