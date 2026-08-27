@@ -409,6 +409,22 @@ def validation_path(data_root: Path | str) -> Path:
     return path
 
 
+def model_execution_device(model) -> torch.device:
+    """Return the device that accepts token indices for this wrapped GPT.
+
+    Exact Stage-A-to-B continuation preserves the inherited B1 gate parameter
+    by identity.  That wrapper scalar can therefore be on CPU while the GPT
+    embedding and transformer blocks are on CUDA, making the first parameter
+    an invalid proxy for the model's input device.
+    """
+    return model.base.transformer.wte.weight.device
+
+
+def validation_batch_to_model_device(model, x, y):
+    device = model_execution_device(model)
+    return x.to(device=device), y.to(device=device)
+
+
 def training_shards(data_root: Path | str):
     rows = sorted(Path(data_root).glob("*train*.npy"))
     if not rows:
@@ -1770,7 +1786,7 @@ def paired_stats(left, right) -> dict:
 @torch.no_grad()
 def evaluate_parallel(model, val_path, batches=VALIDATION_BATCHES) -> dict:
     model.eval()
-    device = next(model.parameters()).device
+    device = model_execution_device(model)
     loader = d1.ExplicitShardLoader([val_path], VALIDATION_B, T)
     names = INCREMENTAL_CONTROLS
     rows = {name: {"sum": 0.0, "targets": 0, "batches": []} for name in names}
@@ -1779,7 +1795,7 @@ def evaluate_parallel(model, val_path, batches=VALIDATION_BATCHES) -> dict:
     for _ in range(int(batches)):
         cpu_x, cpu_y = loader.next_batch()
         identities.append(batch_identity(cpu_x, cpu_y))
-        x, y = cpu_x.to(device), cpu_y.to(device)
+        x, y = validation_batch_to_model_device(model, cpu_x, cpu_y)
         for name in names:
             kwargs = {}
             if name == "b3_off":
@@ -1876,7 +1892,7 @@ def evaluate_incremental(model, val_path, batches=INCREMENTAL_BATCHES) -> dict:
     if int(batches) != 4:
         raise ValueError("primary 2D2G incremental evaluation requires 4 B64 batches")
     model.eval()
-    device = next(model.parameters()).device
+    device = model_execution_device(model)
     loader = d1.ExplicitShardLoader([val_path], VALIDATION_B, T)
     rows = {
         name: {"sum": 0.0, "targets": 0, "batches": [], "sequences": [], "cache_rows": []}
@@ -1889,7 +1905,7 @@ def evaluate_incremental(model, val_path, batches=INCREMENTAL_BATCHES) -> dict:
     for batch_index in range(int(batches)):
         cpu_x, cpu_y = loader.next_batch()
         identities.append(batch_identity(cpu_x, cpu_y))
-        x, y = cpu_x.to(device), cpu_y.to(device)
+        x, y = validation_batch_to_model_device(model, cpu_x, cpu_y)
         for name in INCREMENTAL_CONTROLS:
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
                 current = incremental_control(model, x, y, name, permutation)
@@ -1936,10 +1952,10 @@ def evaluate_incremental(model, val_path, batches=INCREMENTAL_BATCHES) -> dict:
 
 def attention_diagnostics(model, val_path) -> dict:
     model.eval()
-    device = next(model.parameters()).device
+    device = model_execution_device(model)
     loader = d1.ExplicitShardLoader([val_path], 1, T)
     x, y = loader.next_batch()
-    x, y = x.to(device), y.to(device)
+    x, y = validation_batch_to_model_device(model, x, y)
     with torch.no_grad(), torch.autocast(device_type="cuda", dtype=torch.bfloat16):
         first = model.forward_pass(x, targets=y)
         second = model.forward_pass(
@@ -2007,20 +2023,18 @@ def attention_diagnostics(model, val_path) -> dict:
 
 
 def temporal_gradient_diagnostics(model, val_path) -> dict:
-    device = next(model.parameters()).device
     loader = d1.ExplicitShardLoader([val_path], 2, T)
     x, y = loader.next_batch()
-    x, y = x.to(device), y.to(device)
+    x, y = validation_batch_to_model_device(model, x, y)
     return b3_writer_gradient_audit(model, x, y)
 
 
 @torch.no_grad()
 def stability_8pass(model, val_path) -> dict:
     model.eval()
-    device = next(model.parameters()).device
     loader = d1.ExplicitShardLoader([val_path], 2, T)
     x, y = loader.next_batch()
-    x, y = x.to(device), y.to(device)
+    x, y = validation_batch_to_model_device(model, x, y)
     source_h10 = source_h12 = None
     rows = []
     for pass_index in range(1, 9):

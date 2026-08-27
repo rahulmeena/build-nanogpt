@@ -1,12 +1,52 @@
+from contextlib import nullcontext
 import json
 import sys
 from pathlib import Path
 
 import pytest
+import torch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import experiment_2d2g as exp  # noqa: E402
+
+
+class MixedDeviceEvaluationModel(torch.nn.Module):
+    """Mimic the exact-continuation wrapper/device split used by Stage B."""
+
+    def __init__(self):
+        super().__init__()
+        self.g_rec = torch.nn.Parameter(torch.zeros(()))
+        self.g_rec_b3 = torch.nn.Parameter(torch.zeros(()))
+        self.base = torch.nn.Module()
+        self.base.transformer = torch.nn.Module()
+        self.base.transformer.wte = torch.nn.Embedding(16, 4, device="meta")
+        self.observed = []
+
+    @property
+    def recurrent_scale_b1(self):
+        return self.g_rec.tanh()
+
+    @property
+    def recurrent_scale_b3(self):
+        return self.g_rec_b3.tanh()
+
+    def forward_multi_pass(
+        self,
+        tokens,
+        targets=None,
+        b3_recurrent_permutation=None,
+        **kwargs,
+    ):
+        expected = self.base.transformer.wte.weight.device
+        assert tokens.device == expected
+        assert targets is not None and targets.device == expected
+        if b3_recurrent_permutation is not None:
+            assert b3_recurrent_permutation.device == expected
+        self.observed.append(
+            (tokens.device, targets.device, b3_recurrent_permutation is not None)
+        )
+        return {"loss": torch.tensor(1.0)}
 
 
 def incremental(real, off, shuffled, off_wins=140, shuffled_wins=140):
@@ -26,6 +66,54 @@ def test_protocol_arithmetic_and_stage_counts():
     assert exp.TARGETS_PER_STAGE == 100_139_008
     assert exp.INCREMENTAL_BATCHES * exp.VALIDATION_B * exp.T == 262_144
     assert [u for u in range(1, 192) if exp.pass_count(u) == 3] == [32, 64, 96, 128, 160]
+
+
+def test_validation_batch_uses_embedding_device_not_first_wrapper_parameter():
+    model = MixedDeviceEvaluationModel()
+    x = torch.zeros((2, 3), dtype=torch.long)
+    y = torch.ones((2, 3), dtype=torch.long)
+
+    moved_x, moved_y = exp.validation_batch_to_model_device(model, x, y)
+
+    assert next(model.parameters()).device.type == "cpu"
+    assert moved_x.device.type == "meta"
+    assert moved_y.device.type == "meta"
+    assert moved_x.shape == x.shape and moved_y.shape == y.shape
+    assert moved_x.dtype == x.dtype and moved_y.dtype == y.dtype
+    assert x.device.type == "cpu" and y.device.type == "cpu"
+
+
+def test_smoke_parallel_evaluation_uses_gpt_input_device(monkeypatch):
+    class CpuValidationLoader:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def next_batch(self):
+            tokens = torch.arange(exp.VALIDATION_B * exp.T, dtype=torch.long).view(
+                exp.VALIDATION_B, exp.T
+            )
+            return tokens.remainder(16), tokens.add(1).remainder(16)
+
+    model = MixedDeviceEvaluationModel()
+    assert next(model.parameters()).device.type == "cpu"
+    assert exp.model_execution_device(model).type == "meta"
+    monkeypatch.setattr(exp.d1, "ExplicitShardLoader", CpuValidationLoader)
+    monkeypatch.setattr(exp.torch, "autocast", lambda **_kwargs: nullcontext())
+
+    result = exp.evaluate_parallel(model, "unused-validation.npy", batches=1)
+
+    assert len(model.observed) == len(exp.INCREMENTAL_CONTROLS)
+    assert all(
+        tokens.type == "meta" and targets.type == "meta"
+        for tokens, targets, _ in model.observed
+    )
+    assert sum(shuffled for _, _, shuffled in model.observed) == 1
+    assert all(
+        row["validation_targets"] == exp.VALIDATION_B * exp.T
+        for row in result["controls"].values()
+    )
+    assert result["b3_gain"] == 0.0
+    assert result["b3_sequence_gap"] == 0.0
 
 
 def test_preregistered_config_matches_driver():
