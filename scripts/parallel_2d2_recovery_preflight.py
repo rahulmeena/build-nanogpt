@@ -190,8 +190,14 @@ def run(args) -> dict:
     if run_root.name != args.run_id or not run_root.is_dir():
         raise RuntimeError("exact run directory is missing")
     lanes = list(dict.fromkeys(args.lane))
+    retained_lanes = list(dict.fromkeys(args.retain_active_lane or []))
     if not lanes or any(lane not in LANES for lane in lanes):
         raise RuntimeError("only the registered failed lanes can be recovered")
+    if (
+        any(lane not in LANES for lane in retained_lanes)
+        or set(lanes) & set(retained_lanes)
+    ):
+        raise RuntimeError("retained recovery lanes must be registered and disjoint")
     top_preflight = read_json(master_root / "MASTER_PREFLIGHT.json")
     scoped_preflight = read_json(run_root / "MASTER_PREFLIGHT.json")
     original_git = read_json(run_root / "git_worktree_manifest.json")
@@ -215,8 +221,32 @@ def run(args) -> dict:
     lane_evidence = {
         lane: audit_lane(master_root, run_root, lane, original_git) for lane in lanes
     }
+    retained_checks = {}
+    if retained_lanes:
+        previous = read_json(run_root / "RECOVERY_PREFLIGHT.json")
+        for lane in retained_lanes:
+            evidence = previous.get("lane_evidence", {}).get(lane)
+            status = read_json(run_root / f"lane_{lane.lower()}.status.json")
+            error_path = run_root / f"lane_{lane.lower()}.error.json"
+            valid = (
+                previous.get("passed") is True
+                and lane in previous.get("authorized_lanes", [])
+                and isinstance(evidence, dict)
+                and evidence.get("passed") is True
+                and evidence.get("prior_failure_marker_sha256")
+                == file_sha256(error_path)
+                and status.get("run_id") == args.run_id
+                and status.get("status") == "RUNNING"
+                and not (run_root / f"lane_{lane.lower()}.science_complete.json").exists()
+                and not (run_root / f"lane_{lane.lower()}.terminal.json").exists()
+            )
+            retained_checks[lane] = valid
+            if not valid:
+                raise RuntimeError(f"active retained recovery lane is not exact: {lane}")
+            lane_evidence[lane] = evidence
+    authorized_lanes = [*retained_lanes, *lanes]
     unaffected = {}
-    for lane in ({"GPU0", "GPU1", "GPU2", "GPU3"} - set(lanes)):
+    for lane in ({"GPU0", "GPU1", "GPU2", "GPU3"} - set(authorized_lanes)):
         status = read_json(run_root / f"lane_{lane.lower()}.status.json")
         unaffected[lane] = {
             "status": status.get("status"),
@@ -237,12 +267,13 @@ def run(args) -> dict:
         "unaffected_lanes_same_run_without_error": all(
             row["same_run"] and row["no_error_marker"] for row in unaffected.values()
         ),
+        "retained_active_recovery_lanes_exact": all(retained_checks.values()),
     }
     payload = {
         "schema_version": 1,
         "created_utc": now_utc(),
         "run_id": args.run_id,
-        "authorized_lanes": lanes,
+        "authorized_lanes": authorized_lanes,
         "reason": "launch-time implementation defects before scientific update 1; exact frozen update-zero restart",
         "original_master_preflight": str(run_root / "MASTER_PREFLIGHT.json"),
         "immutable_manifest_audit": immutable,
@@ -264,6 +295,7 @@ def main() -> None:
     parser.add_argument("--master-root", required=True)
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--lane", action="append", required=True)
+    parser.add_argument("--retain-active-lane", action="append")
     args = parser.parse_args()
     try:
         run(args)
