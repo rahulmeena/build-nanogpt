@@ -160,6 +160,48 @@ def sequence_identity(x: torch.Tensor, y: torch.Tensor) -> dict:
     }
 
 
+def cuda_uuid_manifest(value) -> dict | None:
+    """Return CUDA UUID metadata using only stable JSON-native values.
+
+    Current PyTorch CUDA builds expose ``_CudaDeviceProperties.uuid`` as a
+    pybind ``_CUuuid`` instance.  Its 16-byte ``bytes`` property is stable,
+    whereas the wrapper object itself is not JSON serializable.
+    """
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return {"format": "text", "value": value}
+
+    raw_bytes = getattr(value, "bytes", None)
+    if raw_bytes is None:
+        raise TypeError("CUDA UUID metadata has neither text nor 16-byte form")
+    try:
+        octets = [int(item) for item in raw_bytes]
+    except (TypeError, ValueError) as error:
+        raise TypeError("CUDA UUID bytes are not an integer sequence") from error
+    if len(octets) != 16:
+        raise ValueError(f"CUDA UUID must contain exactly 16 bytes, observed {len(octets)}")
+    if any(item < 0 or item > 255 for item in octets):
+        raise ValueError("CUDA UUID byte values must be in the inclusive range 0..255")
+
+    hexadecimal = bytes(octets).hex()
+    canonical = "-".join(
+        (
+            hexadecimal[0:8],
+            hexadecimal[8:12],
+            hexadecimal[12:16],
+            hexadecimal[16:20],
+            hexadecimal[20:32],
+        )
+    )
+    return {
+        "format": "uuid-16-byte",
+        "byte_count": 16,
+        "hex": hexadecimal,
+        "canonical": canonical,
+    }
+
+
 def require_visible_a100() -> dict:
     if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
         raise SystemExit("C1 requires exactly one CUDA-visible physical lane")
@@ -171,7 +213,7 @@ def require_visible_a100() -> dict:
         "visible_device_count": 1,
         "name": properties.name,
         "total_memory_bytes": int(properties.total_memory),
-        "uuid": getattr(properties, "uuid", None),
+        "uuid": cuda_uuid_manifest(getattr(properties, "uuid", None)),
         "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
         "torch_version": torch.__version__,
         "torch_cuda": torch.version.cuda,
