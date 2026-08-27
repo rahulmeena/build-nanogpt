@@ -427,6 +427,7 @@ def run(args) -> dict:
     model, model_manifest = load_model(checkpoint, torch.device("cuda", 0))
     subset, batches = reconstruct_subsets(validation, prior)
     durable_json(output / "subset_manifest.json", subset)
+    durable_json(output / "c1_validation_subset_manifest.json", subset)
     durable_json(
         output / "HEARTBEAT.json",
         {
