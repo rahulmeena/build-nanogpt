@@ -38,6 +38,14 @@ class FrozenHeadToHeadTests(unittest.TestCase):
         self.assertEqual(exp.tensor_bytes(scalar), scalar.numpy().tobytes())
         self.assertEqual(exp.state_dict_sha256({"gate": scalar}), exp.state_dict_sha256({"gate": scalar.clone()}))
 
+    def test_incremental_step_adapter(self):
+        logits = object()
+        state = object()
+        self.assertEqual(exp.unpack_incremental_step((logits, state)), (logits, state))
+        self.assertEqual(exp.unpack_incremental_step((logits, state, {"diagnostic": 1})), (logits, state))
+        with self.assertRaises(RuntimeError):
+            exp.unpack_incremental_step((logits,))
+
     def test_absolute_classification_boundaries(self):
         self.assertEqual(
             exp.absolute_classification(0.001, {"lower": 0.0001}),

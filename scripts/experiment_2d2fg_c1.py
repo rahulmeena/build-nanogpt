@@ -500,6 +500,12 @@ def validate_cache_audit(label: str, audit: dict) -> bool:
     )
 
 
+def unpack_incremental_step(result):
+    if not isinstance(result, tuple) or len(result) not in (2, 3):
+        raise RuntimeError("incremental_step must return (logits, state) with optional diagnostics")
+    return result[0], result[1]
+
+
 @torch.inference_mode()
 def run_control(model, label: str, condition: str, x: torch.Tensor, y: torch.Tensor, permutation) -> dict:
     device = model.base.transformer.wte.weight.device
@@ -511,7 +517,7 @@ def run_control(model, label: str, condition: str, x: torch.Tensor, y: torch.Ten
     cache_rows = []
     for position in range(T):
         with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-            logits, state, _ = model.incremental_step(
+            step_result = model.incremental_step(
                 x[:, position],
                 state,
                 control=name,
@@ -519,6 +525,7 @@ def run_control(model, label: str, condition: str, x: torch.Tensor, y: torch.Ten
                 return_diagnostics=False,
                 diagnostic_attention_weights=False,
             )
+            logits, state = unpack_incremental_step(step_result)
         losses = torch_f.cross_entropy(
             logits[:, 0].float(), y[:, position], reduction="none"
         ).double().cpu()
