@@ -21,6 +21,8 @@ class FrozenHeadToHeadTests(unittest.TestCase):
         self.assertEqual(exp.T, 1024)
         self.assertEqual(exp.BATCHES, 16)
         self.assertEqual(exp.SKIP_BATCHES, 20)
+        self.assertEqual(exp.C1_START_TOKEN_OFFSET, 262_145)
+        self.assertEqual(exp.NEW_START_TOKEN_OFFSET, 1_310_722)
         self.assertEqual(exp.SEQUENCES, 1024)
         self.assertEqual(exp.TARGETS, 1_048_576)
 

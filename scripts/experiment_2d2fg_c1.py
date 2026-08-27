@@ -57,6 +57,11 @@ SKIP_BATCHES = 20
 BATCHES = 16
 SEQUENCES = BATCH * BATCHES
 TARGETS = SEQUENCES * T
+OLD_START_TOKEN_OFFSET = 0
+C1_START_TOKEN_OFFSET = 4 * BATCH * T + 1
+# 2D2E-C1 consumed the inclusive raw interval [262145, 1310721].
+# Begin one token later so the optional historical subset is also disjoint.
+NEW_START_TOKEN_OFFSET = C1_START_TOKEN_OFFSET + TARGETS + 1
 BOOTSTRAP_RESAMPLES = 20_000
 BOOTSTRAP_SEED = 20_260_828
 REGRESSION_ATOL = 1e-6
@@ -364,13 +369,13 @@ def sequence_identity(x: torch.Tensor, y: torch.Tensor, batch_index: int, row: i
     }
 
 
-def collect_subset(val_path: Path, skip_batches: int, batches: int, include_sequences: bool) -> dict:
+def collect_subset(val_path: Path, start_token_offset: int, batches: int, include_sequences: bool) -> dict:
     state = {
         "shards": [str(val_path.resolve())],
         "batch_size": BATCH,
         "sequence_length": T,
         "current_shard": 0,
-        "current_position": int(skip_batches) * BATCH * T,
+        "current_position": int(start_token_offset),
     }
     loader = d1.ExplicitShardLoader([val_path], BATCH, T, state=state)
     batch_rows = []
@@ -380,10 +385,10 @@ def collect_subset(val_path: Path, skip_batches: int, batches: int, include_sequ
         batch_rows.append(batch_identity(x, y))
         if include_sequences:
             sequence_rows.extend(sequence_identity(x, y, batch_index, row) for row in range(BATCH))
-    start = int(skip_batches) * BATCH * T + 1
-    end = (int(skip_batches) + int(batches)) * BATCH * T + 1
+    start = int(start_token_offset)
+    end = start + int(batches) * BATCH * T
     return {
-        "skip_batches": int(skip_batches),
+        "start_token_offset": start,
         "batch_count": int(batches),
         "batch_size": BATCH,
         "sequence_length": T,
@@ -398,9 +403,9 @@ def collect_subset(val_path: Path, skip_batches: int, batches: int, include_sequ
 
 
 def build_subset_and_disjointness(val_path: Path) -> tuple[dict, dict]:
-    old = collect_subset(val_path, 0, 4, True)
-    c1 = collect_subset(val_path, 4, 16, True)
-    new = collect_subset(val_path, SKIP_BATCHES, BATCHES, True)
+    old = collect_subset(val_path, OLD_START_TOKEN_OFFSET, 4, True)
+    c1 = collect_subset(val_path, C1_START_TOKEN_OFFSET, 16, True)
+    new = collect_subset(val_path, NEW_START_TOKEN_OFFSET, BATCHES, True)
     old_sequences = {row["combined_sha256"] for row in old["sequence_identities"]}
     c1_sequences = {row["combined_sha256"] for row in c1["sequence_identities"]}
     new_sequences = {row["combined_sha256"] for row in new["sequence_identities"]}
@@ -416,8 +421,8 @@ def build_subset_and_disjointness(val_path: Path) -> tuple[dict, dict]:
         "no_batch_overlap_with_old": not (new_batches & old_batches),
         "no_sequence_overlap_with_c1": not (new_sequences & c1_sequences),
         "no_batch_overlap_with_c1": not (new_batches & c1_batches),
-        "raw_intervals_disjoint_except_boundary_token": new["raw_token_interval_inclusive"][0]
-        == c1["raw_token_interval_inclusive"][1],
+        "raw_intervals_disjoint": new["raw_token_interval_inclusive"][0]
+        > c1["raw_token_interval_inclusive"][1],
     }
     if not all(checks.values()):
         raise SystemExit(f"fresh-subset disjointness failed: {checks}")
@@ -557,7 +562,7 @@ def selected_loader(val_path: Path):
         "batch_size": BATCH,
         "sequence_length": T,
         "current_shard": 0,
-        "current_position": SKIP_BATCHES * BATCH * T,
+        "current_position": NEW_START_TOKEN_OFFSET,
     }
     return d1.ExplicitShardLoader([val_path], BATCH, T, state=state)
 
