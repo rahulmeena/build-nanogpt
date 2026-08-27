@@ -5314,10 +5314,12 @@ def attention_diagnostics(model, val_path, link, batch_size=2) -> dict:
     diagnostics = result["diagnostics"][-1][link]
     weights = diagnostics["recurrent_attention_weights"]
     valid = diagnostics["recurrent_valid_mask"]
-    local_weights = diagnostics["local_attention_weights"]
-    local_valid = diagnostics["local_valid_mask"]
-    if weights is None or valid is None or local_weights is None or local_valid is None:
-        raise SystemExit(f"{link} diagnostic weights unavailable")
+    local_weights = diagnostics.get("local_attention_weights")
+    local_valid = diagnostics.get("local_valid_mask")
+    if weights is None or valid is None:
+        raise SystemExit(f"{link} recurrent diagnostic weights unavailable")
+    if link in {"b2", "b3"} and (local_weights is None or local_valid is None):
+        raise SystemExit(f"{link} local diagnostic weights unavailable")
     query = torch.arange(T, device=device).view(T, 1)
     source = torch.arange(T, device=device).view(1, T)
     lag = query - source
@@ -5333,16 +5335,17 @@ def attention_diagnostics(model, val_path, link, batch_size=2) -> dict:
                       "raw_attention_mass": mass.item(),
                       "normalized_mass_per_available_token": mass.item() / max(available, 1),
                       "valid_position_instances_all_heads_rows": available}
-    local_total = local_weights.double().sum()
     local_bins = {}
-    for name, first, last in local_bins_spec:
-        selected = local_valid & (lag >= first) & (lag <= last)
-        mass = local_weights.masked_select(selected.view(1, 1, T, T)).double().sum()
-        available = int(selected.sum()) * batch_size * N_HEAD
-        local_bins[name] = {"lag_min": first, "lag_max": last, "attention_mass": (mass / local_total).item(),
-                            "raw_attention_mass": mass.item(),
-                            "normalized_mass_per_available_token": mass.item() / max(available, 1),
-                            "valid_position_instances_all_heads_rows": available}
+    if local_weights is not None:
+        local_total = local_weights.double().sum()
+        for name, first, last in local_bins_spec:
+            selected = local_valid & (lag >= first) & (lag <= last)
+            mass = local_weights.masked_select(selected.view(1, 1, T, T)).double().sum()
+            available = int(selected.sum()) * batch_size * N_HEAD
+            local_bins[name] = {"lag_min": first, "lag_max": last, "attention_mass": (mass / local_total).item(),
+                                "raw_attention_mass": mass.item(),
+                                "normalized_mass_per_available_token": mass.item() / max(available, 1),
+                                "valid_position_instances_all_heads_rows": available}
     def summarize(current):
         histogram = torch.zeros(RECURRENT_MAX_LAG + 1, dtype=torch.float64, device=device)
         aggregated = current.double().sum((0, 1)) if current.ndim == 4 else current.double().sum(0)
