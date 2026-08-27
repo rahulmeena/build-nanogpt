@@ -1,0 +1,95 @@
+{
+  "available_cursor_hashes": {
+    "100": {
+      "kind": "recovery",
+      "next_batch_sha256": "ffb4d3dcd57c58d6e1ffd2ee680154e5c35b6ffd20c6c2c91c1a1988c0999249",
+      "next_stream_sha256": "28ea91f6131a87d721e4a62598b3ec1e693f568029e78e36ebab71697e34ed82"
+    },
+    "143": {
+      "kind": "scientific",
+      "next_batch_sha256": "d7d84b7c4ac51dfc823b98acfd327616c0f604cb1771eb7b6cbc283290100fc0",
+      "next_stream_sha256": "3c1665f94db597eb909e738a97353d1c237c3a7226c6dabb84af721be9d89702"
+    },
+    "150": {
+      "kind": "recovery",
+      "next_batch_sha256": "bbc5f195bde0ac72b7fe8151298dc13d1e353b32527be5d7d08d1dfb77037980",
+      "next_stream_sha256": "2296e19de8a8641f53f4e6dc0bdaf9a98bec03bb46a0ebb6cbea61ad0ec15a8e"
+    },
+    "191": {
+      "kind": "scientific",
+      "next_batch_sha256": "39808d08e7e15e9f160e32ba838fd28839067827095b023d4f475b30df392086",
+      "next_stream_sha256": "110e232ab330611a8d23cddc6e914c8a2d912fd8191873ae67488b0d52f48daa"
+    },
+    "48": {
+      "kind": "scientific",
+      "next_batch_sha256": "0bd13fbfbc38e32d6735462a7bbc834df30467374ae97394457e6b0a3436f699",
+      "next_stream_sha256": "47aec6fcaef009fb8ed54f2f59022c635441578b3dc81552567ef9a12b7ed625"
+    },
+    "50": {
+      "kind": "recovery",
+      "next_batch_sha256": "0a151f4d97003226f12d073dca5da65720f1186a5fa2ed9cc9830c1df8430fd6",
+      "next_stream_sha256": "19a41fe90538fa10c63bf067066dc02aa5af62f2e916863e56ee1e0aad31439f"
+    },
+    "96": {
+      "kind": "scientific",
+      "next_batch_sha256": "313c1cd86d1924914e395df1bddf98fcb9ab351592c014b3b1357ecbbab33c97",
+      "next_stream_sha256": "6a870df86881ba3def08dbbe7bbb5554b959780d788d509c578558b52dd19f31"
+    }
+  },
+  "common_source_2d2b_checkpoint_sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+  "common_source_2d2b_commit": "976b92927e698afd27d68eabc78db5a0b6714fef",
+  "final_parallel_gain": 4.3220880979522036e-05,
+  "final_parallel_sequence_gap": 1.9802669885216062e-05,
+  "final_tanh_g_rec_b2": -0.018238622695207596,
+  "final_true_incremental_gain": 1.448861861552686e-05,
+  "final_true_incremental_sequence_gap": 5.0281635568971694e-05,
+  "frozen_2d2c_checkpoint_sha256": "5f024fa69ab9473414d570b5649f3050c9694706bf4bc4c9f8bf4764b4034ded",
+  "frozen_2d2c_commit": "d948d200c3e70a5256c0d6a3d3cfa4c6818e2569",
+  "frozen_2d2c_tag": "experiment-2d2c-b2-w2-second-mirrored-link-final",
+  "gain_trajectory": {
+    "0": 0.0,
+    "143": 5.743728142970639e-05,
+    "191": 4.3220880979522036e-05,
+    "20": 9.905812202948283e-06,
+    "48": -1.3947896059018916e-05,
+    "96": 6.24980799330821e-05
+  },
+  "gate_trajectory": {
+    "0": 0.0,
+    "143": -0.014996225945651531,
+    "191": -0.018238622695207596,
+    "20": 0.0013218846870586276,
+    "48": -0.0021486254408955574,
+    "96": -0.009678013622760773
+  },
+  "initial_w2_compression_damage": 1.3484903198741445,
+  "matched_fields": [
+    "source model/optimizer/loader/RNG/counters/B1 gate",
+    "191 logical global batches",
+    "100139008 additional targets",
+    "one-GPU microbatch 32 with gradient accumulation 16",
+    "pass schedule and CE weights",
+    "new B2 gate optimizer group",
+    "parameter count"
+  ],
+  "raw_gate_trajectory": {
+    "0": 0.0,
+    "143": -0.014997350051999092,
+    "191": -0.01824064552783966,
+    "20": 0.0013218855019658804,
+    "48": -0.0021486287005245686,
+    "96": -0.009678315371274948
+  },
+  "schema": "exp2d2d_frozen_2d2c_matched_reference_v1",
+  "sequence_gap_trajectory": {
+    "0": 0.0,
+    "143": 7.644330253242515e-05,
+    "191": 1.9802669885216062e-05,
+    "20": 4.4075284222344635e-05,
+    "48": -1.0018017473800711e-05,
+    "96": 4.936461382376578e-05
+  },
+  "sole_scientific_difference": "B2 temporal partition: 2D2C local W2 plus recurrent lags 2..1023; 2D2D local W32 plus recurrent lags 32..1023",
+  "true_wins_vs_off": 64,
+  "true_wins_vs_shuffled": 71
+}

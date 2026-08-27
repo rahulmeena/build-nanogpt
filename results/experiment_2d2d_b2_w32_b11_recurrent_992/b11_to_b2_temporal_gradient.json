@@ -1,0 +1,67 @@
+{
+  "0_probe": {
+    "additional_targets": 0,
+    "b2_gate_override": 0.05,
+    "bins": {
+      "128-255": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 0.00011886475112987682,
+        "mean_gradient_rms": 1.9959135897806846e-05,
+        "source_positions": 128
+      },
+      "256-511": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 6.363452121149749e-05,
+        "mean_gradient_rms": 4.876719685853459e-06,
+        "source_positions": 256
+      },
+      "32-63": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 7.46662772144191e-05,
+        "mean_gradient_rms": 1.60353029059479e-05,
+        "source_positions": 32
+      },
+      "512-1023": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 4.15439935750328e-05,
+        "mean_gradient_rms": 3.7786205666634487e-06,
+        "source_positions": 512
+      },
+      "64-127": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 2.0660638256231323e-05,
+        "mean_gradient_rms": 7.2500806709285825e-06,
+        "source_positions": 64
+      }
+    },
+    "effective_gate": 0.0,
+    "finite": true,
+    "gate_raw": 0.0,
+    "gradient_norm": 0.007638983894139528,
+    "link": "B11->B2",
+    "local_update": 0,
+    "long_lag_writer_gradient_present": true,
+    "method": "Pass-2 CE at receiver t=1023 differentiated into attached Pass-1 B11 post-MLP states. Source positions therefore map one-to-one to exact lag from the audited receiver. The recurrent source is a detached requires-grad probe solely to isolate this reader path; attached writer co-adaptation is checked separately in smoke and result training.",
+    "nonzero": true,
+    "pinned_batch": {
+      "combined_sha256": "9bab8fb42f79d53edfc866f6f5f96b1e6fd1b004fad9c670b0344f9a37299de2",
+      "input_sha256": "9009687299d202872afd60478b7ee15ed16b123d962ccd1633b259bb0553e6e1",
+      "target_sha256": "ed6f5bcd6f2921d8fa643c284bb9cba1ceb0954104a6f468a98d5ed3331a095e"
+    },
+    "position_probes": {
+      "early_old_position_0": 1.2163782230345532e-05,
+      "middle_position_512": 1.4590560226679372e-07,
+      "recent_eligible_position_991": 1.1461094118203619e-06,
+      "recent_ineligible_position_992": 0.0
+    },
+    "precision": "bf16",
+    "probe_only": true,
+    "receiver_loss": 6.523852348327637,
+    "receiver_position": 1023
+  }
+}

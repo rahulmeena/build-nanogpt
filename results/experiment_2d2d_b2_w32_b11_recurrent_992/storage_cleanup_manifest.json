@@ -1,0 +1,44 @@
+{
+  "cleanup_actions_after_preflight": [
+    {
+      "bytes": 1493934925,
+      "path": "/workspace/exp2d2d_run/smoke/smoke_update_0003.pt",
+      "phase": "post_smoke",
+      "reason": "disposable three-update smoke checkpoint; SHA and verification sidecars retained"
+    }
+  ],
+  "preflight_cleanup": {
+    "action_provenance": "Exact paths and sizes were captured by the experiment operator during the preflight volume audit; the driver independently verifies every path is absent and records current usage.",
+    "all_deleted_paths_absent_at_preflight": true,
+    "classification": "obsolete disposable smoke checkpoint binaries",
+    "deleted_bytes": 1993284121,
+    "deleted_files": [
+      {
+        "absent_at_preflight": true,
+        "observed_bytes_before_deletion": 498173177,
+        "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a0_smoke_10update/checkpoints/checkpoint_updates_000005.pt"
+      },
+      {
+        "absent_at_preflight": true,
+        "observed_bytes_before_deletion": 498173177,
+        "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a0_smoke_10update/checkpoints/checkpoint_updates_000010.pt"
+      },
+      {
+        "absent_at_preflight": true,
+        "observed_bytes_before_deletion": 498175417,
+        "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2b1_5m/smoke/checkpoint_updates_000002.pt"
+      },
+      {
+        "absent_at_preflight": true,
+        "observed_bytes_before_deletion": 498762350,
+        "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2b2_5m/smoke/checkpoint_updates_000002.pt"
+      }
+    ],
+    "historical_immediate_post_cleanup_workspace_used_bytes": 72781222757,
+    "manifests_and_sidecars_preserved": true,
+    "preflight_measured_workspace_free_bytes": 27152322395,
+    "preflight_measured_workspace_used_bytes": 72847677605,
+    "scientific_or_final_checkpoint_removed": false
+  },
+  "schema": "exp2d2d_storage_cleanup_manifest_v1"
+}

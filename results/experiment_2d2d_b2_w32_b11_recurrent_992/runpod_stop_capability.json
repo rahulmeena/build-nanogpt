@@ -1,0 +1,34 @@
+{
+  "audit_path": "/workspace/exp2d2d_run/runpod_stop_capability_preflight.json",
+  "audit_sha256": "09157086349b9980bd7cb3ebaa1ad30a6b624532a692d815da14cbdf935d7ef4",
+  "authenticated_list_probe": true,
+  "authenticated_pod_identity_response": {
+    "desiredStatus": "RUNNING",
+    "gpuCount": 1,
+    "id": "7kk5yyti00rnrp",
+    "name": "grand_amber_catshark",
+    "runtimeStatus": "running"
+  },
+  "driver_checks": {
+    "authenticated_probe": true,
+    "cli_authorized": true,
+    "credential_available": true,
+    "exact_stop_target": true,
+    "gpu_count": true,
+    "passed": true,
+    "pod_id": true,
+    "pod_name": true,
+    "runtime_running": true,
+    "schema": true,
+    "secret_not_recorded": true
+  },
+  "driver_passed": true,
+  "exact_stop_command": "runpodctl pod stop 7kk5yyti00rnrp -o json",
+  "exact_stop_target": "7kk5yyti00rnrp",
+  "passed": true,
+  "persistent_volume_delete_authorized": false,
+  "pod_delete_authorized": false,
+  "schema": "exp2d2d_runpod_stop_capability_v1",
+  "secret_recorded": false,
+  "stop_credential_available": true
+}
