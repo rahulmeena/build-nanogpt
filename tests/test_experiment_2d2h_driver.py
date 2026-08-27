@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import experiment_2d2h as exp  # noqa: E402
@@ -127,6 +129,7 @@ def test_active_training_progress_does_not_read_removed_b1_gate():
 def test_master_artifact_names_and_local_first_persistence_are_preregistered():
     assert {
         "FINAL_REPORT.md",
+        "POST_TRAINING_AUDIT_CORRECTION.json",
         "attention_diagnostics.json",
         "temporal_gradient_diagnostics.json",
     }.issubset(exp.REQUIRED_ARTIFACTS)
@@ -135,6 +138,117 @@ def test_master_artifact_names_and_local_first_persistence_are_preregistered():
         "fcntl.flock(lock_handle.fileno(), fcntl.LOCK_EX)"
     )
     assert 'verification["persisted_under_global_lock"] = True' in source
+
+
+def test_strict_fp32_equivalence_explicitly_disables_tf32_and_restores_flags():
+    source = inspect.getsource(exp.parallel_incremental_equivalence)
+    assert 'torch.set_float32_matmul_precision("highest")' in source
+    assert "torch.backends.cuda.matmul.allow_tf32 = False" in source
+    assert "torch.backends.cudnn.allow_tf32 = False" in source
+    assert "finally:" in source
+    assert 'report["max_abs_tolerance"] = FP32_INCREMENTAL_ATOL' in source
+    assert "torch.autocast" not in source
+
+
+def test_strict_fp32_equivalence_restores_flags_after_exception(monkeypatch):
+    class Loader:
+        def next_batch(self):
+            return exp.torch.zeros((1, 64), dtype=exp.torch.long), None
+
+    class Model:
+        base = SimpleNamespace(
+            transformer=SimpleNamespace(
+                wte=SimpleNamespace(weight=exp.torch.zeros(1))
+            )
+        )
+
+        def forward_pass(self, _tokens):
+            assert exp.torch.backends.cuda.matmul.allow_tf32 is False
+            assert exp.torch.backends.cudnn.allow_tf32 is False
+            raise RuntimeError("intentional audit failure")
+
+    monkeypatch.setattr(
+        exp.legacy.d1, "ExplicitShardLoader", lambda *_args, **_kwargs: Loader()
+    )
+    original_precision = exp.torch.get_float32_matmul_precision()
+    original_matmul = exp.torch.backends.cuda.matmul.allow_tf32
+    original_cudnn = exp.torch.backends.cudnn.allow_tf32
+    try:
+        exp.torch.set_float32_matmul_precision("high")
+        exp.torch.backends.cuda.matmul.allow_tf32 = True
+        exp.torch.backends.cudnn.allow_tf32 = True
+        with pytest.raises(RuntimeError, match="intentional audit failure"):
+            exp.parallel_incremental_equivalence(Model(), "unused")
+        assert exp.torch.get_float32_matmul_precision() == "high"
+        assert exp.torch.backends.cuda.matmul.allow_tf32 is True
+        assert exp.torch.backends.cudnn.allow_tf32 is True
+    finally:
+        exp.torch.set_float32_matmul_precision(original_precision)
+        exp.torch.backends.cuda.matmul.allow_tf32 = original_matmul
+        exp.torch.backends.cudnn.allow_tf32 = original_cudnn
+
+
+def test_post_training_audit_correction_requires_exact_archive(
+    tmp_path, monkeypatch
+):
+    equivalence = {
+        "precision": "float32",
+        "float32_matmul_precision": "highest",
+        "matmul_allow_tf32": False,
+        "cudnn_allow_tf32": False,
+        "max_abs_tolerance": exp.FP32_INCREMENTAL_ATOL,
+    }
+    assert exp.failed_finalize_evidence_audit(tmp_path)["passed"] is False
+    archive = tmp_path / "failed_finalize_attempt_1"
+    archive.mkdir()
+    payloads = {
+        "parallel_incremental_equivalence.json": {"passed": False},
+        "FINAL_AUDIT.json": {
+            "passed": False,
+            "checks": {
+                "parallel_incremental_equivalence": False,
+                "checkpoint": True,
+            },
+        },
+        "lane_gpu2.error.json": {
+            "lane": "GPU2",
+            "status": "HARD_FAILURE",
+            "phase": "2D2H_FINALIZE",
+            "exit_code": 1,
+        },
+    }
+    expected = {}
+    for name, payload in payloads.items():
+        path = archive / name
+        path.write_text(json.dumps(payload))
+        expected[name] = exp.file_sha256(path)
+    monkeypatch.setattr(exp, "AUDIT_CORRECTION_FAILED_EVIDENCE_SHA256", expected)
+    authorization_path = tmp_path / exp.AUDIT_CORRECTION_AUTHORIZATION
+    authorization_path.write_text(json.dumps({"passed": True, "current_commit": "a" * 40}))
+    correction = exp.post_training_audit_correction(tmp_path, equivalence)
+    assert correction["passed"]
+    assert correction["training_changed"] is False
+    assert correction["checkpoint_changed"] is False
+    assert correction["data_or_primary_scientific_metrics_changed"] is False
+    assert correction["fp32_tolerance_before"] == correction["fp32_tolerance_after"]
+
+
+def test_checkpoint_metadata_stays_bound_to_passing_preflight_commit():
+    source = inspect.getsource(exp.training_metadata)
+    assert 'preflight["implementation_git_commit"]' in source
+    assert 'git_output("rev-parse", "HEAD")' not in source
+
+
+def test_audit_correction_has_separate_finalize_only_cli():
+    parser = exp.build_parser()
+    choices = parser._subparsers._group_actions[0].choices
+    assert "authorize-audit-correction" in choices
+    options = {
+        option
+        for action in choices["authorize-audit-correction"]._actions
+        for option in action.option_strings
+    }
+    assert "--final-checkpoint" in options
 
 
 def test_matched_2d2d_cursor_audit_requires_exact_hashes(tmp_path):

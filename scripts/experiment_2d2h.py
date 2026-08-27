@@ -198,6 +198,32 @@ VALIDATION_SHARD_SHA256 = legacy.VALIDATION_SHARD_SHA256
 SEED = 2026_0221
 BF16_INCREMENTAL_ATOL = 1.25
 FP32_INCREMENTAL_ATOL = 1e-4
+AUDIT_CORRECTION_BASE_COMMIT = "69651f0ba31c55fc175b15c9ed08879868b81866"
+AUDIT_CORRECTION_PREFLIGHT_SHA256 = (
+    "59b92a0c20ce757d77998e2e63d746aa4bdce157ae1c9c717dbf2b40795ecaf8"
+)
+AUDIT_CORRECTION_BASE_FINGERPRINT = (
+    "fae91663242240dbfcfe749763e12200a5cc3d76cabcb493c67fb5784dc40e54"
+)
+AUDIT_CORRECTION_FINAL_CHECKPOINT_SHA256 = (
+    "6929a4d37a2c5b87bbd35cc4cfe1e1c8cccd302a12110ef31d5b96bdd3371938"
+)
+AUDIT_CORRECTION_CHANGED_FILES = {
+    "scripts/experiment_2d2h.py",
+    "tests/test_experiment_2d2h_driver.py",
+}
+AUDIT_CORRECTION_FAILED_EVIDENCE_SHA256 = {
+    "parallel_incremental_equivalence.json": (
+        "5d7ae0ef14c463c0591e5d2bffcd623c4372219c66b35085cace00a1bc9678bd"
+    ),
+    "FINAL_AUDIT.json": (
+        "0814984de8828bd198136dfc8b2836f3b7250cc09a27d5fa9a81ca49bcead7ad"
+    ),
+    "lane_gpu2.error.json": (
+        "249f56cbe2c9e33075afaeb5482ae8e408879b0b27e9d68fa0105442703f0cf9"
+    ),
+}
+AUDIT_CORRECTION_AUTHORIZATION = "POST_TRAINING_AUDIT_CORRECTION_AUTHORIZATION.json"
 B1_LAG_BINS = (
     ("2-7", 2, 7),
     ("8-15", 8, 15),
@@ -274,6 +300,8 @@ REQUIRED_ARTIFACTS = (
     "incremental_cache_audit.json",
     "memory_accounting.json",
     "parallel_incremental_equivalence.json",
+    AUDIT_CORRECTION_AUTHORIZATION,
+    "POST_TRAINING_AUDIT_CORRECTION.json",
     "stability_8pass.json",
     "checkpoint_manifest.json",
     "performance.json",
@@ -3116,7 +3144,9 @@ def training_metadata(args, preflight, micro_batch, accumulation) -> dict:
     return {
         "experiment": EXPERIMENT,
         "protocol": PROTOCOL,
-        "implementation_git_commit": git_output("rev-parse", "HEAD"),
+        # Checkpoints bind to the implementation authorized by the passing
+        # preflight, not to a later evaluation-only reporting commit.
+        "implementation_git_commit": preflight["implementation_git_commit"],
         "implementation_fingerprint": preflight["implementation_fingerprint"],
         "frozen_2d2b_commit": FROZEN_COMMIT,
         "source_checkpoint": str(Path(args.source_checkpoint).resolve()),
@@ -4561,12 +4591,43 @@ def parallel_incremental_equivalence(model, val_path, length=64, batch=2):
     if length < 64:
         raise ValueError("length must exercise B2 W32 eviction")
     loader = legacy.d1.ExplicitShardLoader([val_path], batch, length)
-    tokens = loader.next_batch()[0].to(next(model.parameters()).device)
-    first = model.forward_pass(tokens)
-    comparisons = {
-        "plain": (model.forward_pass(tokens)["logits"], model.incremental_logits(tokens, control="b2_recurrence_off", b2_gate_override=0.0)["logits"]),
-        "active": (model.forward_pass(tokens, b2_recurrent_source=first["h11"], bank_mode="full")["logits"], model.incremental_logits(tokens, control="real", bank_mode="full")["logits"]),
-    }
+    tokens = loader.next_batch()[0].to(model.base.transformer.wte.weight.device)
+    original_precision = torch.get_float32_matmul_precision()
+    original_matmul_tf32 = torch.backends.cuda.matmul.allow_tf32
+    original_cudnn_tf32 = torch.backends.cudnn.allow_tf32
+    try:
+        # This is the strict FP32 audit. Explicitly disable TF32 rather than
+        # merely labeling the result FP32 while inheriting training defaults.
+        torch.set_float32_matmul_precision("highest")
+        torch.backends.cuda.matmul.allow_tf32 = False
+        torch.backends.cudnn.allow_tf32 = False
+        first = model.forward_pass(tokens)
+        comparisons = {
+            "plain": (
+                model.forward_pass(tokens)["logits"],
+                model.incremental_logits(
+                    tokens,
+                    control="b2_recurrence_off",
+                    b2_gate_override=0.0,
+                )["logits"],
+            ),
+            "active": (
+                model.forward_pass(
+                    tokens,
+                    b2_recurrent_source=first["h11"],
+                    bank_mode="full",
+                )["logits"],
+                model.incremental_logits(
+                    tokens,
+                    control="real",
+                    bank_mode="full",
+                )["logits"],
+            ),
+        }
+    finally:
+        torch.set_float32_matmul_precision(original_precision)
+        torch.backends.cuda.matmul.allow_tf32 = original_matmul_tf32
+        torch.backends.cudnn.allow_tf32 = original_cudnn_tf32
     report = {}
     for name, (parallel, incremental) in comparisons.items():
         delta = (parallel.float() - incremental.float()).abs()
@@ -4577,17 +4638,297 @@ def parallel_incremental_equivalence(model, val_path, length=64, batch=2):
             "recursive_self_composition_positions_32_plus_mean_abs": delta[:, 32:].mean().item(),
         }
     report["b2_w32_eviction_exercised"] = True
+    report["precision"] = "float32"
+    report["float32_matmul_precision"] = "highest"
+    report["matmul_allow_tf32"] = False
+    report["cudnn_allow_tf32"] = False
+    report["max_abs_tolerance"] = FP32_INCREMENTAL_ATOL
     report["passed"] = (
         report["plain"]["max_abs"] <= FP32_INCREMENTAL_ATOL
         and report["active"]["pre_recurrence_positions_0_31_max_abs"]
         <= FP32_INCREMENTAL_ATOL
     )
     report["method"] = (
-        "Strict FP32 equality is required for the complete recurrence-off path and "
+        "Strict FP32 tolerance is required for the complete recurrence-off path and "
         "the active pre-recurrence prefix. Later active drift is expected because "
-        "true incremental recurrence self-composes token by token."
+        "true incremental recurrence self-composes token by token. FP32-highest is "
+        "selected explicitly and TF32 is disabled for both compared paths."
     )
     return report
+
+
+def failed_finalize_evidence_audit(output) -> dict:
+    """Validate the immutable, independently sealed failed-finalize evidence."""
+
+    output = Path(output).resolve()
+    archive = output / "failed_finalize_attempt_1"
+    evidence = {}
+    checks = {"archive_present": archive.is_dir()}
+    for name, expected_sha in AUDIT_CORRECTION_FAILED_EVIDENCE_SHA256.items():
+        path = archive / name
+        present = path.is_file() and path.stat().st_size > 0
+        observed_sha = file_sha256(path) if present else None
+        checks[f"{name}_present"] = present
+        checks[f"{name}_sha256_exact"] = observed_sha == expected_sha
+        evidence[name] = {
+            "path": str(path),
+            "bytes": path.stat().st_size if present else 0,
+            "sha256": observed_sha,
+            "expected_sha256": expected_sha,
+        }
+    if checks["parallel_incremental_equivalence.json_present"]:
+        prior_equivalence = read_json(
+            archive / "parallel_incremental_equivalence.json"
+        )
+        checks["prior_equivalence_failed"] = prior_equivalence.get("passed") is False
+    else:
+        checks["prior_equivalence_failed"] = False
+    if checks["FINAL_AUDIT.json_present"]:
+        prior_audit = read_json(archive / "FINAL_AUDIT.json")
+        prior_checks = prior_audit.get("checks")
+        checks["prior_final_audit_failed_only_equivalence"] = (
+            prior_audit.get("passed") is False
+            and isinstance(prior_checks, dict)
+            and prior_checks.get("parallel_incremental_equivalence") is False
+            and all(
+                value is True
+                for key, value in prior_checks.items()
+                if key != "parallel_incremental_equivalence"
+            )
+        )
+    else:
+        checks["prior_final_audit_failed_only_equivalence"] = False
+    if checks["lane_gpu2.error.json_present"]:
+        lane_error = read_json(archive / "lane_gpu2.error.json")
+        checks["prior_lane_error_exact_semantics"] = (
+            lane_error.get("lane") == "GPU2"
+            and lane_error.get("status") == "HARD_FAILURE"
+            and lane_error.get("phase") == "2D2H_FINALIZE"
+            and isinstance(lane_error.get("exit_code"), int)
+            and lane_error["exit_code"] != 0
+        )
+    else:
+        checks["prior_lane_error_exact_semantics"] = False
+    return {
+        "archive": str(archive),
+        "evidence": evidence,
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
+def audit_correction_authorization_path(output) -> Path:
+    return Path(output).resolve() / AUDIT_CORRECTION_AUTHORIZATION
+
+
+def run_authorize_audit_correction(args):
+    """Authorize only the post-training TF32 audit correction, never training."""
+
+    require_git(clean=False)
+    require_config()
+    output = Path(args.output_dir).resolve()
+    expected_output = (REPO_ROOT / "results" / OUTPUT_NAME).resolve()
+    if output != expected_output:
+        raise SystemExit(f"audit correction output must be exactly {expected_output}")
+    workspace_mount_audit(
+        args.output_dir, args.run_root, args.persistent_volume_identity
+    )
+    authenticated_stop_audit(args)
+    require_single_a100()
+    preflight_path = output / "preflight_audit.json"
+    preflight = read_json(preflight_path)
+    current_fingerprint = implementation_fingerprint()
+    current_commit = git_output("rev-parse", "HEAD")
+    origin_commit = git_output("rev-parse", f"origin/{BRANCH}")
+    changed_files = set(
+        filter(
+            None,
+            git_output(
+                "diff", "--name-only", f"{AUDIT_CORRECTION_BASE_COMMIT}..{current_commit}"
+            ).splitlines(),
+        )
+    )
+    checkpoint = Path(args.final_checkpoint).resolve()
+    expected_checkpoint = Path(
+        "/workspace/exp2d2h_run/checkpoints/scientific_update_0191.pt"
+    )
+    checkpoint_sha = file_sha256(checkpoint)
+    sha_path = checkpoint.with_suffix(checkpoint.suffix + ".sha256")
+    verification_path = checkpoint.with_suffix(
+        checkpoint.suffix + ".verification.json"
+    )
+    sha_tokens = sha_path.read_text().split()
+    verification = read_json(verification_path)
+    failed_evidence = failed_finalize_evidence_audit(output)
+    checks = {
+        "old_passing_preflight_bytes_exact": file_sha256(preflight_path)
+        == AUDIT_CORRECTION_PREFLIGHT_SHA256,
+        "old_preflight_passed": preflight.get("science_passed") is True,
+        "old_preflight_commit_exact": preflight.get("implementation_git_commit")
+        == AUDIT_CORRECTION_BASE_COMMIT,
+        "old_preflight_fingerprint_exact": preflight.get(
+            "implementation_fingerprint", {}
+        ).get("aggregate_sha256")
+        == AUDIT_CORRECTION_BASE_FINGERPRINT,
+        "old_commit_is_ancestor": subprocess.call(
+            [
+                "git",
+                "merge-base",
+                "--is-ancestor",
+                AUDIT_CORRECTION_BASE_COMMIT,
+                current_commit,
+            ],
+            cwd=REPO_ROOT,
+        )
+        == 0,
+        "correction_changed_files_exact": changed_files
+        == AUDIT_CORRECTION_CHANGED_FILES,
+        "tracked_worktree_clean": git_output(
+            "status", "--porcelain=v1", "--untracked-files=no"
+        )
+        == "",
+        "correction_commit_pushed": current_commit == origin_commit,
+        "final_checkpoint_path_exact": checkpoint == expected_checkpoint,
+        "final_checkpoint_sha_exact": checkpoint_sha
+        == AUDIT_CORRECTION_FINAL_CHECKPOINT_SHA256,
+        "final_checkpoint_sidecar_exact": sha_tokens
+        == [checkpoint_sha, checkpoint.name],
+        "final_checkpoint_strict_reopen_passed": verification.get("passed")
+        is True
+        and verification.get("sha256") == checkpoint_sha,
+        "failed_finalize_evidence_exact": failed_evidence["passed"] is True,
+    }
+    payload = {
+        "schema_version": 1,
+        "correction_kind": "evaluation_only",
+        "command": " ".join(sys.argv),
+        "base_commit": AUDIT_CORRECTION_BASE_COMMIT,
+        "current_commit": current_commit,
+        "origin_commit": origin_commit,
+        "changed_files": sorted(changed_files),
+        "old_preflight": {
+            "path": str(preflight_path),
+            "sha256": file_sha256(preflight_path),
+            "implementation_fingerprint": preflight.get(
+                "implementation_fingerprint"
+            ),
+        },
+        "current_implementation_fingerprint": current_fingerprint,
+        "final_checkpoint": {
+            "path": str(checkpoint),
+            "sha256": checkpoint_sha,
+            "sha256_sidecar": str(sha_path),
+            "verification": str(verification_path),
+        },
+        "failed_finalize_evidence": failed_evidence,
+        "training_or_checkpoint_change_authorized": False,
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+    durable_json(audit_correction_authorization_path(output), payload)
+    if payload["passed"] is not True:
+        raise SystemExit(f"2D2H audit correction authorization failed: {checks}")
+    print("EXPERIMENT_2D2H_AUDIT_CORRECTION_AUTHORIZED", flush=True)
+    return payload
+
+
+def require_finalize_implementation_fingerprint(preflight, output) -> dict:
+    """Require exact preflight bytes plus the narrow pushed correction commit."""
+
+    current = implementation_fingerprint()
+    authorization_path = audit_correction_authorization_path(output)
+    authorization = read_json(authorization_path)
+    failed_evidence = failed_finalize_evidence_audit(output)
+    checks = {
+        "authorization_passed": authorization.get("passed") is True,
+        "evaluation_only": authorization.get("correction_kind")
+        == "evaluation_only",
+        "old_preflight_object_exact": preflight.get("implementation_git_commit")
+        == AUDIT_CORRECTION_BASE_COMMIT
+        and preflight.get("implementation_fingerprint", {}).get(
+            "aggregate_sha256"
+        )
+        == AUDIT_CORRECTION_BASE_FINGERPRINT,
+        "old_preflight_bytes_exact": file_sha256(
+            Path(output) / "preflight_audit.json"
+        )
+        == AUDIT_CORRECTION_PREFLIGHT_SHA256,
+        "current_fingerprint_authorized": authorization.get(
+            "current_implementation_fingerprint"
+        )
+        == current,
+        "current_commit_authorized": authorization.get("current_commit")
+        == git_output("rev-parse", "HEAD")
+        == git_output("rev-parse", f"origin/{BRANCH}"),
+        "changed_files_exact": set(authorization.get("changed_files", []))
+        == AUDIT_CORRECTION_CHANGED_FILES,
+        "failed_finalize_evidence_still_exact": failed_evidence["passed"] is True
+        and authorization.get("failed_finalize_evidence") == failed_evidence,
+        "training_or_checkpoint_change_forbidden": authorization.get(
+            "training_or_checkpoint_change_authorized"
+        )
+        is False,
+    }
+    if not all(checks.values()):
+        raise SystemExit(
+            f"scientific implementation lacks exact audit-correction authorization: {checks}"
+        )
+    return current
+
+
+def post_training_audit_correction(output, equivalence) -> dict:
+    """Disclose the evaluation-only TF32 audit correction and prior evidence."""
+
+    output = Path(output).resolve()
+    failed_evidence = failed_finalize_evidence_audit(output)
+    authorization_path = audit_correction_authorization_path(output)
+    authorization = read_json(authorization_path)
+    settings_checks = {
+        "precision_is_fp32": equivalence.get("precision") == "float32",
+        "highest_float32_matmul_precision": equivalence.get(
+            "float32_matmul_precision"
+        )
+        == "highest",
+        "matmul_tf32_disabled": equivalence.get("matmul_allow_tf32") is False,
+        "cudnn_tf32_disabled": equivalence.get("cudnn_allow_tf32") is False,
+        "unchanged_fp32_tolerance": equivalence.get("max_abs_tolerance")
+        == FP32_INCREMENTAL_ATOL,
+    }
+    checks = {
+        **settings_checks,
+        "failed_attempt_archive_exact": failed_evidence["passed"] is True,
+        "correction_authorization_exact": authorization.get("passed") is True,
+    }
+    return {
+        "schema_version": 1,
+        "correction_kind": "evaluation_only",
+        "correction": (
+            "Explicitly select float32 matmul precision highest and disable CUDA/CUDNN "
+            "TF32 while running the unchanged strict FP32 parallel/incremental "
+            "equivalence tolerance."
+        ),
+        "reason": (
+            "The failed helper labeled its measurement strict FP32 but inherited "
+            "training-time TF32 process flags."
+        ),
+        "training_changed": False,
+        "checkpoint_changed": False,
+        "data_or_primary_scientific_metrics_changed": False,
+        "audit_measurement_recomputed": True,
+        "fp32_tolerance_before": FP32_INCREMENTAL_ATOL,
+        "fp32_tolerance_after": FP32_INCREMENTAL_ATOL,
+        "authorization": {
+            "path": str(authorization_path),
+            "sha256": file_sha256(authorization_path),
+            "current_commit": authorization.get("current_commit"),
+        },
+        "failed_attempt_archive_present": True,
+        "failed_attempt_archive": failed_evidence["archive"],
+        "failed_attempt_evidence": failed_evidence["evidence"],
+        "failed_attempt_checks": failed_evidence["checks"],
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
 
 
 def memory_accounting(incremental=None) -> dict:
@@ -5793,7 +6134,7 @@ def run_finalize(args):
     device = require_single_a100()
     output = Path(args.output_dir).resolve()
     preflight = read_json(output / "preflight_audit.json")
-    require_implementation_fingerprint(preflight)
+    require_finalize_implementation_fingerprint(preflight, output)
     complete = read_json(output / "training_complete.json")
     if complete.get("completed_2d2h_updates") != MAX_UPDATES:
         raise SystemExit("2D2H training is not complete")
@@ -5813,6 +6154,11 @@ def run_finalize(args):
     val_path = validation_path(args.data_root)
     incremental = evaluate_incremental(model, val_path)
     equivalence = parallel_incremental_equivalence(model, val_path)
+    audit_correction = post_training_audit_correction(output, equivalence)
+    if audit_correction["passed"] is not True:
+        raise SystemExit(
+            f"2D2H post-training audit correction provenance failed: {audit_correction}"
+        )
     stability = self_composition_diagnostic(model, val_path, passes=8)
     memory = memory_accounting(incremental)
     parallel = milestones[str(MAX_UPDATES)]
@@ -5935,6 +6281,7 @@ def run_finalize(args):
         "stability_8pass": stability,
         "scientific_integrity_passed": scientific_integrity,
         "integrity_checks": integrity_checks,
+        "post_training_audit_correction": audit_correction,
         "pod": {
             "id": args.pod_id,
             "name": args.pod_name,
@@ -5973,6 +6320,7 @@ def run_finalize(args):
 - Final tanh(g_rec_B2): {checkpoint['tanh_g_rec_b2']:+.12g}
 - Eight-pass stability: {stability['finite']}
 - Scientific integrity: {scientific_integrity}
+- Evaluation-only FP32/TF32 audit correction disclosed: {audit_correction['passed']}
 
 The final checkpoint is persistent. Update-96 and smoke checkpoints are ephemeral;
 their hashes and strict-reopen audits remain in the artifact set. Stop—but do not
@@ -5983,6 +6331,7 @@ delete—the pod only after repository/local artifact synchronization is verifie
     durable_json(output / "incremental_cache_audit.json", cache_audit)
     durable_json(output / "memory_accounting.json", memory)
     durable_json(output / "parallel_incremental_equivalence.json", equivalence)
+    durable_json(output / "POST_TRAINING_AUDIT_CORRECTION.json", audit_correction)
     durable_json(output / "stability_8pass.json", stability)
     durable_json(output / "paired_controls.json", paired)
     durable_json(output / "gate_diagnostics.json", gate)
@@ -6061,6 +6410,7 @@ def build_parser():
         ("preflight", run_preflight),
         ("smoke", run_smoke),
         ("train", run_train),
+        ("authorize-audit-correction", run_authorize_audit_correction),
         ("finalize", run_finalize),
     ):
         current = subparsers.add_parser(name)
@@ -6068,7 +6418,7 @@ def build_parser():
         if name == "train":
             current.add_argument("--end-update", required=True, type=int)
             current.add_argument("--resume")
-        if name == "finalize":
+        if name in {"authorize-audit-correction", "finalize"}:
             current.add_argument("--final-checkpoint", required=True)
         current.set_defaults(function=function)
     seal = subparsers.add_parser("seal-report")
