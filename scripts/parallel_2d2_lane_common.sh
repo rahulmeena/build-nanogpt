@@ -284,9 +284,13 @@ if not commands:
     raise SystemExit("recovery completed without recorded resumed commands")
 payload = json.loads(success_path.read_text())
 payload["recovery_evidence"] = {
+    "recovery_reason": recovery.get("recovery_reasons", {}).get(
+        lane, lane_evidence.get("recovery_reason")
+    ),
     "prior_failure_marker_sha256": hashlib.sha256(error_path.read_bytes()).hexdigest(),
-    # A failure before scientific update 1 restarts from the strictly reopened
-    # frozen source checkpoint; it is the exact update-zero resume base.
+    # The lane-specific recovery preflight seals the exact restart base.  This
+    # may be a frozen update-zero source or an internal scientific staging
+    # checkpoint such as 2D2G Stage-A-191.
     "resume_checkpoint_sha256": lane_evidence["base_checkpoint_sha256"],
     "resumed_command_records": commands,
     "strict_checkpoint_reopen_passed": lane_evidence["strict_checkpoint_reopen_passed"],
