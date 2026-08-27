@@ -149,16 +149,54 @@ else:
     else:
         if scoped_preflight != preflight:
             problems.append("top-level and run-scoped preflight records differ")
-lane = os.environ["LANE_NAME"].lower()
-for suffix in ("error.json", "science_complete.json", "terminal.json"):
-    if (run_dir / f"lane_{lane}.{suffix}").exists():
-        problems.append(f"stale lane marker exists: lane_{lane}.{suffix}")
+lane_name = os.environ["LANE_NAME"]
+lane = lane_name.lower()
+recovery_mode = os.environ.get("MASTER_RECOVERY_MODE") == "1"
+error_path = run_dir / f"lane_{lane}.error.json"
+success_path = run_dir / f"lane_{lane}.science_complete.json"
+terminal_path = run_dir / f"lane_{lane}.terminal.json"
+if recovery_mode:
+    recovery_path = run_dir / "RECOVERY_PREFLIGHT.json"
+    try:
+        recovery = json.loads(recovery_path.read_text())
+    except (FileNotFoundError, json.JSONDecodeError) as error:
+        problems.append(f"recovery preflight unavailable: {error}")
+    else:
+        lane_evidence = recovery.get("lane_evidence", {}).get(lane_name, {})
+        if recovery.get("passed") is not True or recovery.get("run_id") != run_id:
+            problems.append("recovery preflight is stale or not passing")
+        if lane_name not in recovery.get("authorized_lanes", []):
+            problems.append("lane is not authorized for recovery")
+        if lane_evidence.get("strict_checkpoint_reopen_passed") is not True:
+            problems.append("recovery base checkpoint was not strictly reopened")
+        base_sha = lane_evidence.get("base_checkpoint_sha256")
+        if not isinstance(base_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", base_sha):
+            problems.append("recovery base checkpoint SHA is invalid")
+    try:
+        prior_error = json.loads(error_path.read_text())
+    except (FileNotFoundError, json.JSONDecodeError) as error:
+        problems.append(f"exact prior failure marker unavailable: {error}")
+    else:
+        if prior_error.get("run_id") != run_id or prior_error.get("lane") != lane_name:
+            problems.append("prior failure marker identity mismatch")
+        if prior_error.get("status") != "HARD_FAILURE" or not prior_error.get("exit_code"):
+            problems.append("prior failure marker is not a hard nonzero failure")
+    if success_path.exists() or terminal_path.exists():
+        problems.append("recovery refuses an existing success or terminal marker")
+else:
+    for path in (error_path, success_path, terminal_path):
+        if path.exists():
+            problems.append(f"stale lane marker exists: {path.name}")
 if problems:
     raise SystemExit("lane master gate failed: " + "; ".join(problems))
 PY
 
   mkdir -p "$LANE_RUN_DIR"
   touch "$LANE_COMMAND_LOG"
+  if [[ ${MASTER_RECOVERY_MODE:-0} == 1 ]]; then
+    export LANE_RECOVERY_COMMAND_LOG="$LANE_RUN_DIR/lane_${LANE_NAME,,}.recovery_commands.jsonl"
+    : > "$LANE_RECOVERY_COMMAND_LOG"
+  fi
   exec > >(tee -a "$LANE_LOG") 2>&1
   LANE_PHASE=MASTER_GATE
   export LANE_PHASE
@@ -202,6 +240,17 @@ with path.open("a", encoding="utf-8") as handle:
 PY
 
   "$@"
+  if [[ ${MASTER_RECOVERY_MODE:-0} == 1 ]]; then
+    LANE_RECOVERY_COMMAND="$quoted" "$LANE_PYTHON_BIN" - <<'PY'
+import json
+import os
+from pathlib import Path
+
+path = Path(os.environ["LANE_RECOVERY_COMMAND_LOG"])
+with path.open("a", encoding="utf-8") as handle:
+    handle.write(json.dumps(os.environ["LANE_RECOVERY_COMMAND"]) + "\n")
+PY
+  fi
   lane_write_record status RUNNING "$phase" "" "command completed"
   unset LANE_ACTIVE_COMMAND
 }
@@ -210,8 +259,48 @@ lane_mark_science_complete() {
   LANE_PHASE=SCIENCE_COMPLETE
   export LANE_PHASE
   unset LANE_ACTIVE_COMMAND || true
-  lane_write_record science_complete SCIENCE_COMPLETE_PENDING_GIT_AND_MASTER \
+  local terminal_status=SCIENCE_COMPLETE_PENDING_GIT_AND_MASTER
+  if [[ ${MASTER_RECOVERY_MODE:-0} == 1 ]]; then
+    terminal_status=RECOVERABLE_FAILURE_RESUMED
+  fi
+  lane_write_record science_complete "$terminal_status" \
     "$LANE_PHASE" 0 "all scientific commands for this lane completed"
-  lane_write_record status SCIENCE_COMPLETE_PENDING_GIT_AND_MASTER \
+  if [[ ${MASTER_RECOVERY_MODE:-0} == 1 ]]; then
+    "$LANE_PYTHON_BIN" - <<'PY'
+import hashlib
+import json
+import os
+from pathlib import Path
+
+run_dir = Path(os.environ["LANE_RUN_DIR"])
+lane = os.environ["LANE_NAME"]
+lower = lane.lower()
+error_path = run_dir / f"lane_{lower}.error.json"
+success_path = run_dir / f"lane_{lower}.science_complete.json"
+recovery = json.loads((run_dir / "RECOVERY_PREFLIGHT.json").read_text())
+lane_evidence = recovery["lane_evidence"][lane]
+commands = [json.loads(line) for line in Path(os.environ["LANE_RECOVERY_COMMAND_LOG"]).read_text().splitlines() if line]
+if not commands:
+    raise SystemExit("recovery completed without recorded resumed commands")
+payload = json.loads(success_path.read_text())
+payload["recovery_evidence"] = {
+    "prior_failure_marker_sha256": hashlib.sha256(error_path.read_bytes()).hexdigest(),
+    # A failure before scientific update 1 restarts from the strictly reopened
+    # frozen source checkpoint; it is the exact update-zero resume base.
+    "resume_checkpoint_sha256": lane_evidence["base_checkpoint_sha256"],
+    "resumed_command_records": commands,
+    "strict_checkpoint_reopen_passed": lane_evidence["strict_checkpoint_reopen_passed"],
+    "recovery_preflight": str(run_dir / "RECOVERY_PREFLIGHT.json"),
+}
+temporary = success_path.with_name(success_path.name + f".tmp.{os.getpid()}")
+with temporary.open("w", encoding="utf-8") as handle:
+    json.dump(payload, handle, indent=2, sort_keys=True)
+    handle.write("\n")
+    handle.flush()
+    os.fsync(handle.fileno())
+os.replace(temporary, success_path)
+PY
+  fi
+  lane_write_record status "$terminal_status" \
     "$LANE_PHASE" 0 "lane shell will exit successfully"
 }
