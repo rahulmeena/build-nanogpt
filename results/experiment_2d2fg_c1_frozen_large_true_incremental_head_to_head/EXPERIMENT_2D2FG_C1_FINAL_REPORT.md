@@ -183,7 +183,7 @@ The frozen scientific evaluation and terminal scientific audit completed on the 
 - Zero mutation counters: `{'backward_calls': 0, 'optimizer_steps': 0, 'parameter_updates': 0, 'scheduler_steps': 0, 'training_targets': 0}`
 - Cache and physical-state audit passed: `True`
 - Implementation regression passed: `True`
-- Results commit: `PENDING RESULTS COMMIT`
+- Results commit: `b80af970170d030e62037ec4d4c49069b4676e58`
 - Artifact path: `/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d2fg_c1/results/experiment_2d2fg_c1_frozen_large_true_incremental_head_to_head`
 - Pod `rvgztsr0azrwyo` was stopped at `2026-08-27T20:35:58Z` after a verified local backup.
 - Persistent volume `yhzyb27fb5` is retained.
