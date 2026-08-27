@@ -803,6 +803,13 @@ def reconcile_recovery(args) -> int:
     _, run_root = validate_master_preflight(master_root, args.run_id)
     if (run_root / "MASTER_FINALIZATION_COMPLETE").exists():
         raise RuntimeError("cannot reconcile after master finalization is complete")
+    top_finalization = master_root / "MASTER_FINALIZATION_COMPLETE"
+    if top_finalization.exists():
+        top_finalization_record = read_json(top_finalization)
+        if top_finalization_record.get("run_id") == args.run_id:
+            raise RuntimeError(
+                "cannot reconcile after current-run master finalization publication has begun"
+            )
     recovered_lanes = list(args.recovered_lane)
     if (
         not recovered_lanes
@@ -852,8 +859,9 @@ def reconcile_recovery(args) -> int:
         or not isinstance(preflight_schemas, dict)
         or preflight_schemas != plan_schemas
         or not isinstance(retained_lanes, list)
+        or any(lane not in recovered_lanes for lane in retained_lanes)
         or len(retained_lanes) != len(set(retained_lanes))
-        or set(retained_lanes) != legacy_lanes
+        or not legacy_lanes.issubset(set(retained_lanes))
         or legacy_lanes not in (set(), {"GPU2"})
     ):
         raise RuntimeError(

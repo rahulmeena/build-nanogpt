@@ -140,7 +140,9 @@ def recovery_fixture(root: Path, run_id: str, planned_commands: list[str]) -> tu
             "run_id": run_id,
             "passed": True,
             "authorized_lanes": ["GPU0"],
-            "retained_active_lanes": [],
+            # A retained shell can use the current v2 evidence schema.  Only
+            # legacy evidence is restricted to the explicitly retained GPU2.
+            "retained_active_lanes": ["GPU0"],
             "recovery_evidence_schemas": {"GPU0": "v2_with_recovery_reason"},
             "recovery_reasons": {"GPU0": recovery_reason},
             "checks": {"all_exact": True},
@@ -479,6 +481,18 @@ PY
                     supervisor.durable_bytes_exclusive = original_exclusive_write
                 self.assertTrue((root / "MASTER_FINALIZATION_COMPLETE").exists())
                 self.assertFalse((run_root / "MASTER_FINALIZATION_COMPLETE").exists())
+                terminal_before_rejected_reconcile = (
+                    run_root / "MASTER_TERMINAL_STATUS.json"
+                ).read_bytes()
+                with self.assertRaisesRegex(
+                    RuntimeError,
+                    "current-run master finalization publication has begun",
+                ):
+                    supervisor.reconcile_recovery(args)
+                self.assertEqual(
+                    (run_root / "MASTER_TERMINAL_STATUS.json").read_bytes(),
+                    terminal_before_rejected_reconcile,
+                )
                 self.assertEqual(supervisor.mark_finalization_complete(finalize_args), 0)
                 finalization = json.loads(
                     (run_root / "MASTER_FINALIZATION_COMPLETE").read_text()
