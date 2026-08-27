@@ -6431,12 +6431,23 @@ def self_composition_diagnostic(model, val_path, passes=8, batch_size=2):
             current = model.forward_pass(x, b1_recurrent_source=h12, b2_recurrent_source=h11,
                                          b3_recurrent_source=h10, b4_recurrent_source=h9,
                                          return_diagnostics=index > 0)
-            rows.append({"pass": index + 1, "loss": _token_losses(current["logits"], y).double().mean().item(),
-                         "b9_memory_rms": current["h9"].float().square().mean().sqrt().item(),
-                         "b10_memory_rms": current["h10"].float().square().mean().sqrt().item(),
-                         "b11_memory_rms": current["h11"].float().square().mean().sqrt().item(),
-                         "b12_memory_rms": current["h12"].float().square().mean().sqrt().item(),
-                         "b4_recurrent_output_rms": 0.0 if index == 0 else current["diagnostics"]["b4"]["recurrent_output_rms"].float().item()})
+            row = {
+                "pass": index + 1,
+                "loss": _token_losses(current["logits"], y).double().mean().item(),
+                "b9_memory_rms": current["h9"].float().square().mean().sqrt().item(),
+                "b10_memory_rms": current["h10"].float().square().mean().sqrt().item(),
+                "b11_memory_rms": current["h11"].float().square().mean().sqrt().item(),
+                "b12_memory_rms": current["h12"].float().square().mean().sqrt().item(),
+            }
+            for link in ("b1", "b2", "b3", "b4"):
+                row[f"{link}_recurrent_output_rms"] = (
+                    0.0
+                    if index == 0
+                    else current["diagnostics"][link]["recurrent_output_rms"]
+                    .float()
+                    .item()
+                )
+            rows.append(row)
             h9, h10, h11, h12 = current["h9"], current["h10"], current["h11"], current["h12"]
     report = {"passes": rows, "batch_size": batch_size, "sequence_length": T,
               "finite": all(all(math.isfinite(value) for key, value in row.items() if key != "pass") for row in rows),
