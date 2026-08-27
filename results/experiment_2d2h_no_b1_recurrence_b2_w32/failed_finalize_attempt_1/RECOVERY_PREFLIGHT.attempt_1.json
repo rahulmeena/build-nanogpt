@@ -1,0 +1,324 @@
+{
+  "authorized_lanes": [
+    "GPU2",
+    "GPU0",
+    "GPU1"
+  ],
+  "checks": {
+    "failed_lane_patches_narrow_and_pushed": true,
+    "immutable_shared_manifests_unchanged": true,
+    "original_shared_preflight_still_exact": true,
+    "retained_active_recovery_lanes_exact": true,
+    "unaffected_lanes_same_run_without_error": true
+  },
+  "created_utc": "2026-08-27T13:43:35.926247+00:00",
+  "immutable_manifest_audit": {
+    "AUTO_STOP_PREFLIGHT.json": {
+      "exact_copy": true,
+      "passed": true,
+      "run_scoped_sha256": "90fda6ab3aad815a3aeac23d9039cfe48e1b36eb5a0668618deb50df36f23a4b",
+      "top_sha256": "90fda6ab3aad815a3aeac23d9039cfe48e1b36eb5a0668618deb50df36f23a4b"
+    },
+    "hardware_manifest.json": {
+      "exact_copy": true,
+      "passed": true,
+      "run_scoped_sha256": "6908c6845efe7eac456c59828a8d7d82152ebd6bb4383e22fd6011b79cd59264",
+      "top_sha256": "6908c6845efe7eac456c59828a8d7d82152ebd6bb4383e22fd6011b79cd59264"
+    },
+    "shared_dataset_manifest.json": {
+      "exact_copy": true,
+      "passed": true,
+      "run_scoped_sha256": "2e08be00ef4246afb9a98ca231596501a3aa3f5ed8917c74dd24fbaacadaeecf",
+      "top_sha256": "2e08be00ef4246afb9a98ca231596501a3aa3f5ed8917c74dd24fbaacadaeecf"
+    },
+    "source_checkpoint_manifest.json": {
+      "exact_copy": true,
+      "passed": true,
+      "run_scoped_sha256": "b87092ae2ca4ad3bd24b5ede02e3afe5a0443d39f93b60bdc5430142ceeb3fd6",
+      "top_sha256": "b87092ae2ca4ad3bd24b5ede02e3afe5a0443d39f93b60bdc5430142ceeb3fd6"
+    },
+    "storage_preflight.json": {
+      "exact_copy": true,
+      "passed": true,
+      "run_scoped_sha256": "9546f018571ef15e5289d8defc39985abd0c0e770fd0d64b39633237ac12c438",
+      "top_sha256": "9546f018571ef15e5289d8defc39985abd0c0e770fd0d64b39633237ac12c438"
+    }
+  },
+  "lane_evidence": {
+    "GPU0": {
+      "assigned_gpu": {
+        "checks": {
+          "memory_used_at_most_driver_baseline": true,
+          "no_compute_process": true,
+          "utilization_zero": true
+        },
+        "compute_processes": [],
+        "index": 0,
+        "memory_used_mib": 0,
+        "passed": true,
+        "utilization_percent": 0,
+        "uuid": "GPU-ee06d3bd-5c12-36b6-3ada-e64213745053"
+      },
+      "base_checkpoint": "/workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt",
+      "base_checkpoint_sha256": "dea5e76b55d1ad7281fe3cf3893713392343b875182ba186a0049904e61de790",
+      "branch": "codex/parallel-2d2-master",
+      "changed_files": [
+        "scripts/experiment_2d2e_c1.py",
+        "scripts/parallel_2d2_lane1_stage_b_recovery.sh",
+        "scripts/parallel_2d2_lane_common.sh",
+        "scripts/parallel_2d2_recovery_preflight.py",
+        "scripts/parallel_2d2_supervisor.py",
+        "scripts/test_parallel_2d2_orchestration.py",
+        "scripts/test_parallel_2d2_recovery_preflight.py",
+        "tests/test_experiment_2d2e_c1.py"
+      ],
+      "checkpoint_sidecar_audit": {
+        "checkpoint": "/workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt",
+        "checks": {
+          "expected_sha_exact": true,
+          "sha_sidecar_exact": true,
+          "strict_reopen_sidecar_passed": true
+        },
+        "passed": true,
+        "sha256": "dea5e76b55d1ad7281fe3cf3893713392343b875182ba186a0049904e61de790",
+        "sha_sidecar": "/workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt.sha256",
+        "verification_sidecar": "/workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt.verification.json"
+      },
+      "checks": {
+        "assigned_gpu_idle": true,
+        "base_checkpoint_and_sidecars_exact": true,
+        "changed_files_narrow": true,
+        "current_commit_pushed": true,
+        "focused_tests_passed": true,
+        "no_success_marker": true,
+        "no_terminal_marker": true,
+        "old_commit_is_ancestor": true,
+        "prior_failure_exact": true,
+        "tracked_worktree_clean": true,
+        "untracked_only_in_exact_result_roots": true
+      },
+      "current_commit": "3e88ee88f74c353b1390f78d9fb0e0e71965fe6f",
+      "focused_test_command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_experiment_2d2e_c1.py",
+        "scripts/test_parallel_2d2_recovery_preflight.py"
+      ],
+      "focused_test_stderr": "",
+      "focused_test_stdout": "............                                                             [100%]\n12 passed in 1.59s\n",
+      "lane": "GPU0",
+      "old_commit": "c1d578d3f2926d7892f464ef890032bef7bc8499",
+      "origin_commit": "3e88ee88f74c353b1390f78d9fb0e0e71965fe6f",
+      "passed": true,
+      "prior_failure_marker": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/lane_gpu0.error.json",
+      "prior_failure_marker_sha256": "8b92af7e5c190b985e7bebc83c49224c45293adf248655ef838a44eda944b996",
+      "recovery_reason": "2D2E-C1 completed its evaluation but artifact publication failed on non-JSON CUDA UUID metadata; deterministically rerun frozen C1 from the exact 2D2E checkpoint, then execute the unchanged 2D2F sequence",
+      "strict_checkpoint_reopen_passed": true,
+      "worktree_artifact_audit": {
+        "allowed_untracked_result_roots": [
+          "results/experiment_2d2e_c1_large_true_self_confirmation"
+        ],
+        "checks": {
+          "tracked_worktree_clean": true,
+          "untracked_only_in_exact_result_roots": true
+        },
+        "disallowed_untracked_files": [],
+        "passed": true,
+        "tracked_status": "",
+        "untracked_files": [
+          "results/experiment_2d2e_c1_large_true_self_confirmation/HEARTBEAT.json",
+          "results/experiment_2d2e_c1_large_true_self_confirmation/bootstrap_results.json",
+          "results/experiment_2d2e_c1_large_true_self_confirmation/c1_validation_subset_manifest.json",
+          "results/experiment_2d2e_c1_large_true_self_confirmation/paired_results.json",
+          "results/experiment_2d2e_c1_large_true_self_confirmation/subset_manifest.json"
+        ]
+      }
+    },
+    "GPU1": {
+      "assigned_gpu": {
+        "checks": {
+          "memory_used_at_most_driver_baseline": true,
+          "no_compute_process": true,
+          "utilization_zero": true
+        },
+        "compute_processes": [],
+        "index": 1,
+        "memory_used_mib": 0,
+        "passed": true,
+        "utilization_percent": 0,
+        "uuid": "GPU-60c81eb6-1764-74ca-e25f-212f8f5549d6"
+      },
+      "base_checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt",
+      "base_checkpoint_sha256": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+      "branch": "experiment-2d2g-b2-full-b3-w64",
+      "changed_files": [
+        "scripts/experiment_2d2g.py",
+        "tests/test_experiment_2d2g_driver.py"
+      ],
+      "checkpoint_sidecar_audit": {
+        "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt",
+        "checks": {
+          "expected_sha_exact": true,
+          "sha_sidecar_exact": true,
+          "strict_reopen_sidecar_passed": true
+        },
+        "passed": true,
+        "sha256": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+        "sha_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt.sha256",
+        "verification_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt.verification.json"
+      },
+      "checks": {
+        "assigned_gpu_idle": true,
+        "base_checkpoint_and_sidecars_exact": true,
+        "changed_files_narrow": true,
+        "current_commit_pushed": true,
+        "focused_tests_passed": true,
+        "no_success_marker": true,
+        "no_terminal_marker": true,
+        "old_commit_is_ancestor": true,
+        "prior_failure_exact": true,
+        "tracked_worktree_clean": true,
+        "untracked_only_in_exact_result_roots": true
+      },
+      "current_commit": "756ebbae45817feb883158c7fcad9260b3fd0acc",
+      "focused_test_command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_experiment_2d2g_core.py",
+        "tests/test_experiment_2d2g_driver.py"
+      ],
+      "focused_test_stderr": "",
+      "focused_test_stdout": ".......................                                                  [100%]\n23 passed in 4.45s\n",
+      "lane": "GPU1",
+      "old_commit": "08340ac65a38345edab35d75a2deaa29896f0405",
+      "origin_commit": "756ebbae45817feb883158c7fcad9260b3fd0acc",
+      "passed": true,
+      "prior_failure_marker": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/lane_gpu1.error.json",
+      "prior_failure_marker_sha256": "90ad118a27f68e8e091fbaa674f720e9c3f4897998ccfeadf44444c53a31d9f2",
+      "recovery_reason": "2D2G-B disposable smoke evaluation failed on an evaluation-device implementation defect after exact 2D2G-A update 191 completed; retain Stage-A-191 and rerun only smoke-B plus Stage B",
+      "strict_checkpoint_reopen_passed": true,
+      "worktree_artifact_audit": {
+        "allowed_untracked_result_roots": [
+          "results/experiment_2d2g_b2_full_b3_w64"
+        ],
+        "checks": {
+          "tracked_worktree_clean": true,
+          "untracked_only_in_exact_result_roots": true
+        },
+        "disallowed_untracked_files": [],
+        "passed": true,
+        "tracked_status": "",
+        "untracked_files": [
+          "results/experiment_2d2g_b2_full_b3_w64/HEARTBEAT.json",
+          "results/experiment_2d2g_b2_full_b3_w64/architecture_manifest.json",
+          "results/experiment_2d2g_b2_full_b3_w64/checkpoint_manifest.json",
+          "results/experiment_2d2g_b2_full_b3_w64/commands_and_runtime.json",
+          "results/experiment_2d2g_b2_full_b3_w64/parameter_manifest.json",
+          "results/experiment_2d2g_b2_full_b3_w64/preflight_audit.json",
+          "results/experiment_2d2g_b2_full_b3_w64/source_manifest.json",
+          "results/experiment_2d2g_b2_full_b3_w64/stage_a_data_match.json",
+          "results/experiment_2d2g_b2_full_b3_w64/stage_a_forced_restart_update_96.json",
+          "results/experiment_2d2g_b2_full_b3_w64/stage_a_restart_required_update_96.json",
+          "results/experiment_2d2g_b2_full_b3_w64/stage_a_training_metrics.jsonl",
+          "results/experiment_2d2g_b2_full_b3_w64/stage_b_data_match.json",
+          "results/experiment_2d2g_b2_full_b3_w64/storage_cleanup_manifest.json"
+        ]
+      }
+    },
+    "GPU2": {
+      "assigned_gpu": {
+        "checks": {
+          "memory_used_at_most_driver_baseline": true,
+          "no_compute_process": true,
+          "utilization_zero": true
+        },
+        "compute_processes": [],
+        "index": 2,
+        "memory_used_mib": 0,
+        "passed": true,
+        "utilization_percent": 0,
+        "uuid": "GPU-919af9b8-795b-f061-a0ad-aff690fe8074"
+      },
+      "base_checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
+      "base_checkpoint_sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+      "branch": "experiment-2d2h-no-b1-recurrence-b2-w32",
+      "changed_files": [
+        "scripts/experiment_2d2h.py",
+        "tests/test_experiment_2d2h_driver.py"
+      ],
+      "checks": {
+        "assigned_gpu_idle": true,
+        "base_checkpoint_sha_exact": true,
+        "base_sha_sidecar_exact": true,
+        "base_strict_reopen_sidecar_passed": true,
+        "changed_files_narrow": true,
+        "current_commit_pushed": true,
+        "focused_tests_passed": true,
+        "no_success_marker": true,
+        "no_terminal_marker": true,
+        "old_commit_is_ancestor": true,
+        "prior_failure_exact": true,
+        "worktree_clean": true
+      },
+      "current_commit": "69651f0ba31c55fc175b15c9ed08879868b81866",
+      "focused_test_command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_experiment_2d2h_core.py",
+        "tests/test_experiment_2d2h_driver.py"
+      ],
+      "focused_test_stderr": "",
+      "focused_test_stdout": ".................                                                        [100%]\n17 passed in 2.51s\n",
+      "lane": "GPU2",
+      "old_commit": "3c4975c5b948bcd5726bc3752ba994d84a66e208",
+      "origin_commit": "69651f0ba31c55fc175b15c9ed08879868b81866",
+      "passed": true,
+      "prior_failure_marker": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/lane_gpu2.error.json",
+      "prior_failure_marker_sha256": "5cd53233965511df12ec63fad8d2603d7b0da626e6ece0d5421f0f64cefbfdbd",
+      "recovery_reason": "2D2H failed before scientific update 1 on B2 gate-freshness audit ordering; restart from the exact frozen 2D2B checkpoint",
+      "strict_checkpoint_reopen_passed": true
+    }
+  },
+  "original_master_preflight": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/MASTER_PREFLIGHT.json",
+  "passed": true,
+  "pod_stop_automated": false,
+  "reason": "lane-specific audited recovery; see recovery_reasons",
+  "recovery_command_plan": {
+    "authorized_lanes": [
+      "GPU2",
+      "GPU0",
+      "GPU1"
+    ],
+    "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/RECOVERY_COMMAND_PLAN.json",
+    "sha256": "1360c1a948af6a79759fc6492d38921027cf1892ffa1d94aa96602d0983fe569"
+  },
+  "recovery_evidence_schemas": {
+    "GPU0": "v2_with_recovery_reason",
+    "GPU1": "v2_with_recovery_reason",
+    "GPU2": "legacy_v1_without_recovery_reason"
+  },
+  "recovery_reasons": {
+    "GPU0": "2D2E-C1 completed its evaluation but artifact publication failed on non-JSON CUDA UUID metadata; deterministically rerun frozen C1 from the exact 2D2E checkpoint, then execute the unchanged 2D2F sequence",
+    "GPU1": "2D2G-B disposable smoke evaluation failed on an evaluation-device implementation defect after exact 2D2G-A update 191 completed; retain Stage-A-191 and rerun only smoke-B plus Stage B",
+    "GPU2": "2D2H failed before scientific update 1 on B2 gate-freshness audit ordering; restart from the exact frozen 2D2B checkpoint"
+  },
+  "retained_active_lanes": [
+    "GPU2"
+  ],
+  "run_id": "e8c7fb77-213d-4f2b-9cbc-968aa779fc68",
+  "schema_version": 1,
+  "unaffected_lanes": {
+    "GPU3": {
+      "no_error_marker": true,
+      "phase": "2D2I_FINALIZE",
+      "same_run": true,
+      "status": "RUNNING"
+    }
+  }
+}

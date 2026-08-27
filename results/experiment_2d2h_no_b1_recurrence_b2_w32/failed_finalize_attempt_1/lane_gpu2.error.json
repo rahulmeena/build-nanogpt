@@ -1,0 +1,16 @@
+{
+  "command": "python scripts/experiment_2d2h.py finalize --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32 --run-root /workspace/exp2d2h_run --ephemeral-checkpoint-root /tmp/parallel_2d2_ephemeral/2d2h --checkpoint-persist-lock /workspace/parallel_2d2_master/locks/checkpoint_persist.lock --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA\\ A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json --final-checkpoint /workspace/exp2d2h_run/checkpoints/scientific_update_0191.pt",
+  "exit_code": 1,
+  "experiments": "2D2H",
+  "gpu_index": 2,
+  "lane": "GPU2",
+  "message": "lane command failed",
+  "phase": "2D2H_FINALIZE",
+  "process_group_id": 9729,
+  "run_id": "e8c7fb77-213d-4f2b-9cbc-968aa779fc68",
+  "schema_version": 1,
+  "shell_pid": 9729,
+  "status": "HARD_FAILURE",
+  "updated_epoch": 1787838335.740515,
+  "updated_utc": "2026-08-27T13:45:35.740516+00:00"
+}

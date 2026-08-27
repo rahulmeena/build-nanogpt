@@ -1,0 +1,357 @@
+Traceback (most recent call last):
+  File "/workspace/parallel_2d2_master/worktrees/2d2h/scripts/experiment_2d2h.py", line 6083, in <module>
+    main()
+  File "/workspace/parallel_2d2_master/worktrees/2d2h/scripts/experiment_2d2h.py", line 6079, in main
+    return args.function(args)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/parallel_2d2_master/worktrees/2d2h/scripts/experiment_2d2h.py", line 2588, in run_preflight
+    model, optimizer, source_loader, source_payload, source_audit = load_source_bundle(
+                                                                    ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/parallel_2d2_master/worktrees/2d2h/scripts/experiment_2d2h.py", line 788, in load_source_bundle
+    if any(source_model.g_rec in group["params"] for group in optimizer.param_groups):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/parallel_2d2_master/worktrees/2d2h/scripts/experiment_2d2h.py", line 788, in <genexpr>
+    if any(source_model.g_rec in group["params"] for group in optimizer.param_groups):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Boolean value of Tensor with more than one value is ambiguous
+semantic diff audit failed: {'b1_local_window': True, 'base_parameter_names': True, 'b1_gate_removed': True, 'b2_gate_fresh': False}
+2D2B validation batch=01/20
+2D2B validation batch=02/20
+2D2B validation batch=03/20
+2D2B validation batch=04/20
+2D2B validation batch=05/20
+2D2B validation batch=06/20
+2D2B validation batch=07/20
+2D2B validation batch=08/20
+2D2B validation batch=09/20
+2D2B validation batch=10/20
+2D2B validation batch=11/20
+2D2B validation batch=12/20
+2D2B validation batch=13/20
+2D2B validation batch=14/20
+2D2B validation batch=15/20
+2D2B validation batch=16/20
+2D2B validation batch=17/20
+2D2B validation batch=18/20
+2D2B validation batch=19/20
+2D2B validation batch=20/20
+2D2H validation batch=01/20
+2D2H validation batch=02/20
+2D2H validation batch=03/20
+2D2H validation batch=04/20
+2D2H validation batch=05/20
+2D2H validation batch=06/20
+2D2H validation batch=07/20
+2D2H validation batch=08/20
+2D2H validation batch=09/20
+2D2H validation batch=10/20
+2D2H validation batch=11/20
+2D2H validation batch=12/20
+2D2H validation batch=13/20
+2D2H validation batch=14/20
+2D2H validation batch=15/20
+2D2H validation batch=16/20
+2D2H validation batch=17/20
+2D2H validation batch=18/20
+2D2H validation batch=19/20
+2D2H validation batch=20/20
+EXPERIMENT_2D2H_PREFLIGHT_PASS
+EXPERIMENT_2D2H_SMOKE_PASS
+2D2H update=001/191 loss=3.179244 b1=REMOVED b2=-0.00030000 dt=8.91s
+2D2H update=002/191 loss=3.138817 b1=REMOVED b2=-0.00059695 dt=8.70s
+2D2H update=003/191 loss=3.121071 b1=REMOVED b2=-0.00089450 dt=8.71s
+2D2H update=004/191 loss=3.120593 b1=REMOVED b2=-0.00119307 dt=8.80s
+2D2H update=005/191 loss=3.034244 b1=REMOVED b2=-0.00148251 dt=8.74s
+2D2H update=006/191 loss=3.092606 b1=REMOVED b2=-0.00171590 dt=8.74s
+2D2H update=007/191 loss=3.145063 b1=REMOVED b2=-0.00183420 dt=8.75s
+2D2H update=008/191 loss=3.114279 b1=REMOVED b2=-0.00186825 dt=8.76s
+2D2H update=009/191 loss=3.081553 b1=REMOVED b2=-0.00186016 dt=8.83s
+2D2H update=010/191 loss=3.141922 b1=REMOVED b2=-0.00182144 dt=8.77s
+2D2H update=011/191 loss=3.114427 b1=REMOVED b2=-0.00178655 dt=8.78s
+2D2H update=012/191 loss=3.122640 b1=REMOVED b2=-0.00176308 dt=8.77s
+2D2H update=013/191 loss=3.038594 b1=REMOVED b2=-0.00176170 dt=8.83s
+2D2H update=014/191 loss=3.110208 b1=REMOVED b2=-0.00178160 dt=8.76s
+2D2H update=015/191 loss=3.063924 b1=REMOVED b2=-0.00181393 dt=9.06s
+2D2H update=016/191 loss=3.099175 b1=REMOVED b2=-0.00184121 dt=9.79s
+2D2H update=017/191 loss=3.107968 b1=REMOVED b2=-0.00186009 dt=9.03s
+2D2H update=018/191 loss=3.050635 b1=REMOVED b2=-0.00188520 dt=8.83s
+2D2H update=019/191 loss=3.092143 b1=REMOVED b2=-0.00191041 dt=8.75s
+2D2H update=020/191 loss=3.057835 b1=REMOVED b2=-0.00193869 dt=8.75s
+2D2H validation batch=01/20
+2D2H validation batch=02/20
+2D2H validation batch=03/20
+2D2H validation batch=04/20
+2D2H validation batch=05/20
+2D2H validation batch=06/20
+2D2H validation batch=07/20
+2D2H validation batch=08/20
+2D2H validation batch=09/20
+2D2H validation batch=10/20
+2D2H validation batch=11/20
+2D2H validation batch=12/20
+2D2H validation batch=13/20
+2D2H validation batch=14/20
+2D2H validation batch=15/20
+2D2H validation batch=16/20
+2D2H validation batch=17/20
+2D2H validation batch=18/20
+2D2H validation batch=19/20
+2D2H validation batch=20/20
+2D2H update=021/191 loss=3.073129 b1=REMOVED b2=-0.00195719 dt=9.45s
+2D2H update=022/191 loss=3.110720 b1=REMOVED b2=-0.00195904 dt=8.84s
+2D2H update=023/191 loss=3.054440 b1=REMOVED b2=-0.00195411 dt=8.74s
+2D2H update=024/191 loss=3.082150 b1=REMOVED b2=-0.00195655 dt=8.83s
+2D2H update=025/191 loss=3.070301 b1=REMOVED b2=-0.00198549 dt=8.75s
+2D2H update=026/191 loss=3.088573 b1=REMOVED b2=-0.00202435 dt=8.76s
+2D2H update=027/191 loss=2.979058 b1=REMOVED b2=-0.00207282 dt=8.76s
+2D2H update=028/191 loss=3.054079 b1=REMOVED b2=-0.00213762 dt=8.82s
+2D2H update=029/191 loss=2.994199 b1=REMOVED b2=-0.00221383 dt=8.76s
+2D2H update=030/191 loss=3.052660 b1=REMOVED b2=-0.00230418 dt=8.77s
+2D2H update=031/191 loss=2.991226 b1=REMOVED b2=-0.00239656 dt=8.77s
+2D2H update=032/191 loss=3.059933 b1=REMOVED b2=-0.00249333 dt=13.30s
+2D2H update=033/191 loss=3.036562 b1=REMOVED b2=-0.00256948 dt=8.76s
+2D2H update=034/191 loss=3.000726 b1=REMOVED b2=-0.00259616 dt=8.76s
+2D2H update=035/191 loss=3.002002 b1=REMOVED b2=-0.00264081 dt=8.76s
+2D2H update=036/191 loss=2.969459 b1=REMOVED b2=-0.00265187 dt=8.76s
+2D2H update=037/191 loss=3.039049 b1=REMOVED b2=-0.00264921 dt=8.83s
+2D2H update=038/191 loss=3.128480 b1=REMOVED b2=-0.00263466 dt=8.75s
+2D2H update=039/191 loss=3.147509 b1=REMOVED b2=-0.00260241 dt=8.75s
+2D2H update=040/191 loss=3.151989 b1=REMOVED b2=-0.00259566 dt=8.77s
+2D2H update=041/191 loss=3.085153 b1=REMOVED b2=-0.00262597 dt=8.84s
+2D2H update=042/191 loss=3.142096 b1=REMOVED b2=-0.00266226 dt=8.76s
+2D2H update=043/191 loss=3.084454 b1=REMOVED b2=-0.00269676 dt=8.83s
+2D2H update=044/191 loss=3.165534 b1=REMOVED b2=-0.00275086 dt=8.76s
+2D2H update=045/191 loss=3.133095 b1=REMOVED b2=-0.00283291 dt=8.76s
+2D2H update=046/191 loss=3.181410 b1=REMOVED b2=-0.00289577 dt=8.75s
+2D2H update=047/191 loss=3.153341 b1=REMOVED b2=-0.00289303 dt=8.81s
+2D2H update=048/191 loss=3.105606 b1=REMOVED b2=-0.00289826 dt=8.76s
+2D2H validation batch=01/20
+2D2H validation batch=02/20
+2D2H validation batch=03/20
+2D2H validation batch=04/20
+2D2H validation batch=05/20
+2D2H validation batch=06/20
+2D2H validation batch=07/20
+2D2H validation batch=08/20
+2D2H validation batch=09/20
+2D2H validation batch=10/20
+2D2H validation batch=11/20
+2D2H validation batch=12/20
+2D2H validation batch=13/20
+2D2H validation batch=14/20
+2D2H validation batch=15/20
+2D2H validation batch=16/20
+2D2H validation batch=17/20
+2D2H validation batch=18/20
+2D2H validation batch=19/20
+2D2H validation batch=20/20
+2D2H update=049/191 loss=3.160130 b1=REMOVED b2=-0.00295597 dt=8.91s
+2D2H update=050/191 loss=3.083757 b1=REMOVED b2=-0.00305057 dt=8.74s
+2D2H update=051/191 loss=3.045673 b1=REMOVED b2=-0.00316334 dt=8.75s
+2D2H update=052/191 loss=3.134193 b1=REMOVED b2=-0.00326880 dt=8.81s
+2D2H update=053/191 loss=3.091028 b1=REMOVED b2=-0.00329472 dt=8.75s
+2D2H update=054/191 loss=3.115140 b1=REMOVED b2=-0.00325222 dt=8.76s
+2D2H update=055/191 loss=3.071443 b1=REMOVED b2=-0.00317646 dt=8.76s
+2D2H update=056/191 loss=3.231237 b1=REMOVED b2=-0.00309538 dt=8.83s
+2D2H update=057/191 loss=3.068602 b1=REMOVED b2=-0.00301069 dt=8.77s
+2D2H update=058/191 loss=3.067997 b1=REMOVED b2=-0.00293339 dt=8.76s
+2D2H update=059/191 loss=3.037786 b1=REMOVED b2=-0.00286013 dt=8.76s
+2D2H update=060/191 loss=3.099817 b1=REMOVED b2=-0.00278103 dt=8.76s
+2D2H update=061/191 loss=3.074714 b1=REMOVED b2=-0.00270777 dt=8.83s
+2D2H update=062/191 loss=3.098154 b1=REMOVED b2=-0.00262978 dt=8.75s
+2D2H update=063/191 loss=3.079472 b1=REMOVED b2=-0.00257606 dt=8.75s
+2D2H update=064/191 loss=3.111188 b1=REMOVED b2=-0.00253393 dt=13.28s
+2D2H update=065/191 loss=3.086839 b1=REMOVED b2=-0.00251970 dt=8.77s
+2D2H update=066/191 loss=3.097978 b1=REMOVED b2=-0.00251155 dt=8.82s
+2D2H update=067/191 loss=3.106761 b1=REMOVED b2=-0.00252445 dt=8.77s
+2D2H update=068/191 loss=3.109195 b1=REMOVED b2=-0.00254473 dt=8.78s
+2D2H update=069/191 loss=3.087379 b1=REMOVED b2=-0.00259999 dt=8.76s
+2D2H update=070/191 loss=3.062159 b1=REMOVED b2=-0.00264414 dt=8.76s
+2D2H update=071/191 loss=3.063805 b1=REMOVED b2=-0.00270081 dt=8.81s
+2D2H update=072/191 loss=3.064981 b1=REMOVED b2=-0.00276961 dt=8.76s
+2D2H update=073/191 loss=2.999941 b1=REMOVED b2=-0.00284062 dt=8.77s
+2D2H update=074/191 loss=3.011155 b1=REMOVED b2=-0.00290779 dt=8.77s
+2D2H update=075/191 loss=2.964263 b1=REMOVED b2=-0.00297859 dt=8.76s
+2D2H update=076/191 loss=3.021105 b1=REMOVED b2=-0.00308798 dt=8.81s
+2D2H update=077/191 loss=3.012456 b1=REMOVED b2=-0.00320596 dt=8.76s
+2D2H update=078/191 loss=3.030697 b1=REMOVED b2=-0.00333098 dt=8.76s
+2D2H update=079/191 loss=3.040089 b1=REMOVED b2=-0.00343451 dt=8.77s
+2D2H update=080/191 loss=2.977647 b1=REMOVED b2=-0.00350261 dt=8.82s
+2D2H update=081/191 loss=3.039999 b1=REMOVED b2=-0.00355424 dt=8.76s
+2D2H update=082/191 loss=3.029598 b1=REMOVED b2=-0.00360332 dt=8.76s
+2D2H update=083/191 loss=2.975320 b1=REMOVED b2=-0.00363290 dt=8.85s
+2D2H update=084/191 loss=3.021415 b1=REMOVED b2=-0.00367028 dt=8.84s
+2D2H update=085/191 loss=3.126314 b1=REMOVED b2=-0.00370680 dt=8.77s
+2D2H update=086/191 loss=3.176508 b1=REMOVED b2=-0.00371705 dt=8.77s
+2D2H update=087/191 loss=3.115531 b1=REMOVED b2=-0.00369696 dt=9.58s
+2D2H update=088/191 loss=3.031378 b1=REMOVED b2=-0.00370518 dt=9.68s
+2D2H update=089/191 loss=3.143538 b1=REMOVED b2=-0.00371462 dt=8.77s
+2D2H update=090/191 loss=3.130909 b1=REMOVED b2=-0.00372285 dt=8.77s
+2D2H update=091/191 loss=3.127385 b1=REMOVED b2=-0.00379390 dt=8.83s
+2D2H update=092/191 loss=3.149092 b1=REMOVED b2=-0.00387975 dt=8.76s
+2D2H update=093/191 loss=3.112195 b1=REMOVED b2=-0.00398807 dt=8.75s
+2D2H update=094/191 loss=3.112565 b1=REMOVED b2=-0.00409806 dt=8.75s
+2D2H update=095/191 loss=3.169101 b1=REMOVED b2=-0.00421475 dt=8.82s
+2D2H update=096/191 loss=3.109383 b1=REMOVED b2=-0.00430716 dt=13.22s
+2D2H validation batch=01/20
+2D2H validation batch=02/20
+2D2H validation batch=03/20
+2D2H validation batch=04/20
+2D2H validation batch=05/20
+2D2H validation batch=06/20
+2D2H validation batch=07/20
+2D2H validation batch=08/20
+2D2H validation batch=09/20
+2D2H validation batch=10/20
+2D2H validation batch=11/20
+2D2H validation batch=12/20
+2D2H validation batch=13/20
+2D2H validation batch=14/20
+2D2H validation batch=15/20
+2D2H validation batch=16/20
+2D2H validation batch=17/20
+2D2H validation batch=18/20
+2D2H validation batch=19/20
+2D2H validation batch=20/20
+EXPERIMENT_2D2H_UPDATE_96_RESTART_REQUIRED
+2D2H update=097/191 loss=3.145216 b1=REMOVED b2=-0.00439948 dt=8.90s
+2D2H update=098/191 loss=3.087791 b1=REMOVED b2=-0.00448938 dt=8.72s
+2D2H update=099/191 loss=3.128725 b1=REMOVED b2=-0.00456940 dt=8.74s
+2D2H update=100/191 loss=3.201907 b1=REMOVED b2=-0.00459852 dt=8.84s
+2D2H update=101/191 loss=3.103143 b1=REMOVED b2=-0.00459599 dt=8.75s
+2D2H update=102/191 loss=3.100765 b1=REMOVED b2=-0.00454286 dt=8.74s
+2D2H update=103/191 loss=3.215626 b1=REMOVED b2=-0.00451830 dt=8.82s
+2D2H update=104/191 loss=3.055626 b1=REMOVED b2=-0.00453777 dt=8.75s
+2D2H update=105/191 loss=3.087811 b1=REMOVED b2=-0.00455741 dt=8.76s
+2D2H update=106/191 loss=3.105828 b1=REMOVED b2=-0.00455895 dt=8.76s
+2D2H update=107/191 loss=3.047211 b1=REMOVED b2=-0.00453969 dt=8.83s
+2D2H update=108/191 loss=3.081270 b1=REMOVED b2=-0.00448252 dt=8.77s
+2D2H update=109/191 loss=3.037522 b1=REMOVED b2=-0.00438963 dt=8.77s
+2D2H update=110/191 loss=3.124321 b1=REMOVED b2=-0.00429102 dt=8.77s
+2D2H update=111/191 loss=3.063470 b1=REMOVED b2=-0.00422008 dt=8.77s
+2D2H update=112/191 loss=3.113384 b1=REMOVED b2=-0.00416250 dt=8.82s
+2D2H update=113/191 loss=3.088708 b1=REMOVED b2=-0.00413284 dt=8.77s
+2D2H update=114/191 loss=3.086447 b1=REMOVED b2=-0.00416298 dt=8.77s
+2D2H update=115/191 loss=3.105640 b1=REMOVED b2=-0.00423075 dt=8.76s
+2D2H update=116/191 loss=3.064590 b1=REMOVED b2=-0.00432507 dt=8.81s
+2D2H update=117/191 loss=3.098349 b1=REMOVED b2=-0.00443662 dt=8.77s
+2D2H update=118/191 loss=3.082622 b1=REMOVED b2=-0.00455153 dt=8.77s
+2D2H update=119/191 loss=3.024719 b1=REMOVED b2=-0.00469260 dt=8.77s
+2D2H update=120/191 loss=2.988208 b1=REMOVED b2=-0.00477391 dt=8.77s
+2D2H update=121/191 loss=2.993767 b1=REMOVED b2=-0.00481362 dt=8.82s
+2D2H update=122/191 loss=2.983896 b1=REMOVED b2=-0.00485679 dt=8.77s
+2D2H update=123/191 loss=3.029194 b1=REMOVED b2=-0.00487491 dt=8.77s
+2D2H update=124/191 loss=3.036780 b1=REMOVED b2=-0.00487567 dt=8.76s
+2D2H update=125/191 loss=2.967273 b1=REMOVED b2=-0.00488285 dt=8.83s
+2D2H update=126/191 loss=3.060271 b1=REMOVED b2=-0.00489705 dt=8.76s
+2D2H update=127/191 loss=3.006269 b1=REMOVED b2=-0.00496410 dt=8.82s
+2D2H update=128/191 loss=3.007255 b1=REMOVED b2=-0.00504786 dt=13.61s
+2D2H update=129/191 loss=3.019963 b1=REMOVED b2=-0.00511851 dt=8.75s
+2D2H update=130/191 loss=3.054714 b1=REMOVED b2=-0.00517020 dt=8.83s
+2D2H update=131/191 loss=3.206811 b1=REMOVED b2=-0.00520660 dt=8.76s
+2D2H update=132/191 loss=3.182698 b1=REMOVED b2=-0.00523733 dt=8.76s
+2D2H update=133/191 loss=3.171794 b1=REMOVED b2=-0.00524296 dt=8.76s
+2D2H update=134/191 loss=3.151815 b1=REMOVED b2=-0.00525851 dt=8.83s
+2D2H update=135/191 loss=3.186836 b1=REMOVED b2=-0.00530845 dt=8.76s
+2D2H update=136/191 loss=3.139773 b1=REMOVED b2=-0.00531537 dt=8.76s
+2D2H update=137/191 loss=3.240613 b1=REMOVED b2=-0.00532022 dt=8.77s
+2D2H update=138/191 loss=3.139083 b1=REMOVED b2=-0.00531627 dt=8.85s
+2D2H update=139/191 loss=3.168107 b1=REMOVED b2=-0.00532495 dt=8.77s
+2D2H update=140/191 loss=3.081824 b1=REMOVED b2=-0.00535435 dt=8.78s
+2D2H update=141/191 loss=3.110546 b1=REMOVED b2=-0.00542518 dt=8.83s
+2D2H update=142/191 loss=3.076661 b1=REMOVED b2=-0.00554340 dt=8.77s
+2D2H update=143/191 loss=3.209541 b1=REMOVED b2=-0.00567395 dt=8.76s
+2D2H validation batch=01/20
+2D2H validation batch=02/20
+2D2H validation batch=03/20
+2D2H validation batch=04/20
+2D2H validation batch=05/20
+2D2H validation batch=06/20
+2D2H validation batch=07/20
+2D2H validation batch=08/20
+2D2H validation batch=09/20
+2D2H validation batch=10/20
+2D2H validation batch=11/20
+2D2H validation batch=12/20
+2D2H validation batch=13/20
+2D2H validation batch=14/20
+2D2H validation batch=15/20
+2D2H validation batch=16/20
+2D2H validation batch=17/20
+2D2H validation batch=18/20
+2D2H validation batch=19/20
+2D2H validation batch=20/20
+2D2H update=144/191 loss=3.153846 b1=REMOVED b2=-0.00572782 dt=8.74s
+2D2H update=145/191 loss=3.122700 b1=REMOVED b2=-0.00573353 dt=8.80s
+2D2H update=146/191 loss=3.179978 b1=REMOVED b2=-0.00569865 dt=8.75s
+2D2H update=147/191 loss=3.243330 b1=REMOVED b2=-0.00567373 dt=8.76s
+2D2H update=148/191 loss=3.083089 b1=REMOVED b2=-0.00567844 dt=8.77s
+2D2H update=149/191 loss=3.191963 b1=REMOVED b2=-0.00571045 dt=8.76s
+2D2H update=150/191 loss=3.068189 b1=REMOVED b2=-0.00576585 dt=8.84s
+2D2H update=151/191 loss=3.200844 b1=REMOVED b2=-0.00575404 dt=8.77s
+2D2H update=152/191 loss=3.134862 b1=REMOVED b2=-0.00575890 dt=8.77s
+2D2H update=153/191 loss=3.199568 b1=REMOVED b2=-0.00580173 dt=8.77s
+2D2H update=154/191 loss=3.020458 b1=REMOVED b2=-0.00581896 dt=8.84s
+2D2H update=155/191 loss=3.071324 b1=REMOVED b2=-0.00579003 dt=8.77s
+2D2H update=156/191 loss=3.055503 b1=REMOVED b2=-0.00574238 dt=8.77s
+2D2H update=157/191 loss=3.074582 b1=REMOVED b2=-0.00568062 dt=8.78s
+2D2H update=158/191 loss=3.066992 b1=REMOVED b2=-0.00563042 dt=8.84s
+2D2H update=159/191 loss=3.129708 b1=REMOVED b2=-0.00561908 dt=8.78s
+2D2H update=160/191 loss=3.068540 b1=REMOVED b2=-0.00561995 dt=13.32s
+2D2H update=161/191 loss=3.106158 b1=REMOVED b2=-0.00559961 dt=8.77s
+2D2H update=162/191 loss=3.155443 b1=REMOVED b2=-0.00560395 dt=8.78s
+2D2H update=163/191 loss=3.066625 b1=REMOVED b2=-0.00561904 dt=8.79s
+2D2H update=164/191 loss=3.112956 b1=REMOVED b2=-0.00563156 dt=8.82s
+2D2H update=165/191 loss=3.124065 b1=REMOVED b2=-0.00563829 dt=8.79s
+2D2H update=166/191 loss=2.973269 b1=REMOVED b2=-0.00562400 dt=8.77s
+2D2H update=167/191 loss=3.029709 b1=REMOVED b2=-0.00558220 dt=8.76s
+2D2H update=168/191 loss=3.008068 b1=REMOVED b2=-0.00549783 dt=8.77s
+2D2H update=169/191 loss=2.971089 b1=REMOVED b2=-0.00543885 dt=8.82s
+2D2H update=170/191 loss=3.024523 b1=REMOVED b2=-0.00539323 dt=8.76s
+2D2H update=171/191 loss=3.017177 b1=REMOVED b2=-0.00539176 dt=8.77s
+2D2H update=172/191 loss=3.014885 b1=REMOVED b2=-0.00541545 dt=8.76s
+2D2H update=173/191 loss=3.059092 b1=REMOVED b2=-0.00548098 dt=8.82s
+2D2H update=174/191 loss=3.006075 b1=REMOVED b2=-0.00555119 dt=8.76s
+2D2H update=175/191 loss=2.997958 b1=REMOVED b2=-0.00560684 dt=8.77s
+2D2H update=176/191 loss=2.959187 b1=REMOVED b2=-0.00563487 dt=8.77s
+2D2H update=177/191 loss=3.004467 b1=REMOVED b2=-0.00564700 dt=8.84s
+2D2H update=178/191 loss=3.087483 b1=REMOVED b2=-0.00560733 dt=8.76s
+2D2H update=179/191 loss=3.072222 b1=REMOVED b2=-0.00552668 dt=8.76s
+2D2H update=180/191 loss=3.179312 b1=REMOVED b2=-0.00545298 dt=8.76s
+2D2H update=181/191 loss=3.083141 b1=REMOVED b2=-0.00534597 dt=8.84s
+2D2H update=182/191 loss=3.111173 b1=REMOVED b2=-0.00525752 dt=8.76s
+2D2H update=183/191 loss=3.108624 b1=REMOVED b2=-0.00517522 dt=8.75s
+2D2H update=184/191 loss=3.093528 b1=REMOVED b2=-0.00513167 dt=8.83s
+2D2H update=185/191 loss=3.058464 b1=REMOVED b2=-0.00511228 dt=8.76s
+2D2H update=186/191 loss=3.089698 b1=REMOVED b2=-0.00507405 dt=8.77s
+2D2H update=187/191 loss=3.096354 b1=REMOVED b2=-0.00504020 dt=8.77s
+2D2H update=188/191 loss=3.168007 b1=REMOVED b2=-0.00499604 dt=8.81s
+2D2H update=189/191 loss=3.116555 b1=REMOVED b2=-0.00497670 dt=8.76s
+2D2H update=190/191 loss=3.111613 b1=REMOVED b2=-0.00499081 dt=8.76s
+2D2H update=191/191 loss=3.255607 b1=REMOVED b2=-0.00505796 dt=8.76s
+2D2H validation batch=01/20
+2D2H validation batch=02/20
+2D2H validation batch=03/20
+2D2H validation batch=04/20
+2D2H validation batch=05/20
+2D2H validation batch=06/20
+2D2H validation batch=07/20
+2D2H validation batch=08/20
+2D2H validation batch=09/20
+2D2H validation batch=10/20
+2D2H validation batch=11/20
+2D2H validation batch=12/20
+2D2H validation batch=13/20
+2D2H validation batch=14/20
+2D2H validation batch=15/20
+2D2H validation batch=16/20
+2D2H validation batch=17/20
+2D2H validation batch=18/20
+2D2H validation batch=19/20
+2D2H validation batch=20/20
+EXPERIMENT_2D2H_TRAINING_COMPLETE
+2D2H incremental batch=01/4
+2D2H incremental batch=02/4
+2D2H incremental batch=03/4
+2D2H incremental batch=04/4
+2D2H final audit failed: {'experiment': '2D2H', 'checks': {'preflight': True, 'final_checkpoint': True, 'exact_parameter_count': True, 'b1_gate_absent': True, 'b1_gate_optimizer_state_absent': True, 'incremental_target_count': True, 'incremental_cache_bounds': True, 'parallel_incremental_equivalence': False, 'eight_pass_stability': True, 'writer_gradient': True, 'attention_finite': True, 'all_training_states_finite': True, 'exact_2d2d_data_trajectory': True}, 'artifact_inventory': {'required_artifacts': {'FINAL_REPORT.md': {'exists_nonempty': True, 'bytes': None, 'sha256': None, 'size_deferred_self_referential': True, 'hash_deferred_self_referential': True}, 'EXPERIMENT_2D2H_FINAL_REPORT.md': {'exists_nonempty': True, 'bytes': None, 'sha256': None, 'size_deferred_self_referential': True, 'hash_deferred_self_referential': True}, 'FINAL_AUDIT.json': {'exists_nonempty': True, 'bytes': None, 'sha256': None, 'size_deferred_self_referential': True, 'hash_deferred_self_referential': True}, 'result_summary.json': {'exists_nonempty': True, 'bytes': None, 'sha256': None, 'size_deferred_self_referential': True, 'hash_deferred_self_referential': True}, 'source_manifest.json': {'exists_nonempty': True, 'bytes': 17826, 'sha256': 'e1798a24fdd1b7b619332734aa9e549d910ba0f9b66a0c8a4f97eaab3e9fc765', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'parameter_manifest.json': {'exists_nonempty': True, 'bytes': 76704, 'sha256': '831ac864819d31fd751d702c4d6ca724187e067415af78e60eceed9491883ff1', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'architecture_manifest.json': {'exists_nonempty': True, 'bytes': 1756, 'sha256': 'bf481013423fb74cfb44aaa0b2e0c30228dbdbaff08324aad8da76ae9b1472be', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'matched_2d2d_data_audit.json': {'exists_nonempty': True, 'bytes': 7527, 'sha256': '9126d6461c4f9c63f2a2e90ba7005b68ba64f28bacc2a745ac963fd59d385077', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'semantic_diff_audit.json': {'exists_nonempty': True, 'bytes': 879, 'sha256': '6becbe1fdd97f6e2195d233f40315cfed261e6a773d6bdcd626cf95b04b62422', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'batch_manifest.json': {'exists_nonempty': True, 'bytes': 637, 'sha256': '9d5ce30c317b43f71eee8deb055290b8bb209adeee8d9d7dc148bfd76e701480', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'preflight_audit.json': {'exists_nonempty': True, 'bytes': 278713, 'sha256': '59b92a0c20ce757d77998e2e63d746aa4bdce157ae1c9c717dbf2b40795ecaf8', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'initial_combined_damage.json': {'exists_nonempty': True, 'bytes': 259, 'sha256': '775bec47513fa3b3cb61db935353e246b4e2b2428c2494725c38cfb87aea2eff', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'training_metrics.jsonl': {'exists_nonempty': True, 'bytes': 251085, 'sha256': 'dc0108fd7c6e31e45bbf7599648527bab4c615f2483d49be6490171c5e43602f', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'milestone_validation.json': {'exists_nonempty': True, 'bytes': 824082, 'sha256': '5f90c442fc0aa79c6afcd0d9005d46827f6040ce71e26ac3a27e807609ceec62', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'paired_controls.json': {'exists_nonempty': True, 'bytes': 28836, 'sha256': 'b7952ff398c59723525cf6d60c2d5e84b91aeb7b0eea3c2cba2d24a7db8fad68', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'gate_diagnostics.json': {'exists_nonempty': True, 'bytes': 34637, 'sha256': 'b526eae70007db1119371f665010c922f79235d79c6908dabc7f92de4d405fc2', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'attention_diagnostics.json': {'exists_nonempty': True, 'bytes': 47964, 'sha256': 'b8a50b0f251c0147388848c31c146cbaf8a6b5ff27db72876a894f17b6360b43', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'temporal_gradient_diagnostics.json': {'exists_nonempty': True, 'bytes': 16550, 'sha256': 'fdbf9ba221cdff2dc888f6dcbac88cfadd12b445522512f5b71a50f0254fc02d', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'b2_local_attention_lag_bins.json': {'exists_nonempty': True, 'bytes': 6689, 'sha256': '4d4c1f9cc2e91eaa846188d2abb2f472c55ef739a7cf9e653a893cd2c8a27c77', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'b2_recurrent_attention_lag_bins.json': {'exists_nonempty': True, 'bytes': 10229, 'sha256': 'd63e0aab69d95bd0acff09e7eb2161ac9c33f47d287ee2754ef9ae12c6c75f1c', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'b2_attention_head_distance.json': {'exists_nonempty': True, 'bytes': 28566, 'sha256': '0668914372a36509f1bc3a77d1473069e4b5127512188faece064f9584e515bc', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'b11_to_b2_temporal_gradient.json': {'exists_nonempty': True, 'bytes': 15729, 'sha256': '457501af8fff4effd915dbedc748895466a9128cc8a262969929b34c7ae67f84', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'incremental_validation.json': {'exists_nonempty': True, 'bytes': 705021, 'sha256': 'a2201db19fa63a6c7eb5f20b28d19c3b5ce7823afb37a6e386d9561d80a822b4', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'incremental_cache_audit.json': {'exists_nonempty': True, 'bytes': 110339, 'sha256': 'c1044241431e786b00d340c77ff433aa347062c7ed0826980872bcdf69b8779b', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'memory_accounting.json': {'exists_nonempty': True, 'bytes': 1174, 'sha256': '398fef9c88b7475d8d47e733812072c594979121de1731da9ca703ef7c80139b', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'parallel_incremental_equivalence.json': {'exists_nonempty': True, 'bytes': 768, 'sha256': '5d7ae0ef14c463c0591e5d2bffcd623c4372219c66b35085cace00a1bc9678bd', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'stability_8pass.json': {'exists_nonempty': True, 'bytes': 1743, 'sha256': '8fdab2358dd3ee90dbe8410430afa5b4820942a0236aee313c5bb8ebf31b702d', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'checkpoint_manifest.json': {'exists_nonempty': True, 'bytes': 4606, 'sha256': '13618d5776684430e43814b11e216e466c2791187bc7361e40dea359c41b097d', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'performance.json': {'exists_nonempty': True, 'bytes': 3091, 'sha256': '46c3a088cbc8394ef401b9522364c15da14d7d82febd5ed9c9b994c576aa0083', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'distributed_equivalence.json': {'exists_nonempty': True, 'bytes': 180, 'sha256': '18b819ec9bbe898da272d5becc8a70ec51ee6543da7815fec1845a34ff611910', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'storage_cleanup_manifest.json': {'exists_nonempty': True, 'bytes': 347, 'sha256': 'd6d7153034137288831e0a70cde8d2bccbde5afbf53544fb5c5e5b338005997f', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'commands_and_runtime.json': {'exists_nonempty': True, 'bytes': None, 'sha256': None, 'size_deferred_self_referential': True, 'hash_deferred_self_referential': True}, 'HEARTBEAT.json': {'exists_nonempty': True, 'bytes': 491, 'sha256': 'ca87a33fd6b04889676ea98081fec9a46a9ff86065012cc721fbbeab8b90d0d1', 'size_deferred_self_referential': False, 'hash_deferred_self_referential': False}, 'UNATTENDED_FINAL_HANDOFF.md': {'exists_nonempty': True, 'bytes': None, 'sha256': None, 'size_deferred_self_referential': True, 'hash_deferred_self_referential': True}}, 'required_plots': {'P1_real_off_validation_ce.png': {'exists_nonempty': True, 'bytes': 45497, 'sha256': 'be2ec37927fc4c052d828b1a0965b11ec5b90613559215ab55b96cf18bc434fc'}, 'P2_b2_w32_recurrent_gain.png': {'exists_nonempty': True, 'bytes': 53142, 'sha256': 'e4c0de70df8c6b6c2347ab7954e44519fd88e1447816ea2cadcf55d9fa0bb29f'}, 'P3_b2_w32_sequence_gap.png': {'exists_nonempty': True, 'bytes': 47194, 'sha256': '58209c12c994f2e3dace1b5e12b851e0f11beb4dd89680b43c4e8bbdd080e929'}, 'P4_w2_vs_w32_gain.png': {'exists_nonempty': True, 'bytes': 27222, 'sha256': '425beed4e63eb80e2305db1287cc0dc62e5015a6fb43c7ef83da84817bcdfaaf'}, 'P5_b1_gate.png': {'exists_nonempty': True, 'bytes': 49859, 'sha256': '20911ce52e2d17d755cbc02ecb096b13e71ec625a49acad19c932117009439d9'}, 'P6_b2_w2_vs_w32_gate.png': {'exists_nonempty': True, 'bytes': 23374, 'sha256': 'cb3c7b00e5a3095b63a2032136966deb1948f16caf238848ebcc54d1d97fd2aa'}, 'P7_b2_recurrent_attention_mass.png': {'exists_nonempty': True, 'bytes': 31981, 'sha256': 'bb7cfb2e8b41ab510f55214febb7e3c0cb6ed6799580981afde4295c9fe23e63'}, 'P8_b2_recurrent_attention_density.png': {'exists_nonempty': True, 'bytes': 31558, 'sha256': 'b0f67e29eeed5b668e73191d3faca1014e7be43c0877b7b45f8b37718c98883e'}, 'P9_b2_local_attention.png': {'exists_nonempty': True, 'bytes': 28063, 'sha256': '629ac1df1b196103ffc018af1cad9cce9bdd0f609f9dab8d975e3816075ab10e'}, 'P10_b11_to_b2_writer_gradient.png': {'exists_nonempty': True, 'bytes': 35195, 'sha256': '9054ee879619224e72de0e1dd6085e09c27c19028f12f4f92103bed7187ed946'}, 'P11_b2_per_head_mean_lag.png': {'exists_nonempty': True, 'bytes': 24461, 'sha256': 'fb3a4531a05b0c224bcbf3e6f11a68223f9885228ee367506230e92a372b734c'}, 'P12_parallel_vs_true_incremental_gain.png': {'exists_nonempty': True, 'bytes': 26746, 'sha256': '2bcc6a02ab1dc2e422a4896fdbad7b08f809e19b3f340fe566b9524baa71bb59'}, 'P13_inference_state_memory.png': {'exists_nonempty': True, 'bytes': 25079, 'sha256': 'f8cebd39334a95497a770d287c0470c36a5376a16966de82ef8c7c5297a99178'}, 'P14_runtime_throughput_vram.png': {'exists_nonempty': True, 'bytes': 24168, 'sha256': 'f5252db7a85373c8b7bba06e8a0da560e4539c1d89f1437f2863f5637acd5457'}}, 'required_artifact_count': 34, 'required_plot_count': 14, 'passed': True}, 'passed': False}

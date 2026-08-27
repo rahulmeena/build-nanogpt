@@ -1,0 +1,70 @@
+{
+  "b1_local_positions": [
+    "t-1",
+    "t"
+  ],
+  "b1_local_window": 2,
+  "b2_local_positions": [
+    "t-31",
+    "...",
+    "t"
+  ],
+  "b2_local_window": 32,
+  "b2_maximum_recurrent_entries": 992,
+  "b2_recurrent_min_lag": 32,
+  "b2_recurrent_source_set": "max(0,t-1023)...t-32 inclusive",
+  "b3_b12_windows": [
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024,
+    1024
+  ],
+  "experiment": "2D2H",
+  "forbidden_modules_absent": {
+    "additional_link_beyond_B11_to_B2": true,
+    "attnres": true,
+    "b12_raw_state_ring": true,
+    "b12_to_b1_recurrence": true,
+    "b1_gate": true,
+    "dedicated_recurrent_projection": true,
+    "detached_training_arm": true,
+    "teacher": true
+  },
+  "forbidden_repeated_state_tensor": "[B,T,T,C]",
+  "incremental_b11_raw_residual_capacity": 1023,
+  "incremental_b12_raw_residual_capacity": 0,
+  "incremental_b1_historical_kv_capacity": 1,
+  "incremental_b2_historical_kv_capacity": 31,
+  "incremental_b3_b12_historical_kv_capacity": 1023,
+  "links": {
+    "B11_to_B2": {
+      "destination": "B2 attention",
+      "gate": "new tanh(g_rec_b2)",
+      "local_window": 32,
+      "maximum_recurrent_entries": 992,
+      "recurrent_lags": "32...1023",
+      "source": "B11 post-MLP residual immediately before B12"
+    },
+    "B12_to_B1": {
+      "gate_parameter_present": false,
+      "present": false,
+      "raw_state_ring_present": false,
+      "reason": "physically removed before 2D2H training"
+    }
+  },
+  "overall_context": 1024,
+  "overall_kv_savings_claimed": true,
+  "parallel_source_tensor_shapes": {
+    "h11": "[B,T,C]"
+  },
+  "recurrent_max_lag": 1023,
+  "separate_softmaxes": true,
+  "shared_destination_ln_qkv": true,
+  "single_destination_c_proj": true
+}

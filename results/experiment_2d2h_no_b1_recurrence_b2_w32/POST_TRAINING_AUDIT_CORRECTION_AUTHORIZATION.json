@@ -1,0 +1,115 @@
+{
+  "base_commit": "69651f0ba31c55fc175b15c9ed08879868b81866",
+  "changed_files": [
+    "scripts/experiment_2d2h.py",
+    "tests/test_experiment_2d2h_driver.py"
+  ],
+  "checks": {
+    "correction_changed_files_exact": true,
+    "correction_commit_pushed": true,
+    "failed_finalize_evidence_exact": true,
+    "final_checkpoint_path_exact": true,
+    "final_checkpoint_sha_exact": true,
+    "final_checkpoint_sidecar_exact": true,
+    "final_checkpoint_strict_reopen_passed": true,
+    "old_commit_is_ancestor": true,
+    "old_passing_preflight_bytes_exact": true,
+    "old_preflight_commit_exact": true,
+    "old_preflight_fingerprint_exact": true,
+    "old_preflight_passed": true,
+    "tracked_worktree_clean": true
+  },
+  "command": "scripts/experiment_2d2h.py authorize-audit-correction --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32 --run-root /workspace/exp2d2h_run --ephemeral-checkpoint-root /tmp/parallel_2d2_ephemeral/2d2h --checkpoint-persist-lock /workspace/parallel_2d2_master/locks/checkpoint_persist.lock --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json --final-checkpoint /workspace/exp2d2h_run/checkpoints/scientific_update_0191.pt",
+  "correction_kind": "evaluation_only",
+  "current_commit": "1a6979130994c2959728e0335c30b4fcb9502d24",
+  "current_implementation_fingerprint": {
+    "aggregate_sha256": "68a92dd2baffb8a027204b5fdb31c17c02c79182c9a9dfc02276e41c749eb350",
+    "algorithm": "sha256",
+    "files": {
+      "configs/exp2d2h_no_b1_recurrence_b2_w32.json": "fcc3ab08504c5cdac746294d6e3d4f8c053cca6516f1c79d4ff12ebab9c8c54e",
+      "scripts/experiment_2d0.py": "8aa43e88849713d5c2026cd6e3b568afc7ff2f8d40a104e928231b142f2cef19",
+      "scripts/experiment_2d0d.py": "2d207569131a0c31ae89146e8acc9d6ab4c88ecd8539e3a369ba2e576848c502",
+      "scripts/experiment_2d1.py": "ef5f60a932319ba0d079de8db94a24d658bda6c241ac7b96e897ad7d391b528f",
+      "scripts/experiment_2d2a.py": "f3814e6798f9a5d7c1e6eeea8319278f21f7878755a1438e875f7b834566beae",
+      "scripts/experiment_2d2a_core.py": "aa92c2325a14474dea1e07680c34fc3c308bbc6e63a267521524fad2912087c0",
+      "scripts/experiment_2d2b.py": "ceb93f3b62b6d4a38194c97b4d1d2ab98cec7abd53959760a4924ba768988bde",
+      "scripts/experiment_2d2b_core.py": "277a6fa324a196f3a5ff2b4fd7daa367dcdec20980651c915903c197fb7a8af4",
+      "scripts/experiment_2d2h.py": "9d6ee1a5ae152bf10ed5b89293fe6dd8d6ebf2e910f5701028d9a59631a043a3",
+      "scripts/experiment_2d2h_core.py": "5bb0565ed36ddd43ca15084ace6f78e5d06cdf8d4225d3a5adfa3862b25f0a79",
+      "scripts/smoke_test.py": "3e7db4490b15e00e92266cf645e8b33f2a33c8eda282c3a26490b2faaef1fe93",
+      "tests/test_experiment_2d2h_core.py": "1f36767947c0c04a923183b809cfd7b5f417428cd8b023d1eeb38fe4a55d3bc7",
+      "tests/test_experiment_2d2h_driver.py": "2f6f8200ab8867e249246d431fa47ca7653c3655637bd1ccc3baf616506a5e99",
+      "train_gpt2.py": "395134486e02106afeed75d42023beb3be3e41a5f67532626f92f17f2c283269"
+    }
+  },
+  "failed_finalize_evidence": {
+    "archive": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/failed_finalize_attempt_1",
+    "checks": {
+      "FINAL_AUDIT.json_present": true,
+      "FINAL_AUDIT.json_sha256_exact": true,
+      "archive_present": true,
+      "lane_gpu2.error.json_present": true,
+      "lane_gpu2.error.json_sha256_exact": true,
+      "parallel_incremental_equivalence.json_present": true,
+      "parallel_incremental_equivalence.json_sha256_exact": true,
+      "prior_equivalence_failed": true,
+      "prior_final_audit_failed_only_equivalence": true,
+      "prior_lane_error_exact_semantics": true
+    },
+    "evidence": {
+      "FINAL_AUDIT.json": {
+        "bytes": 12696,
+        "expected_sha256": "0814984de8828bd198136dfc8b2836f3b7250cc09a27d5fa9a81ca49bcead7ad",
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/failed_finalize_attempt_1/FINAL_AUDIT.json",
+        "sha256": "0814984de8828bd198136dfc8b2836f3b7250cc09a27d5fa9a81ca49bcead7ad"
+      },
+      "lane_gpu2.error.json": {
+        "bytes": 1259,
+        "expected_sha256": "249f56cbe2c9e33075afaeb5482ae8e408879b0b27e9d68fa0105442703f0cf9",
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/failed_finalize_attempt_1/lane_gpu2.error.json",
+        "sha256": "249f56cbe2c9e33075afaeb5482ae8e408879b0b27e9d68fa0105442703f0cf9"
+      },
+      "parallel_incremental_equivalence.json": {
+        "bytes": 768,
+        "expected_sha256": "5d7ae0ef14c463c0591e5d2bffcd623c4372219c66b35085cace00a1bc9678bd",
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/failed_finalize_attempt_1/parallel_incremental_equivalence.json",
+        "sha256": "5d7ae0ef14c463c0591e5d2bffcd623c4372219c66b35085cace00a1bc9678bd"
+      }
+    },
+    "passed": true
+  },
+  "final_checkpoint": {
+    "path": "/workspace/exp2d2h_run/checkpoints/scientific_update_0191.pt",
+    "sha256": "6929a4d37a2c5b87bbd35cc4cfe1e1c8cccd302a12110ef31d5b96bdd3371938",
+    "sha256_sidecar": "/workspace/exp2d2h_run/checkpoints/scientific_update_0191.pt.sha256",
+    "verification": "/workspace/exp2d2h_run/checkpoints/scientific_update_0191.pt.verification.json"
+  },
+  "old_preflight": {
+    "implementation_fingerprint": {
+      "aggregate_sha256": "fae91663242240dbfcfe749763e12200a5cc3d76cabcb493c67fb5784dc40e54",
+      "algorithm": "sha256",
+      "files": {
+        "configs/exp2d2h_no_b1_recurrence_b2_w32.json": "fcc3ab08504c5cdac746294d6e3d4f8c053cca6516f1c79d4ff12ebab9c8c54e",
+        "scripts/experiment_2d0.py": "8aa43e88849713d5c2026cd6e3b568afc7ff2f8d40a104e928231b142f2cef19",
+        "scripts/experiment_2d0d.py": "2d207569131a0c31ae89146e8acc9d6ab4c88ecd8539e3a369ba2e576848c502",
+        "scripts/experiment_2d1.py": "ef5f60a932319ba0d079de8db94a24d658bda6c241ac7b96e897ad7d391b528f",
+        "scripts/experiment_2d2a.py": "f3814e6798f9a5d7c1e6eeea8319278f21f7878755a1438e875f7b834566beae",
+        "scripts/experiment_2d2a_core.py": "aa92c2325a14474dea1e07680c34fc3c308bbc6e63a267521524fad2912087c0",
+        "scripts/experiment_2d2b.py": "ceb93f3b62b6d4a38194c97b4d1d2ab98cec7abd53959760a4924ba768988bde",
+        "scripts/experiment_2d2b_core.py": "277a6fa324a196f3a5ff2b4fd7daa367dcdec20980651c915903c197fb7a8af4",
+        "scripts/experiment_2d2h.py": "57ddfbed116474fab7ab0e965c75f3c5146d2ad535c9088f16cdcdc65368f6ee",
+        "scripts/experiment_2d2h_core.py": "5bb0565ed36ddd43ca15084ace6f78e5d06cdf8d4225d3a5adfa3862b25f0a79",
+        "scripts/smoke_test.py": "3e7db4490b15e00e92266cf645e8b33f2a33c8eda282c3a26490b2faaef1fe93",
+        "tests/test_experiment_2d2h_core.py": "1f36767947c0c04a923183b809cfd7b5f417428cd8b023d1eeb38fe4a55d3bc7",
+        "tests/test_experiment_2d2h_driver.py": "4d508d53cd92c01a16fe03b083b8ece3a08c7af5f695e8e86dbe8dc7d18bc272",
+        "train_gpt2.py": "395134486e02106afeed75d42023beb3be3e41a5f67532626f92f17f2c283269"
+      }
+    },
+    "path": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/preflight_audit.json",
+    "sha256": "59b92a0c20ce757d77998e2e63d746aa4bdce157ae1c9c717dbf2b40795ecaf8"
+  },
+  "origin_commit": "1a6979130994c2959728e0335c30b4fcb9502d24",
+  "passed": true,
+  "schema_version": 1,
+  "training_or_checkpoint_change_authorized": false
+}

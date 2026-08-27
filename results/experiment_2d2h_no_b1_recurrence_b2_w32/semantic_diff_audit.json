@@ -1,0 +1,42 @@
+{
+  "architecture_changes": [
+    {
+      "field": "B2 ordinary local window",
+      "new": 32,
+      "old": 1024
+    },
+    {
+      "field": "B12->B1 recurrence",
+      "new": "physically absent",
+      "old": "present"
+    },
+    {
+      "field": "g_rec B1 gate",
+      "new": "removed",
+      "old": "trained scalar"
+    },
+    {
+      "field": "new recurrent link",
+      "new": "B11->B2 lags 32...1023",
+      "old": null
+    },
+    {
+      "field": "new learnable tensor",
+      "new": "scalar g_rec_b2",
+      "old": null
+    }
+  ],
+  "baseline": "final Experiment 2D2B",
+  "memory_efficient_source_storage": true,
+  "new_learnable_tensors": [
+    "g_rec_b2"
+  ],
+  "passed": true,
+  "source_base_state_dict_keys_preserved": true,
+  "unchanged": {
+    "b1_gate_removed": true,
+    "b1_local_window": true,
+    "b2_gate_fresh": true,
+    "base_parameter_names": true
+  }
+}

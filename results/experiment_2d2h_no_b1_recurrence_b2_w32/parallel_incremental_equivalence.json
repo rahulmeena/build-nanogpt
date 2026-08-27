@@ -1,0 +1,22 @@
+{
+  "active": {
+    "max_abs": 3.457069396972656e-05,
+    "mean_abs": 2.467480953782797e-06,
+    "pre_recurrence_positions_0_31_max_abs": 3.457069396972656e-05,
+    "recursive_self_composition_positions_32_plus_mean_abs": 2.5610233933548443e-06
+  },
+  "b2_w32_eviction_exercised": true,
+  "cudnn_allow_tf32": false,
+  "float32_matmul_precision": "highest",
+  "matmul_allow_tf32": false,
+  "max_abs_tolerance": 0.0001,
+  "method": "Strict FP32 tolerance is required for the complete recurrence-off path and the active pre-recurrence prefix. Later active drift is expected because true incremental recurrence self-composes token by token. FP32-highest is selected explicitly and TF32 is disabled for both compared paths.",
+  "passed": true,
+  "plain": {
+    "max_abs": 3.457069396972656e-05,
+    "mean_abs": 2.4446558199997526e-06,
+    "pre_recurrence_positions_0_31_max_abs": 3.457069396972656e-05,
+    "recursive_self_composition_positions_32_plus_mean_abs": 2.5153731257887557e-06
+  },
+  "precision": "float32"
+}

@@ -1,0 +1,20 @@
+{
+  "191": {
+    "checkpoint": "/workspace/exp2d2h_run/checkpoints/scientific_update_0191.pt",
+    "command": "scripts/experiment_2d2h.py train --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32 --run-root /workspace/exp2d2h_run --ephemeral-checkpoint-root /tmp/parallel_2d2_ephemeral/2d2h --checkpoint-persist-lock /workspace/parallel_2d2_master/locks/checkpoint_persist.lock --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json --end-update 191 --resume /tmp/parallel_2d2_ephemeral/2d2h/scientific_update_0096.pt",
+    "completed_at": 1787838018.3731685,
+    "end_local_update": 191,
+    "process_id": 12184,
+    "start_local_update": 96,
+    "started_at": 1787837018.9076223
+  },
+  "96": {
+    "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2h/scientific_update_0096.pt",
+    "command": "scripts/experiment_2d2h.py train --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32 --run-root /workspace/exp2d2h_run --ephemeral-checkpoint-root /tmp/parallel_2d2_ephemeral/2d2h --checkpoint-persist-lock /workspace/parallel_2d2_master/locks/checkpoint_persist.lock --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json --end-update 96",
+    "completed_at": 1787837005.760953,
+    "end_local_update": 96,
+    "process_id": 10298,
+    "start_local_update": 0,
+    "started_at": 1787835918.0737736
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "B1": {
+    "b11_recurrent_raw_state_bytes": 1571328,
+    "b12_recurrent_raw_state_bytes": 0,
+    "b1_local_kv_bytes": 3072,
+    "b2_local_kv_bytes": 95232,
+    "b3_b12_ordinary_kv_bytes": 31426560,
+    "batch_size": 1,
+    "mib": {
+      "total": 31.56298828125
+    },
+    "total_experimental_inference_state_bytes": 33096192
+  },
+  "B64": {
+    "b11_recurrent_raw_state_bytes": 100564992,
+    "b12_recurrent_raw_state_bytes": 0,
+    "b1_local_kv_bytes": 196608,
+    "b2_local_kv_bytes": 6094848,
+    "b3_b12_ordinary_kv_bytes": 2011299840,
+    "batch_size": 64,
+    "mib": {
+      "total": 2020.03125
+    },
+    "total_experimental_inference_state_bytes": 2118156288
+  },
+  "bytes_per_element": 2,
+  "deployment_accounting_dtype": "BF16",
+  "observed_final_incremental_storage": {
+    "b12_ring_present": false,
+    "cache_bytes": 2017591296,
+    "control": "real",
+    "raw_ring_bytes": 201129984,
+    "total_physical_state_bytes": 2218721280
+  },
+  "state_limits": {
+    "B1 ordinary historical KV": 1,
+    "B11 raw recurrent states": 1023,
+    "B12 raw recurrent states": 0,
+    "B2 ordinary historical KV": 31,
+    "B3-B12 ordinary historical KV each": 1023
+  }
+}

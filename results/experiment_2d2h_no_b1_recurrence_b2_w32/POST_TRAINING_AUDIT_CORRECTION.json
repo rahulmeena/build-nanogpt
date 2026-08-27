@@ -1,0 +1,61 @@
+{
+  "audit_measurement_recomputed": true,
+  "authorization": {
+    "current_commit": "1a6979130994c2959728e0335c30b4fcb9502d24",
+    "path": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/POST_TRAINING_AUDIT_CORRECTION_AUTHORIZATION.json",
+    "sha256": "a464a79836979cc396921fd53f763dfa2aed515ac8beb22c97de98996ad63d3f"
+  },
+  "checkpoint_changed": false,
+  "checks": {
+    "correction_authorization_exact": true,
+    "cudnn_tf32_disabled": true,
+    "failed_attempt_archive_exact": true,
+    "highest_float32_matmul_precision": true,
+    "matmul_tf32_disabled": true,
+    "precision_is_fp32": true,
+    "unchanged_fp32_tolerance": true
+  },
+  "correction": "Explicitly select float32 matmul precision highest and disable CUDA/CUDNN TF32 while running the unchanged strict FP32 parallel/incremental equivalence tolerance.",
+  "correction_kind": "evaluation_only",
+  "data_or_primary_scientific_metrics_changed": false,
+  "failed_attempt_archive": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/failed_finalize_attempt_1",
+  "failed_attempt_archive_present": true,
+  "failed_attempt_checks": {
+    "FINAL_AUDIT.json_present": true,
+    "FINAL_AUDIT.json_sha256_exact": true,
+    "archive_present": true,
+    "lane_gpu2.error.json_present": true,
+    "lane_gpu2.error.json_sha256_exact": true,
+    "parallel_incremental_equivalence.json_present": true,
+    "parallel_incremental_equivalence.json_sha256_exact": true,
+    "prior_equivalence_failed": true,
+    "prior_final_audit_failed_only_equivalence": true,
+    "prior_lane_error_exact_semantics": true
+  },
+  "failed_attempt_evidence": {
+    "FINAL_AUDIT.json": {
+      "bytes": 12696,
+      "expected_sha256": "0814984de8828bd198136dfc8b2836f3b7250cc09a27d5fa9a81ca49bcead7ad",
+      "path": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/failed_finalize_attempt_1/FINAL_AUDIT.json",
+      "sha256": "0814984de8828bd198136dfc8b2836f3b7250cc09a27d5fa9a81ca49bcead7ad"
+    },
+    "lane_gpu2.error.json": {
+      "bytes": 1259,
+      "expected_sha256": "249f56cbe2c9e33075afaeb5482ae8e408879b0b27e9d68fa0105442703f0cf9",
+      "path": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/failed_finalize_attempt_1/lane_gpu2.error.json",
+      "sha256": "249f56cbe2c9e33075afaeb5482ae8e408879b0b27e9d68fa0105442703f0cf9"
+    },
+    "parallel_incremental_equivalence.json": {
+      "bytes": 768,
+      "expected_sha256": "5d7ae0ef14c463c0591e5d2bffcd623c4372219c66b35085cace00a1bc9678bd",
+      "path": "/workspace/parallel_2d2_master/worktrees/2d2h/results/experiment_2d2h_no_b1_recurrence_b2_w32/failed_finalize_attempt_1/parallel_incremental_equivalence.json",
+      "sha256": "5d7ae0ef14c463c0591e5d2bffcd623c4372219c66b35085cace00a1bc9678bd"
+    }
+  },
+  "fp32_tolerance_after": 0.0001,
+  "fp32_tolerance_before": 0.0001,
+  "passed": true,
+  "reason": "The failed helper labeled its measurement strict FP32 but inherited training-time TF32 process flags.",
+  "schema_version": 1,
+  "training_changed": false
+}
