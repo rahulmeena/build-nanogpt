@@ -1,4 +1,5 @@
 from contextlib import nullcontext
+import copy
 import json
 import sys
 from pathlib import Path
@@ -56,6 +57,158 @@ def incremental(real, off, shuffled, off_wins=140, shuffled_wins=140):
         "real_vs_off_sequences": {"wins": off_wins},
         "real_vs_shuffled_sequences": {"wins": shuffled_wins},
     }
+
+
+def build_recovery_provenance(tmp_path, monkeypatch):
+    ephemeral = tmp_path / "ephemeral"
+    checkpoint_dir = ephemeral / "2d2g" / "checkpoints"
+    checkpoint_dir.mkdir(parents=True)
+    output = tmp_path / "output"
+    output.mkdir()
+    provenance = tmp_path / "sealed-provenance"
+    provenance.mkdir()
+    monkeypatch.setattr(exp, "EPHEMERAL_ROOT", ephemeral)
+
+    manifest = {"stage_a": {}, "stage_b": {}}
+    sealed_checkpoints = {}
+    for update in (96, 191):
+        checkpoint = checkpoint_dir / f"stage_a_scientific_update_{update:04d}.pt"
+        checkpoint.write_bytes((f"checkpoint-{update}-" * 7).encode())
+        sha = exp.file_sha256(checkpoint)
+        checkpoint.with_suffix(checkpoint.suffix + ".sha256").write_text(
+            f"{sha}  {checkpoint.name}\n"
+        )
+        verification = {"passed": True, "strict_model_load": True, "updates": True}
+        exp.durable_json(
+            checkpoint.with_suffix(checkpoint.suffix + ".verification.json"),
+            verification,
+        )
+        batch, stream = exp.expected_cursor("a", update)
+        manifest["stage_a"][str(update)] = {
+            "checkpoint": str(checkpoint.resolve()),
+            "sha256": sha,
+            "bytes": checkpoint.stat().st_size,
+            "next_global_batch_sha256": batch,
+            "next_global_batch_stream_sha256": stream,
+            "strict_reopen": verification,
+        }
+        sealed_checkpoints[update] = {
+            "filename": checkpoint.name,
+            "bytes": checkpoint.stat().st_size,
+            "sha256": sha,
+        }
+
+    stage_a_match = {
+        "reference": "2D2D",
+        "source_batch": exp.SOURCE_NEXT_BATCH,
+        "source_stream": exp.SOURCE_NEXT_STREAM,
+        "passed": True,
+    }
+    for update in (96, 191):
+        batch, stream = exp.expected_cursor("a", update)
+        stage_a_match[f"update_{update}"] = {
+            "observed_next_global_batch_sha256": batch,
+            "observed_next_global_batch_stream_sha256": stream,
+            "expected": [batch, stream],
+            "exact": True,
+        }
+
+    runtime = {
+        "commands": [
+            {
+                "command": "scripts/experiment_2d2g.py preflight --output-dir old",
+                "kind": "preflight",
+            },
+            {
+                "command": "scripts/experiment_2d2g.py train-a --end-update 96",
+                "stage": "a",
+                "start_update": 1,
+                "end_update": 96,
+                "pid": 111,
+                "wall_seconds": 100.0,
+            },
+            {
+                "command": (
+                    "scripts/experiment_2d2g.py train-a --resume stage-a-96 "
+                    "--end-update 191"
+                ),
+                "stage": "a",
+                "start_update": 97,
+                "end_update": 191,
+                "pid": 222,
+                "wall_seconds": 101.0,
+            },
+        ]
+    }
+    restart_required = {
+        "checkpoint": copy.deepcopy(manifest["stage_a"]["96"]),
+        "saved_process_id": 111,
+        "status": "MANDATORY_FRESH_PROCESS_REQUIRED",
+    }
+    restart_batch, restart_stream = exp.expected_cursor("a", 96)
+    forced_restart = {
+        "checkpoint_process_id": 111,
+        "resumed_process_id": 222,
+        "fresh_process": True,
+        "passed": True,
+        "next_global_batch_sha256": restart_batch,
+        "expected_next_global_batch_sha256": restart_batch,
+        "next_global_batch_stream_sha256": restart_stream,
+        "expected_next_global_batch_stream_sha256": restart_stream,
+    }
+    final_checkpoint = manifest["stage_a"]["191"]["checkpoint"]
+    heartbeat = {
+        "experiment": exp.EXPERIMENT,
+        "stage": "a",
+        "phase": "training",
+        "local_update": exp.UPDATES_PER_STAGE,
+        "targets": exp.TARGETS_PER_STAGE,
+        "last_loss": 3.0,
+        "g_rec_b1": 0.1,
+        "g_rec_b3": None,
+        "pid": 222,
+        "checkpoint": final_checkpoint,
+        "timestamp": 1.0,
+    }
+    json_payloads = {
+        "checkpoint_manifest.json": manifest,
+        "commands_and_runtime.json": runtime,
+        "stage_a_data_match.json": stage_a_match,
+        "stage_a_restart_required_update_96.json": restart_required,
+        "stage_a_forced_restart_update_96.json": forced_restart,
+        "HEARTBEAT.json": heartbeat,
+    }
+    for name, payload in json_payloads.items():
+        exp.durable_json(provenance / name, payload)
+
+    metric_lines = []
+    for update in range(1, exp.UPDATES_PER_STAGE + 1):
+        metric_lines.append(
+            json.dumps(
+                {
+                    "stage": "a",
+                    "local_update": update,
+                    "processed_stage_targets": update * exp.GLOBAL_TARGETS,
+                    "wall_seconds": 1.0,
+                    "pass_losses": [3.0],
+                    "tanh_g_rec_b1": 0.1,
+                },
+                sort_keys=True,
+            )
+        )
+    (provenance / "stage_a_training_metrics.jsonl").write_text(
+        "\n".join(metric_lines) + "\n"
+    )
+    for name in exp.RECOVERY_STAGE_A_SUPPORT_FILES:
+        (output / name).write_bytes((provenance / name).read_bytes())
+
+    expected_hashes = {
+        name: exp.file_sha256(provenance / name)
+        for name in exp.RECOVERY_PROVENANCE_SHA256
+    }
+    monkeypatch.setattr(exp, "RECOVERY_PROVENANCE_SHA256", expected_hashes)
+    monkeypatch.setattr(exp, "RECOVERY_STAGE_A_CHECKPOINTS", sealed_checkpoints)
+    return output, provenance, manifest, runtime, stage_a_match
 
 
 def test_protocol_arithmetic_and_stage_counts():
@@ -254,3 +407,161 @@ def test_smoke_cli_requires_explicit_ephemeral_checkpoint_directory():
         ]
     )
     assert args.checkpoint_dir.endswith("/2d2g/smoke")
+
+
+def test_recovery_provenance_cli_is_double_locked(monkeypatch, tmp_path):
+    monkeypatch.delenv("MASTER_RECOVERY_MODE", raising=False)
+    assert exp.recovery_provenance_dir(None) is None
+    with pytest.raises(SystemExit, match="legal only"):
+        exp.recovery_provenance_dir(str(tmp_path))
+    monkeypatch.setenv("MASTER_RECOVERY_MODE", "1")
+    with pytest.raises(SystemExit, match="requires"):
+        exp.recovery_provenance_dir(None)
+    assert exp.recovery_provenance_dir(str(tmp_path)) == tmp_path.resolve()
+
+
+def test_exact_recovery_provenance_restores_and_appends_without_reset(
+    monkeypatch, tmp_path
+):
+    output, provenance, manifest, original_runtime, stage_a_match = (
+        build_recovery_provenance(tmp_path, monkeypatch)
+    )
+    exp.durable_json(output / "checkpoint_manifest.json", {"stage_a": {}, "stage_b": {}})
+    exp.durable_json(
+        output / "commands_and_runtime.json",
+        {"commands": [{"command": "failed preflight", "kind": "preflight"}]},
+    )
+    exp.durable_json(
+        output / "stage_a_data_match.json",
+        {"reference": "2D2D", "passed": True},
+    )
+    cleanup = {
+        "scientific_source_removed": False,
+        "cleanup_actions": [{"path": "/tmp/orphan.pt", "removed": True}],
+    }
+    exp.durable_json(output / "storage_cleanup_manifest.json", cleanup)
+
+    recovery = exp.require_exact_stage_a_recovery_provenance(output, provenance)
+    first = exp.publish_preflight_bookkeeping(
+        output,
+        "scripts/experiment_2d2g.py preflight --recovery-provenance-dir sealed",
+        {"reference": "unused"},
+        recovery,
+    )
+
+    assert exp.read_json(output / "checkpoint_manifest.json") == manifest
+    assert exp.read_json(output / "stage_a_data_match.json") == stage_a_match
+    commands = exp.read_json(output / "commands_and_runtime.json")["commands"]
+    assert commands[:3] == original_runtime["commands"]
+    assert [row["kind"] for row in commands[3:]] == ["recovery_preflight"]
+    assert exp.read_json(output / "storage_cleanup_manifest.json") == cleanup
+    assert first["passed"]
+    assert first["source"]["runtime_wall_seconds_reconstructed"] is False
+    assert first["restored"]["original_runtime_rows_preserved_exactly"]
+
+    second = exp.publish_preflight_bookkeeping(
+        output,
+        "scripts/experiment_2d2g.py preflight --recovery-provenance-dir sealed",
+        {"reference": "unused"},
+        recovery,
+    )
+    commands = exp.read_json(output / "commands_and_runtime.json")["commands"]
+    assert commands[:3] == original_runtime["commands"]
+    assert [row["kind"] for row in commands[3:]] == [
+        "recovery_preflight",
+        "recovery_preflight",
+    ]
+    assert len(second["attempts"]) == 2
+
+
+def test_recovery_provenance_rejects_checkpoint_or_support_mutation(
+    monkeypatch, tmp_path
+):
+    output, provenance, manifest, _, _ = build_recovery_provenance(
+        tmp_path, monkeypatch
+    )
+    checkpoint = Path(manifest["stage_a"]["191"]["checkpoint"])
+    checkpoint.write_bytes(checkpoint.read_bytes() + b"mutation")
+    with pytest.raises(SystemExit, match="manifest/checkpoint mismatch"):
+        exp.require_exact_stage_a_recovery_provenance(output, provenance)
+
+    output, provenance, _, _, _ = build_recovery_provenance(
+        tmp_path / "support-case", monkeypatch
+    )
+    (output / "HEARTBEAT.json").write_text("{}\n")
+    with pytest.raises(SystemExit, match="hash mismatch"):
+        exp.require_exact_stage_a_recovery_provenance(output, provenance)
+
+
+def test_existing_recovery_bookkeeping_refuses_post_preflight_rows(
+    monkeypatch, tmp_path
+):
+    output, provenance, _, _, _ = build_recovery_provenance(tmp_path, monkeypatch)
+    recovery = exp.require_exact_stage_a_recovery_provenance(output, provenance)
+    exp.publish_preflight_bookkeeping(
+        output, "recovery preflight one", {"reference": "unused"}, recovery
+    )
+    runtime = exp.read_json(output / "commands_and_runtime.json")
+    runtime["commands"].append({"kind": "disposable_stage_b_smoke"})
+    exp.durable_json(output / "commands_and_runtime.json", runtime)
+    with pytest.raises(SystemExit, match="post-preflight work"):
+        exp.publish_preflight_bookkeeping(
+            output, "recovery preflight two", {"reference": "unused"}, recovery
+        )
+
+
+def test_finalize_recovery_integrity_cannot_fail_open_after_tampering(
+    monkeypatch, tmp_path
+):
+    output, provenance, _, _, _ = build_recovery_provenance(tmp_path, monkeypatch)
+    recovery = exp.require_exact_stage_a_recovery_provenance(output, provenance)
+    preflight = {"recovery_stage_a_provenance": recovery["audit"]}
+    exp.durable_json(output / "preflight_audit.json", preflight)
+    exp.publish_preflight_bookkeeping(
+        output, "recovery preflight", {"reference": "unused"}, recovery
+    )
+    monkeypatch.setenv("MASTER_RECOVERY_MODE", "1")
+    manifest = exp.read_json(output / "checkpoint_manifest.json")
+    match = exp.read_json(output / "stage_a_data_match.json")
+    runtime = exp.read_json(output / "commands_and_runtime.json")
+
+    baseline = exp.recovery_finalize_integrity(
+        output, preflight, runtime, manifest, match
+    )
+    assert baseline["required"] and baseline["passed"]
+
+    lost_row_runtime = {"commands": runtime["commands"][:3]}
+    lost_row = exp.recovery_finalize_integrity(
+        output, preflight, lost_row_runtime, manifest, match
+    )
+    assert lost_row["required"] and not lost_row["passed"]
+    assert not lost_row["checks"]["recovery_rows_canonical"]
+
+    audit_path = output / "recovery_stage_a_provenance_audit.json"
+    exact_audit = audit_path.read_bytes()
+    tampered_audit = exp.read_json(audit_path)
+    tampered_audit["source"]["identity"]["source_sha256"][
+        "checkpoint_manifest.json"
+    ] = "0" * 64
+    exp.durable_json(audit_path, tampered_audit)
+    changed_source = exp.recovery_finalize_integrity(
+        output, preflight, runtime, manifest, match
+    )
+    assert not changed_source["passed"]
+    assert not changed_source["checks"]["source_identity_exact"]
+    audit_path.write_bytes(exact_audit)
+
+    changed_manifest = copy.deepcopy(manifest)
+    changed_manifest["stage_a"].pop("96")
+    manifest_result = exp.recovery_finalize_integrity(
+        output, preflight, runtime, changed_manifest, match
+    )
+    assert not manifest_result["passed"]
+    assert not manifest_result["checks"]["current_stage_a_manifest_exact"]
+
+    audit_path.unlink()
+    missing_audit = exp.recovery_finalize_integrity(
+        output, preflight, runtime, manifest, match
+    )
+    assert missing_audit["required"] and not missing_audit["passed"]
+    assert not missing_audit["checks"]["audit_present_regular"]

@@ -146,6 +146,40 @@ REQUIRED_TRAINING_ARTIFACTS = (
     "UNATTENDED_FINAL_HANDOFF.md",
 )
 
+# Recovery-only observations sealed after the original Stage-A chain completed
+# and before the failed Stage-B smoke recovery preflight replaced its bookkeeping
+# files.  These are not scientific hyperparameters: they bind a narrowly scoped
+# recovery to the exact, already-produced Stage-A evidence.
+RECOVERY_PROVENANCE_SCHEMA = "exp2d2g_exact_stage_a_recovery_provenance_v1"
+RECOVERY_REQUIREMENT_MARKER = "RECOVERY_STAGE_A_PROVENANCE_REQUIRED.json"
+RECOVERY_PROVENANCE_SHA256 = {
+    "checkpoint_manifest.json": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a",
+    "commands_and_runtime.json": "b2675e8e981556af0cf8b4668bfc8733e39073f386ea36fe8be7bdbc2fb4ebfe",
+    "stage_a_data_match.json": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382",
+    "stage_a_restart_required_update_96.json": "6243c2c1ca8b3cf7638476658d020dc52c5346f14b87174915afe156afcec5a8",
+    "stage_a_forced_restart_update_96.json": "989f6b2e2b912ed7d0258ca083c2f0615d062d4360cd8e1a444e652aec458b6e",
+    "HEARTBEAT.json": "d8553cb11ab32dbcf47b83e4dcf97f76bc21b85ccfecbed8da3288434a514bbe",
+    "stage_a_training_metrics.jsonl": "160dfe6a18e3a39952203a130dcfe17ddc5c96932f767723ed8e282a03b28d14",
+}
+RECOVERY_STAGE_A_CHECKPOINTS = {
+    96: {
+        "filename": "stage_a_scientific_update_0096.pt",
+        "bytes": 1_493_934_683,
+        "sha256": "0a4850737049c39a9fe7f18f8a26a069e10e7facc68360ecc3f7772c41a5cc84",
+    },
+    191: {
+        "filename": "stage_a_scientific_update_0191.pt",
+        "bytes": 1_493_934_811,
+        "sha256": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+    },
+}
+RECOVERY_STAGE_A_SUPPORT_FILES = (
+    "stage_a_restart_required_update_96.json",
+    "stage_a_forced_restart_update_96.json",
+    "HEARTBEAT.json",
+    "stage_a_training_metrics.jsonl",
+)
+
 
 def file_sha256(path: Path | str) -> str:
     digest = hashlib.sha256()
@@ -168,6 +202,21 @@ def aggregate_hashes(values) -> str:
     for value in values:
         digest.update(bytes.fromhex(str(value)))
     return digest.hexdigest()
+
+
+def canonical_json_sha256(value) -> str:
+    encoded = (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def expected_recovery_provenance_identity() -> dict:
+    return {
+        "source_sha256": dict(RECOVERY_PROVENANCE_SHA256),
+        "stage_a_checkpoint_sha256": {
+            str(update): RECOVERY_STAGE_A_CHECKPOINTS[update]["sha256"]
+            for update in (96, 191)
+        },
+    }
 
 
 def read_json(path: Path | str):
@@ -237,6 +286,506 @@ def append_command_runtime(output: Path | str, row: dict) -> None:
     payload = read_json(path) if path.exists() else {"commands": []}
     payload.setdefault("commands", []).append(row)
     durable_json(path, payload)
+
+
+def recovery_provenance_dir(value: str | None) -> Path | None:
+    """Require an explicit provenance source for master recovery preflights."""
+
+    recovery_mode = os.environ.get("MASTER_RECOVERY_MODE") == "1"
+    if recovery_mode and not value:
+        raise SystemExit(
+            "MASTER_RECOVERY_MODE=1 requires --recovery-provenance-dir"
+        )
+    if value and not recovery_mode:
+        raise SystemExit(
+            "--recovery-provenance-dir is legal only with MASTER_RECOVERY_MODE=1"
+        )
+    return Path(value).resolve() if value else None
+
+
+def _require_regular_recovery_file(path: Path, expected_sha256: str) -> dict:
+    if not path.is_file() or path.is_symlink():
+        raise SystemExit(f"recovery provenance requires regular file: {path}")
+    observed = file_sha256(path)
+    if observed != expected_sha256:
+        raise SystemExit(
+            f"recovery provenance hash mismatch for {path.name}: {observed}"
+        )
+    return {
+        "path": str(path.resolve()),
+        "bytes": path.stat().st_size,
+        "sha256": observed,
+    }
+
+
+def require_exact_stage_a_recovery_provenance(
+    output_dir: Path | str, provenance_dir: Path | str
+) -> dict:
+    """Validate the exact archived Stage-A evidence before restoring bookkeeping.
+
+    This deliberately does not reopen or alter either scientific checkpoint.  It
+    binds the archived bookkeeping to the surviving checkpoint bytes, their
+    strict-reopen sidecars, matched cursors, restart boundary, heartbeat, and all
+    191 immutable training-metric rows.
+    """
+
+    output = Path(output_dir).resolve()
+    provenance = Path(provenance_dir).resolve()
+    if not provenance.is_dir() or provenance.is_symlink():
+        raise SystemExit(f"invalid recovery provenance directory: {provenance}")
+    if provenance == output or is_relative_to(provenance, output):
+        raise SystemExit("recovery provenance must be sealed outside the result directory")
+
+    source_files = {}
+    for name, expected_sha in RECOVERY_PROVENANCE_SHA256.items():
+        source_files[name] = _require_regular_recovery_file(
+            provenance / name, expected_sha
+        )
+
+    manifest = read_json(provenance / "checkpoint_manifest.json")
+    if set(manifest) != {"stage_a", "stage_b"}:
+        raise SystemExit("recovery checkpoint manifest has unexpected top-level keys")
+    if set(manifest["stage_a"]) != {"96", "191"} or manifest["stage_b"] != {}:
+        raise SystemExit("recovery checkpoint manifest is not exact Stage A 96/191")
+
+    checkpoint_audits = {}
+    expected_entry_keys = {
+        "checkpoint",
+        "sha256",
+        "bytes",
+        "next_global_batch_sha256",
+        "next_global_batch_stream_sha256",
+        "strict_reopen",
+    }
+    checkpoint_root = (EPHEMERAL_ROOT / "2d2g" / "checkpoints").resolve()
+    for update in (96, 191):
+        key = str(update)
+        entry = manifest["stage_a"][key]
+        observed_keys = set(entry)
+        if observed_keys != expected_entry_keys:
+            raise SystemExit(
+                f"recovery Stage-A update {update} manifest keys changed: "
+                f"{sorted(observed_keys)}"
+            )
+        sealed = RECOVERY_STAGE_A_CHECKPOINTS[update]
+        checkpoint = Path(entry["checkpoint"])
+        if not checkpoint.is_absolute() or checkpoint.resolve().parent != checkpoint_root:
+            raise SystemExit(
+                f"recovery Stage-A update {update} checkpoint path is not canonical"
+            )
+        if checkpoint.name != sealed["filename"]:
+            raise SystemExit(
+                f"recovery Stage-A update {update} checkpoint filename changed"
+            )
+        expected_cursor_pair = expected_cursor("a", update)
+        checks = {
+            "checkpoint_regular": checkpoint.is_file() and not checkpoint.is_symlink(),
+            "checkpoint_path_exact": str(checkpoint.resolve()) == entry["checkpoint"],
+            "checkpoint_bytes_exact": checkpoint.is_file()
+            and checkpoint.stat().st_size == sealed["bytes"] == entry["bytes"],
+            "checkpoint_sha_exact": entry["sha256"] == sealed["sha256"],
+            "next_batch_exact": entry["next_global_batch_sha256"]
+            == expected_cursor_pair[0],
+            "next_stream_exact": entry["next_global_batch_stream_sha256"]
+            == expected_cursor_pair[1],
+        }
+        if not all(checks.values()):
+            raise SystemExit(
+                f"recovery Stage-A update {update} manifest/checkpoint mismatch: {checks}"
+            )
+        sidecar = checkpoint_sidecar_audit(checkpoint, sealed["sha256"])
+        verification = read_json(
+            checkpoint.with_suffix(checkpoint.suffix + ".verification.json")
+        )
+        checks.update(
+            sidecars_passed=sidecar["passed"],
+            strict_reopen_exact=entry["strict_reopen"] == verification,
+            strict_reopen_passed=verification.get("passed") is True,
+        )
+        if not all(checks.values()):
+            raise SystemExit(
+                f"recovery Stage-A update {update} sidecar mismatch: {checks}"
+            )
+        checkpoint_audits[key] = {
+            "manifest": copy.deepcopy(entry),
+            "sidecar_audit": sidecar,
+            "checks": checks,
+            "passed": True,
+        }
+
+    stage_a_match = read_json(provenance / "stage_a_data_match.json")
+    if set(stage_a_match) != {
+        "reference",
+        "source_batch",
+        "source_stream",
+        "update_96",
+        "update_191",
+        "passed",
+    }:
+        raise SystemExit("recovery Stage-A matched-data evidence has unexpected keys")
+    match_checks = {
+        "reference": stage_a_match["reference"] == "2D2D",
+        "source_batch": stage_a_match["source_batch"] == SOURCE_NEXT_BATCH,
+        "source_stream": stage_a_match["source_stream"] == SOURCE_NEXT_STREAM,
+        "passed": stage_a_match["passed"] is True,
+    }
+    for update in (96, 191):
+        row = stage_a_match[f"update_{update}"]
+        cursor = expected_cursor("a", update)
+        match_checks[f"update_{update}"] = (
+            set(row)
+            == {
+                "observed_next_global_batch_sha256",
+                "observed_next_global_batch_stream_sha256",
+                "expected",
+                "exact",
+            }
+            and row["observed_next_global_batch_sha256"] == cursor[0]
+            and row["observed_next_global_batch_stream_sha256"] == cursor[1]
+            and row["expected"] == list(cursor)
+            and row["exact"] is True
+            and manifest["stage_a"][str(update)]["next_global_batch_sha256"]
+            == cursor[0]
+            and manifest["stage_a"][str(update)][
+                "next_global_batch_stream_sha256"
+            ]
+            == cursor[1]
+        )
+    if not all(match_checks.values()):
+        raise SystemExit(f"recovery Stage-A matched-data audit failed: {match_checks}")
+
+    runtime = read_json(provenance / "commands_and_runtime.json")
+    if set(runtime) != {"commands"} or len(runtime["commands"]) != 3:
+        raise SystemExit("recovery runtime must contain the exact three original rows")
+    preflight_row, first_segment, second_segment = runtime["commands"]
+    runtime_checks = {
+        "preflight_keys": set(preflight_row) == {"command", "kind"},
+        "preflight_kind": preflight_row.get("kind") == "preflight",
+        "preflight_command": "experiment_2d2g.py preflight "
+        in preflight_row.get("command", ""),
+    }
+    expected_segments = ((first_segment, 1, 96), (second_segment, 97, 191))
+    for index, (row, start, end) in enumerate(expected_segments, start=1):
+        prefix = f"segment_{index}"
+        wall = row.get("wall_seconds")
+        runtime_checks.update(
+            {
+                f"{prefix}_keys": set(row)
+                == {
+                    "command",
+                    "stage",
+                    "start_update",
+                    "end_update",
+                    "pid",
+                    "wall_seconds",
+                },
+                f"{prefix}_stage": row.get("stage") == "a",
+                f"{prefix}_updates": (
+                    row.get("start_update"), row.get("end_update")
+                )
+                == (start, end),
+                f"{prefix}_pid": isinstance(row.get("pid"), int)
+                and row["pid"] > 0,
+                f"{prefix}_wall": isinstance(wall, (int, float))
+                and not isinstance(wall, bool)
+                and math.isfinite(float(wall))
+                and float(wall) > 0,
+                f"{prefix}_command": "experiment_2d2g.py train-a "
+                in row.get("command", "")
+                and f"--end-update {end}" in row.get("command", ""),
+                f"{prefix}_resume_contract": (
+                    "--resume" not in row.get("command", "")
+                    if start == 1
+                    else "--resume" in row.get("command", "")
+                ),
+            }
+        )
+    if not all(runtime_checks.values()):
+        raise SystemExit(f"recovery Stage-A runtime audit failed: {runtime_checks}")
+
+    restart_required = read_json(
+        provenance / "stage_a_restart_required_update_96.json"
+    )
+    forced_restart = read_json(
+        provenance / "stage_a_forced_restart_update_96.json"
+    )
+    heartbeat = read_json(provenance / "HEARTBEAT.json")
+    boundary_checks = {
+        "update96_checkpoint_exact": restart_required.get("checkpoint")
+        == manifest["stage_a"]["96"],
+        "update96_pid_exact": restart_required.get("saved_process_id")
+        == first_segment["pid"],
+        "update96_status": restart_required.get("status")
+        == "MANDATORY_FRESH_PROCESS_REQUIRED",
+        "fresh_process": forced_restart.get("fresh_process") is True,
+        "restart_passed": forced_restart.get("passed") is True,
+        "checkpoint_pid_exact": forced_restart.get("checkpoint_process_id")
+        == first_segment["pid"],
+        "resume_pid_exact": forced_restart.get("resumed_process_id")
+        == second_segment["pid"],
+        "distinct_pids": first_segment["pid"] != second_segment["pid"],
+        "restart_batch_exact": forced_restart.get("next_global_batch_sha256")
+        == forced_restart.get("expected_next_global_batch_sha256")
+        == STAGE_A_UPDATE96_BATCH,
+        "restart_stream_exact": forced_restart.get(
+            "next_global_batch_stream_sha256"
+        )
+        == forced_restart.get("expected_next_global_batch_stream_sha256")
+        == STAGE_A_UPDATE96_STREAM,
+        "heartbeat_experiment": heartbeat.get("experiment") == EXPERIMENT,
+        "heartbeat_stage": heartbeat.get("stage") == "a",
+        "heartbeat_update": heartbeat.get("local_update") == UPDATES_PER_STAGE,
+        "heartbeat_targets": heartbeat.get("targets") == TARGETS_PER_STAGE,
+        "heartbeat_pid": heartbeat.get("pid") == second_segment["pid"],
+        "heartbeat_checkpoint": Path(heartbeat.get("checkpoint", "")).resolve()
+        == Path(manifest["stage_a"]["191"]["checkpoint"]).resolve(),
+    }
+    if not all(boundary_checks.values()):
+        raise SystemExit(f"recovery Stage-A restart audit failed: {boundary_checks}")
+
+    metrics_path = provenance / "stage_a_training_metrics.jsonl"
+    try:
+        metric_rows = [json.loads(line) for line in metrics_path.read_text().splitlines()]
+    except (json.JSONDecodeError, OSError) as error:
+        raise SystemExit(f"invalid archived Stage-A metrics: {error}") from error
+    metric_checks = {
+        "row_count": len(metric_rows) == UPDATES_PER_STAGE,
+        "updates_exact": [row.get("local_update") for row in metric_rows]
+        == list(range(1, UPDATES_PER_STAGE + 1)),
+        "stage_exact": all(row.get("stage") == "a" for row in metric_rows),
+        "targets_exact": all(
+            row.get("processed_stage_targets") == index * GLOBAL_TARGETS
+            for index, row in enumerate(metric_rows, start=1)
+        ),
+        "wall_seconds_finite_positive": all(
+            isinstance(row.get("wall_seconds"), (int, float))
+            and not isinstance(row.get("wall_seconds"), bool)
+            and math.isfinite(float(row["wall_seconds"]))
+            and float(row["wall_seconds"]) > 0
+            for row in metric_rows
+        ),
+        "final_loss_matches_heartbeat": bool(metric_rows)
+        and metric_rows[-1].get("pass_losses", [None])[-1]
+        == heartbeat.get("last_loss"),
+        "final_gate_matches_heartbeat": bool(metric_rows)
+        and metric_rows[-1].get("tanh_g_rec_b1") == heartbeat.get("g_rec_b1"),
+    }
+    if not all(metric_checks.values()):
+        raise SystemExit(f"recovery Stage-A metric audit failed: {metric_checks}")
+
+    current_support = {}
+    for name in RECOVERY_STAGE_A_SUPPORT_FILES:
+        current = output / name
+        current_support[name] = _require_regular_recovery_file(
+            current, RECOVERY_PROVENANCE_SHA256[name]
+        )
+        if file_sha256(current) != source_files[name]["sha256"]:
+            raise SystemExit(
+                f"current Stage-A support evidence differs from archive: {name}"
+            )
+
+    metric_segment_wall_seconds = {
+        "updates_1_96": sum(float(row["wall_seconds"]) for row in metric_rows[:96]),
+        "updates_97_191": sum(float(row["wall_seconds"]) for row in metric_rows[96:]),
+    }
+    audit = {
+        "schema": RECOVERY_PROVENANCE_SCHEMA,
+        "source_kind": "exact_pre_destructive_preflight_archive",
+        "provenance_dir": str(provenance),
+        "identity": expected_recovery_provenance_identity(),
+        "source_files": source_files,
+        "current_support_files": current_support,
+        "checkpoint_audits": checkpoint_audits,
+        "matched_data_checks": match_checks,
+        "runtime_checks": runtime_checks,
+        "restart_boundary_checks": boundary_checks,
+        "metric_checks": metric_checks,
+        "runtime_wall_seconds_source": "exact archived original runtime rows",
+        "runtime_wall_seconds_reconstructed": False,
+        "metric_segment_wall_seconds_for_cross_reference_only": metric_segment_wall_seconds,
+        "passed": True,
+    }
+    return {
+        "checkpoint_manifest": manifest,
+        "commands_and_runtime": runtime,
+        "stage_a_data_match": stage_a_match,
+        "audit": audit,
+    }
+
+
+def recovery_requirement_marker(recovery_audit: dict) -> dict:
+    return {
+        "schema": RECOVERY_PROVENANCE_SCHEMA,
+        "recovery_required": True,
+        "source_identity": expected_recovery_provenance_identity(),
+        "source_sha256": dict(RECOVERY_PROVENANCE_SHA256),
+        "provenance_dir": recovery_audit["provenance_dir"],
+    }
+
+
+def recovery_preflight_runtime_row(
+    command: str, recovery_audit: dict, pid: int, published_at: float
+) -> dict:
+    return {
+        "command": command,
+        "kind": "recovery_preflight",
+        "pid": int(pid),
+        "published_at": float(published_at),
+        "recovery_provenance_schema": RECOVERY_PROVENANCE_SCHEMA,
+        "provenance_dir": recovery_audit["provenance_dir"],
+        "checkpoint_manifest_sha256": RECOVERY_PROVENANCE_SHA256[
+            "checkpoint_manifest.json"
+        ],
+        "commands_and_runtime_sha256": RECOVERY_PROVENANCE_SHA256[
+            "commands_and_runtime.json"
+        ],
+        "stage_a_data_match_sha256": RECOVERY_PROVENANCE_SHA256[
+            "stage_a_data_match.json"
+        ],
+    }
+
+
+def recovery_restored_state(runtime: dict, original_runtime: dict) -> dict:
+    return {
+        "checkpoint_manifest_sha256": RECOVERY_PROVENANCE_SHA256[
+            "checkpoint_manifest.json"
+        ],
+        "stage_a_data_match_sha256": RECOVERY_PROVENANCE_SHA256[
+            "stage_a_data_match.json"
+        ],
+        "recovery_runtime_prefix_sha256": canonical_json_sha256(runtime),
+        "original_runtime_rows_preserved_exactly": runtime["commands"][:3]
+        == original_runtime["commands"],
+        "recovery_preflight_rows": len(runtime["commands"]) - 3,
+    }
+
+
+def publish_preflight_bookkeeping(
+    output_dir: Path | str,
+    command: str,
+    source_match: dict,
+    recovery: dict | None = None,
+) -> dict | None:
+    """Publish fresh or explicitly recovered preflight bookkeeping."""
+
+    output = Path(output_dir).resolve()
+    if recovery is None:
+        durable_json(output / "stage_a_data_match.json", source_match)
+        durable_json(output / "checkpoint_manifest.json", {"stage_a": {}, "stage_b": {}})
+        durable_json(
+            output / "commands_and_runtime.json",
+            {"commands": [{"command": command, "kind": "preflight"}]},
+        )
+        durable_json(
+            output / "storage_cleanup_manifest.json",
+            {"scientific_source_removed": False, "cleanup_actions": []},
+        )
+        return None
+
+    audit_path = output / "recovery_stage_a_provenance_audit.json"
+    prior_audit = read_json(audit_path) if audit_path.is_file() else None
+    original_runtime = copy.deepcopy(recovery["commands_and_runtime"])
+    marker = recovery_requirement_marker(recovery["audit"])
+    marker_path = output / RECOVERY_REQUIREMENT_MARKER
+    if marker_path.is_file() and read_json(marker_path) != marker:
+        raise SystemExit("existing recovery requirement marker changed")
+    if prior_audit is not None:
+        current_manifest = read_json(output / "checkpoint_manifest.json")
+        current_match = read_json(output / "stage_a_data_match.json")
+        current_runtime = read_json(output / "commands_and_runtime.json")
+        prior_attempts = prior_audit.get("attempts", [])
+        current_recovery_rows = current_runtime.get("commands", [])[3:]
+        if (
+            set(prior_audit)
+            != {"schema", "source", "attempts", "restored", "requirement_marker", "passed"}
+            or prior_audit.get("schema") != RECOVERY_PROVENANCE_SCHEMA
+            or prior_audit.get("passed") is not True
+            or prior_audit.get("source") != recovery["audit"]
+            or prior_audit.get("requirement_marker") != marker
+            or current_manifest != recovery["checkpoint_manifest"]
+            or current_match != recovery["stage_a_data_match"]
+            or current_runtime.get("commands", [])[:3]
+            != original_runtime["commands"]
+            or not all(
+                row.get("kind") == "recovery_preflight"
+                for row in current_recovery_rows
+            )
+            or len(prior_attempts) != len(current_recovery_rows)
+            or any(
+                set(attempt) != {"runtime_row", "superseded_output_files"}
+                or attempt.get("runtime_row") != row
+                or row
+                != recovery_preflight_runtime_row(
+                    row.get("command", ""),
+                    recovery["audit"],
+                    row.get("pid", -1),
+                    row.get("published_at", -1.0),
+                )
+                for attempt, row in zip(prior_attempts, current_recovery_rows)
+            )
+            or prior_audit.get("restored")
+            != recovery_restored_state(current_runtime, original_runtime)
+        ):
+            raise SystemExit(
+                "existing recovery bookkeeping changed or contains post-preflight work"
+            )
+        runtime = current_runtime
+        attempts = list(prior_attempts)
+    else:
+        runtime = copy.deepcopy(original_runtime)
+        attempts = []
+
+    cleanup_path = output / "storage_cleanup_manifest.json"
+    if cleanup_path.is_file():
+        cleanup = read_json(cleanup_path)
+        if (
+            cleanup.get("scientific_source_removed") is not False
+            or not isinstance(cleanup.get("cleanup_actions"), list)
+        ):
+            raise SystemExit("existing recovery cleanup manifest is invalid")
+    else:
+        cleanup = {"scientific_source_removed": False, "cleanup_actions": []}
+
+    superseded = {}
+    for name in (
+        "checkpoint_manifest.json",
+        "commands_and_runtime.json",
+        "stage_a_data_match.json",
+    ):
+        path = output / name
+        superseded[name] = {
+            "present": path.is_file(),
+            "sha256": file_sha256(path) if path.is_file() else None,
+            "bytes": path.stat().st_size if path.is_file() else 0,
+        }
+    published_at = time.time()
+    runtime_row = recovery_preflight_runtime_row(
+        command, recovery["audit"], os.getpid(), published_at
+    )
+    attempt = {
+        "runtime_row": copy.deepcopy(runtime_row),
+        "superseded_output_files": superseded,
+    }
+    attempts.append(attempt)
+    runtime["commands"].append(runtime_row)
+    if not marker_path.is_file():
+        durable_json(marker_path, marker)
+    durable_json(output / "stage_a_data_match.json", recovery["stage_a_data_match"])
+    durable_json(output / "checkpoint_manifest.json", recovery["checkpoint_manifest"])
+    durable_json(output / "commands_and_runtime.json", runtime)
+    if not cleanup_path.is_file():
+        durable_json(cleanup_path, cleanup)
+
+    published = {
+        "schema": RECOVERY_PROVENANCE_SCHEMA,
+        "source": recovery["audit"],
+        "attempts": attempts,
+        "restored": recovery_restored_state(runtime, original_runtime),
+        "requirement_marker": marker,
+        "passed": True,
+    }
+    durable_json(audit_path, published)
+    return published
 
 
 def record_cleanup(output: Path | str, actions: list[dict]) -> None:
@@ -1369,6 +1918,14 @@ def run_preflight(args):
     device = require_assigned_a100()
     output = Path(args.output_dir).resolve()
     output.mkdir(parents=True, exist_ok=True)
+    provenance_dir = recovery_provenance_dir(
+        getattr(args, "recovery_provenance_dir", None)
+    )
+    recovery = (
+        require_exact_stage_a_recovery_provenance(output, provenance_dir)
+        if provenance_dir is not None
+        else None
+    )
     source_model, source_optimizer, source_loader, payload, source = load_2d2b_source(
         args.source_checkpoint, device, restore_rng=False
     )
@@ -1425,6 +1982,7 @@ def run_preflight(args):
         "data": data,
         "config": config,
         "implementation_fingerprint": implementation_fingerprint(),
+        "recovery_stage_a_provenance": recovery["audit"] if recovery else None,
         "checks": checks,
         "passed": all(checks.values()),
         "authorized": all(checks.values()),
@@ -1441,20 +1999,21 @@ def run_preflight(args):
         "no_g_rec_b2": True,
         "passed": checks["stage_a_parameters"] and checks["stage_b_parameters"],
     })
-    durable_json(output / "stage_a_data_match.json", {
+    source_match = {
         "reference": "2D2D", "source_batch": SOURCE_NEXT_BATCH,
         "source_stream": SOURCE_NEXT_STREAM,
         "passed": source["checks"]["next_batch"] and source["checks"]["next_stream"]
-    })
+    }
     durable_json(output / "stage_b_data_match.json", {
         "reference": "2D2E", "expected_start_batch": STAGE_A_FINAL_BATCH,
         "expected_start_stream": STAGE_A_FINAL_STREAM, "pending_stage_a": True
     })
-    durable_json(output / "storage_cleanup_manifest.json", {
-        "scientific_source_removed": False, "cleanup_actions": []
-    })
-    durable_json(output / "checkpoint_manifest.json", {"stage_a": {}, "stage_b": {}})
-    durable_json(output / "commands_and_runtime.json", {"commands": [{"command": " ".join(sys.argv), "kind": "preflight"}]})
+    publish_preflight_bookkeeping(
+        output,
+        " ".join(sys.argv),
+        source_match,
+        recovery=recovery,
+    )
     if not audit["passed"]:
         raise SystemExit(f"2D2G preflight failed: {checks}")
     print("EXPERIMENT_2D2G_PREFLIGHT_PASS", flush=True)
@@ -2149,6 +2708,103 @@ def render_report(summary, audit) -> str:
     return "\n".join(lines)
 
 
+def recovery_finalize_integrity(
+    output: Path | str,
+    preflight_audit: dict,
+    command_runtime: dict,
+    checkpoint_manifest: dict,
+    stage_a_match: dict,
+) -> dict:
+    output = Path(output).resolve()
+    marker_path = output / RECOVERY_REQUIREMENT_MARKER
+    audit_path = output / "recovery_stage_a_provenance_audit.json"
+    commands = command_runtime.get("commands", [])
+    recovery_rows = [row for row in commands if row.get("kind") == "recovery_preflight"]
+    preflight_source = preflight_audit.get("recovery_stage_a_provenance")
+    required = any(
+        (
+            os.environ.get("MASTER_RECOVERY_MODE") == "1",
+            preflight_source is not None,
+            marker_path.exists(),
+            audit_path.exists(),
+            bool(recovery_rows),
+        )
+    )
+    if not required:
+        return {
+            "required": False,
+            "checks": {"ordinary_run_has_no_recovery_claim": True},
+            "passed": True,
+        }
+
+    marker = read_json(marker_path) if marker_path.is_file() else {}
+    recovery_audit = read_json(audit_path) if audit_path.is_file() else {}
+    source = recovery_audit.get("source", {})
+    attempts = recovery_audit.get("attempts", [])
+    recovery_prefix = {"commands": commands[: 3 + len(recovery_rows)]}
+    expected_stage_a = {
+        update: source.get("checkpoint_audits", {}).get(update, {}).get("manifest")
+        for update in ("96", "191")
+    }
+    try:
+        expected_marker = recovery_requirement_marker(source)
+    except (KeyError, TypeError):
+        expected_marker = None
+    canonical_rows = bool(source) and all(
+        row
+        == recovery_preflight_runtime_row(
+            row.get("command", ""),
+            source,
+            row.get("pid", -1),
+            row.get("published_at", -1.0),
+        )
+        for row in recovery_rows
+    )
+    checks = {
+        "master_recovery_mode": os.environ.get("MASTER_RECOVERY_MODE") == "1",
+        "preflight_declares_recovery": isinstance(preflight_source, dict),
+        "marker_present_regular": marker_path.is_file() and not marker_path.is_symlink(),
+        "audit_present_regular": audit_path.is_file() and not audit_path.is_symlink(),
+        "marker_exact": expected_marker is not None and marker == expected_marker,
+        "audit_exact_keys": set(recovery_audit)
+        == {"schema", "source", "attempts", "restored", "requirement_marker", "passed"},
+        "audit_schema": recovery_audit.get("schema") == RECOVERY_PROVENANCE_SCHEMA,
+        "audit_passed": recovery_audit.get("passed") is True,
+        "source_matches_preflight_exactly": source == preflight_source,
+        "source_passed": source.get("passed") is True,
+        "source_identity_exact": source.get("identity")
+        == expected_recovery_provenance_identity(),
+        "source_hash_map_exact": {
+            name: row.get("sha256")
+            for name, row in source.get("source_files", {}).items()
+        }
+        == RECOVERY_PROVENANCE_SHA256,
+        "audit_marker_exact": recovery_audit.get("requirement_marker") == marker,
+        "original_runtime_exact": canonical_json_sha256(
+            {"commands": commands[:3]}
+        )
+        == RECOVERY_PROVENANCE_SHA256["commands_and_runtime.json"],
+        "recovery_rows_contiguous": commands[3 : 3 + len(recovery_rows)]
+        == recovery_rows,
+        "recovery_rows_canonical": bool(recovery_rows) and canonical_rows,
+        "attempts_exactly_map_runtime": len(attempts) == len(recovery_rows)
+        and all(
+            set(attempt) == {"runtime_row", "superseded_output_files"}
+            and attempt.get("runtime_row") == row
+            for attempt, row in zip(attempts, recovery_rows)
+        ),
+        "restored_state_exact": recovery_audit.get("restored")
+        == recovery_restored_state(
+            recovery_prefix, {"commands": commands[:3]}
+        ),
+        "current_stage_a_manifest_exact": checkpoint_manifest.get("stage_a")
+        == expected_stage_a,
+        "current_stage_a_data_match_exact": canonical_json_sha256(stage_a_match)
+        == RECOVERY_PROVENANCE_SHA256["stage_a_data_match.json"],
+    }
+    return {"required": True, "checks": checks, "passed": all(checks.values())}
+
+
 def run_finalize(args):
     started = time.monotonic()
     require_git(clean=False)
@@ -2192,6 +2848,19 @@ def run_finalize(args):
     restart_a = read_json(output / "stage_a_forced_restart_update_96.json")
     restart_b = read_json(output / "stage_b_forced_restart_update_96.json")
     checkpoint_manifest = read_json(output / "checkpoint_manifest.json")
+    command_runtime = read_json(output / "commands_and_runtime.json")
+    preflight_audit = read_json(output / "preflight_audit.json")
+    recovery_integrity = recovery_finalize_integrity(
+        output,
+        preflight_audit,
+        command_runtime,
+        checkpoint_manifest,
+        stage_a_match,
+    )
+    if not recovery_integrity["passed"]:
+        raise SystemExit(
+            f"2D2G recovery provenance integrity failed: {recovery_integrity['checks']}"
+        )
     milestones = read_json(output / "milestone_validation.json")
     training_milestone_191_present = "191" in milestones
     legacy_191_final_removed = milestones.pop("191_final", None) is not None
@@ -2227,6 +2896,7 @@ def run_finalize(args):
             key in checkpoint_manifest["stage_b"]
             for key in ("96", "191", "191_persistent")
         ),
+        "recovery_stage_a_provenance": recovery_integrity["passed"],
         "persistent_checkpoint_reverified": persistent_sidecars["passed"],
         "persistent_sha_matches_local": persisted["persistent_sha256"]
         == file_sha256(args.stage_b_checkpoint),
@@ -2238,6 +2908,7 @@ def run_finalize(args):
         incremental, stability["passed"], scientific_integrity
     )
     audit = {"checks": checks, "passed": all(checks.values()), "classification": classification}
+    audit["recovery_stage_a_provenance"] = recovery_integrity
     audit["milestone_reconciliation"] = {
         "final_evaluation_overwrote_update_191": True,
         "legacy_191_final_removed": legacy_191_final_removed,
@@ -2285,11 +2956,10 @@ def run_finalize(args):
     durable_json(output / "incremental_cache_audit.json", cache)
     durable_json(output / "memory_accounting.json", memory)
     durable_json(output / "stability_8pass.json", stability)
-    command_runtime = read_json(output / "commands_and_runtime.json")
     training_wall_seconds = sum(
         float(row.get("wall_seconds", 0.0))
         for row in command_runtime.get("commands", [])
-        if row.get("kind") != "preflight"
+        if row.get("kind") not in {"preflight", "recovery_preflight"}
     )
     finalize_wall_seconds = time.monotonic() - started
     durable_json(output / "performance.json", {
@@ -2299,6 +2969,17 @@ def run_finalize(args):
         "recorded_pre_finalize_wall_seconds": training_wall_seconds,
         "finalization_wall_seconds": finalize_wall_seconds,
         "recorded_lane_gpu_hours": (training_wall_seconds + finalize_wall_seconds) / 3600.0,
+        "recorded_successful_science_gpu_hours": (
+            training_wall_seconds + finalize_wall_seconds
+        ) / 3600.0,
+        "recovery_overhead": {
+            "recovery_preflight_wall_seconds_available": False,
+            "recorded_recovery_preflight_wall_seconds": None,
+            "recovery_preflight_wall_seconds_fabricated": False,
+            "failed_attempt_3_wall_seconds_available": False,
+            "failed_attempt_3_wall_seconds_fabricated": False,
+            "excluded_from_successful_science_gpu_hours": True,
+        },
     })
     durable_json(output / "result_summary.json", summary)
     append_command_runtime(
@@ -2379,6 +3060,7 @@ def build_parser():
     add_common(preflight)
     preflight.add_argument("--source-checkpoint", required=True)
     preflight.add_argument("--data-root", required=True)
+    preflight.add_argument("--recovery-provenance-dir")
     preflight.set_defaults(function=run_preflight)
 
     smoke = sub.add_parser("smoke-b")
