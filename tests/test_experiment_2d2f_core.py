@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 
+import numpy as np
 import torch
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -8,6 +9,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "scripts")]
 
 import smoke_test as support  # noqa: E402
 import experiment_2d2d_core as source_core  # noqa: E402
+import experiment_2d2f as experiment  # noqa: E402
 import experiment_2d2f_core as core  # noqa: E402
 
 SYMBOLS = support.load_training_symbols()
@@ -86,6 +88,33 @@ def test_b3_gate_zero_identity_and_b2_has_no_recurrent_diagnostics():
         mask = diagnostics["recurrent_valid_mask"]
         assert recurrent.masked_select(~mask.view(1, 1, TEST_LENGTH, TEST_LENGTH)).count_nonzero() == 0
         assert recurrent[:, :, :first_valid].count_nonzero() == 0
+    assert "local_attention_weights" not in active["diagnostics"]["b1"]
+    assert "local_valid_mask" not in active["diagnostics"]["b1"]
+    assert active["diagnostics"]["b3"]["local_attention_weights"] is not None
+    assert active["diagnostics"]["b3"]["local_valid_mask"] is not None
+
+
+def test_attention_diagnostics_accept_inherited_b1_schema_and_require_b3_local(
+    tmp_path, monkeypatch
+):
+    model = tiny_model().eval()
+    shard = tmp_path / "diagnostic.npy"
+    np.save(
+        shard,
+        np.arange(2 * TEST_LENGTH + 1, dtype=np.int64) % model.config.vocab_size,
+    )
+    monkeypatch.setattr(experiment, "T", TEST_LENGTH)
+    monkeypatch.setattr(experiment, "N_HEAD", model.config.n_head)
+
+    b1 = experiment.attention_diagnostics(model, shard, "b1")
+    b3 = experiment.attention_diagnostics(model, shard, "b3")
+
+    assert b1["link"] == "B12->B1"
+    assert b1["local_lag_bins"] == {}
+    assert b1["weights_finite"]
+    assert b3["link"] == "B10->B3"
+    assert set(b3["local_lag_bins"]) == {"0-7", "8-15", "16-31", "32-63"}
+    assert b3["weights_finite"]
 
 
 def test_b1_and_b3_writer_paths_are_attached():
