@@ -1,0 +1,27 @@
+{
+  "checks": {
+    "canonical_result_directory": true,
+    "fuse_network_mount": true,
+    "logical_quota_not_exceeded": true,
+    "one_final_checkpoint_plus_8_gib_margin": true,
+    "persistent_identity_exact": true,
+    "run_root_on_workspace": true,
+    "target_exact": true
+  },
+  "configured_quota_bytes": 100000000000,
+  "filesystem": "fuse",
+  "fuse_df_informational_only": "Filesystem                        1B-blocks            Used       Available Use% Mounted on\nmfs#us-md-1.runpod.net:9421 443466171875328 322133953806336 121332218068992  73% /workspace\n",
+  "fuse_df_not_used_as_network_volume_quota": true,
+  "master_storage_preflight": "/workspace/parallel_2d2_master/storage_preflight.json",
+  "master_storage_preflight_sha256": "9546f018571ef15e5289d8defc39985abd0c0e770fd0d64b39633237ac12c438",
+  "measured_free_bytes": 19000909774,
+  "measured_used_bytes": 80999090226,
+  "output_dir": "/workspace/parallel_2d2_master/worktrees/2d2f/results/experiment_2d2f_no_b2_recurrence_b3_w64",
+  "passed": true,
+  "persistent_volume_identity": "yhzyb27fb5",
+  "required_free_bytes": 10083874743,
+  "run_root": "/workspace/exp2d2f_run",
+  "safety_margin_bytes": 8589934592,
+  "source": "mfs#us-md-1.runpod.net:9421[/networkvolumes/yhzyb27fb5]",
+  "target": "/workspace"
+}

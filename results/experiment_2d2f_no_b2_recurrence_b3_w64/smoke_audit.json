@@ -1,0 +1,888 @@
+{
+  "checkpoint": {
+    "bytes": 1493935663,
+    "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2f/smoke/smoke_update_0003.pt",
+    "completed_2d2f_updates": 3,
+    "cumulative_2d2_targets": 250615808,
+    "next_global_batch_sha256": "1d99207783537896b7646ba3689ee30794f08bbac5b14d4acff7822a4f4dc27a",
+    "next_global_batch_stream_sha256": "39def6a16e68c5d6992484c386fc3ecc104b41f1901541db6bf6872297d88ade",
+    "passed": true,
+    "sha256": "862c270a99c0db4fed2d6c2a92c64c8cf633806a62438f78e5b0ffb7c53b5be2",
+    "strict_reopen": {
+      "additional_targets": true,
+      "architecture": true,
+      "b3_gate_duplicate": true,
+      "cumulative_targets": true,
+      "fields_exact": true,
+      "gate_duplicate": true,
+      "loader_state": true,
+      "metadata": true,
+      "model_finite": true,
+      "model_keys": true,
+      "next_batch": true,
+      "next_stream": true,
+      "optimizer_finite": true,
+      "passed": true,
+      "schema": true,
+      "source": true,
+      "training_state": true,
+      "updates": true,
+      "weight_tying": true
+    }
+  },
+  "checkpoint_binary_deleted": true,
+  "checkpoint_sidecars_deleted": true,
+  "checks": {
+    "all_gradient_groups_nonzero": true,
+    "b3_gate_changes_from_zero": true,
+    "b3_gradient_update1_nonzero": true,
+    "cache_geometry": true,
+    "checkpoint_fresh_model_reload": true,
+    "checkpoint_strict_reopen": true,
+    "exactly_three_updates": true,
+    "finite": true,
+    "no_future_leakage": true,
+    "source_checkpoint_untouched": true,
+    "writer_gradient_after_gate_opens": true
+  },
+  "command": "scripts/experiment_2d2f.py smoke --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2f/results/experiment_2d2f_no_b2_recurrence_b3_w64 --run-root /workspace/exp2d2f_run --ephemeral-checkpoint-dir /tmp/parallel_2d2_ephemeral/2d2f --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json",
+  "disposition": "Discarded; scientific update 1 reloads exact finalized 2D2D.",
+  "experiment": "2D2F",
+  "fresh_model_reload": {
+    "checkpoint_sha256": "862c270a99c0db4fed2d6c2a92c64c8cf633806a62438f78e5b0ffb7c53b5be2",
+    "next_global_batch_sha256": "1d99207783537896b7646ba3689ee30794f08bbac5b14d4acff7822a4f4dc27a",
+    "passed": true,
+    "rng_restore": {
+      "expected_fingerprints": {
+        "numpy": "6811db8db134168b5c74615ae4823b411a6b1f366707ccbec8f7646767ae8e12",
+        "python": "efa4da0349af84d90c76c68c2382a12ce2bea9cb1ce2c1afdc5124098be6fad5",
+        "torch_cpu": "715f42de835c377d54671cfc55302d6257c87ea22d957de046988477fddfd87d",
+        "torch_cuda": "d4e9f28b642b44e18d2d01f6d043791487e8efb9f9821d5e4d4b1ffc23dab14f"
+      },
+      "observed_fingerprints": {
+        "numpy": "6811db8db134168b5c74615ae4823b411a6b1f366707ccbec8f7646767ae8e12",
+        "python": "efa4da0349af84d90c76c68c2382a12ce2bea9cb1ce2c1afdc5124098be6fad5",
+        "torch_cpu": "715f42de835c377d54671cfc55302d6257c87ea22d957de046988477fddfd87d",
+        "torch_cuda": "d4e9f28b642b44e18d2d01f6d043791487e8efb9f9821d5e4d4b1ffc23dab14f"
+      },
+      "passed": true,
+      "per_generator_exact": {
+        "numpy": true,
+        "python": true,
+        "torch_cpu": true,
+        "torch_cuda": true
+      }
+    },
+    "saved_process_id": 17844
+  },
+  "incremental_cache_audit": {
+    "b11_recurrent_ring_present": false,
+    "b1_historical_kv": 1,
+    "b1_historical_kv_limit": 1,
+    "b2_historical_kv": 31,
+    "b2_historical_kv_limit": 31,
+    "b3_full_counterfactual": false,
+    "b3_historical_kv": 63,
+    "b3_historical_kv_limit": 63,
+    "b4_b12_historical_kv": [
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72
+    ],
+    "b4_b12_historical_kv_limit": 1023,
+    "cache_lengths": [
+      1,
+      31,
+      63,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72,
+      72
+    ],
+    "cache_physical_storage": [
+      {
+        "block": 1,
+        "key": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 6144,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 6144,
+          "shape": [
+            2,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 2,
+        "key": {
+          "actual_bytes": 190464,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 190464,
+          "shape": [
+            2,
+            12,
+            31,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 190464,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 190464,
+          "shape": [
+            2,
+            12,
+            31,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 3,
+        "key": {
+          "actual_bytes": 387072,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 387072,
+          "shape": [
+            2,
+            12,
+            63,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 387072,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 387072,
+          "shape": [
+            2,
+            12,
+            63,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 4,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 5,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 6,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 7,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 8,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 9,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 10,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 11,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 12,
+        "key": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 442368,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "element_size_bytes": 4,
+          "exact": true,
+          "expected_bytes": 442368,
+          "shape": [
+            2,
+            12,
+            72,
+            64
+          ],
+          "storage_offset": 0
+        }
+      }
+    ],
+    "h10_ring_length": 72,
+    "h10_ring_limit": 1023,
+    "h10_ring_physical_storage": {
+      "actual_bytes": 442368,
+      "contiguous": true,
+      "dtype": "torch.float32",
+      "element_size_bytes": 4,
+      "exact": true,
+      "expected_bytes": 442368,
+      "shape": [
+        2,
+        72,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "h10_ring_positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "h12_ring_length": 72,
+    "h12_ring_limit": 1023,
+    "h12_ring_physical_storage": {
+      "actual_bytes": 442368,
+      "contiguous": true,
+      "dtype": "torch.float32",
+      "element_size_bytes": 4,
+      "exact": true,
+      "expected_bytes": 442368,
+      "shape": [
+        2,
+        72,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "h12_ring_positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "passed": true,
+    "physical_storage_exact": true,
+    "position": 72
+  },
+  "kind": "exactly three disposable optimizer updates",
+  "passed": true,
+  "rows": [
+    {
+      "gate_gradients": {
+        "b1": 0.08548223227262497,
+        "b3": 0.007659912109375
+      },
+      "gate_raw_after": {
+        "b1": 0.12927183508872986,
+        "b3": -0.0002999967837240547
+      },
+      "gate_raw_before": {
+        "b1": 0.12906356155872345,
+        "b3": 0.0
+      },
+      "gradient_groups": {
+        "b3_gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.007659912109375,
+          "tensors": 1
+        },
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 8.1403226852417,
+          "tensors": 148
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.08548223227262497,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 8.140774726867676,
+      "gradients_finite": true,
+      "loss": 2.963629961013794,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        2.963003396987915,
+        2.963838815689087
+      ],
+      "recurrent_states_finite": true,
+      "update": 1
+    },
+    {
+      "gate_gradients": {
+        "b1": 0.026291582733392715,
+        "b3": 0.0021514890249818563
+      },
+      "gate_raw_after": {
+        "b1": 0.12944673001766205,
+        "b3": -0.0005730136763304472
+      },
+      "gate_raw_before": {
+        "b1": 0.12927183508872986,
+        "b3": -0.0002999967837240547
+      },
+      "gradient_groups": {
+        "b3_gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.0021514890249818563,
+          "tensors": 1
+        },
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 5.594305992126465,
+          "tensors": 148
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.026291582733392715,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 5.594367504119873,
+      "gradients_finite": true,
+      "loss": 2.8256564140319824,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        2.8256759643554688,
+        2.8256497383117676
+      ],
+      "recurrent_states_finite": true,
+      "update": 2
+    },
+    {
+      "gate_gradients": {
+        "b1": -0.0005552195943892002,
+        "b3": -0.015014642849564552
+      },
+      "gate_raw_after": {
+        "b1": 0.12960854172706604,
+        "b3": -0.00047984463162720203
+      },
+      "gate_raw_before": {
+        "b1": 0.12944673001766205,
+        "b3": -0.0005730136763304472
+      },
+      "gradient_groups": {
+        "b3_gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.015014642849564552,
+          "tensors": 1
+        },
+        "base": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 6.265270233154297,
+          "tensors": 148
+        },
+        "gate": {
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.0005552195943892002,
+          "tensors": 1
+        }
+      },
+      "gradient_norm": 6.265289783477783,
+      "gradients_finite": true,
+      "loss": 2.7187328338623047,
+      "optimizer_finite": true,
+      "parameters_finite": true,
+      "pass_losses": [
+        2.7225661277770996,
+        2.7174549102783203
+      ],
+      "recurrent_states_finite": true,
+      "update": 3
+    }
+  ],
+  "writer_gradient_after_gate_opens": {
+    "bins": {
+      "128-255": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 7.607375778206915e-07,
+        "mean_gradient_rms": 1.8072728380502667e-07,
+        "source_positions": 128
+      },
+      "256-511": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.2162869325038628e-06,
+        "mean_gradient_rms": 8.789812966369936e-08,
+        "source_positions": 256
+      },
+      "512-1023": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.6424680779891787e-06,
+        "mean_gradient_rms": 9.705005510340925e-08,
+        "source_positions": 512
+      },
+      "64-127": {
+        "fraction_nonzero_elements": 1.0,
+        "fraction_nonzero_positions": 1.0,
+        "max_gradient_rms": 1.0320005685571232e-06,
+        "mean_gradient_rms": 1.9532016892753745e-07,
+        "source_positions": 64
+      }
+    },
+    "effective_gate": -0.0004798446025233716,
+    "finite": true,
+    "gate_override": null,
+    "gate_raw": -0.00047984463162720203,
+    "gradient_norm": 0.00010153120092581958,
+    "link": "B10->B3",
+    "long_lag_writer_gradient_present": true,
+    "nonzero": true,
+    "pinned_batch": {
+      "combined_sha256": "9bab8fb42f79d53edfc866f6f5f96b1e6fd1b004fad9c670b0344f9a37299de2",
+      "input_sha256": "9009687299d202872afd60478b7ee15ed16b123d962ccd1633b259bb0553e6e1",
+      "target_sha256": "ed6f5bcd6f2921d8fa643c284bb9cba1ceb0954104a6f468a98d5ed3331a095e"
+    },
+    "position_probes": {
+      "early_old_position_0": 1.3268880216799062e-08,
+      "middle_position_512": 6.512628214494498e-09,
+      "recent_eligible_position_959": 8.037194731969066e-08,
+      "recent_ineligible_position_960": 0.0
+    },
+    "precision": "bf16",
+    "receiver_loss": 6.809809684753418,
+    "receiver_position": 1023
+  }
+}

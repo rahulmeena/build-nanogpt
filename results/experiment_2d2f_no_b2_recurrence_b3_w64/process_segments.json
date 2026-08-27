@@ -1,0 +1,20 @@
+{
+  "191": {
+    "checkpoint": "/workspace/exp2d2f_run/checkpoints/scientific_update_0191.pt",
+    "command": "scripts/experiment_2d2f.py train --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2f/results/experiment_2d2f_no_b2_recurrence_b3_w64 --run-root /workspace/exp2d2f_run --ephemeral-checkpoint-dir /tmp/parallel_2d2_ephemeral/2d2f --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json --end-update 191 --resume /tmp/parallel_2d2_ephemeral/2d2f/scientific_update_0096.pt",
+    "completed_at": 1787843829.2864728,
+    "end_local_update": 191,
+    "process_id": 19564,
+    "start_local_update": 96,
+    "started_at": 1787842721.8196805
+  },
+  "96": {
+    "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2f/scientific_update_0096.pt",
+    "command": "scripts/experiment_2d2f.py train --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2f/results/experiment_2d2f_no_b2_recurrence_b3_w64 --run-root /workspace/exp2d2f_run --ephemeral-checkpoint-dir /tmp/parallel_2d2_ephemeral/2d2f --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json --end-update 96",
+    "completed_at": 1787842701.3991542,
+    "end_local_update": 96,
+    "process_id": 18057,
+    "start_local_update": 0,
+    "started_at": 1787841573.0295217
+  }
+}
