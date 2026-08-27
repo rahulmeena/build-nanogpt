@@ -128,7 +128,7 @@ SANITIZED_TOOL_ENVIRONMENT = {
     "LC_ALL": "C",
 }
 MASTER_FINALIZATION_IMPLEMENTATION_TAG = (
-    "parallel-2d2-master-finalization-implementation"
+    "parallel-2d2-master-finalization-implementation-v2"
 )
 CHECKPOINT_PERSIST_LOCK = (
     "/workspace/parallel_2d2_master/locks/checkpoint_persist.lock"
@@ -3749,9 +3749,15 @@ def validate_master_report_git_binding(report_audit: dict, git_audit: dict) -> d
         raise RuntimeError("Git/report cross-binding repository set is not exact")
     checks = {}
     for name, row in rows.items():
+        # The report cannot contain the object ID of the commit that first
+        # contains its own bytes.  For MASTER, bind the signed implementation
+        # commit; the final report descendant is bound by Git evidence itself.
+        report_commit = (
+            row["implementation_commit"] if name == "MASTER" else row["commit"]
+        )
         pattern = (
             rf"(?m)^- {re.escape(name)}: branch `"
-            rf"{re.escape(row['branch'])}`, commit `{re.escape(row['commit'])}`"
+            rf"{re.escape(row['branch'])}`, commit `{re.escape(report_commit)}`"
             rf"(?:, tag `[^`]+`)?\.$"
         )
         if re.search(pattern, body) is None:
