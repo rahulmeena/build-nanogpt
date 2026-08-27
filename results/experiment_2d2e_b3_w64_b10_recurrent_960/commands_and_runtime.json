@@ -1,0 +1,20 @@
+{
+  "environment": {
+    "autocast": "cuda bfloat16",
+    "cublas_workspace_config": ":4096:8",
+    "cuda": "12.8",
+    "cuda_device_count": 1,
+    "cudnn": 91002,
+    "experiment": "2D2E",
+    "float32_matmul_precision": "high",
+    "git_branch": "experiment-2d2e-b3-w64-b10-recurrent-960",
+    "git_commit": "d974c233ee8ff9f569cd5d575a9ab5a5d3b012d8",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "matplotlib": null,
+    "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+    "timestamp": 1787821391.5555937,
+    "torch": "2.8.0+cu128"
+  },
+  "preflight_command": "scripts/experiment_2d2e.py preflight --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2e/results/experiment_2d2e_b3_w64_b10_recurrent_960 --run-root /workspace/exp2d2e_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl pod stop 7kk5yyti00rnrp -o json --stop-authenticated --stop-audit-path /workspace/exp2d2e_run/runpod_stop_capability_preflight.json"
+}
