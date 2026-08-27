@@ -33,6 +33,7 @@ LANES = {
             "scripts/parallel_2d2_lane_common.sh",
             "scripts/parallel_2d2_recovery_preflight.py",
             "scripts/parallel_2d2_lane1_stage_b_recovery.sh",
+            "scripts/parallel_2d2_lane2_finalize_recovery.sh",
             "scripts/parallel_2d2_supervisor.py",
             "scripts/test_parallel_2d2_orchestration.py",
             "scripts/test_parallel_2d2_recovery_preflight.py",
@@ -69,9 +70,10 @@ LANES = {
             "results/experiment_2d2g_b2_full_b3_w64",
         },
         "recovery_reason": (
-            "2D2G-B disposable smoke evaluation failed on an evaluation-device "
-            "implementation defect after exact 2D2G-A update 191 completed; "
-            "retain Stage-A-191 and rerun only smoke-B plus Stage B"
+            "2D2G-B recovery attempt 1 stopped before science because its "
+            "experiment preflight fingerprint named the pre-device-fix implementation; "
+            "rerun the 2D2G preflight from frozen 2D2B, retain exact Stage-A-191, "
+            "then rerun smoke-B plus Stage B"
         ),
         "tests": [
             "tests/test_experiment_2d2g_core.py",
@@ -81,8 +83,8 @@ LANES = {
     "GPU2": {
         "branch": "experiment-2d2h-no-b1-recurrence-b2-w32",
         "worktree": "/workspace/parallel_2d2_master/worktrees/2d2h",
-        "base_checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
-        "base_sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+        "base_checkpoint": "/workspace/exp2d2h_run/checkpoints/scientific_update_0191.pt",
+        "base_sha256": None,
         "allowed_changed_files": {
             "scripts/experiment_2d2h.py",
             "tests/test_experiment_2d2h_driver.py",
@@ -91,8 +93,11 @@ LANES = {
             "results/experiment_2d2h_no_b1_recurrence_b2_w32",
         },
         "recovery_reason": (
-            "2D2H failed before scientific update 1 on B2 gate-freshness audit "
-            "ordering; restart from the exact frozen 2D2B checkpoint"
+            "2D2H completed training and final metrics, then its evaluation-only "
+            "parallel/incremental equivalence audit used default TF32 while enforcing "
+            "an FP32 1e-4 tolerance; seal the exact prior passing preflight, approved "
+            "audit-only implementation correction, failed-audit evidence, clean pushed "
+            "HEAD, and persisted H update-191 checkpoint before finalize-only recovery"
         ),
         "tests": [
             "tests/test_experiment_2d2h_core.py",
@@ -102,6 +107,12 @@ LANES = {
 }
 
 BASH_PERCENT_Q_SAFE = re.compile(r"[A-Za-z0-9_@%+=:,./-]+")
+EXPECTED_POD = {
+    "id": "7i2zyd53ytspwz",
+    "name": "empirical_tan_panda",
+    "gpu_count": 4,
+    "volume_id": "yhzyb27fb5",
+}
 
 
 def render_bash_percent_q(argv) -> str:
@@ -179,6 +190,7 @@ def expected_recovery_argv(master_root: Path, run_root: Path, lane: str) -> list
         ephemeral = "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints"
         smoke = "/tmp/parallel_2d2_ephemeral/2d2g/smoke"
         persistent = "/workspace/exp2d2g_run/checkpoints"
+        source = "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt"
         a191 = f"{ephemeral}/stage_a_scientific_update_0191.pt"
         b96 = f"{ephemeral}/stage_b_scientific_update_0096.pt"
         b191 = f"{ephemeral}/stage_b_scientific_update_0191.pt"
@@ -189,6 +201,10 @@ def expected_recovery_argv(master_root: Path, run_root: Path, lane: str) -> list
         ]
         driver = ["python", "scripts/experiment_2d2g.py"]
         return [
+            [
+                *driver, "preflight", *common, "--source-checkpoint", source,
+                "--data-root", data_root,
+            ],
             [
                 *driver, "smoke-b", *common, "--stage-a-checkpoint", a191,
                 "--checkpoint-dir", smoke, "--data-root", data_root,
@@ -236,12 +252,9 @@ def expected_recovery_argv(master_root: Path, run_root: Path, lane: str) -> list
         ]
         driver = ["python", "scripts/experiment_2d2h.py"]
         return [
-            [*driver, "preflight", *common],
-            [*driver, "smoke", *common],
-            [*driver, "train", *common, "--end-update", "96"],
             [
-                *driver, "train", *common, "--end-update", "191",
-                "--resume", f"{ephemeral}/scientific_update_0096.pt",
+                *driver, "authorize-audit-correction", *common, "--final-checkpoint",
+                f"{run_root_2d2h}/checkpoints/scientific_update_0191.pt",
             ],
             [
                 *driver, "finalize", *common, "--final-checkpoint",
@@ -256,19 +269,34 @@ def recovery_command_plan(
     run_root: Path,
     lanes: list[str],
     retained_active_lanes=(),
+    recovery_attempt: int = 1,
+    recovery_evidence_schemas: dict[str, str] | None = None,
 ) -> dict:
     retained = set(retained_active_lanes)
+    schemas = recovery_evidence_schemas or {
+        lane: (
+            "legacy_v1_without_recovery_reason"
+            if lane in retained
+            else "v2_with_recovery_reason"
+        )
+        for lane in lanes
+    }
+    if set(schemas) != set(lanes) or any(
+        schema not in {
+            "v2_with_recovery_reason",
+            "legacy_v1_without_recovery_reason",
+        }
+        for schema in schemas.values()
+    ):
+        raise RuntimeError("recovery evidence schema mapping is not lane-exact")
     return {
         "schema_version": 1,
         "run_id": run_root.name,
+        "recovery_attempt": int(recovery_attempt),
         "recovered_lanes": {
             lane: {
                 "recovery_reason": LANES[lane]["recovery_reason"],
-                "recovery_evidence_schema": (
-                    "legacy_v1_without_recovery_reason"
-                    if lane in retained
-                    else "v2_with_recovery_reason"
-                ),
+                "recovery_evidence_schema": schemas[lane],
                 "expected_resumed_command_records": [
                     render_bash_percent_q(argv)
                     for argv in expected_recovery_argv(master_root, run_root, lane)
@@ -308,11 +336,169 @@ def durable_json(path: Path, payload: dict) -> None:
 
 def preserve_exact_json(path: Path, payload: dict) -> None:
     expected = (json.dumps(payload, indent=2, sort_keys=True) + "\n").encode()
+    preserve_exact_bytes(path, expected)
+
+
+def preserve_exact_bytes(path: Path, expected: bytes) -> None:
     if path.exists():
         if path.read_bytes() != expected:
-            raise RuntimeError(f"refusing to replace changed recovery plan: {path}")
+            raise RuntimeError(f"refusing to replace changed recovery evidence: {path}")
         return
-    durable_json(path, payload)
+    temporary = path.with_name(path.name + f".tmp.{os.getpid()}")
+    with temporary.open("xb") as handle:
+        handle.write(expected)
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temporary, path)
+    descriptor = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def versioned_plan_path(run_root: Path, recovery_attempt: int) -> Path:
+    if recovery_attempt == 1:
+        return run_root / "RECOVERY_COMMAND_PLAN.json"
+    return run_root / f"RECOVERY_COMMAND_PLAN_ATTEMPT_{recovery_attempt:04d}.json"
+
+
+def versioned_preflight_path(run_root: Path, recovery_attempt: int) -> Path:
+    return run_root / f"RECOVERY_PREFLIGHT_ATTEMPT_{recovery_attempt:04d}.json"
+
+
+def prepare_prior_attempt_evidence(
+    run_root: Path,
+    lanes: list[str],
+    recovery_attempt: int,
+    original_terminal_gate: dict | None = None,
+) -> dict | None:
+    """Seal and validate the immediately preceding failed recovery attempt."""
+
+    if recovery_attempt == 1:
+        return None
+    previous_attempt = recovery_attempt - 1
+    canonical_preflight = run_root / "RECOVERY_PREFLIGHT.json"
+    previous_preflight_bytes = canonical_preflight.read_bytes()
+    previous_preflight = json.loads(previous_preflight_bytes)
+    if not isinstance(previous_preflight, dict):
+        raise RuntimeError("previous recovery preflight is not a JSON object")
+    observed_previous_attempt = previous_preflight.get("recovery_attempt", 1)
+    if (
+        previous_preflight.get("passed") is not True
+        or previous_preflight.get("run_id") != run_root.name
+        or observed_previous_attempt != previous_attempt
+    ):
+        raise RuntimeError("previous recovery preflight is not the exact prior attempt")
+
+    plan_metadata = previous_preflight.get("recovery_command_plan")
+    if not isinstance(plan_metadata, dict) or not isinstance(
+        plan_metadata.get("path"), str
+    ):
+        raise RuntimeError("previous recovery plan metadata is missing")
+    prior_plan_path = Path(plan_metadata["path"]).resolve()
+    expected_prior_plan_path = versioned_plan_path(
+        run_root, previous_attempt
+    ).resolve()
+    if prior_plan_path != expected_prior_plan_path:
+        raise RuntimeError("previous recovery plan path is not attempt-exact")
+    prior_plan_bytes = prior_plan_path.read_bytes()
+    prior_plan_sha = hashlib.sha256(prior_plan_bytes).hexdigest()
+    if plan_metadata.get("sha256") != prior_plan_sha:
+        raise RuntimeError("previous recovery plan SHA does not match sealed bytes")
+    prior_plan = json.loads(prior_plan_bytes)
+    if not isinstance(prior_plan, dict):
+        raise RuntimeError("previous recovery plan is not a JSON object")
+    prior_plan_attempt = prior_plan.get("recovery_attempt", 1)
+    prior_rows = prior_plan.get("recovered_lanes")
+    if (
+        prior_plan.get("schema_version") != 1
+        or prior_plan.get("run_id") != run_root.name
+        or prior_plan_attempt != previous_attempt
+        or not isinstance(prior_rows, dict)
+        or any(lane not in prior_rows for lane in lanes)
+        or any(
+            not isinstance(prior_rows[lane].get("expected_resumed_command_records"), list)
+            or not prior_rows[lane]["expected_resumed_command_records"]
+            for lane in lanes
+        )
+    ):
+        raise RuntimeError("previous recovery plan does not authorize the retried lanes")
+
+    archived_preflight = versioned_preflight_path(run_root, previous_attempt)
+    preserve_exact_bytes(archived_preflight, previous_preflight_bytes)
+    lane_files = {}
+    for lane in lanes:
+        lower = lane.lower()
+        sources = {
+            "error": run_root / f"lane_{lower}.error.json",
+            "status": run_root / f"lane_{lower}.status.json",
+            "recovery_commands": run_root / f"lane_{lower}.recovery_commands.jsonl",
+        }
+        error = read_json(sources["error"])
+        status = read_json(sources["status"])
+        if (
+            error.get("run_id") != run_root.name
+            or error.get("lane") != lane
+            or error.get("status") != "HARD_FAILURE"
+            or not isinstance(error.get("exit_code"), int)
+            or error["exit_code"] == 0
+            or status.get("run_id") != run_root.name
+            or status.get("lane") != lane
+            or status.get("status") != "HARD_FAILURE"
+            or not isinstance(status.get("exit_code"), int)
+            or status["exit_code"] == 0
+            or (run_root / f"lane_{lower}.science_complete.json").exists()
+            or not terminal_is_sealed_for_lane(
+                original_terminal_gate or {},
+                lane,
+                run_root / f"lane_{lower}.terminal.json",
+            )
+        ):
+            raise RuntimeError(f"{lane} prior recovery outcome is not an exact hard failure")
+        lane_files[lane] = {}
+        for kind, source in sources.items():
+            content = source.read_bytes()
+            suffix = ".jsonl" if source.suffix == ".jsonl" else ".json"
+            destination = run_root / (
+                f"lane_{lower}.{kind}.recovery_attempt_{previous_attempt:04d}{suffix}"
+            )
+            preserve_exact_bytes(destination, content)
+            lane_files[lane][kind] = {
+                "source": str(source),
+                "preserved_path": str(destination),
+                "sha256": hashlib.sha256(content).hexdigest(),
+            }
+
+    manifest = {
+        "schema_version": 1,
+        "run_id": run_root.name,
+        "failed_recovery_attempt": previous_attempt,
+        "next_recovery_attempt": recovery_attempt,
+        "retried_lanes": lanes,
+        "prior_preflight": {
+            "preserved_path": str(archived_preflight),
+            "sha256": hashlib.sha256(previous_preflight_bytes).hexdigest(),
+        },
+        "prior_command_plan": {
+            "path": str(prior_plan_path),
+            "sha256": prior_plan_sha,
+        },
+        "lane_failure_evidence": lane_files,
+    }
+    manifest_path = run_root / (
+        f"RECOVERY_ATTEMPT_{previous_attempt:04d}_EVIDENCE.json"
+    )
+    preserve_exact_json(manifest_path, manifest)
+    return {
+        "failed_recovery_attempt": previous_attempt,
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": file_sha256(manifest_path),
+        "prior_command_plan_path": str(prior_plan_path),
+        "prior_command_plan_sha256": prior_plan_sha,
+        "prior_preflight_path": str(archived_preflight),
+        "prior_preflight_sha256": hashlib.sha256(previous_preflight_bytes).hexdigest(),
+    }
 
 
 def read_json(path: Path) -> dict:
@@ -320,6 +506,149 @@ def read_json(path: Path) -> dict:
     if not isinstance(value, dict):
         raise RuntimeError(f"JSON object required: {path}")
     return value
+
+
+def process_alive(pid) -> bool:
+    if not isinstance(pid, int) or pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def process_group_alive(process_group_id) -> bool:
+    if not isinstance(process_group_id, int) or process_group_id <= 0:
+        return False
+    try:
+        os.killpg(process_group_id, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def audit_original_terminal_recovery(
+    master_root: Path, run_root: Path, explicitly_authorized: bool
+) -> dict:
+    master_paths = {
+        "run_terminal": run_root / "MASTER_TERMINAL_STATUS.json",
+        "run_all_lanes": run_root / "MASTER_ALL_LANES_TERMINAL",
+        "top_terminal": master_root / "MASTER_TERMINAL_STATUS.json",
+        "top_all_lanes": master_root / "MASTER_ALL_LANES_TERMINAL",
+    }
+    any_terminal = any(path.exists() for path in master_paths.values()) or any(
+        (run_root / f"lane_gpu{index}.terminal.json").exists()
+        for index in range(4)
+    )
+    if not explicitly_authorized:
+        return {
+            "mode": "original_supervisor_terminal_recovery",
+            "explicit_cli_authorization": False,
+            "terminal_state_present": any_terminal,
+            "checks": {
+                "explicitly_authorized_if_terminal_state_present": not any_terminal,
+            },
+            "lanes": {},
+            "passed": not any_terminal,
+        }
+
+    master_bytes = {name: path.read_bytes() for name, path in master_paths.items()}
+    canonical_bytes = master_bytes["run_terminal"]
+    terminal = json.loads(canonical_bytes)
+    if not isinstance(terminal, dict):
+        raise RuntimeError("original master terminal is not a JSON object")
+    embedded = terminal.get("lanes")
+    lane_rows = {}
+    for index in range(4):
+        lane = f"GPU{index}"
+        path = run_root / f"lane_{lane.lower()}.terminal.json"
+        row = read_json(path)
+        expected_status = "SUCCESS" if lane == "GPU3" else "HARD_FAILURE"
+        expected_returncode = 0 if lane == "GPU3" else None
+        checks = {
+            "identity_exact": row.get("run_id") == run_root.name
+            and row.get("lane") == lane,
+            "embedded_exact": isinstance(embedded, dict)
+            and embedded.get(lane) == row,
+            "status_exact": row.get("status") == expected_status,
+            "returncode_exact": row.get("returncode") == expected_returncode
+            if lane == "GPU3"
+            else isinstance(row.get("returncode"), int)
+            and row["returncode"] != 0,
+        }
+        lane_rows[lane] = {
+            "path": str(path),
+            "sha256": file_sha256(path),
+            "status": row.get("status"),
+            "returncode": row.get("returncode"),
+            "checks": checks,
+            "passed": all(checks.values()),
+        }
+
+    heartbeat_pid = terminal.get("heartbeat_pid")
+    heartbeat_pgid = terminal.get("heartbeat_process_group_id")
+    checks = {
+        "explicit_cli_authorization": explicitly_authorized,
+        "all_master_terminal_bytes_exact": all(
+            content == canonical_bytes for content in master_bytes.values()
+        ),
+        "run_identity_exact": terminal.get("run_id") == run_root.name,
+        "pod_identity_exact": terminal.get("pod") == EXPECTED_POD,
+        "overall_hard_failure": terminal.get("status") == "HARD_FAILURE",
+        "all_four_original_shells_exited": terminal.get(
+            "all_four_lane_shells_exited"
+        )
+        is True,
+        "all_lanes_terminal": terminal.get("all_lanes_terminal") is True,
+        "lane_set_exact": isinstance(embedded, dict)
+        and set(embedded) == {"GPU0", "GPU1", "GPU2", "GPU3"},
+        "standalone_and_embedded_lanes_exact": all(
+            row["passed"] for row in lane_rows.values()
+        ),
+        "heartbeat_declared_retained": terminal.get(
+            "heartbeat_left_running_for_finalization"
+        )
+        is True,
+        "heartbeat_pid_alive": process_alive(heartbeat_pid),
+        "heartbeat_process_group_alive": process_group_alive(heartbeat_pgid),
+    }
+    return {
+        "mode": "original_supervisor_terminal_recovery",
+        "explicit_cli_authorization": explicitly_authorized,
+        "terminal_state_present": any_terminal,
+        "master_records": {
+            name: {"path": str(master_paths[name]), "sha256": hashlib.sha256(content).hexdigest()}
+            for name, content in master_bytes.items()
+        },
+        "master_terminal_sha256": hashlib.sha256(canonical_bytes).hexdigest(),
+        "heartbeat": {
+            "pid": heartbeat_pid,
+            "process_group_id": heartbeat_pgid,
+            "pid_alive": checks["heartbeat_pid_alive"],
+            "process_group_alive": checks["heartbeat_process_group_alive"],
+        },
+        "lanes": lane_rows,
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
+def terminal_is_sealed_for_lane(gate: dict, lane: str, path: Path) -> bool:
+    if not path.exists():
+        return True
+    row = gate.get("lanes", {}).get(lane, {}) if isinstance(gate, dict) else {}
+    return (
+        gate.get("passed") is True
+        and gate.get("explicit_cli_authorization") is True
+        and row.get("passed") is True
+        and row.get("path") == str(path)
+        and row.get("sha256") == file_sha256(path)
+    )
 
 
 def git_output(worktree: Path, *args: str) -> str:
@@ -429,7 +758,13 @@ def gpu_idle(index: int) -> dict:
     }
 
 
-def audit_lane(master_root: Path, run_root: Path, lane: str, original_git: dict) -> dict:
+def audit_lane(
+    master_root: Path,
+    run_root: Path,
+    lane: str,
+    original_git: dict,
+    original_terminal_gate: dict,
+) -> dict:
     spec = LANES[lane]
     worktree = Path(spec["worktree"]).resolve()
     branch = spec["branch"]
@@ -443,6 +778,7 @@ def audit_lane(master_root: Path, run_root: Path, lane: str, original_git: dict)
         filter(None, git_output(worktree, "diff", "--name-only", f"{old}..{current}").splitlines())
     )
     error_path = run_root / f"lane_{lane.lower()}.error.json"
+    terminal_path = run_root / f"lane_{lane.lower()}.terminal.json"
     error = read_json(error_path)
     checkpoint = Path(spec["base_checkpoint"])
     checkpoint_audit = audit_checkpoint_sidecars(
@@ -460,7 +796,9 @@ def audit_lane(master_root: Path, run_root: Path, lane: str, original_git: dict)
         and isinstance(error.get("exit_code"), int)
         and error["exit_code"] != 0,
         "no_success_marker": not (run_root / f"lane_{lane.lower()}.science_complete.json").exists(),
-        "no_terminal_marker": not (run_root / f"lane_{lane.lower()}.terminal.json").exists(),
+        "terminal_absent_or_exactly_sealed": terminal_is_sealed_for_lane(
+            original_terminal_gate, lane, terminal_path
+        ),
         "old_commit_is_ancestor": ancestor,
         "current_commit_pushed": current == origin,
         "tracked_worktree_clean": worktree_audit["checks"][
@@ -492,6 +830,11 @@ def audit_lane(master_root: Path, run_root: Path, lane: str, original_git: dict)
             "strict_reopen_sidecar_passed"
         ],
         "worktree_artifact_audit": worktree_audit,
+        "original_terminal": (
+            original_terminal_gate.get("lanes", {}).get(lane)
+            if terminal_path.exists()
+            else None
+        ),
         "focused_test_command": test_command,
         "focused_test_stdout": test.stdout,
         "focused_test_stderr": test.stderr,
@@ -504,8 +847,11 @@ def audit_lane(master_root: Path, run_root: Path, lane: str, original_git: dict)
 def run(args) -> dict:
     master_root = Path(args.master_root).resolve()
     run_root = (master_root / "runs" / args.run_id).resolve()
+    recovery_attempt = int(args.recovery_attempt)
     if run_root.name != args.run_id or not run_root.is_dir():
         raise RuntimeError("exact run directory is missing")
+    if recovery_attempt < 1:
+        raise RuntimeError("recovery attempt must be a positive integer")
     lanes = list(dict.fromkeys(args.lane))
     retained_lanes = list(dict.fromkeys(args.retain_active_lane or []))
     if not lanes or any(lane not in LANES for lane in lanes):
@@ -515,6 +861,16 @@ def run(args) -> dict:
         or set(lanes) & set(retained_lanes)
     ):
         raise RuntimeError("retained recovery lanes must be registered and disjoint")
+    original_terminal_gate = audit_original_terminal_recovery(
+        master_root, run_root, args.allow_original_terminal_recovery
+    )
+    if original_terminal_gate.get("passed") is not True:
+        raise RuntimeError(
+            "original-supervisor terminal recovery gate did not pass exactly"
+        )
+    prior_attempt_evidence = prepare_prior_attempt_evidence(
+        run_root, lanes, recovery_attempt, original_terminal_gate
+    )
     top_preflight = read_json(master_root / "MASTER_PREFLIGHT.json")
     scoped_preflight = read_json(run_root / "MASTER_PREFLIGHT.json")
     original_git = read_json(run_root / "git_worktree_manifest.json")
@@ -536,11 +892,20 @@ def run(args) -> dict:
             "passed": read_json(scoped).get("passed") is True,
         }
     lane_evidence = {
-        lane: audit_lane(master_root, run_root, lane, original_git) for lane in lanes
+        lane: audit_lane(
+            master_root,
+            run_root,
+            lane,
+            original_git,
+            original_terminal_gate,
+        )
+        for lane in lanes
     }
     retained_checks = {}
+    retained_schemas = {}
     if retained_lanes:
         previous = read_json(run_root / "RECOVERY_PREFLIGHT.json")
+        previous_schemas = previous.get("recovery_evidence_schemas", {})
         for lane in retained_lanes:
             evidence = previous.get("lane_evidence", {}).get(lane)
             status = read_json(run_root / f"lane_{lane.lower()}.status.json")
@@ -555,18 +920,39 @@ def run(args) -> dict:
                 and status.get("run_id") == args.run_id
                 and status.get("status") == "RUNNING"
                 and not (run_root / f"lane_{lane.lower()}.science_complete.json").exists()
-                and not (run_root / f"lane_{lane.lower()}.terminal.json").exists()
+                and terminal_is_sealed_for_lane(
+                    original_terminal_gate,
+                    lane,
+                    run_root / f"lane_{lane.lower()}.terminal.json",
+                )
             )
             retained_checks[lane] = valid
             if not valid:
                 raise RuntimeError(f"active retained recovery lane is not exact: {lane}")
+            schema = previous_schemas.get(lane)
+            if schema not in {
+                "v2_with_recovery_reason",
+                "legacy_v1_without_recovery_reason",
+            }:
+                raise RuntimeError(f"retained recovery schema is invalid: {lane}")
+            retained_schemas[lane] = schema
             # Older passing recovery evidence predates lane-specific reasons.
             # Seal the registered reason into the new combined preflight so
             # completion and reconciliation can require one exact value.
             evidence = dict(evidence)
             evidence["recovery_reason"] = LANES[lane]["recovery_reason"]
+            terminal_path = run_root / f"lane_{lane.lower()}.terminal.json"
+            evidence["original_terminal"] = (
+                original_terminal_gate.get("lanes", {}).get(lane)
+                if terminal_path.exists()
+                else None
+            )
             lane_evidence[lane] = evidence
     authorized_lanes = [*retained_lanes, *lanes]
+    recovery_evidence_schemas = {
+        **retained_schemas,
+        **{lane: "v2_with_recovery_reason" for lane in lanes},
+    }
     recovery_reasons = {
         lane: lane_evidence[lane].get(
             "recovery_reason", LANES[lane]["recovery_reason"]
@@ -596,21 +982,19 @@ def run(args) -> dict:
             row["same_run"] and row["no_error_marker"] for row in unaffected.values()
         ),
         "retained_active_recovery_lanes_exact": all(retained_checks.values()),
+        "original_supervisor_terminal_recovery_exact": original_terminal_gate.get(
+            "passed"
+        )
+        is True,
     }
     payload = {
         "schema_version": 1,
         "created_utc": now_utc(),
         "run_id": args.run_id,
+        "recovery_attempt": recovery_attempt,
         "authorized_lanes": authorized_lanes,
         "retained_active_lanes": retained_lanes,
-        "recovery_evidence_schemas": {
-            lane: (
-                "legacy_v1_without_recovery_reason"
-                if lane in retained_lanes
-                else "v2_with_recovery_reason"
-            )
-            for lane in authorized_lanes
-        },
+        "recovery_evidence_schemas": recovery_evidence_schemas,
         "reason": (
             next(iter(recovery_reasons.values()))
             if len(recovery_reasons) == 1
@@ -618,6 +1002,7 @@ def run(args) -> dict:
         ),
         "recovery_reasons": recovery_reasons,
         "original_master_preflight": str(run_root / "MASTER_PREFLIGHT.json"),
+        "original_terminal_recovery_gate": original_terminal_gate,
         "immutable_manifest_audit": immutable,
         "lane_evidence": lane_evidence,
         "unaffected_lanes": unaffected,
@@ -625,22 +1010,38 @@ def run(args) -> dict:
         "passed": all(checks.values()),
         "pod_stop_automated": False,
     }
+    if prior_attempt_evidence is not None:
+        payload["prior_attempt_evidence"] = prior_attempt_evidence
     plan = recovery_command_plan(
-        master_root, run_root, authorized_lanes, retained_lanes
+        master_root,
+        run_root,
+        authorized_lanes,
+        retained_lanes,
+        recovery_attempt,
+        recovery_evidence_schemas,
     )
-    plan_path = run_root / "RECOVERY_COMMAND_PLAN.json"
+    plan_path = versioned_plan_path(run_root, recovery_attempt)
     payload["recovery_command_plan"] = {
         "path": str(plan_path),
         "sha256": hashlib.sha256(
             (json.dumps(plan, indent=2, sort_keys=True) + "\n").encode()
         ).hexdigest(),
         "authorized_lanes": authorized_lanes,
+        "recovery_attempt": recovery_attempt,
     }
-    if payload["passed"]:
-        preserve_exact_json(plan_path, plan)
-    durable_json(run_root / "RECOVERY_PREFLIGHT.json", payload)
     if not payload["passed"]:
+        durable_json(
+            run_root
+            / f"RECOVERY_PREFLIGHT_ATTEMPT_{recovery_attempt:04d}_FAILED.json",
+            payload,
+        )
         raise RuntimeError(f"recovery preflight failed: {checks}")
+    preserve_exact_json(plan_path, plan)
+    if recovery_attempt > 1:
+        preserve_exact_json(
+            versioned_preflight_path(run_root, recovery_attempt), payload
+        )
+    durable_json(run_root / "RECOVERY_PREFLIGHT.json", payload)
     print("PARALLEL_2D2_RECOVERY_PREFLIGHT_PASS", flush=True)
     return payload
 
@@ -651,6 +1052,8 @@ def main() -> None:
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--lane", action="append", required=True)
     parser.add_argument("--retain-active-lane", action="append")
+    parser.add_argument("--recovery-attempt", type=int, default=1)
+    parser.add_argument("--allow-original-terminal-recovery", action="store_true")
     args = parser.parse_args()
     try:
         run(args)

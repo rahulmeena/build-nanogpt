@@ -20,6 +20,7 @@ lane_write_record() {
   LANE_RECORD_MESSAGE="$message" \
   LANE_RECORD_COMMAND="${LANE_ACTIVE_COMMAND:-}" \
   "$LANE_PYTHON_BIN" - <<'PY'
+import hashlib
 import json
 import os
 import time
@@ -181,8 +182,32 @@ if recovery_mode:
             problems.append("prior failure marker identity mismatch")
         if prior_error.get("status") != "HARD_FAILURE" or not prior_error.get("exit_code"):
             problems.append("prior failure marker is not a hard nonzero failure")
-    if success_path.exists() or terminal_path.exists():
-        problems.append("recovery refuses an existing success or terminal marker")
+    if success_path.exists():
+        problems.append("recovery refuses an existing science-complete marker")
+    if terminal_path.exists():
+        terminal_gate = recovery.get("original_terminal_recovery_gate", {})
+        sealed = lane_evidence.get("original_terminal")
+        try:
+            terminal_bytes = terminal_path.read_bytes()
+            terminal = json.loads(terminal_bytes)
+        except (OSError, json.JSONDecodeError) as error:
+            problems.append(f"existing original terminal is unreadable: {error}")
+        else:
+            terminal_sha = hashlib.sha256(terminal_bytes).hexdigest()
+            if (
+                terminal_gate.get("passed") is not True
+                or terminal_gate.get("explicit_cli_authorization") is not True
+                or not isinstance(sealed, dict)
+                or sealed.get("passed") is not True
+                or sealed.get("path") != str(terminal_path)
+                or sealed.get("sha256") != terminal_sha
+                or terminal.get("run_id") != run_id
+                or terminal.get("lane") != lane_name
+                or terminal.get("status") != "HARD_FAILURE"
+                or not isinstance(terminal.get("returncode"), int)
+                or terminal["returncode"] == 0
+            ):
+                problems.append("existing original terminal is not exactly sealed for recovery")
 else:
     for path in (error_path, success_path, terminal_path):
         if path.exists():

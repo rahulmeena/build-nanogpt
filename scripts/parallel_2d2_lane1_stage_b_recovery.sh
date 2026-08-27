@@ -23,10 +23,13 @@ COMMON=(
   --pod-name empirical_tan_panda
 )
 DATA_ROOT=/workspace/build-nanogpt/edu_fineweb10B
+SOURCE=/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt
 A191="$EPHEMERAL/stage_a_scientific_update_0191.pt"
 B96="$EPHEMERAL/stage_b_scientific_update_0096.pt"
 B191="$EPHEMERAL/stage_b_scientific_update_0191.pt"
 
+log_command 2D2G_RECOVERY_PREFLIGHT python scripts/experiment_2d2g.py preflight "${COMMON[@]}" \
+  --source-checkpoint "$SOURCE" --data-root "$DATA_ROOT"
 log_command 2D2G_B_RECOVERY_SMOKE python scripts/experiment_2d2g.py smoke-b "${COMMON[@]}" \
   --stage-a-checkpoint "$A191" --checkpoint-dir "$SMOKE_EPHEMERAL" \
   --data-root "$DATA_ROOT"
