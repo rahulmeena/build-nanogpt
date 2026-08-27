@@ -83,6 +83,16 @@ def test_validation_batch_uses_embedding_device_not_first_wrapper_parameter():
     assert x.device.type == "cpu" and y.device.type == "cpu"
 
 
+def test_checkpoint_gate_exact_is_device_safe_without_weakening_equality():
+    cpu_gate = torch.tensor(0.125, dtype=torch.float32)
+    assert exp.checkpoint_gate_exact(cpu_gate, cpu_gate.clone())
+    assert not exp.checkpoint_gate_exact(cpu_gate, torch.tensor(0.25))
+    assert not exp.checkpoint_gate_exact(cpu_gate, cpu_gate.to(torch.float64))
+    assert not exp.checkpoint_gate_exact(cpu_gate, cpu_gate.reshape(1))
+    if torch.cuda.is_available():
+        assert exp.checkpoint_gate_exact(cpu_gate, cpu_gate.cuda())
+
+
 def test_smoke_parallel_evaluation_uses_gpt_input_device(monkeypatch):
     class CpuValidationLoader:
         def __init__(self, *_args, **_kwargs):

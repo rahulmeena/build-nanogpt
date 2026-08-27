@@ -425,6 +425,18 @@ def validation_batch_to_model_device(model, x, y):
     return x.to(device=device), y.to(device=device)
 
 
+def checkpoint_gate_exact(left: torch.Tensor, right: torch.Tensor) -> bool:
+    """Compare a reopened scalar gate exactly without requiring one device."""
+
+    return (
+        torch.is_tensor(left)
+        and torch.is_tensor(right)
+        and left.shape == right.shape
+        and left.dtype == right.dtype
+        and torch.equal(left.detach().cpu(), right.detach().cpu())
+    )
+
+
 def training_shards(data_root: Path | str):
     rows = sorted(Path(data_root).glob("*train*.npy"))
     if not rows:
@@ -1647,7 +1659,9 @@ def run_smoke_b(args):
         == checkpoint_verification["next_global_batch_stream_sha256"],
         "model_finite": model_finite(reopened_model),
         "optimizer_finite": optimizer_finite(reopened_optimizer),
-        "gate_exact": torch.equal(reopened_model.g_rec_b3, model.g_rec_b3),
+        "gate_exact": checkpoint_gate_exact(
+            reopened_model.g_rec_b3, model.g_rec_b3
+        ),
     }
     checkpoint_reload = {
         "checkpoint": checkpoint_verification,
