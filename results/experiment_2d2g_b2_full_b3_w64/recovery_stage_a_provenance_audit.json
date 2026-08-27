@@ -1,0 +1,322 @@
+{
+  "attempts": [
+    {
+      "runtime_row": {
+        "checkpoint_manifest_sha256": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a",
+        "command": "scripts/experiment_2d2g.py preflight --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --recovery-provenance-dir /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight",
+        "commands_and_runtime_sha256": "b2675e8e981556af0cf8b4668bfc8733e39073f386ea36fe8be7bdbc2fb4ebfe",
+        "kind": "recovery_preflight",
+        "pid": 18941,
+        "provenance_dir": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight",
+        "published_at": 1787842384.8314064,
+        "recovery_provenance_schema": "exp2d2g_exact_stage_a_recovery_provenance_v1",
+        "stage_a_data_match_sha256": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382"
+      },
+      "superseded_output_files": {
+        "checkpoint_manifest.json": {
+          "bytes": 37,
+          "present": true,
+          "sha256": "fa2845fd57fc2257e6a1d0225d966bed7b374007989b28fb4b41f1ac5da888b5"
+        },
+        "commands_and_runtime.json": {
+          "bytes": 405,
+          "present": true,
+          "sha256": "45ff71de9b1c3b1a7a4d84a639401e93051e9a2bc4805687db16c0697adaaf54"
+        },
+        "stage_a_data_match.json": {
+          "bytes": 217,
+          "present": true,
+          "sha256": "8ce182add17308926abccf22ade7378da81431920a0bb6e2c2f390c8af974974"
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "requirement_marker": {
+    "provenance_dir": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight",
+    "recovery_required": true,
+    "schema": "exp2d2g_exact_stage_a_recovery_provenance_v1",
+    "source_identity": {
+      "source_sha256": {
+        "HEARTBEAT.json": "d8553cb11ab32dbcf47b83e4dcf97f76bc21b85ccfecbed8da3288434a514bbe",
+        "checkpoint_manifest.json": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a",
+        "commands_and_runtime.json": "b2675e8e981556af0cf8b4668bfc8733e39073f386ea36fe8be7bdbc2fb4ebfe",
+        "stage_a_data_match.json": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382",
+        "stage_a_forced_restart_update_96.json": "989f6b2e2b912ed7d0258ca083c2f0615d062d4360cd8e1a444e652aec458b6e",
+        "stage_a_restart_required_update_96.json": "6243c2c1ca8b3cf7638476658d020dc52c5346f14b87174915afe156afcec5a8",
+        "stage_a_training_metrics.jsonl": "160dfe6a18e3a39952203a130dcfe17ddc5c96932f767723ed8e282a03b28d14"
+      },
+      "stage_a_checkpoint_sha256": {
+        "191": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+        "96": "0a4850737049c39a9fe7f18f8a26a069e10e7facc68360ecc3f7772c41a5cc84"
+      }
+    },
+    "source_sha256": {
+      "HEARTBEAT.json": "d8553cb11ab32dbcf47b83e4dcf97f76bc21b85ccfecbed8da3288434a514bbe",
+      "checkpoint_manifest.json": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a",
+      "commands_and_runtime.json": "b2675e8e981556af0cf8b4668bfc8733e39073f386ea36fe8be7bdbc2fb4ebfe",
+      "stage_a_data_match.json": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382",
+      "stage_a_forced_restart_update_96.json": "989f6b2e2b912ed7d0258ca083c2f0615d062d4360cd8e1a444e652aec458b6e",
+      "stage_a_restart_required_update_96.json": "6243c2c1ca8b3cf7638476658d020dc52c5346f14b87174915afe156afcec5a8",
+      "stage_a_training_metrics.jsonl": "160dfe6a18e3a39952203a130dcfe17ddc5c96932f767723ed8e282a03b28d14"
+    }
+  },
+  "restored": {
+    "checkpoint_manifest_sha256": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a",
+    "original_runtime_rows_preserved_exactly": true,
+    "recovery_preflight_rows": 1,
+    "recovery_runtime_prefix_sha256": "d7d7d74aa479ca96185548974978f841874b7195069099f04d218ea1f42b17d1",
+    "stage_a_data_match_sha256": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382"
+  },
+  "schema": "exp2d2g_exact_stage_a_recovery_provenance_v1",
+  "source": {
+    "checkpoint_audits": {
+      "191": {
+        "checks": {
+          "checkpoint_bytes_exact": true,
+          "checkpoint_path_exact": true,
+          "checkpoint_regular": true,
+          "checkpoint_sha_exact": true,
+          "next_batch_exact": true,
+          "next_stream_exact": true,
+          "sidecars_passed": true,
+          "strict_reopen_exact": true,
+          "strict_reopen_passed": true
+        },
+        "manifest": {
+          "bytes": 1493934811,
+          "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt",
+          "next_global_batch_sha256": "39808d08e7e15e9f160e32ba838fd28839067827095b023d4f475b30df392086",
+          "next_global_batch_stream_sha256": "110e232ab330611a8d23cddc6e914c8a2d912fd8191873ae67488b0d52f48daa",
+          "sha256": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+          "strict_reopen": {
+            "architecture": true,
+            "loader_next_batch": true,
+            "loader_next_stream": true,
+            "matched_cursor": true,
+            "metadata": true,
+            "model_finite": true,
+            "model_keys": true,
+            "no_b2_gate": true,
+            "optimizer_finite": true,
+            "passed": true,
+            "rng": true,
+            "schema": true,
+            "stage": true,
+            "strict_model_load": true,
+            "strict_optimizer_load": true,
+            "targets": true,
+            "updates": true
+          }
+        },
+        "passed": true,
+        "sidecar_audit": {
+          "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt",
+          "checks": {
+            "expected_sha_matches": true,
+            "sha_sidecar_matches": true,
+            "sha_sidecar_present": true,
+            "verification_passed": true,
+            "verification_sidecar_present": true
+          },
+          "passed": true,
+          "sha256": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+          "sha_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt.sha256",
+          "verification_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt.verification.json"
+        }
+      },
+      "96": {
+        "checks": {
+          "checkpoint_bytes_exact": true,
+          "checkpoint_path_exact": true,
+          "checkpoint_regular": true,
+          "checkpoint_sha_exact": true,
+          "next_batch_exact": true,
+          "next_stream_exact": true,
+          "sidecars_passed": true,
+          "strict_reopen_exact": true,
+          "strict_reopen_passed": true
+        },
+        "manifest": {
+          "bytes": 1493934683,
+          "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0096.pt",
+          "next_global_batch_sha256": "313c1cd86d1924914e395df1bddf98fcb9ab351592c014b3b1357ecbbab33c97",
+          "next_global_batch_stream_sha256": "6a870df86881ba3def08dbbe7bbb5554b959780d788d509c578558b52dd19f31",
+          "sha256": "0a4850737049c39a9fe7f18f8a26a069e10e7facc68360ecc3f7772c41a5cc84",
+          "strict_reopen": {
+            "architecture": true,
+            "loader_next_batch": true,
+            "loader_next_stream": true,
+            "matched_cursor": true,
+            "metadata": true,
+            "model_finite": true,
+            "model_keys": true,
+            "no_b2_gate": true,
+            "optimizer_finite": true,
+            "passed": true,
+            "rng": true,
+            "schema": true,
+            "stage": true,
+            "strict_model_load": true,
+            "strict_optimizer_load": true,
+            "targets": true,
+            "updates": true
+          }
+        },
+        "passed": true,
+        "sidecar_audit": {
+          "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0096.pt",
+          "checks": {
+            "expected_sha_matches": true,
+            "sha_sidecar_matches": true,
+            "sha_sidecar_present": true,
+            "verification_passed": true,
+            "verification_sidecar_present": true
+          },
+          "passed": true,
+          "sha256": "0a4850737049c39a9fe7f18f8a26a069e10e7facc68360ecc3f7772c41a5cc84",
+          "sha_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0096.pt.sha256",
+          "verification_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0096.pt.verification.json"
+        }
+      }
+    },
+    "current_support_files": {
+      "HEARTBEAT.json": {
+        "bytes": 352,
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/HEARTBEAT.json",
+        "sha256": "d8553cb11ab32dbcf47b83e4dcf97f76bc21b85ccfecbed8da3288434a514bbe"
+      },
+      "stage_a_forced_restart_update_96.json": {
+        "bytes": 534,
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/stage_a_forced_restart_update_96.json",
+        "sha256": "989f6b2e2b912ed7d0258ca083c2f0615d062d4360cd8e1a444e652aec458b6e"
+      },
+      "stage_a_restart_required_update_96.json": {
+        "bytes": 1005,
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/stage_a_restart_required_update_96.json",
+        "sha256": "6243c2c1ca8b3cf7638476658d020dc52c5346f14b87174915afe156afcec5a8"
+      },
+      "stage_a_training_metrics.jsonl": {
+        "bytes": 124012,
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/stage_a_training_metrics.jsonl",
+        "sha256": "160dfe6a18e3a39952203a130dcfe17ddc5c96932f767723ed8e282a03b28d14"
+      }
+    },
+    "identity": {
+      "source_sha256": {
+        "HEARTBEAT.json": "d8553cb11ab32dbcf47b83e4dcf97f76bc21b85ccfecbed8da3288434a514bbe",
+        "checkpoint_manifest.json": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a",
+        "commands_and_runtime.json": "b2675e8e981556af0cf8b4668bfc8733e39073f386ea36fe8be7bdbc2fb4ebfe",
+        "stage_a_data_match.json": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382",
+        "stage_a_forced_restart_update_96.json": "989f6b2e2b912ed7d0258ca083c2f0615d062d4360cd8e1a444e652aec458b6e",
+        "stage_a_restart_required_update_96.json": "6243c2c1ca8b3cf7638476658d020dc52c5346f14b87174915afe156afcec5a8",
+        "stage_a_training_metrics.jsonl": "160dfe6a18e3a39952203a130dcfe17ddc5c96932f767723ed8e282a03b28d14"
+      },
+      "stage_a_checkpoint_sha256": {
+        "191": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+        "96": "0a4850737049c39a9fe7f18f8a26a069e10e7facc68360ecc3f7772c41a5cc84"
+      }
+    },
+    "matched_data_checks": {
+      "passed": true,
+      "reference": true,
+      "source_batch": true,
+      "source_stream": true,
+      "update_191": true,
+      "update_96": true
+    },
+    "metric_checks": {
+      "final_gate_matches_heartbeat": true,
+      "final_loss_matches_heartbeat": true,
+      "row_count": true,
+      "stage_exact": true,
+      "targets_exact": true,
+      "updates_exact": true,
+      "wall_seconds_finite_positive": true
+    },
+    "metric_segment_wall_seconds_for_cross_reference_only": {
+      "updates_1_96": 776.7272157017142,
+      "updates_97_191": 761.0854898858815
+    },
+    "passed": true,
+    "provenance_dir": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight",
+    "restart_boundary_checks": {
+      "checkpoint_pid_exact": true,
+      "distinct_pids": true,
+      "fresh_process": true,
+      "heartbeat_checkpoint": true,
+      "heartbeat_experiment": true,
+      "heartbeat_pid": true,
+      "heartbeat_stage": true,
+      "heartbeat_targets": true,
+      "heartbeat_update": true,
+      "restart_batch_exact": true,
+      "restart_passed": true,
+      "restart_stream_exact": true,
+      "resume_pid_exact": true,
+      "update96_checkpoint_exact": true,
+      "update96_pid_exact": true,
+      "update96_status": true
+    },
+    "runtime_checks": {
+      "preflight_command": true,
+      "preflight_keys": true,
+      "preflight_kind": true,
+      "segment_1_command": true,
+      "segment_1_keys": true,
+      "segment_1_pid": true,
+      "segment_1_resume_contract": true,
+      "segment_1_stage": true,
+      "segment_1_updates": true,
+      "segment_1_wall": true,
+      "segment_2_command": true,
+      "segment_2_keys": true,
+      "segment_2_pid": true,
+      "segment_2_resume_contract": true,
+      "segment_2_stage": true,
+      "segment_2_updates": true,
+      "segment_2_wall": true
+    },
+    "runtime_wall_seconds_reconstructed": false,
+    "runtime_wall_seconds_source": "exact archived original runtime rows",
+    "schema": "exp2d2g_exact_stage_a_recovery_provenance_v1",
+    "source_files": {
+      "HEARTBEAT.json": {
+        "bytes": 352,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/HEARTBEAT.json",
+        "sha256": "d8553cb11ab32dbcf47b83e4dcf97f76bc21b85ccfecbed8da3288434a514bbe"
+      },
+      "checkpoint_manifest.json": {
+        "bytes": 1980,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/checkpoint_manifest.json",
+        "sha256": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a"
+      },
+      "commands_and_runtime.json": {
+        "bytes": 1536,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/commands_and_runtime.json",
+        "sha256": "b2675e8e981556af0cf8b4668bfc8733e39073f386ea36fe8be7bdbc2fb4ebfe"
+      },
+      "stage_a_data_match.json": {
+        "bytes": 1092,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/stage_a_data_match.json",
+        "sha256": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382"
+      },
+      "stage_a_forced_restart_update_96.json": {
+        "bytes": 534,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/stage_a_forced_restart_update_96.json",
+        "sha256": "989f6b2e2b912ed7d0258ca083c2f0615d062d4360cd8e1a444e652aec458b6e"
+      },
+      "stage_a_restart_required_update_96.json": {
+        "bytes": 1005,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/stage_a_restart_required_update_96.json",
+        "sha256": "6243c2c1ca8b3cf7638476658d020dc52c5346f14b87174915afe156afcec5a8"
+      },
+      "stage_a_training_metrics.jsonl": {
+        "bytes": 124012,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/stage_a_training_metrics.jsonl",
+        "sha256": "160dfe6a18e3a39952203a130dcfe17ddc5c96932f767723ed8e282a03b28d14"
+      }
+    },
+    "source_kind": "exact_pre_destructive_preflight_archive"
+  }
+}

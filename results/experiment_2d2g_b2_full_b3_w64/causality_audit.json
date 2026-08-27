@@ -1,0 +1,25 @@
+{
+  "future_leakage": {
+    "checks": {
+      "future_token_cannot_change_past_logits": true,
+      "other_row_cannot_change_reference_row": true
+    },
+    "passed": true
+  },
+  "mask": {
+    "checks": {
+      "full_nonoverlapping_temporal_coverage": true,
+      "local_mask_exact": true,
+      "maximum_lag_at_most_1023": true,
+      "minimum_lag_64": true,
+      "no_future_access": true,
+      "no_native_local_overlap": true,
+      "recurrent_mask_exact": true
+    },
+    "eligibility": "max(0,t-1023) <= j <= t-64",
+    "length": 1024,
+    "passed": true,
+    "selected_entries": 461280
+  },
+  "passed": true
+}

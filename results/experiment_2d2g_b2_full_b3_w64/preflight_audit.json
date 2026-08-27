@@ -1,0 +1,608 @@
+{
+  "authorized": true,
+  "causality": {
+    "checks": {
+      "full_nonoverlapping_temporal_coverage": true,
+      "local_mask_exact": true,
+      "maximum_lag_at_most_1023": true,
+      "minimum_lag_64": true,
+      "no_future_access": true,
+      "no_native_local_overlap": true,
+      "recurrent_mask_exact": true
+    },
+    "eligibility": "max(0,t-1023) <= j <= t-64",
+    "length": 72,
+    "passed": true,
+    "selected_entries": 36
+  },
+  "checks": {
+    "b3_gate_zero_identity": true,
+    "cache": true,
+    "causality": true,
+    "data": true,
+    "no_b11_gate": true,
+    "no_b11_ring": true,
+    "source": true,
+    "source_sidecars": true,
+    "stage_a_parameters": true,
+    "stage_b_parameters": true,
+    "transplant": true
+  },
+  "command": "scripts/experiment_2d2g.py preflight --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --recovery-provenance-dir /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight",
+  "config": {
+    "branch": "experiment-2d2g-b2-full-b3-w64",
+    "checkpoint_policy": {
+      "rotating_recovery_per_lane": 1,
+      "serialize_persistent_final_with": "/workspace/parallel_2d2_master/locks/checkpoint_persist.lock",
+      "stage_a_final": "ephemeral_until_stage_b_sealed",
+      "stage_a_update_96": "ephemeral",
+      "stage_b_final": "persistent_after_checkpoint_lock",
+      "stage_b_smoke": "ephemeral_disposable_strict_reopen_then_delete",
+      "stage_b_update_96": "ephemeral"
+    },
+    "classification": {
+      "positive_requires_gain_gt_zero": true,
+      "positive_requires_sequence_gap_gt_zero": true,
+      "positive_requires_wins_vs_off": 129,
+      "positive_requires_wins_vs_shuffled": 129,
+      "strong_gain_threshold": 0.001,
+      "strong_requires_wins_each": 166
+    },
+    "experiment": "2D2G",
+    "hardware": {
+      "assigned_cuda_device": 1,
+      "ddp": false,
+      "gpu_type": "NVIDIA A100-SXM4-80GB",
+      "nccl_multi_rank": false,
+      "physical_gpu_count": 4,
+      "visible_device_count": 1
+    },
+    "protocol": "master_parallel_2d2g_b2_full_b3_w64_v1",
+    "source_2d2b": {
+      "checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
+      "frozen_commit": "976b92927e698afd27d68eabc78db5a0b6714fef",
+      "next_global_batch_sha256": "e1d96ca0106f21badeb0004025e80abc562509fb6299a63eb8662a3da3c17a52",
+      "next_global_batch_stream_sha256": "fc01029471dfe8674e900dd3d1e20a34e235853d44c68ede1b67f5b1a61e44f0",
+      "sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326"
+    },
+    "stage_a": {
+      "architecture": {
+        "b11_to_b2_recurrence": false,
+        "b12_to_b1_recurrence": true,
+        "b1_local_window": 2,
+        "b2_local_window": 1024,
+        "b3_b12_local_window": 1024,
+        "parameters": 124475905
+      },
+      "final_next_global_batch_sha256": "39808d08e7e15e9f160e32ba838fd28839067827095b023d4f475b30df392086",
+      "final_next_global_batch_stream_sha256": "110e232ab330611a8d23cddc6e914c8a2d912fd8191873ae67488b0d52f48daa",
+      "mandatory_fresh_process_restart_update": 96,
+      "matched_reference": "2D2D training data segment",
+      "targets": 100139008,
+      "update_96_next_global_batch_sha256": "313c1cd86d1924914e395df1bddf98fcb9ab351592c014b3b1357ecbbab33c97",
+      "update_96_next_global_batch_stream_sha256": "6a870df86881ba3def08dbbe7bbb5554b959780d788d509c578558b52dd19f31",
+      "updates": 191
+    },
+    "stage_b": {
+      "architecture": {
+        "b10_to_b3_recurrence": true,
+        "b11_raw_ring_present": false,
+        "b11_to_b2_recurrence": false,
+        "b12_to_b1_recurrence": true,
+        "b1_local_window": 2,
+        "b2_local_window": 1024,
+        "b3_local_window": 64,
+        "b3_max_recurrent_entries": 960,
+        "b3_recurrent_max_lag": 1023,
+        "b3_recurrent_min_lag": 64,
+        "new_parameters": [
+          "g_rec_b3"
+        ],
+        "parameters": 124475906
+      },
+      "final_next_global_batch_sha256": "91fa2cae4e6e52cfddd2b470175ec704f0548b447f02861917ec548736fe18e7",
+      "final_next_global_batch_stream_sha256": "4da6fed71755e523030a2d8e9e7cc96d19691a8c9b3ac8c490426bafe3d44e82",
+      "incremental_paired_sequences": 256,
+      "incremental_targets_per_control": 262144,
+      "mandatory_fresh_process_restart_update": 96,
+      "matched_reference": "2D2E training data segment",
+      "milestones": [
+        0,
+        20,
+        48,
+        96,
+        143,
+        191
+      ],
+      "smoke_updates": 3,
+      "targets": 100139008,
+      "update_96_next_global_batch_sha256": "1fce24bac89d50b68868e689d246ea08e784d738db29bb68c5166d0339347109",
+      "update_96_next_global_batch_stream_sha256": "8dfb91e0d6022f092a67045540ce5bb9e90d9554a4d8610afa123251ff7f8703",
+      "updates": 191
+    },
+    "stage_b_controls": [
+      "real",
+      "b3_off",
+      "b3_shuffled",
+      "b3_full_counterfactual"
+    ],
+    "training": {
+      "all_parameters_trainable": true,
+      "base_lr": 3e-05,
+      "base_weight_decay": 0.1,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "gate_lr": 0.0003,
+      "gate_weight_decay": 0.0,
+      "gradient_clip": 1.0,
+      "objective": "next-token cross entropy only",
+      "recurrent_sources_detached": false,
+      "sequence_length": 1024,
+      "targets_per_update": 524288,
+      "three_pass_every_local_updates": 32,
+      "three_pass_weights": [
+        0.2,
+        0.4,
+        0.4
+      ],
+      "two_pass_weights": [
+        0.25,
+        0.75
+      ]
+    }
+  },
+  "data": {
+    "training_shards": [
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+      "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+    ],
+    "validation_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+    "validation_shard": "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_val_000000.npy"
+  },
+  "experiment": "2D2G",
+  "implementation_fingerprint": {
+    "aggregate_sha256": "6c0ca0d078520635e8e366ee4cc8d12042783d43a9043d0d5359b6fb3f7e7f9d",
+    "files": {
+      "configs/exp2d2g_b2_full_b3_w64.json": "9729f6fd02c77379c6358fbb222752ef19cf24628aa208390ea351ff6b816389",
+      "scripts/experiment_2d2g.py": "73c1da34a9d7b5ba16dd086ae284a2c310b5002a3742c00fc075c4484c94a505",
+      "scripts/experiment_2d2g_core.py": "1fa6963d80ec333e619256df75575302847462750f699739f6242c22491765d1",
+      "tests/test_experiment_2d2g_core.py": "e716ae69eb195c6dc01881212e2b76ed34f2e5cd96b62d65edad188dbeeaf416",
+      "tests/test_experiment_2d2g_driver.py": "2c9488c52db9fab0d6e9f958851d86c7bf09b61b8f3f10fa0b54f1548d71984d"
+    }
+  },
+  "passed": true,
+  "protocol": "master_parallel_2d2g_b2_full_b3_w64_v1",
+  "recovery_stage_a_provenance": {
+    "checkpoint_audits": {
+      "191": {
+        "checks": {
+          "checkpoint_bytes_exact": true,
+          "checkpoint_path_exact": true,
+          "checkpoint_regular": true,
+          "checkpoint_sha_exact": true,
+          "next_batch_exact": true,
+          "next_stream_exact": true,
+          "sidecars_passed": true,
+          "strict_reopen_exact": true,
+          "strict_reopen_passed": true
+        },
+        "manifest": {
+          "bytes": 1493934811,
+          "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt",
+          "next_global_batch_sha256": "39808d08e7e15e9f160e32ba838fd28839067827095b023d4f475b30df392086",
+          "next_global_batch_stream_sha256": "110e232ab330611a8d23cddc6e914c8a2d912fd8191873ae67488b0d52f48daa",
+          "sha256": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+          "strict_reopen": {
+            "architecture": true,
+            "loader_next_batch": true,
+            "loader_next_stream": true,
+            "matched_cursor": true,
+            "metadata": true,
+            "model_finite": true,
+            "model_keys": true,
+            "no_b2_gate": true,
+            "optimizer_finite": true,
+            "passed": true,
+            "rng": true,
+            "schema": true,
+            "stage": true,
+            "strict_model_load": true,
+            "strict_optimizer_load": true,
+            "targets": true,
+            "updates": true
+          }
+        },
+        "passed": true,
+        "sidecar_audit": {
+          "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt",
+          "checks": {
+            "expected_sha_matches": true,
+            "sha_sidecar_matches": true,
+            "sha_sidecar_present": true,
+            "verification_passed": true,
+            "verification_sidecar_present": true
+          },
+          "passed": true,
+          "sha256": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+          "sha_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt.sha256",
+          "verification_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt.verification.json"
+        }
+      },
+      "96": {
+        "checks": {
+          "checkpoint_bytes_exact": true,
+          "checkpoint_path_exact": true,
+          "checkpoint_regular": true,
+          "checkpoint_sha_exact": true,
+          "next_batch_exact": true,
+          "next_stream_exact": true,
+          "sidecars_passed": true,
+          "strict_reopen_exact": true,
+          "strict_reopen_passed": true
+        },
+        "manifest": {
+          "bytes": 1493934683,
+          "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0096.pt",
+          "next_global_batch_sha256": "313c1cd86d1924914e395df1bddf98fcb9ab351592c014b3b1357ecbbab33c97",
+          "next_global_batch_stream_sha256": "6a870df86881ba3def08dbbe7bbb5554b959780d788d509c578558b52dd19f31",
+          "sha256": "0a4850737049c39a9fe7f18f8a26a069e10e7facc68360ecc3f7772c41a5cc84",
+          "strict_reopen": {
+            "architecture": true,
+            "loader_next_batch": true,
+            "loader_next_stream": true,
+            "matched_cursor": true,
+            "metadata": true,
+            "model_finite": true,
+            "model_keys": true,
+            "no_b2_gate": true,
+            "optimizer_finite": true,
+            "passed": true,
+            "rng": true,
+            "schema": true,
+            "stage": true,
+            "strict_model_load": true,
+            "strict_optimizer_load": true,
+            "targets": true,
+            "updates": true
+          }
+        },
+        "passed": true,
+        "sidecar_audit": {
+          "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0096.pt",
+          "checks": {
+            "expected_sha_matches": true,
+            "sha_sidecar_matches": true,
+            "sha_sidecar_present": true,
+            "verification_passed": true,
+            "verification_sidecar_present": true
+          },
+          "passed": true,
+          "sha256": "0a4850737049c39a9fe7f18f8a26a069e10e7facc68360ecc3f7772c41a5cc84",
+          "sha_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0096.pt.sha256",
+          "verification_sidecar": "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0096.pt.verification.json"
+        }
+      }
+    },
+    "current_support_files": {
+      "HEARTBEAT.json": {
+        "bytes": 352,
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/HEARTBEAT.json",
+        "sha256": "d8553cb11ab32dbcf47b83e4dcf97f76bc21b85ccfecbed8da3288434a514bbe"
+      },
+      "stage_a_forced_restart_update_96.json": {
+        "bytes": 534,
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/stage_a_forced_restart_update_96.json",
+        "sha256": "989f6b2e2b912ed7d0258ca083c2f0615d062d4360cd8e1a444e652aec458b6e"
+      },
+      "stage_a_restart_required_update_96.json": {
+        "bytes": 1005,
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/stage_a_restart_required_update_96.json",
+        "sha256": "6243c2c1ca8b3cf7638476658d020dc52c5346f14b87174915afe156afcec5a8"
+      },
+      "stage_a_training_metrics.jsonl": {
+        "bytes": 124012,
+        "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/stage_a_training_metrics.jsonl",
+        "sha256": "160dfe6a18e3a39952203a130dcfe17ddc5c96932f767723ed8e282a03b28d14"
+      }
+    },
+    "identity": {
+      "source_sha256": {
+        "HEARTBEAT.json": "d8553cb11ab32dbcf47b83e4dcf97f76bc21b85ccfecbed8da3288434a514bbe",
+        "checkpoint_manifest.json": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a",
+        "commands_and_runtime.json": "b2675e8e981556af0cf8b4668bfc8733e39073f386ea36fe8be7bdbc2fb4ebfe",
+        "stage_a_data_match.json": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382",
+        "stage_a_forced_restart_update_96.json": "989f6b2e2b912ed7d0258ca083c2f0615d062d4360cd8e1a444e652aec458b6e",
+        "stage_a_restart_required_update_96.json": "6243c2c1ca8b3cf7638476658d020dc52c5346f14b87174915afe156afcec5a8",
+        "stage_a_training_metrics.jsonl": "160dfe6a18e3a39952203a130dcfe17ddc5c96932f767723ed8e282a03b28d14"
+      },
+      "stage_a_checkpoint_sha256": {
+        "191": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+        "96": "0a4850737049c39a9fe7f18f8a26a069e10e7facc68360ecc3f7772c41a5cc84"
+      }
+    },
+    "matched_data_checks": {
+      "passed": true,
+      "reference": true,
+      "source_batch": true,
+      "source_stream": true,
+      "update_191": true,
+      "update_96": true
+    },
+    "metric_checks": {
+      "final_gate_matches_heartbeat": true,
+      "final_loss_matches_heartbeat": true,
+      "row_count": true,
+      "stage_exact": true,
+      "targets_exact": true,
+      "updates_exact": true,
+      "wall_seconds_finite_positive": true
+    },
+    "metric_segment_wall_seconds_for_cross_reference_only": {
+      "updates_1_96": 776.7272157017142,
+      "updates_97_191": 761.0854898858815
+    },
+    "passed": true,
+    "provenance_dir": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight",
+    "restart_boundary_checks": {
+      "checkpoint_pid_exact": true,
+      "distinct_pids": true,
+      "fresh_process": true,
+      "heartbeat_checkpoint": true,
+      "heartbeat_experiment": true,
+      "heartbeat_pid": true,
+      "heartbeat_stage": true,
+      "heartbeat_targets": true,
+      "heartbeat_update": true,
+      "restart_batch_exact": true,
+      "restart_passed": true,
+      "restart_stream_exact": true,
+      "resume_pid_exact": true,
+      "update96_checkpoint_exact": true,
+      "update96_pid_exact": true,
+      "update96_status": true
+    },
+    "runtime_checks": {
+      "preflight_command": true,
+      "preflight_keys": true,
+      "preflight_kind": true,
+      "segment_1_command": true,
+      "segment_1_keys": true,
+      "segment_1_pid": true,
+      "segment_1_resume_contract": true,
+      "segment_1_stage": true,
+      "segment_1_updates": true,
+      "segment_1_wall": true,
+      "segment_2_command": true,
+      "segment_2_keys": true,
+      "segment_2_pid": true,
+      "segment_2_resume_contract": true,
+      "segment_2_stage": true,
+      "segment_2_updates": true,
+      "segment_2_wall": true
+    },
+    "runtime_wall_seconds_reconstructed": false,
+    "runtime_wall_seconds_source": "exact archived original runtime rows",
+    "schema": "exp2d2g_exact_stage_a_recovery_provenance_v1",
+    "source_files": {
+      "HEARTBEAT.json": {
+        "bytes": 352,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/HEARTBEAT.json",
+        "sha256": "d8553cb11ab32dbcf47b83e4dcf97f76bc21b85ccfecbed8da3288434a514bbe"
+      },
+      "checkpoint_manifest.json": {
+        "bytes": 1980,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/checkpoint_manifest.json",
+        "sha256": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a"
+      },
+      "commands_and_runtime.json": {
+        "bytes": 1536,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/commands_and_runtime.json",
+        "sha256": "b2675e8e981556af0cf8b4668bfc8733e39073f386ea36fe8be7bdbc2fb4ebfe"
+      },
+      "stage_a_data_match.json": {
+        "bytes": 1092,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/stage_a_data_match.json",
+        "sha256": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382"
+      },
+      "stage_a_forced_restart_update_96.json": {
+        "bytes": 534,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/stage_a_forced_restart_update_96.json",
+        "sha256": "989f6b2e2b912ed7d0258ca083c2f0615d062d4360cd8e1a444e652aec458b6e"
+      },
+      "stage_a_restart_required_update_96.json": {
+        "bytes": 1005,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/stage_a_restart_required_update_96.json",
+        "sha256": "6243c2c1ca8b3cf7638476658d020dc52c5346f14b87174915afe156afcec5a8"
+      },
+      "stage_a_training_metrics.jsonl": {
+        "bytes": 124012,
+        "path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight/stage_a_training_metrics.jsonl",
+        "sha256": "160dfe6a18e3a39952203a130dcfe17ddc5c96932f767723ed8e282a03b28d14"
+      }
+    },
+    "source_kind": "exact_pre_destructive_preflight_archive"
+  },
+  "source": {
+    "checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
+    "checks": {
+      "model_finite": true,
+      "next_batch": true,
+      "next_stream": true,
+      "optimizer_finite": true,
+      "parameters": true,
+      "weight_tying": true
+    },
+    "next_global_batch_sha256": "e1d96ca0106f21badeb0004025e80abc562509fb6299a63eb8662a3da3c17a52",
+    "next_global_batch_stream_sha256": "fc01029471dfe8674e900dd3d1e20a34e235853d44c68ede1b67f5b1a61e44f0",
+    "sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+    "sidecar_audit": {
+      "checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
+      "checks": {
+        "expected_sha_matches": true,
+        "sha_sidecar_matches": true,
+        "sha_sidecar_present": true,
+        "verification_passed": true,
+        "verification_sidecar_present": true
+      },
+      "passed": true,
+      "sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+      "sha_sidecar": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt.sha256",
+      "verification_sidecar": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt.verification.json"
+    }
+  },
+  "stage_a_architecture": {
+    "b1": {
+      "local_window": 2,
+      "recurrent_lags": [
+        2,
+        1023
+      ],
+      "source": "B12"
+    },
+    "b2": {
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "b3_b12_local_window": 1024,
+    "parameters": 124475905,
+    "stage": "2D2G-A"
+  },
+  "stage_b_architecture": {
+    "b1": {
+      "local_window": 2,
+      "recurrent_lags": [
+        2,
+        1023
+      ],
+      "source": "B12"
+    },
+    "b2": {
+      "b11_ring": false,
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "b3": {
+      "gate": "tanh(g_rec_b3)",
+      "local_window": 64,
+      "maximum_recurrent_entries": 960,
+      "recurrent_lags": [
+        64,
+        1023
+      ],
+      "source": "B10 post-MLP residual before B11"
+    },
+    "b4_b12_local_window": 1024,
+    "parameters": 124475906,
+    "stage": "2D2G-B"
+  },
+  "transplant": {
+    "new_b3_state_absent": true,
+    "new_b3_zero": true,
+    "no_b2_gate": true,
+    "optimizer_groups_exact": true,
+    "optimizer_state_exact": true,
+    "parameters": true,
+    "source_state_entries_preserved": true,
+    "weight_tying": true
+  }
+}

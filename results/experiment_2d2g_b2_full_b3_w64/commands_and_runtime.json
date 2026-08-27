@@ -1,0 +1,70 @@
+{
+  "commands": [
+    {
+      "command": "scripts/experiment_2d2g.py preflight --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B",
+      "kind": "preflight"
+    },
+    {
+      "command": "scripts/experiment_2d2g.py train-a --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --checkpoint-dir /tmp/parallel_2d2_ephemeral/2d2g/checkpoints --end-update 96 --data-root /workspace/build-nanogpt/edu_fineweb10B",
+      "end_update": 96,
+      "pid": 8192,
+      "stage": "a",
+      "start_update": 1,
+      "wall_seconds": 796.9584985673428
+    },
+    {
+      "command": "scripts/experiment_2d2g.py train-a --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --resume /tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0096.pt --checkpoint-dir /tmp/parallel_2d2_ephemeral/2d2g/checkpoints --end-update 191 --data-root /workspace/build-nanogpt/edu_fineweb10B",
+      "end_update": 191,
+      "pid": 10849,
+      "stage": "a",
+      "start_update": 97,
+      "wall_seconds": 782.0081627033651
+    },
+    {
+      "checkpoint_manifest_sha256": "57dcdf99e4610d48d8c2379d13ad42236ae411cdfefe4806796ce423e2d57a2a",
+      "command": "scripts/experiment_2d2g.py preflight --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --source-checkpoint /workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --recovery-provenance-dir /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight",
+      "commands_and_runtime_sha256": "b2675e8e981556af0cf8b4668bfc8733e39073f386ea36fe8be7bdbc2fb4ebfe",
+      "kind": "recovery_preflight",
+      "pid": 18941,
+      "provenance_dir": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight",
+      "published_at": 1787842384.8314064,
+      "recovery_provenance_schema": "exp2d2g_exact_stage_a_recovery_provenance_v1",
+      "stage_a_data_match_sha256": "3125dcbbbb3e7db3f32f566fd412203ada9c0bdc5c1458adf850b001805d9382"
+    },
+    {
+      "command": "scripts/experiment_2d2g.py smoke-b --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --stage-a-checkpoint /tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt --checkpoint-dir /tmp/parallel_2d2_ephemeral/2d2g/smoke --data-root /workspace/build-nanogpt/edu_fineweb10B",
+      "kind": "disposable_stage_b_smoke",
+      "pid": 19024,
+      "wall_seconds": 90.24283520877361
+    },
+    {
+      "command": "scripts/experiment_2d2g.py train-b --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --stage-a-checkpoint /tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_a_scientific_update_0191.pt --checkpoint-dir /tmp/parallel_2d2_ephemeral/2d2g/checkpoints --end-update 96 --data-root /workspace/build-nanogpt/edu_fineweb10B",
+      "end_update": 96,
+      "pid": 19308,
+      "stage": "b",
+      "start_update": 1,
+      "wall_seconds": 905.8568918611854
+    },
+    {
+      "command": "scripts/experiment_2d2g.py train-b --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --resume /tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_b_scientific_update_0096.pt --checkpoint-dir /tmp/parallel_2d2_ephemeral/2d2g/checkpoints --end-update 191 --data-root /workspace/build-nanogpt/edu_fineweb10B",
+      "end_update": 191,
+      "pid": 20483,
+      "stage": "b",
+      "start_update": 97,
+      "wall_seconds": 869.3891266062856
+    },
+    {
+      "command": "scripts/experiment_2d2g.py persist-final --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --local-checkpoint /tmp/parallel_2d2_ephemeral/2d2g/checkpoints/stage_b_scientific_update_0191.pt --persistent-dir /workspace/exp2d2g_run/checkpoints --lock-path /workspace/parallel_2d2_master/locks/checkpoint_persist.lock",
+      "kind": "persist_final_checkpoint",
+      "lock": "/workspace/parallel_2d2_master/locks/checkpoint_persist.lock",
+      "pid": 22310,
+      "wall_seconds": 8.773553183302283
+    },
+    {
+      "command": "scripts/experiment_2d2g.py finalize --output-dir /workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64 --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --stage-b-checkpoint /workspace/exp2d2g_run/checkpoints/stage_b_scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B",
+      "kind": "finalize",
+      "pid": 22407,
+      "wall_seconds": 361.34564498625696
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "actual_tanh_g_rec_b3": 0.011108865961432457,
+  "attached": true,
+  "b1_source_detached_for_b3_path_isolation": true,
+  "checks": {
+    "all_lag_bins_nonzero": true,
+    "eligible_writer_gradient_nonzero": true,
+    "gate_open": true,
+    "gradient_finite": true,
+    "ineligible_last_64_exact_zero": true
+  },
+  "eligible_source_positions": [
+    0,
+    960
+  ],
+  "ineligible_source_positions": [
+    960,
+    1024
+  ],
+  "lag_bins": {
+    "128-255": {
+      "finite": true,
+      "fraction_nonzero": 1.0,
+      "max_gradient_rms": 4.7488217091995466e-07,
+      "mean_gradient_rms": 2.3487483957751465e-08,
+      "source_position_interval": [
+        768,
+        896
+      ]
+    },
+    "256-511": {
+      "finite": true,
+      "fraction_nonzero": 1.0,
+      "max_gradient_rms": 6.387638791238714e-07,
+      "mean_gradient_rms": 2.7242263556104263e-08,
+      "source_position_interval": [
+        512,
+        768
+      ]
+    },
+    "512-1023": {
+      "finite": true,
+      "fraction_nonzero": 1.0,
+      "max_gradient_rms": 6.967447347960842e-07,
+      "mean_gradient_rms": 4.241221418510577e-08,
+      "source_position_interval": [
+        0,
+        512
+      ]
+    },
+    "64-127": {
+      "finite": true,
+      "fraction_nonzero": 1.0,
+      "max_gradient_rms": 4.235593920043357e-08,
+      "mean_gradient_rms": 5.98642246885106e-09,
+      "source_position_interval": [
+        896,
+        960
+      ]
+    }
+  },
+  "passed": true,
+  "source": "B10 post-MLP residual before B11"
+}

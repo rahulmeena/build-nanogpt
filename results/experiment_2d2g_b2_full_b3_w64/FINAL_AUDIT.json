@@ -1,0 +1,84 @@
+{
+  "checks": {
+    "cache_audit": true,
+    "causality": true,
+    "disposable_smoke": true,
+    "exact_milestone_set": true,
+    "final_checkpoint_update_191": true,
+    "final_cursor_matched_2d2e": true,
+    "incremental_targets": true,
+    "model_finite": true,
+    "no_b11_ring": true,
+    "no_b2_gate": true,
+    "optimizer_finite": true,
+    "paired_sequences": true,
+    "parameters": true,
+    "persistent_checkpoint_reverified": true,
+    "persistent_sha_matches_local": true,
+    "recovery_stage_a_provenance": true,
+    "required_artifacts": true,
+    "stability": true,
+    "stage_a_checkpoints": true,
+    "stage_a_data_match": true,
+    "stage_a_fresh_process_update_96": true,
+    "stage_b_checkpoints": true,
+    "stage_b_data_match": true,
+    "stage_b_fresh_process_update_96": true,
+    "stage_b_transition": true,
+    "training_milestone_191_present": true,
+    "writer_gradient": true
+  },
+  "classification": "POSITIVE UTILITY ESTABLISHED",
+  "milestone_reconciliation": {
+    "final_evaluation_overwrote_update_191": true,
+    "key_audit": {
+      "expected_keys": [
+        "0",
+        "20",
+        "48",
+        "96",
+        "143",
+        "191"
+      ],
+      "missing_keys": [],
+      "observed_keys": [
+        "0",
+        "143",
+        "191",
+        "20",
+        "48",
+        "96"
+      ],
+      "passed": true,
+      "unexpected_keys": []
+    },
+    "legacy_191_final_removed": false
+  },
+  "passed": true,
+  "recovery_stage_a_provenance": {
+    "checks": {
+      "attempts_exactly_map_runtime": true,
+      "audit_exact_keys": true,
+      "audit_marker_exact": true,
+      "audit_passed": true,
+      "audit_present_regular": true,
+      "audit_schema": true,
+      "current_stage_a_data_match_exact": true,
+      "current_stage_a_manifest_exact": true,
+      "marker_exact": true,
+      "marker_present_regular": true,
+      "master_recovery_mode": true,
+      "original_runtime_exact": true,
+      "preflight_declares_recovery": true,
+      "recovery_rows_canonical": true,
+      "recovery_rows_contiguous": true,
+      "restored_state_exact": true,
+      "source_hash_map_exact": true,
+      "source_identity_exact": true,
+      "source_matches_preflight_exactly": true,
+      "source_passed": true
+    },
+    "passed": true,
+    "required": true
+  }
+}

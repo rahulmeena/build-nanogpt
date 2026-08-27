@@ -1,0 +1,47 @@
+{
+  "stage_a": {
+    "b1": {
+      "local_window": 2,
+      "recurrent_lags": [
+        2,
+        1023
+      ],
+      "source": "B12"
+    },
+    "b2": {
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "b3_b12_local_window": 1024,
+    "parameters": 124475905,
+    "stage": "2D2G-A"
+  },
+  "stage_b": {
+    "b1": {
+      "local_window": 2,
+      "recurrent_lags": [
+        2,
+        1023
+      ],
+      "source": "B12"
+    },
+    "b2": {
+      "b11_ring": false,
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "b3": {
+      "gate": "tanh(g_rec_b3)",
+      "local_window": 64,
+      "maximum_recurrent_entries": 960,
+      "recurrent_lags": [
+        64,
+        1023
+      ],
+      "source": "B10 post-MLP residual before B11"
+    },
+    "b4_b12_local_window": 1024,
+    "parameters": 124475906,
+    "stage": "2D2G-B"
+  }
+}
