@@ -1,0 +1,28 @@
+{
+  "experiment": "2D2H",
+  "protocol": "master_parallel_4gpu_2d2h_v1",
+  "branch": "experiment-2d2h-no-b1-recurrence-b2-w32",
+  "gpu_lane": 2,
+  "cuda_visible_devices": "2",
+  "ddp": false,
+  "frozen_2d2b_commit": "976b92927e698afd27d68eabc78db5a0b6714fef",
+  "source_checkpoint": "/workspace/exp2d2b_run/checkpoints/scientific_update_0191.pt",
+  "source_checkpoint_sha256": "8c39f47248e3a5f4dc69f5e8e97c8a1cd1bcdfa91154eba5804c448942075326",
+  "source_checkpoint_bytes": 1493937033,
+  "architecture": {
+    "b1": {"local_window": 2, "maximum_historical_local_kv_entries": 1, "recurrent_path_present": false, "g_rec_b1_present": false, "b12_raw_ring_present": false},
+    "b2": {"local_window": 32, "maximum_historical_local_kv_entries": 31, "recurrent_source": "B11 post-MLP residual before B12", "recurrent_min_lag": 32, "recurrent_max_lag": 1023, "maximum_recurrent_entries": 992, "separate_recurrent_softmax": true, "shared_existing_ln_qkv": true, "single_c_proj": true, "gate": "fresh tanh(g_rec_b2)", "gate_initial_raw": 0.0},
+    "b3_b12_window": 1024,
+    "removed_parameters_vs_2d2b": ["g_rec"],
+    "added_parameters_vs_2d2b": ["g_rec_b2"],
+    "total_parameters": 124475905
+  },
+  "optimizer": {"restore_base_state": true, "drop_b1_gate_group_and_state": true, "fresh_b2_gate_state": true, "base_lr": 0.00003, "b2_gate_lr": 0.0003, "betas": [0.9, 0.95], "eps": 1e-8, "weight_decay": 0.1, "gradient_clip": 1.0, "warmup_restarted": false},
+  "training": {"additional_updates": 191, "targets_per_update": 524288, "additional_targets": 100139008, "cumulative_2d2_targets": 250609664, "sequence_length": 1024, "two_pass_weights": [0.25, 0.75], "three_pass_weights": [0.2, 0.4, 0.4], "three_pass_every_local_updates": 32, "milestones": [0, 20, 48, 96, 143, 191], "scientific_checkpoints": [96, 191], "forced_fresh_process_restart_after_update": 96, "update96_checkpoint_storage": "node-local ephemeral", "final_checkpoint_storage": "persistent workspace under checkpoint_persist.lock", "objective": "next-token cross entropy only", "recurrent_source_detached": false},
+  "data_match": {"reference_experiment": "2D2D", "same_2d2b_parent_cursor": true, "updates": 191, "targets": 100139008, "source_next_global_batch_sha256": "e1d96ca0106f21badeb0004025e80abc562509fb6299a63eb8662a3da3c17a52", "source_next_global_batch_stream_sha256": "fc01029471dfe8674e900dd3d1e20a34e235853d44c68ede1b67f5b1a61e44f0"},
+  "controls": ["H_REAL", "H_B2_OFF", "H_B2_SHUFFLED", "H_B2_FULL_COUNTERFACTUAL"],
+  "validation": {"parallel_batches": 20, "parallel_batch_size": 64, "incremental_targets_per_control": 262144, "incremental_sequences_per_control": 256, "positive_utility_required_wins": 129},
+  "incremental_cache_bounds": {"b1_historical_kv": 1, "b2_historical_kv": 31, "b11_raw_ring": 1023, "b12_raw_ring": 0, "b3_b12_historical_kv_each": 1023, "complete_prefix_recomputation": false},
+  "diagnostics": {"writer_gradient_bins": ["32-63", "64-127", "128-255", "256-511", "512-1023"], "attention_bins": ["32-63", "64-127", "128-255", "256-511", "512-1023"], "stability_passes": 8},
+  "forbidden": ["B12-to-B1 recurrent attention", "g_rec_B1 parameter or optimizer state", "B12 recurrent raw-state ring", "teacher", "AttnRes", "auxiliary loss", "DDP", "NCCL multi-rank", "complete-prefix recomputation"]
+}
