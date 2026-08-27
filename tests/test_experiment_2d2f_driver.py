@@ -1,4 +1,5 @@
 import json
+import inspect
 import sys
 from pathlib import Path
 
@@ -57,7 +58,68 @@ def test_preregistered_classification_thresholds():
         "B10→B3 W64 RECURRENT LINK ESTABLISHES POSITIVE UTILITY")
     assert exp.classify_result(incremental(3.0, 3.002, 3.0015, wins=180)) == (
         "B10→B3 W64 RECURRENT LINK STRONGLY ESTABLISHES UTILITY")
-    assert exp.classify_result(incremental(3.01, 3.0, 3.02, wins=120)) == (
+    assert exp.classify_result(incremental(3.0, 3.0001, 3.0002, wins=120)) == (
         "B10→B3 W64 RECURRENCE IS SEQUENCE-SPECIFIC BUT DOES NOT ESTABLISH UTILITY")
     assert exp.classify_result(incremental(3.0, 3.00001, 2.99999, wins=128)) == (
         "B10→B3 W64 RECURRENT LINK REMAINS NEAR ZERO")
+    assert exp.classify_result(incremental(3.01, 3.0, 3.02, wins=100)) == (
+        "B10→B3 W64 RECURRENT LINK IS HARMFUL")
+
+
+def test_frozen_2d2e_matched_stream_is_read_from_final_commit():
+    original = exp.subprocess.check_output
+    exp.subprocess.check_output = lambda *args, **kwargs: json.dumps(
+        {"scientific_global_stream_sha256": exp.SOURCE_NEXT_STREAM_SHA256}
+    ).encode()
+    try:
+        reference = exp.frozen_2d2e_batch_manifest()
+    finally:
+        exp.subprocess.check_output = original
+    assert reference["commit"] == exp.FROZEN_2D2E_FINAL_COMMIT
+    assert reference["path"] == exp.FROZEN_2D2E_BATCH_MANIFEST
+    assert reference["payload"]["scientific_global_stream_sha256"] == (
+        exp.SOURCE_NEXT_STREAM_SHA256
+    )
+
+
+def test_smoke_and_final_persistence_are_protocol_complete():
+    smoke_source = inspect.getsource(exp.run_smoke)
+    assert "save_checkpoint(" in smoke_source
+    assert "load_checkpoint_runtime(" in smoke_source
+    assert '"writer_gradient_after_gate_opens"' in smoke_source
+    persist_source = inspect.getsource(exp.save_run_checkpoint)
+    assert "checkpoint_persist_lock()" in persist_source
+    assert "persistent_copy_sha_verified" in persist_source
+    assert "local_stage" in persist_source
+
+
+def test_master_protocol_minimum_artifact_names_are_required():
+    required = set(exp.REQUIRED_ARTIFACTS)
+    assert {
+        "FINAL_REPORT.md",
+        "FINAL_AUDIT.json",
+        "result_summary.json",
+        "attention_diagnostics.json",
+        "temporal_gradient_diagnostics.json",
+        "incremental_validation.json",
+        "incremental_cache_audit.json",
+        "stability_8pass.json",
+        "UNATTENDED_FINAL_HANDOFF.md",
+    } <= required
+
+
+def test_matched_2d2e_trajectory_comparison_is_signed_2d2f_minus_2d2e():
+    current = {
+        "b3_recurrent_gain": 0.003,
+        "b3_sequence_gap": 0.002,
+        "tanh_g_rec_b3": 0.04,
+    }
+    frozen = {
+        "b3_recurrent_gain": 0.001,
+        "b3_sequence_gap": -0.001,
+        "tanh_g_rec_b3": 0.03,
+    }
+    row = exp.trajectory_comparison_to_2d2e(current, frozen)
+    assert abs(row["gain_2d2f_minus_2d2e"] - 0.002) < 1e-15
+    assert abs(row["sequence_gap_2d2f_minus_2d2e"] - 0.003) < 1e-15
+    assert abs(row["tanh_g_rec_b3_2d2f_minus_2d2e"] - 0.01) < 1e-15

@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import copy
+import fcntl
 import gc
 import hashlib
 import inspect
@@ -20,6 +21,7 @@ import math
 import os
 import pickle
 import random
+import shutil
 import statistics
 import subprocess
 import sys
@@ -59,6 +61,13 @@ PROTOCOL = "exp2d2f_no_b2_recurrence_b3_w64_v1"
 BRANCH = "experiment-2d2f-no-b2-recurrence-b3-w64"
 FROZEN_TAG = "experiment-2d2d-b2-w32-b11-recurrent-992-final"
 FROZEN_COMMIT = "a9300a9800f2e2c46f3892cff52b0a4a2a547d11"
+FROZEN_2D2E_FINAL_COMMIT = "406bef0dc0f375d6783cfc364a935e62bb54d982"
+FROZEN_2D2E_BATCH_MANIFEST = (
+    "results/experiment_2d2e_b3_w64_b10_recurrent_960/batch_manifest.json"
+)
+FROZEN_2D2E_MILESTONES = (
+    "results/experiment_2d2e_b3_w64_b10_recurrent_960/milestone_validation.json"
+)
 CONFIG_PATH = REPO_ROOT / "configs" / "exp2d2f_no_b2_recurrence_b3_w64.json"
 OUTPUT_NAME = "experiment_2d2f_no_b2_recurrence_b3_w64"
 CHECKPOINT_SCHEMA = "exp2d2f_no_b2_recurrence_b3_w64_checkpoint_v1"
@@ -107,6 +116,9 @@ VALIDATION_SHARD_SHA256 = legacy.VALIDATION_SHARD_SHA256
 SEED = 2026_0221
 BF16_INCREMENTAL_ATOL = 1.25
 FP32_INCREMENTAL_ATOL = 1e-4
+MASTER_ROOT = Path("/workspace/parallel_2d2_master")
+MASTER_STORAGE_PREFLIGHT = MASTER_ROOT / "storage_preflight.json"
+CHECKPOINT_PERSIST_LOCK = MASTER_ROOT / "locks" / "checkpoint_persist.lock"
 B1_LAG_BINS = (
     ("2-7", 2, 7),
     ("8-15", 8, 15),
@@ -178,6 +190,7 @@ REQUIRED_ARTIFACTS = (
     "architecture_manifest.json",
     "2d2d_reference_manifest.json",
     "matched_2d2e_data_audit.json",
+    "frozen_2d2e_trajectory_reference.json",
     "preflight_audit.json",
     "training_metrics.jsonl",
     "milestone_validation.json",
@@ -379,6 +392,18 @@ def require_implementation_fingerprint(preflight: dict) -> dict:
     return current
 
 
+def _logical_file_bytes(root: Path) -> int:
+    """Measure the network-volume quota using logical file sizes, not FUSE df."""
+
+    total = 0
+    for base, _, names in os.walk(root, followlinks=False):
+        for name in names:
+            path = Path(base) / name
+            if not path.is_symlink():
+                total += path.lstat().st_size
+    return total
+
+
 def workspace_mount_audit(output_dir, run_root, supplied_identity) -> dict:
     output = Path(output_dir).resolve()
     run = Path(run_root).resolve()
@@ -394,12 +419,23 @@ def workspace_mount_audit(output_dir, run_root, supplied_identity) -> dict:
         text=True,
     ).strip().split(maxsplit=2)
     target, source, filesystem = row
-    quota_bytes = int(subprocess.check_output(["df", "-B1", "--output=size", "/workspace"], text=True).splitlines()[-1])
-    used_bytes = int(
-        subprocess.check_output(["du", "-sb", "/workspace"], text=True).split()[0]
-    )
+    if not MASTER_STORAGE_PREFLIGHT.is_file():
+        raise SystemExit(
+            f"master storage preflight is missing: {MASTER_STORAGE_PREFLIGHT}"
+        )
+    master_storage = read_json(MASTER_STORAGE_PREFLIGHT)
+    quota_bytes = int(master_storage["network_volume_capacity_decimal_bytes"])
+    if master_storage.get("network_volume_id") != supplied_identity:
+        raise SystemExit("master storage preflight volume identity mismatch")
+    if not master_storage.get("passed"):
+        raise SystemExit("master storage preflight did not pass")
+    used_bytes = _logical_file_bytes(Path("/workspace"))
     free_bytes = quota_bytes - used_bytes
-    required_free_bytes = 20 * 1024**3
+    safety_margin_bytes = 8 * 1024**3
+    required_free_bytes = SOURCE_BYTES + safety_margin_bytes
+    fuse_df = subprocess.check_output(
+        ["df", "-B1", "/workspace"], text=True
+    )
     checks = {
         "target_exact": target == "/workspace",
         "persistent_identity_exact": f"/networkvolumes/{supplied_identity}"
@@ -407,7 +443,9 @@ def workspace_mount_audit(output_dir, run_root, supplied_identity) -> dict:
         "fuse_network_mount": filesystem == "fuse",
         "canonical_result_directory": output == expected_output,
         "run_root_on_workspace": str(run).startswith("/workspace/"),
-        "at_least_20_gib_free": free_bytes >= required_free_bytes,
+        "logical_quota_not_exceeded": free_bytes >= 0,
+        "one_final_checkpoint_plus_8_gib_margin": free_bytes
+        >= required_free_bytes,
     }
     if not all(checks.values()):
         raise SystemExit(f"persistent workspace audit failed: {checks}")
@@ -421,10 +459,58 @@ def workspace_mount_audit(output_dir, run_root, supplied_identity) -> dict:
         "configured_quota_bytes": quota_bytes,
         "measured_used_bytes": used_bytes,
         "measured_free_bytes": free_bytes,
+        "fuse_df_informational_only": fuse_df,
+        "fuse_df_not_used_as_network_volume_quota": True,
+        "master_storage_preflight": str(MASTER_STORAGE_PREFLIGHT),
+        "master_storage_preflight_sha256": file_sha256(MASTER_STORAGE_PREFLIGHT),
+        "safety_margin_bytes": safety_margin_bytes,
         "required_free_bytes": required_free_bytes,
         "checks": checks,
         "passed": True,
     }
+
+
+def ephemeral_checkpoint_audit(path_value) -> dict:
+    if not path_value:
+        raise SystemExit("2D2F requires a node-local ephemeral checkpoint directory")
+    path = Path(path_value).resolve()
+    path.mkdir(parents=True, exist_ok=True)
+    row = subprocess.check_output(
+        ["findmnt", "-T", str(path), "-n", "-o", "TARGET,SOURCE,FSTYPE"],
+        text=True,
+    ).strip().split(maxsplit=2)
+    target, source, filesystem = row
+    free_bytes = shutil.disk_usage(path).free
+    required_free_bytes = 2 * SOURCE_BYTES + 2 * 1024**3
+    checks = {
+        "outside_workspace": not str(path).startswith("/workspace/"),
+        "not_network_fuse": filesystem != "fuse",
+        "two_checkpoint_stages_plus_margin": free_bytes >= required_free_bytes,
+    }
+    report = {
+        "path": str(path),
+        "target": target,
+        "source": source,
+        "filesystem": filesystem,
+        "free_bytes": free_bytes,
+        "required_free_bytes": required_free_bytes,
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+    if not report["passed"]:
+        raise SystemExit(f"ephemeral checkpoint audit failed: {checks}")
+    return report
+
+
+@contextlib.contextmanager
+def checkpoint_persist_lock():
+    CHECKPOINT_PERSIST_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    with CHECKPOINT_PERSIST_LOCK.open("a+b") as handle:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
 def authenticated_stop_audit(args) -> dict:
@@ -2033,6 +2119,53 @@ def loader_at_source_cursor(source_state: dict, micro_batch: int):
     )
 
 
+def frozen_2d2e_artifact(path: str) -> dict:
+    """Read one 2D2E artifact from its immutable final commit."""
+    try:
+        raw = subprocess.check_output(
+            [
+                "git",
+                "show",
+                f"{FROZEN_2D2E_FINAL_COMMIT}:{path}",
+            ],
+            cwd=REPO_ROOT,
+        )
+    except subprocess.CalledProcessError as error:
+        raise SystemExit(
+            f"frozen 2D2E artifact is unavailable from its final commit: {path}"
+        ) from error
+    return {
+        "commit": FROZEN_2D2E_FINAL_COMMIT,
+        "path": path,
+        "blob_sha256": hashlib.sha256(raw).hexdigest(),
+        "payload": json.loads(raw),
+    }
+
+
+def frozen_2d2e_batch_manifest() -> dict:
+    """Read and verify the matched-data artifact from final 2D2E."""
+
+    report = frozen_2d2e_artifact(FROZEN_2D2E_BATCH_MANIFEST)
+    payload = report["payload"]
+    if payload.get("scientific_global_stream_sha256") != SOURCE_NEXT_STREAM_SHA256:
+        raise SystemExit("frozen 2D2E matched stream SHA is not the preregistered stream")
+    return report
+
+
+def trajectory_comparison_to_2d2e(current: dict, reference: dict) -> dict:
+    return {
+        "frozen_2d2e_b3_recurrent_gain": reference["b3_recurrent_gain"],
+        "frozen_2d2e_b3_sequence_gap": reference["b3_sequence_gap"],
+        "frozen_2d2e_tanh_g_rec_b3": reference["tanh_g_rec_b3"],
+        "gain_2d2f_minus_2d2e": current["b3_recurrent_gain"]
+        - reference["b3_recurrent_gain"],
+        "sequence_gap_2d2f_minus_2d2e": current["b3_sequence_gap"]
+        - reference["b3_sequence_gap"],
+        "tanh_g_rec_b3_2d2f_minus_2d2e": current["tanh_g_rec_b3"]
+        - reference["tanh_g_rec_b3"],
+    }
+
+
 def run_preflight(args):
     require_git(clean=True)
     config = require_config()
@@ -2866,6 +2999,7 @@ def load_checkpoint_runtime(
 
 def initialize_runtime(args):
     workspace_mount_audit(args.output_dir, args.run_root, args.persistent_volume_identity)
+    ephemeral = ephemeral_checkpoint_audit(args.ephemeral_checkpoint_dir)
     authenticated_stop_audit(args)
     device = require_single_a100()
     output = Path(args.output_dir).resolve()
@@ -2873,6 +3007,8 @@ def initialize_runtime(args):
     smoke = read_json(output / "smoke_audit.json")
     if not preflight.get("result_run_authorized") or not smoke.get("passed"):
         raise SystemExit("scientific training requires passing preflight and smoke")
+    if ephemeral["path"] != preflight["ephemeral_checkpoint_audit"]["path"]:
+        raise SystemExit("training ephemeral checkpoint directory differs from preflight")
     require_implementation_fingerprint(preflight)
     if not preflight["runpod_stop_audit"]["driver_passed"]:
         raise SystemExit("authenticated RunPod STOP unavailable")
@@ -3255,16 +3391,21 @@ def milestone_diagnostics(runtime, update, val_path):
 
 def save_run_checkpoint(runtime, update, kind):
     prefix = "scientific" if kind == "scientific" else "recovery"
-    if int(update) == FORCED_RESTART_UPDATE and runtime.ephemeral_checkpoint_dir:
-        checkpoint_root = Path(runtime.ephemeral_checkpoint_dir)
+    if not runtime.ephemeral_checkpoint_dir:
+        raise SystemExit("scientific checkpointing requires node-local ephemeral storage")
+    ephemeral_root = Path(runtime.ephemeral_checkpoint_dir)
+    persistent_root = Path(runtime.run_root) / "checkpoints"
+    if int(update) == MAX_UPDATES and kind == "scientific":
+        checkpoint_path = persistent_root / f"{prefix}_update_{update:04d}.pt"
+        stage_path = ephemeral_root / f".{prefix}_update_{update:04d}.local-stage.pt"
     else:
-        checkpoint_root = Path(runtime.run_root) / "checkpoints"
-    checkpoint_path = checkpoint_root / f"{prefix}_update_{update:04d}.pt"
+        checkpoint_path = ephemeral_root / f"{prefix}_update_{update:04d}.pt"
+        stage_path = checkpoint_path
     previous = runtime.training_state.get("last_checkpoint")
     runtime.training_state["last_checkpoint"] = str(checkpoint_path.resolve())
     try:
-        verification = save_checkpoint(
-            checkpoint_path,
+        stage_verification = save_checkpoint(
+            stage_path,
             runtime.model,
             runtime.optimizer,
             runtime.loader,
@@ -3272,6 +3413,77 @@ def save_run_checkpoint(runtime, update, kind):
             runtime.metadata,
             runtime.accumulation,
         )
+        if stage_path == checkpoint_path:
+            verification = stage_verification
+        else:
+            checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+            if checkpoint_path.exists():
+                raise SystemExit(f"refusing to overwrite final checkpoint: {checkpoint_path}")
+            temporary = checkpoint_path.with_name(
+                f".{checkpoint_path.name}.{os.getpid()}.persisting"
+            )
+            with checkpoint_persist_lock():
+                try:
+                    shutil.copyfile(stage_path, temporary)
+                    with temporary.open("rb") as handle:
+                        os.fsync(handle.fileno())
+                    if file_sha256(temporary) != stage_verification["sha256"]:
+                        raise SystemExit("local-to-persistent checkpoint copy SHA mismatch")
+                    os.replace(temporary, checkpoint_path)
+                    legacy.d0.fsync_directory(checkpoint_path.parent)
+                    verification = strict_reopen_checkpoint(
+                        checkpoint_path,
+                        runtime.model,
+                        runtime.optimizer,
+                        runtime.loader,
+                        runtime.training_state,
+                        runtime.accumulation,
+                        runtime.metadata,
+                    )
+                    if verification["sha256"] != stage_verification["sha256"]:
+                        raise SystemExit("persistent final checkpoint SHA differs from local stage")
+                    verification["local_stage"] = {
+                        "path": str(stage_path),
+                        "sha256": stage_verification["sha256"],
+                        "bytes": stage_verification["bytes"],
+                        "strict_reopen_passed": stage_verification["passed"],
+                    }
+                    verification["persistent_copy_lock"] = str(CHECKPOINT_PERSIST_LOCK)
+                    verification["persistent_copy_sha_verified"] = True
+                    durable_text(
+                        checkpoint_path.with_suffix(checkpoint_path.suffix + ".sha256"),
+                        f"{verification['sha256']}  {checkpoint_path.name}\n",
+                    )
+                    durable_json(
+                        checkpoint_path.with_suffix(
+                            checkpoint_path.suffix + ".verification.json"
+                        ),
+                        verification,
+                    )
+                finally:
+                    if temporary.exists():
+                        temporary.unlink()
+            stage_files = [
+                stage_path,
+                stage_path.with_suffix(stage_path.suffix + ".sha256"),
+                stage_path.with_suffix(stage_path.suffix + ".verification.json"),
+            ]
+            removed_bytes = sum(
+                path.stat().st_size for path in stage_files if path.exists()
+            )
+            for path in stage_files:
+                if path.exists():
+                    path.unlink()
+            cleanup = read_json(runtime.output / "storage_cleanup_manifest.json")
+            cleanup["cleanup_actions"].append(
+                {
+                    "phase": "final_checkpoint_persisted",
+                    "path": str(stage_path),
+                    "bytes": removed_bytes,
+                    "reason": "local final stage removed after locked persistent copy and matching SHA",
+                }
+            )
+            durable_json(runtime.output / "storage_cleanup_manifest.json", cleanup)
     except BaseException:
         runtime.training_state["last_checkpoint"] = previous
         raise
@@ -3409,6 +3621,9 @@ def run_train(args):
         "checkpoint": runtime.training_state["last_checkpoint"],
     }
     merge_keyed_json(runtime.output / "process_segments.json", args.end_update, segment)
+    commands = read_json(runtime.output / "commands_and_runtime.json")
+    commands.setdefault("training_segments", []).append(segment)
+    durable_json(runtime.output / "commands_and_runtime.json", commands)
     if int(args.end_update) == FORCED_RESTART_UPDATE:
         print("EXPERIMENT_2D2F_UPDATE_96_RESTART_REQUIRED", flush=True)
     else:
@@ -4371,7 +4586,8 @@ def incremental_position_bins(incremental):
 def build_artifact_inventory(output):
     output = Path(output)
     mutable = {
-        "EXPERIMENT_2D2E_FINAL_REPORT.md",
+        "FINAL_REPORT.md",
+        "EXPERIMENT_2D2F_FINAL_REPORT.md",
         "FINAL_AUDIT.json",
         "result_summary.json",
         "commands_and_runtime.json",
@@ -5277,9 +5493,20 @@ def attention_diagnostics(model, val_path, link, batch_size=2) -> dict:
         histogram.scatter_add_(0, lag[valid].long(), aggregated[valid])
         mass = histogram.sum()
         mean = ((histogram * torch.arange(histogram.numel(), device=device)).sum() / mass).item()
+        probabilities = current.double()
+        entropy = -(
+            probabilities.clamp_min(1e-300).log() * probabilities
+        ).sum(-1)
+        valid_queries = valid.any(-1)
+        if current.ndim == 4:
+            selected_entropy = entropy[:, :, valid_queries]
+        else:
+            selected_entropy = entropy[:, valid_queries]
         return {"mean_attended_recurrent_lag": mean,
                 "median_attended_recurrent_lag": _weighted_quantile(histogram, 0.5),
                 "p90_attended_recurrent_lag": _weighted_quantile(histogram, 0.9),
+                "attention_entropy": selected_entropy.mean().item(),
+                "effective_recurrent_positions": selected_entropy.exp().mean().item(),
                 "total_attention_mass": mass.item()}
     heads = {str(head): summarize(weights[:, head]) for head in range(N_HEAD)}
     report = {"link": {"b1": "B12->B1", "b3": "B10->B3"}[link],
@@ -5486,6 +5713,7 @@ def probe_microbatch(model, optimizer, shards, device, candidates=(32, 16, 8, 4,
 def run_preflight(args):
     require_git(clean=True); require_config(); fingerprint = implementation_fingerprint()
     mount = workspace_mount_audit(args.output_dir, args.run_root, args.persistent_volume_identity)
+    ephemeral = ephemeral_checkpoint_audit(args.ephemeral_checkpoint_dir)
     stop = authenticated_stop_audit(args); device = require_single_a100(); seed_all()
     output = Path(args.output_dir).resolve()
     if output.exists() and any(output.iterdir()):
@@ -5542,8 +5770,15 @@ def run_preflight(args):
     source_accumulation = int(source_payload["metadata"]["gradient_accumulation"])
     source_stream = global_batch_stream_hash(source_loader, source_accumulation)
     scientific_stream = global_batch_stream_hash(scientific_loader, accumulation)
-    reference_path = REPO_ROOT / "results" / "experiment_2d2e_b3_w64_b10_recurrent_960" / "batch_manifest.json"
-    reference_2d2e = read_json(reference_path)
+    frozen_reference = frozen_2d2e_batch_manifest()
+    reference_2d2e = frozen_reference["payload"]
+    trajectory_artifact = frozen_2d2e_artifact(FROZEN_2D2E_MILESTONES)
+    frozen_trajectory = trajectory_artifact["payload"]
+    if set(frozen_trajectory) != {str(update) for update in MILESTONES}:
+        raise SystemExit("frozen 2D2E milestone trajectory is incomplete")
+    zero["frozen_2d2e_comparison"] = trajectory_comparison_to_2d2e(
+        zero, frozen_trajectory["0"]
+    )
     matched_2d2e = {
         "schema": "exp2d2f_matched_2d2e_data_audit_v1",
         "source_loader_state_restored": True,
@@ -5551,6 +5786,9 @@ def run_preflight(args):
         "expected_first_batch_sha256": SOURCE_NEXT_BATCH_SHA256,
         "scientific_global_stream_sha256": scientific_stream,
         "frozen_2d2e_global_stream_sha256": reference_2d2e["scientific_global_stream_sha256"],
+        "frozen_2d2e_final_commit": frozen_reference["commit"],
+        "frozen_2d2e_batch_manifest_path": frozen_reference["path"],
+        "frozen_2d2e_batch_manifest_sha256": frozen_reference["blob_sha256"],
         "exact_updates": MAX_UPDATES,
         "exact_targets": ADDITIONAL_TARGETS,
         "per_update_hashes_available": False,
@@ -5580,6 +5818,7 @@ def run_preflight(args):
         "matched_2d2e_data": matched_2d2e["passed"],
         "global_batch": selected * T * accumulation == GLOBAL_TARGETS,
         "persistent_workspace": mount["passed"], "authenticated_stop": stop["driver_passed"],
+        "node_local_ephemeral_checkpoints": ephemeral["passed"],
     }
     preflight = {"experiment": EXPERIMENT, "protocol": PROTOCOL, "timestamp": time.time(),
                  "command": " ".join(sys.argv), "implementation_git_commit": git_output("rev-parse", "HEAD"),
@@ -5592,10 +5831,20 @@ def run_preflight(args):
                  "selected_microbatch": selected, "gradient_accumulation": accumulation,
                  "microbatch_probe": probe, "runpod_stop_audit": stop,
                  "persistent_workspace_audit": mount, "checks": checks,
+                 "ephemeral_checkpoint_audit": ephemeral,
                  "science_passed": all(checks.values()), "result_run_authorized": all(checks.values()),
                  "wall_seconds": time.monotonic() - started}
     durable_json(output / "batch_manifest.json", batch_manifest)
     durable_json(output / "matched_2d2e_data_audit.json", matched_2d2e)
+    durable_json(
+        output / "frozen_2d2e_trajectory_reference.json",
+        {
+            "commit": trajectory_artifact["commit"],
+            "path": trajectory_artifact["path"],
+            "blob_sha256": trajectory_artifact["blob_sha256"],
+            "milestones": frozen_trajectory,
+        },
+    )
     durable_json(output / "preflight_audit.json", preflight)
     durable_json(output / "milestone_validation.json", {"0": zero})
     durable_json(output / "paired_controls.json", {"0": {"all_real_vs_b3_off": zero["all_real_vs_b3_off"], "all_real_vs_b3_shuffled": zero["all_real_vs_b3_shuffled"]}})
@@ -5624,9 +5873,12 @@ def run_preflight(args):
 def run_smoke(args):
     require_git(clean=False); require_config()
     workspace_mount_audit(args.output_dir, args.run_root, args.persistent_volume_identity)
+    ephemeral = ephemeral_checkpoint_audit(args.ephemeral_checkpoint_dir)
     authenticated_stop_audit(args); device = require_single_a100()
     output = Path(args.output_dir).resolve(); preflight = read_json(output / "preflight_audit.json")
     if not preflight.get("result_run_authorized"): raise SystemExit("smoke requires passing preflight")
+    if ephemeral["path"] != preflight["ephemeral_checkpoint_audit"]["path"]:
+        raise SystemExit("smoke ephemeral checkpoint directory differs from preflight")
     require_implementation_fingerprint(preflight)
     model, optimizer, _, source_payload, _ = load_source_bundle(args.source_checkpoint, device, restore_rng=True)
     loader = loader_at_source_cursor(source_payload["loader_state"], 2)
@@ -5662,21 +5914,125 @@ def run_smoke(args):
     cache_x, _ = loader.clone().next_batch()
     with torch.no_grad():
         cache = model.incremental_logits(cache_x[:, :72].to(device), control="all_real", bank_mode="full")["cache_audit"]
+    writer_after_open = temporal_gradient_by_lag(
+        model, validation_path(args.data_root), "b3"
+    )
+    smoke_state = {
+        "completed_2d2f_updates": 3,
+        "processed_2d2f_targets": 3 * 2 * T,
+        "cumulative_2d2_targets": SOURCE_TARGETS + 3 * 2 * T,
+        "started_at": time.time(),
+        "last_checkpoint": None,
+        "last_metrics": rows[-1],
+        "kind": "disposable_smoke",
+    }
+    smoke_metadata = {
+        "experiment": EXPERIMENT,
+        "kind": "disposable_smoke",
+        "implementation_git_commit": git_output("rev-parse", "HEAD"),
+        "implementation_fingerprint": preflight["implementation_fingerprint"],
+        "source_checkpoint_sha256": SOURCE_SHA256,
+        "micro_batch_sequences": 2,
+        "gradient_accumulation": 1,
+        "pod_id": args.pod_id,
+    }
+    smoke_path = (
+        Path(ephemeral["path"]) / "smoke" / "smoke_update_0003.pt"
+    )
+    smoke_state["last_checkpoint"] = str(smoke_path.resolve())
+    verification = save_checkpoint(
+        smoke_path, model, optimizer, loader, smoke_state, smoke_metadata, 1
+    )
+    record_checkpoint(output, 3, verification, kind="smoke")
+    reload_model, reload_optimizer, _, _, _ = load_source_bundle(
+        args.source_checkpoint, device, restore_rng=False
+    )
+    (
+        reload_loader,
+        reload_state,
+        reload_saved_pid,
+        reload_sha,
+        reload_rng,
+    ) = load_checkpoint_runtime(
+        smoke_path,
+        reload_model,
+        reload_optimizer,
+        2,
+        1,
+        smoke_metadata,
+    )
+    reload_exact = (
+        reload_state == smoke_state
+        and reload_saved_pid == os.getpid()
+        and reload_sha == verification["sha256"]
+        and reload_rng["passed"]
+        and next_global_batch_hash(reload_loader, 1)
+        == verification["next_global_batch_sha256"]
+    )
     checks = {"exactly_three_updates": len(rows) == 3,
               "b3_gradient_update1_nonzero": math.isfinite(rows[0]["gate_gradients"]["b3"]) and rows[0]["gate_gradients"]["b3"] != 0,
+              "b3_gate_changes_from_zero": rows[0]["gate_raw_after"]["b3"] != 0.0,
               "all_gradient_groups_nonzero": all(all(row["gradient_groups"][name]["finite"] and row["gradient_groups"][name]["nonzero"] for name in ("base", "gate", "b3_gate")) for row in rows),
               "finite": all(row["parameters_finite"] and row["optimizer_finite"] and row["recurrent_states_finite"] for row in rows),
+              "writer_gradient_after_gate_opens": writer_after_open["finite"]
+              and writer_after_open["nonzero"]
+              and writer_after_open["long_lag_writer_gradient_present"],
+              "no_future_leakage": preflight["kernel_preflight"]["checks"]["future_causality"],
               "cache_geometry": cache["passed"] and cache["b1_historical_kv"] == 1 and cache["b2_historical_kv"] == 31 and cache["b3_historical_kv"] == 63,
+              "checkpoint_strict_reopen": verification["passed"],
+              "checkpoint_fresh_model_reload": reload_exact,
               "source_checkpoint_untouched": file_sha256(args.source_checkpoint) == SOURCE_SHA256}
     audit = {"experiment": EXPERIMENT, "kind": "exactly three disposable optimizer updates",
              "command": " ".join(sys.argv), "rows": rows, "incremental_cache_audit": cache,
+             "writer_gradient_after_gate_opens": writer_after_open,
+             "checkpoint": verification,
+             "fresh_model_reload": {
+                 "passed": reload_exact,
+                 "checkpoint_sha256": reload_sha,
+                 "saved_process_id": reload_saved_pid,
+                 "rng_restore": reload_rng,
+                 "next_global_batch_sha256": next_global_batch_hash(reload_loader, 1),
+             },
              "checks": checks, "passed": all(checks.values()),
              "disposition": "Discarded; scientific update 1 reloads exact finalized 2D2D."}
     durable_json(output / "smoke_audit.json", audit)
-    manifest = read_json(output / "checkpoint_manifest.json")
-    manifest["smoke"]["3"] = {"updates": 3, "binary_retained": False, "disposable": True}
-    durable_json(output / "checkpoint_manifest.json", manifest)
     if not audit["passed"]: raise SystemExit(f"2D2F smoke failed: {checks}")
+    smoke_files = [
+        smoke_path,
+        smoke_path.with_suffix(smoke_path.suffix + ".sha256"),
+        smoke_path.with_suffix(smoke_path.suffix + ".verification.json"),
+    ]
+    removed_bytes = sum(path.stat().st_size for path in smoke_files if path.exists())
+    for path in smoke_files:
+        if path.exists():
+            path.unlink()
+    manifest = read_json(output / "checkpoint_manifest.json")
+    manifest["smoke"]["3"].update(
+        binary_retained=False,
+        sidecars_retained=False,
+        disposable=True,
+        deleted_after_strict_fresh_model_reload=True,
+    )
+    durable_json(output / "checkpoint_manifest.json", manifest)
+    cleanup = read_json(output / "storage_cleanup_manifest.json")
+    cleanup["cleanup_actions"].append(
+        {
+            "phase": "post_smoke",
+            "path": str(smoke_path),
+            "bytes": removed_bytes,
+            "reason": "disposable smoke checkpoint deleted after strict fresh-model reload",
+        }
+    )
+    durable_json(output / "storage_cleanup_manifest.json", cleanup)
+    audit["checkpoint_binary_deleted"] = True
+    audit["checkpoint_sidecars_deleted"] = True
+    durable_json(output / "smoke_audit.json", audit)
+    commands = read_json(output / "commands_and_runtime.json")
+    commands["smoke_command"] = " ".join(sys.argv)
+    commands["smoke_checkpoint_reload"] = verification
+    durable_json(output / "commands_and_runtime.json", commands)
+    del reload_model, reload_optimizer, reload_loader
+    gc.collect(); torch.cuda.empty_cache()
     print("EXPERIMENT_2D2F_SMOKE_PASS", flush=True)
     return audit
 
@@ -5686,6 +6042,12 @@ def milestone_diagnostics(runtime, update, val_path):
     validation = evaluate_parallel(runtime.model, val_path, combined_controls=(update == MAX_UPDATES))
     validation.update(local_update=update, additional_targets=update * GLOBAL_TARGETS,
                       cumulative_2d2_targets=SOURCE_TARGETS + update * GLOBAL_TARGETS)
+    frozen = read_json(
+        runtime.output / "frozen_2d2e_trajectory_reference.json"
+    )["milestones"][str(update)]
+    validation["frozen_2d2e_comparison"] = trajectory_comparison_to_2d2e(
+        validation, frozen
+    )
     attention = {link: attention_diagnostics(runtime.model, val_path, link) for link in ("b1", "b3")}
     temporal = {link: temporal_gradient_by_lag(runtime.model, val_path, link) for link in ("b1", "b3")}
     for row in temporal.values():
@@ -5899,6 +6261,8 @@ def classify_result(incremental, stable=True, integrity=True) -> str:
     if positive and gain >= 0.001 and off["wins"] >= 166 and shuffled["wins"] >= 166:
         return "B10→B3 W64 RECURRENT LINK STRONGLY ESTABLISHES UTILITY"
     if positive: return "B10→B3 W64 RECURRENT LINK ESTABLISHES POSITIVE UTILITY"
+    if gain < 0 and off["losses"] >= 129:
+        return "B10→B3 W64 RECURRENT LINK IS HARMFUL"
     if gap > 0: return "B10→B3 W64 RECURRENCE IS SEQUENCE-SPECIFIC BUT DOES NOT ESTABLISH UTILITY"
     balanced = 112 <= off["wins"] <= 144 and 112 <= shuffled["wins"] <= 144
     if abs(gain) < 1e-4 and abs(gap) < 1e-4 and balanced:
@@ -5909,6 +6273,7 @@ def classify_result(incremental, stable=True, integrity=True) -> str:
 def choose_recommendation(classification, initial_damage):
     if classification == "EXPERIMENT 2D2F INVALID": return "FIX 2D2F INTEGRITY"
     if classification == "B10→B3 W64 RECURRENT LINK IS UNSTABLE": return "STABILIZE B10→B3 W64 RECURRENCE"
+    if classification == "B10→B3 W64 RECURRENT LINK IS HARMFUL": return "REMOVE B10→B3 FROM THE 2D2F RESULT ARCHITECTURE"
     if classification in {"B10→B3 W64 RECURRENT LINK ESTABLISHES POSITIVE UTILITY", "B10→B3 W64 RECURRENT LINK STRONGLY ESTABLISHES UTILITY"}:
         return "RUN MATCHED NO-B11→B2 CONTROL BEFORE ADDING B9→B4"
     if classification == "B10→B3 W64 RECURRENCE IS SEQUENCE-SPECIFIC BUT DOES NOT ESTABLISH UTILITY":
@@ -6064,8 +6429,11 @@ def render_report(summary, audit, questions):
 
 def run_finalize(args):
     require_config(); workspace_mount_audit(args.output_dir, args.run_root, args.persistent_volume_identity)
+    ephemeral = ephemeral_checkpoint_audit(args.ephemeral_checkpoint_dir)
     authenticated_stop_audit(args); device = require_single_a100(); output = Path(args.output_dir).resolve()
     preflight = read_json(output / "preflight_audit.json"); smoke = read_json(output / "smoke_audit.json")
+    if ephemeral["path"] != preflight["ephemeral_checkpoint_audit"]["path"]:
+        raise SystemExit("finalize ephemeral checkpoint directory differs from preflight")
     require_implementation_fingerprint(preflight)
     model, optimizer, final_model = load_final_model(args, device)
     training = read_jsonl(output / "training_metrics.jsonl")
@@ -6090,6 +6458,10 @@ def run_finalize(args):
                    "peak_allocated_vram_mb": max(row["peak_allocated_vram_mb"] for row in training),
                    "peak_reserved_vram_mb": max(row["peak_reserved_vram_mb"] for row in training),
                    "incremental": incremental["performance"]}
+    commands = read_json(output / "commands_and_runtime.json")
+    commands["finalize_command"] = " ".join(sys.argv)
+    commands["final_performance"] = performance
+    durable_json(output / "commands_and_runtime.json", commands)
     stable = stability["finite"] and model_finite(model)
     integrity = preflight["science_passed"] and smoke["passed"] and cache_audit["passed"] and equivalence["passed"]
     classification = classify_result(incremental, stable=stable, integrity=integrity)
@@ -6114,6 +6486,7 @@ def run_finalize(args):
     durable_json(output / "scientific_questions.json", questions)
     checkpoint_manifest = read_json(output / "checkpoint_manifest.json")
     restart = read_json(output / "forced_restart_update_96.json")
+    final_checkpoint_record = checkpoint_manifest["scientific"][str(MAX_UPDATES)]
     checks = {
         "source 2D2D checkpoint SHA exact": file_sha256(args.source_checkpoint) == SOURCE_SHA256,
         "source final tag exact": git_output("rev-parse", FROZEN_TAG + "^{commit}") == FROZEN_COMMIT,
@@ -6128,12 +6501,33 @@ def run_finalize(args):
         "B1 resumed; B2 gate dropped; B3 zero initialized": preflight["semantic_diff"]["b1_gate_resumed"] and preflight["semantic_diff"]["b2_gate_absent"] and preflight["semantic_diff"]["b3_gate_zero"],
         "shared source optimizer state resumed; B2 state dropped; B3 fresh": preflight["source"]["checks"]["source_optimizer_state_preserved"] and preflight["source"]["checks"]["new_b3_optimizer_state_absent"],
         "data stream continues after 2D2D": preflight["checks"]["loader_continuation"],
+        "matched 2D2E target stream exact": preflight["checks"]["matched_2d2e_data"],
         "global batch 524,288": preflight["checks"]["global_batch"],
         "CE-only exact pass cadence": all(row["pass_count"] == pass_count(row["local_update"]) and tuple(row["pass_weights"]) == pass_weights(row["local_update"]) for row in training),
         "no detach and all writer gradients": all(temporal[link]["nonzero"] for link in temporal),
         "191 updates and 100,139,008 targets": len(training) == MAX_UPDATES and training[-1]["additional_targets"] == ADDITIONAL_TARGETS,
+        "trajectory compared to frozen 2D2E at every milestone": all(
+            "frozen_2d2e_comparison" in milestones[str(update)]
+            for update in MILESTONES
+        ),
         "mandatory update-96 fresh-process restart": restart["passed"],
         "checkpoint hashes verified": all(checkpoint_manifest["scientific"][str(update)]["passed"] for update in SCIENTIFIC_CHECKPOINTS),
+        "final checkpoint staged locally then copied under shared lock": final_checkpoint_record.get("local_stage", {}).get("strict_reopen_passed") is True
+        and final_checkpoint_record.get("persistent_copy_sha_verified") is True
+        and final_checkpoint_record.get("persistent_copy_lock") == str(CHECKPOINT_PERSIST_LOCK),
+        "smoke checkpoint strict fresh-model reload": smoke["checks"]["checkpoint_strict_reopen"]
+        and smoke["checks"]["checkpoint_fresh_model_reload"],
+        "smoke writer gradient after gate opened": smoke["checks"]["writer_gradient_after_gate_opens"],
+        "B3 attention diagnostics complete": all(
+            key in attention["b3"]["aggregate"]
+            for key in (
+                "attention_entropy",
+                "effective_recurrent_positions",
+                "mean_attended_recurrent_lag",
+                "median_attended_recurrent_lag",
+                "p90_attended_recurrent_lag",
+            )
+        ) and "head_mean_lag_range" in attention["b3"],
         "true incremental evaluation completed": incremental["primary_target_requirement_met"] and incremental["paired_sequences"] == 256,
         "physical cache audit passed": cache_audit["passed"],
         "8-pass stability passed": stable,
@@ -6141,6 +6535,7 @@ def run_finalize(args):
         "Git synchronized": False,
         "sealed report commit synchronized": False,
         "persistent volume preserved": True,
+        "required artifact set complete": False,
     }
     summary = {"experiment": EXPERIMENT, "primary_classification": classification,
                "recommendation": recommendation, "source_checkpoint": str(Path(args.source_checkpoint).resolve()),
@@ -6162,6 +6557,17 @@ def run_finalize(args):
     durable_text(output / "EXPERIMENT_2D2F_FINAL_REPORT.md", report_text)
     durable_text(output / "UNATTENDED_FINAL_HANDOFF.md", render_report(summary, audit, questions) + "\nGPU remains running until local backup, Git seal, attestation, and verified stop.\n")
     durable_json(output / "HEARTBEAT.json", {"experiment": EXPERIMENT, "timestamp": time.time(), "status": "FINALIZED_PENDING_GIT_SEAL", "local_update": MAX_UPDATES})
+    inventory = build_artifact_inventory(output)
+    audit["artifact_inventory"] = inventory
+    audit["checks"]["required artifact set complete"] = inventory["passed"]
+    durable_json(output / "artifact_inventory.json", inventory)
+    durable_json(output / "FINAL_AUDIT.json", audit)
+    report_text = render_report(summary, audit, questions)
+    durable_text(output / "FINAL_REPORT.md", report_text)
+    durable_text(output / "EXPERIMENT_2D2F_FINAL_REPORT.md", report_text)
+    durable_text(output / "UNATTENDED_FINAL_HANDOFF.md", report_text + "\nGPU remains running until local backup, Git seal, attestation, and verified stop.\n")
+    if not inventory["passed"]:
+        raise SystemExit("2D2F required artifact inventory is incomplete")
     print("EXPERIMENT_2D2F_FINALIZED_PENDING_GIT_SEAL", flush=True)
     return summary
 
@@ -6171,6 +6577,9 @@ def run_seal_report(args):
     if git_output("rev-parse", "HEAD") != args.results_commit or git_output("rev-parse", f"origin/{BRANCH}") != args.results_commit:
         raise SystemExit("results commit must be checked out and pushed")
     summary = read_json(output / "result_summary.json"); audit = read_json(output / "FINAL_AUDIT.json"); questions = read_json(output / "scientific_questions.json")
+    commands = read_json(output / "commands_and_runtime.json")
+    commands["seal_report_command"] = " ".join(sys.argv)
+    durable_json(output / "commands_and_runtime.json", commands)
     summary["git"]["results_commit"] = args.results_commit; summary["pod"]["status"] = "RUNNING_PENDING_SEALED_REPORT_ATTESTATION"
     audit["checks"]["Git synchronized"] = True
     durable_json(output / "result_summary.json", summary); durable_json(output / "FINAL_AUDIT.json", audit)
@@ -6186,6 +6595,9 @@ def run_attest_seal(args):
     if git_output("rev-parse", "HEAD") != args.sealed_commit or git_output("rev-parse", f"origin/{BRANCH}") != args.sealed_commit:
         raise SystemExit("sealed report commit must be checked out and pushed")
     summary = read_json(output / "result_summary.json"); audit = read_json(output / "FINAL_AUDIT.json"); questions = read_json(output / "scientific_questions.json")
+    commands = read_json(output / "commands_and_runtime.json")
+    commands["attest_seal_command"] = " ".join(sys.argv)
+    durable_json(output / "commands_and_runtime.json", commands)
     summary["git"]["sealed_commit"] = args.sealed_commit; summary["pod"]["status"] = "READY_FOR_LOCAL_BACKUP_AND_STOP"
     audit["checks"]["sealed report commit synchronized"] = True; audit["passed"] = all(audit["checks"].values())
     if not audit["passed"]: raise SystemExit(f"final attestation failed: {audit['checks']}")
