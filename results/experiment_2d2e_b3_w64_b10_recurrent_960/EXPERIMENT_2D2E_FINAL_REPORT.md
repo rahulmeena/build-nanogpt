@@ -222409,32 +222409,32 @@ Exact next recommendation: **IMPROVE DEEPER-LAYER RECURRENT READOUT BEFORE ADDIN
 
 ## Integrity audit
 
-- PASS — source 2D2D checkpoint SHA exact
-- PASS — source final tag exact
-- PASS — parameter count 124,475,907
-- PASS — exactly one new parameter
+- PASS — 191 updates and 100,139,008 targets
+- PASS — 8-pass stability passed
 - PASS — B1 W2 and recurrent lags exact
+- PASS — B1 and B2 gates resumed; B3 zero initialized
 - PASS — B2 W32 and recurrent lags exact
 - PASS — B3 W64 and recurrent lags exact
-- PASS — B3 max recurrent width 960
 - PASS — B3 local/recurrent non-overlap
-- PASS — existing projections and one c_proj reused
-- PASS — B1 and B2 gates resumed; B3 zero initialized
-- PASS — all source optimizer state resumed; fresh only B3
-- PASS — data stream continues after 2D2D
-- PASS — global batch 524,288
+- PASS — B3 max recurrent width 960
 - PASS — CE-only exact pass cadence
-- PASS — no detach and all writer gradients
-- PASS — 191 updates and 100,139,008 targets
-- PASS — mandatory update-96 fresh-process restart
+- PASS — Git synchronized
+- PASS — all source optimizer state resumed; fresh only B3
 - PASS — checkpoint hashes verified
-- PASS — true incremental evaluation completed
-- PASS — physical cache audit passed
-- PASS — 8-pass stability passed
-- PASS — storage audit passed
-- FAIL — Git synchronized
-- FAIL — sealed report commit synchronized
+- PASS — data stream continues after 2D2D
+- PASS — exactly one new parameter
+- PASS — existing projections and one c_proj reused
+- PASS — global batch 524,288
+- PASS — mandatory update-96 fresh-process restart
+- PASS — no detach and all writer gradients
+- PASS — parameter count 124,475,907
 - PASS — persistent volume preserved
+- PASS — physical cache audit passed
+- FAIL — sealed report commit synchronized
+- PASS — source 2D2D checkpoint SHA exact
+- PASS — source final tag exact
+- PASS — storage audit passed
+- PASS — true incremental evaluation completed
 
 ## Scientific questions Q1–Q40
 
