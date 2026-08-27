@@ -289,6 +289,17 @@ class RecoveryPreflightTests(unittest.TestCase):
     def test_lane_common_accepts_only_sealed_original_terminal(self) -> None:
         path = Path(__file__).with_name("parallel_2d2_lane_common.sh")
         text = path.read_text()
+        lane_init_start = text.index("lane_init() {")
+        embedded_gate_start = text.index(
+            '  "$LANE_PYTHON_BIN" - <<\'PY\'', lane_init_start
+        )
+        embedded_gate_end = text.index("\nPY\n", embedded_gate_start)
+        embedded_gate = text[embedded_gate_start:embedded_gate_end]
+        self.assertIn("import hashlib", embedded_gate)
+        self.assertLess(
+            embedded_gate.index("import hashlib"),
+            embedded_gate.index("hashlib.sha256"),
+        )
         self.assertIn('recovery.get("original_terminal_recovery_gate", {})', text)
         self.assertIn('sealed.get("sha256") != terminal_sha', text)
         self.assertIn('terminal.get("status") != "HARD_FAILURE"', text)

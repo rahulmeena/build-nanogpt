@@ -105,6 +105,7 @@ lane_init() {
   MASTER_EXPECTED_POD_NAME="$MASTER_EXPECTED_POD_NAME" \
   MASTER_EXPECTED_VOLUME_ID="$MASTER_EXPECTED_VOLUME_ID" \
   "$LANE_PYTHON_BIN" - <<'PY'
+import hashlib
 import json
 import os
 import re
