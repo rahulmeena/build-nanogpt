@@ -123,3 +123,10 @@ def test_matched_2d2e_trajectory_comparison_is_signed_2d2f_minus_2d2e():
     assert abs(row["gain_2d2f_minus_2d2e"] - 0.002) < 1e-15
     assert abs(row["sequence_gap_2d2f_minus_2d2e"] - 0.003) < 1e-15
     assert abs(row["tanh_g_rec_b3_2d2f_minus_2d2e"] - 0.01) < 1e-15
+
+
+def test_fresh_training_allows_only_its_preflight_result_directory():
+    source = inspect.getsource(exp.run_train)
+    assert "require_git(clean=False)" in source
+    assert "OUTPUT_NAME not in line" in source
+    assert "require_git(clean=not bool(args.resume))" not in source

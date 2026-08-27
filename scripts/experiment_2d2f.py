@@ -3554,15 +3554,18 @@ def reconcile_uncheckpointed_artifacts(output, completed):
 
 
 def run_train(args):
-    require_git(clean=not bool(args.resume))
-    if args.resume:
-        dirty = [
-            line
-            for line in git_output("status", "--porcelain").splitlines()
-            if line and OUTPUT_NAME not in line
-        ]
-        if dirty:
-            raise SystemExit(f"resume has non-result worktree changes: {dirty}")
+    # Preflight and smoke deliberately create the uncommitted result artifacts
+    # that scientific training extends.  Permit only that canonical directory
+    # on both the fresh and resumed segments; implementation or unrelated dirt
+    # remains a hard stop.
+    require_git(clean=False)
+    dirty = [
+        line
+        for line in git_output("status", "--porcelain").splitlines()
+        if line and OUTPUT_NAME not in line
+    ]
+    if dirty:
+        raise SystemExit(f"training has non-result worktree changes: {dirty}")
     require_config()
     if int(args.end_update) not in (FORCED_RESTART_UPDATE, MAX_UPDATES):
         raise SystemExit("2D2F train segments must end at local update 96 or 191")
