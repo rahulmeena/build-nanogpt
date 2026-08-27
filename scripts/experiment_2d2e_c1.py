@@ -322,7 +322,11 @@ def evaluate_controls(model, batches, heartbeat_path: Path | None = None) -> dic
             total = 0.0
             for position in range(T):
                 with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-                    logits, state, _ = model.incremental_step(
+                    # The frozen 2D2E incremental API returns diagnostics only
+                    # when ``return_diagnostics`` is true.  C1 deliberately
+                    # disables them, so the exact contract is the two-tuple
+                    # (logits, next_state).
+                    logits, state = model.incremental_step(
                         x[:, position],
                         state,
                         control=control,

@@ -1,4 +1,5 @@
 import importlib.util
+import inspect
 from pathlib import Path
 
 import numpy as np
@@ -37,3 +38,9 @@ def test_bootstrap_is_reproducible_and_classification_preregistered():
     includes_zero = {"lower": -0.1, "upper": 0.1}
     assert MODULE.classify_confirmation(0.1, 0.2, first, includes_zero) == "DIRECTIONAL CONFIRMATION"
     assert MODULE.classify_confirmation(0.0, 0.2, first, second) == "NOT CONFIRMED"
+
+
+def test_frozen_incremental_step_uses_two_value_no_diagnostics_contract():
+    source = inspect.getsource(MODULE.evaluate_controls)
+    assert "logits, state = model.incremental_step(" in source
+    assert "logits, state, _ = model.incremental_step(" not in source
