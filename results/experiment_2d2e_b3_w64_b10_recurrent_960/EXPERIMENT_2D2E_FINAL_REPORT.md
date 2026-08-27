@@ -222430,7 +222430,7 @@ Exact next recommendation: **IMPROVE DEEPER-LAYER RECURRENT READOUT BEFORE ADDIN
 - PASS — parameter count 124,475,907
 - PASS — persistent volume preserved
 - PASS — physical cache audit passed
-- FAIL — sealed report commit synchronized
+- PASS — sealed report commit synchronized
 - PASS — source 2D2D checkpoint SHA exact
 - PASS — source final tag exact
 - PASS — storage audit passed

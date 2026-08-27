@@ -222430,7 +222430,7 @@ Exact next recommendation: **IMPROVE DEEPER-LAYER RECURRENT READOUT BEFORE ADDIN
 - PASS — parameter count 124,475,907
 - PASS — persistent volume preserved
 - PASS — physical cache audit passed
-- FAIL — sealed report commit synchronized
+- PASS — sealed report commit synchronized
 - PASS — source 2D2D checkpoint SHA exact
 - PASS — source final tag exact
 - PASS — storage audit passed
@@ -222600,4 +222600,4 @@ false
 
 # EXPERIMENT 2D2E COMPLETE
 
-Commit and push this sealed report, then attest it before stopping the pod.
+Back up locally, commit/push this attestation, then stop—not delete—the exact pod.
