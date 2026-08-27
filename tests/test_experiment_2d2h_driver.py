@@ -15,6 +15,12 @@ def test_removed_b1_gate_optimizer_membership_uses_identity():
     assert 'source_model.g_rec in group["params"]' not in source
 
 
+def test_new_b2_gate_audit_does_not_depend_on_parameter_order():
+    source = inspect.getsource(exp.semantic_diff_audit)
+    assert 'named.count("g_rec_b2") == 1' in source
+    assert 'named[-1] == "g_rec_b2"' not in source
+
+
 def incremental(real, off, shuffled, wins, count=256):
     return {
         "true_b2_recurrent_gain": off - real,

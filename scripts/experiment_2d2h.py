@@ -1166,7 +1166,11 @@ def semantic_diff_audit(model, source_payload) -> dict:
         "base_parameter_names": [name for name in named if name != "g_rec_b2"]
         == [name for name in source_named if name != "g_rec"],
         "b1_gate_removed": "g_rec" not in named,
-        "b2_gate_fresh": named[-1] == "g_rec_b2",
+        # Module registration order places the wrapper-owned scalar before
+        # the reused base module on current PyTorch.  Freshness is an exact
+        # name/shape/inventory property, not a positional ordering property.
+        "b2_gate_fresh": named.count("g_rec_b2") == 1
+        and tuple(dict(model.named_parameters())["g_rec_b2"].shape) == (),
     }
     report = {
         "baseline": "final Experiment 2D2B",
