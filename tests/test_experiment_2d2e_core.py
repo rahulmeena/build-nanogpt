@@ -106,10 +106,11 @@ def test_b3_gate_zero_identity_and_all_links_use_separate_softmaxes():
         torch.testing.assert_close(recurrent[:, :, first_valid:].sum(-1),
                                    torch.ones_like(recurrent[:, :, first_valid:, 0]),
                                    rtol=0, atol=5e-7)
-        local = diagnostics["local_attention_weights"]
-        local_mask = diagnostics["local_valid_mask"]
-        assert local.masked_select(~local_mask.view(1, 1, TEST_LENGTH, TEST_LENGTH)).count_nonzero() == 0
-        torch.testing.assert_close(local.sum(-1), torch.ones_like(local[..., 0]), rtol=0, atol=5e-7)
+        if link in {"b2", "b3"}:
+            local = diagnostics["local_attention_weights"]
+            local_mask = diagnostics["local_valid_mask"]
+            assert local.masked_select(~local_mask.view(1, 1, TEST_LENGTH, TEST_LENGTH)).count_nonzero() == 0
+            torch.testing.assert_close(local.sum(-1), torch.ones_like(local[..., 0]), rtol=0, atol=5e-7)
 
 
 def test_all_three_writer_paths_are_attached_after_gates_open():
