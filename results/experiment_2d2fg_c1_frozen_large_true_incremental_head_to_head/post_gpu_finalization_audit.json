@@ -1,0 +1,42 @@
+{
+  "schema": "2d2fg_c1_post_gpu_finalization_audit_v1",
+  "created_utc": "2026-08-27T20:39:08Z",
+  "scientific_evaluation_finished_utc": "2026-08-27T20:35:00Z",
+  "scientific_evaluation_passed": true,
+  "scientific_final_audit_written_before_plotting": true,
+  "remote_post_processing": {
+    "plotting_attempted": true,
+    "plotting_completed": false,
+    "failure_type": "ModuleNotFoundError",
+    "failure_detail": "The pod image did not include matplotlib.",
+    "scientific_metrics_affected": false,
+    "gpu_rerun_required": false
+  },
+  "local_backup": {
+    "completed_before_pod_stop": true,
+    "remote_to_local_rsync_checksum_comparison_empty": true,
+    "scientific_files_copied": 25,
+    "result_summary_sha256_at_copy": "bf9009d2814600252be5fdb3fe69f725a24889822bcdf48a950fa1e507e4b5ef",
+    "final_audit_sha256_at_copy": "7ca46f29cd80db1e5c3fd610a1e70955e1af9372ea9b3529e0f2f9b2b9ee8d13",
+    "per_sequence_losses_sha256_at_copy": "db9ce6067ce57fee65498df8864d2994f1ac1d646d4843ef010b1b2d5eac2f3a"
+  },
+  "pod_stop": {
+    "pod_id": "rvgztsr0azrwyo",
+    "pod_name": "happy_apricot_stork",
+    "stopped_utc": "2026-08-27T20:35:58Z",
+    "desired_status": "EXITED",
+    "runtime_status": "stopped",
+    "runtime_status_reason": "stopped_by_user",
+    "persistent_volume_id": "yhzyb27fb5",
+    "persistent_volume_retained": true
+  },
+  "local_post_processing": {
+    "gpu_used": false,
+    "numpy_version": "2.5.2",
+    "matplotlib_version": "3.10.6",
+    "plots_created": 6,
+    "report_created": true,
+    "scientific_json_recomputed": false
+  },
+  "passed": true
+}

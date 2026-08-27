@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queried_utc": "2026-08-27T19:51:54Z",
+  "authenticated": true,
+  "passed": true,
+  "pod_id": "rvgztsr0azrwyo",
+  "pod_name": "happy_apricot_stork",
+  "desired_status": "RUNNING",
+  "runtime_status": "running",
+  "gpu_count": 1,
+  "cost_per_hour_usd": 1.59,
+  "volume_id": "yhzyb27fb5",
+  "volume_mount": "/workspace",
+  "volume_source": "mfs#us-md-1.runpod.net:9421[/networkvolumes/yhzyb27fb5]",
+  "volume_retention_policy": "retain; never delete",
+  "exact_stop_command": "runpodctl pod stop rvgztsr0azrwyo -o json",
+  "stop_scope": "exact pod only",
+  "query_evidence": {
+    "id": "rvgztsr0azrwyo",
+    "name": "happy_apricot_stork",
+    "desiredStatus": "RUNNING",
+    "runtimeStatus": "running",
+    "gpuCount": 1
+  }
+}

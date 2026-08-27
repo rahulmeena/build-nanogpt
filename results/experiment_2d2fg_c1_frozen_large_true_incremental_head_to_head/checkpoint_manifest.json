@@ -1,0 +1,202 @@
+{
+  "F": {
+    "architecture": {
+      "b1_local_positions": [
+        "t-1",
+        "t"
+      ],
+      "b1_local_window": 2,
+      "b1_maximum_recurrent_entries": 1022,
+      "b1_recurrent_min_lag": 2,
+      "b1_recurrent_source_set": "max(0,t-1023)...t-2 inclusive",
+      "b2_local_positions": [
+        "t-31",
+        "...",
+        "t"
+      ],
+      "b2_local_window": 32,
+      "b2_maximum_recurrent_entries": 0,
+      "b2_recurrent_min_lag": null,
+      "b2_recurrent_source_set": null,
+      "b3_local_positions": [
+        "t-63",
+        "...",
+        "t"
+      ],
+      "b3_local_window": 64,
+      "b3_maximum_recurrent_entries": 960,
+      "b3_recurrent_min_lag": 64,
+      "b3_recurrent_source_set": "max(0,t-1023)...t-64 inclusive",
+      "b4_b12_windows": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "experiment": "2D2F",
+      "forbidden_modules_absent": {
+        "additional_link_beyond_B10_to_B3": true,
+        "attnres": true,
+        "b11_to_b2_recurrent_path": true,
+        "dedicated_recurrent_projection": true,
+        "detached_training_arm": true,
+        "g_rec_b2": true,
+        "teacher": true
+      },
+      "forbidden_repeated_state_tensor": "[B,T,T,C]",
+      "incremental_b10_raw_residual_capacity": 1023,
+      "incremental_b11_raw_residual_capacity": 0,
+      "incremental_b12_raw_residual_capacity": 1023,
+      "incremental_b1_historical_kv_capacity": 1,
+      "incremental_b2_historical_kv_capacity": 31,
+      "incremental_b3_historical_kv_capacity": 63,
+      "incremental_b4_b12_historical_kv_capacity": 1023,
+      "links": {
+        "B10_to_B3": {
+          "destination": "B3 attention",
+          "gate": "new tanh(g_rec_b3)",
+          "local_window": 64,
+          "maximum_recurrent_entries": 960,
+          "recurrent_lags": "64...1023",
+          "source": "B10 post-MLP residual immediately before B11"
+        },
+        "B12_to_B1": {
+          "destination": "B1 attention",
+          "gate": "inherited tanh(g_rec)",
+          "local_window": 2,
+          "maximum_recurrent_entries": 1022,
+          "recurrent_lags": "2...1023",
+          "source": "B12 post-MLP residual immediately before final LayerNorm"
+        }
+      },
+      "overall_context": 1024,
+      "overall_kv_savings_claimed": true,
+      "parallel_source_tensor_shapes": {
+        "h10": "[B,T,C]",
+        "h12": "[B,T,C]"
+      },
+      "recurrent_max_lag": 1023,
+      "separate_softmaxes": true,
+      "shared_destination_ln_qkv": true,
+      "single_destination_c_proj": true
+    },
+    "architecture_artifact": {
+      "path": "/workspace/parallel_2d2_master/worktrees/2d2f/results/experiment_2d2f_no_b2_recurrence_b3_w64/architecture_manifest.json",
+      "sha256": "2ed16c633785230d6f8d5a24c2121ee10735aae70df84be6b1766f0425cc2cd2"
+    },
+    "bytes": 1493948883,
+    "checkpoint_manifest_artifact": {
+      "path": "/workspace/parallel_2d2_master/worktrees/2d2f/results/experiment_2d2f_no_b2_recurrence_b3_w64/checkpoint_manifest.json",
+      "sha256": "5413e2a01ba49e8e46ca3a9bcc98277ac0d8a476cfcd6b92a94c3b8bed7331cb"
+    },
+    "checkpoint_verification_sidecar_sha256": "6df770fe7df1150d722b7be5de5126ecf5966ef1a7a7f0a06cc3e6a8e54f6d24",
+    "checks": {
+      "all_parameters_frozen": true,
+      "architecture_checkpoint_matches_artifact": true,
+      "b1_gate_expected": true,
+      "b3_gate_expected": true,
+      "checkpoint_manifest_binds_sha": true,
+      "checkpoint_sha_exact": true,
+      "completed_updates_exact": true,
+      "finite_tensors": true,
+      "g_rec_b2_absent": true,
+      "g_rec_b3_present": true,
+      "g_rec_present": true,
+      "optimizer_not_instantiated": true,
+      "parameter_count_exact": true,
+      "payload_model_digest_matches_loaded_model": true,
+      "schema_exact": true,
+      "sidecars_present_and_exact": true,
+      "strict_model_load": true,
+      "weight_tying": true
+    },
+    "g_rec_b1_raw": 0.17639775574207306,
+    "g_rec_b3_raw": 0.01723785139620304,
+    "label": "F",
+    "model_state_sha256": "ca37bb9d747eb60375122f816216f88c5ab0d9ee774c892cea7f2bd14dfebbfc",
+    "parameter_count": 124475906,
+    "passed": true,
+    "path": "/workspace/exp2d2f_run/checkpoints/scientific_update_0191.pt",
+    "schema": "exp2d2f_no_b2_recurrence_b3_w64_checkpoint_v1",
+    "sha256": "a58dd647e7aa70c22b5c1cd49cc708d85576e95c0a0c30fc93b1f0c02eae0ea6",
+    "tanh_g_rec_b1": 0.17459064722061157,
+    "tanh_g_rec_b3": 0.017236143350601196
+  },
+  "G": {
+    "architecture": {
+      "b1": {
+        "local_window": 2,
+        "recurrent_lags": [
+          2,
+          1023
+        ],
+        "source": "B12"
+      },
+      "b2": {
+        "b11_ring": false,
+        "local_window": 1024,
+        "recurrent": false
+      },
+      "b3": {
+        "gate": "tanh(g_rec_b3)",
+        "local_window": 64,
+        "maximum_recurrent_entries": 960,
+        "recurrent_lags": [
+          64,
+          1023
+        ],
+        "source": "B10 post-MLP residual before B11"
+      },
+      "b4_b12_local_window": 1024,
+      "parameters": 124475906,
+      "stage": "2D2G-B"
+    },
+    "architecture_artifact": {
+      "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/architecture_manifest.json",
+      "sha256": "8da4580a02b0d505fd07bbb6475348eb28009237101100690fa7895d25e3b26b"
+    },
+    "bytes": 1493936843,
+    "checkpoint_manifest_artifact": {
+      "path": "/workspace/parallel_2d2_master/worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64/checkpoint_manifest.json",
+      "sha256": "a1e5a931eaadf1efda4fb58264351f9609b65917fb1e01f609f58a304f2c0e5f"
+    },
+    "checkpoint_verification_sidecar_sha256": "908d7c3b3f0e0271a83ccba3a3fbb49893c485e8582b88118644cfc00fffd9c8",
+    "checks": {
+      "all_parameters_frozen": true,
+      "architecture_checkpoint_matches_artifact": true,
+      "b1_gate_expected": true,
+      "b3_gate_expected": true,
+      "checkpoint_manifest_binds_sha": true,
+      "checkpoint_sha_exact": true,
+      "completed_updates_exact": true,
+      "finite_tensors": true,
+      "g_rec_b2_absent": true,
+      "g_rec_b3_present": true,
+      "g_rec_present": true,
+      "optimizer_not_instantiated": true,
+      "parameter_count_exact": true,
+      "payload_model_digest_matches_loaded_model": true,
+      "schema_exact": true,
+      "sidecars_present_and_exact": true,
+      "strict_model_load": true,
+      "weight_tying": true
+    },
+    "g_rec_b1_raw": 0.16951227188110352,
+    "g_rec_b3_raw": 0.011109323240816593,
+    "label": "G",
+    "model_state_sha256": "e301adb701bd4c6201a87454be6b6ea6ae74544d91a77e7e4deb0976e6b23c95",
+    "parameter_count": 124475906,
+    "passed": true,
+    "path": "/workspace/exp2d2g_run/checkpoints/stage_b_scientific_update_0191.pt",
+    "schema": "exp2d2g_stage_b_b3_w64_checkpoint_v1",
+    "sha256": "36ec3fa28741fa8ce999c43e309baa175112b795c079575d2a89525f134c3da0",
+    "tanh_g_rec_b1": 0.16790711879730225,
+    "tanh_g_rec_b3": 0.011108865961432457
+  },
+  "passed": true
+}

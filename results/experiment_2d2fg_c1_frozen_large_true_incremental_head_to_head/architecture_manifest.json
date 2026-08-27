@@ -1,0 +1,116 @@
+{
+  "F": {
+    "b1_local_positions": [
+      "t-1",
+      "t"
+    ],
+    "b1_local_window": 2,
+    "b1_maximum_recurrent_entries": 1022,
+    "b1_recurrent_min_lag": 2,
+    "b1_recurrent_source_set": "max(0,t-1023)...t-2 inclusive",
+    "b2_local_positions": [
+      "t-31",
+      "...",
+      "t"
+    ],
+    "b2_local_window": 32,
+    "b2_maximum_recurrent_entries": 0,
+    "b2_recurrent_min_lag": null,
+    "b2_recurrent_source_set": null,
+    "b3_local_positions": [
+      "t-63",
+      "...",
+      "t"
+    ],
+    "b3_local_window": 64,
+    "b3_maximum_recurrent_entries": 960,
+    "b3_recurrent_min_lag": 64,
+    "b3_recurrent_source_set": "max(0,t-1023)...t-64 inclusive",
+    "b4_b12_windows": [
+      1024,
+      1024,
+      1024,
+      1024,
+      1024,
+      1024,
+      1024,
+      1024,
+      1024
+    ],
+    "experiment": "2D2F",
+    "forbidden_modules_absent": {
+      "additional_link_beyond_B10_to_B3": true,
+      "attnres": true,
+      "b11_to_b2_recurrent_path": true,
+      "dedicated_recurrent_projection": true,
+      "detached_training_arm": true,
+      "g_rec_b2": true,
+      "teacher": true
+    },
+    "forbidden_repeated_state_tensor": "[B,T,T,C]",
+    "incremental_b10_raw_residual_capacity": 1023,
+    "incremental_b11_raw_residual_capacity": 0,
+    "incremental_b12_raw_residual_capacity": 1023,
+    "incremental_b1_historical_kv_capacity": 1,
+    "incremental_b2_historical_kv_capacity": 31,
+    "incremental_b3_historical_kv_capacity": 63,
+    "incremental_b4_b12_historical_kv_capacity": 1023,
+    "links": {
+      "B10_to_B3": {
+        "destination": "B3 attention",
+        "gate": "new tanh(g_rec_b3)",
+        "local_window": 64,
+        "maximum_recurrent_entries": 960,
+        "recurrent_lags": "64...1023",
+        "source": "B10 post-MLP residual immediately before B11"
+      },
+      "B12_to_B1": {
+        "destination": "B1 attention",
+        "gate": "inherited tanh(g_rec)",
+        "local_window": 2,
+        "maximum_recurrent_entries": 1022,
+        "recurrent_lags": "2...1023",
+        "source": "B12 post-MLP residual immediately before final LayerNorm"
+      }
+    },
+    "overall_context": 1024,
+    "overall_kv_savings_claimed": true,
+    "parallel_source_tensor_shapes": {
+      "h10": "[B,T,C]",
+      "h12": "[B,T,C]"
+    },
+    "recurrent_max_lag": 1023,
+    "separate_softmaxes": true,
+    "shared_destination_ln_qkv": true,
+    "single_destination_c_proj": true
+  },
+  "G": {
+    "b1": {
+      "local_window": 2,
+      "recurrent_lags": [
+        2,
+        1023
+      ],
+      "source": "B12"
+    },
+    "b2": {
+      "b11_ring": false,
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "b3": {
+      "gate": "tanh(g_rec_b3)",
+      "local_window": 64,
+      "maximum_recurrent_entries": 960,
+      "recurrent_lags": [
+        64,
+        1023
+      ],
+      "source": "B10 post-MLP residual before B11"
+    },
+    "b4_b12_local_window": 1024,
+    "parameters": 124475906,
+    "stage": "2D2G-B"
+  },
+  "passed": true
+}
