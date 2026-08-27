@@ -1,0 +1,55 @@
+{
+  "B1": {
+    "b1_local_kv_bytes": 3072,
+    "b2_local_kv_bytes": 95232,
+    "b3_local_kv_bytes": 193536,
+    "b4_b12_ordinary_kv_bytes": 28283904,
+    "batch_size": 1,
+    "delta_bytes_vs_final_2d2d": -1377792,
+    "delta_bytes_vs_standard_gpt2": -4422144,
+    "final_2d2d_inference_state_bytes": 34667520,
+    "mib": {
+      "saving_vs_standard": 4.21728515625,
+      "total": 31.74755859375
+    },
+    "saving_bytes_vs_standard_gpt2": 4422144,
+    "standard_gpt2_w1024_kv_bytes": 37711872,
+    "three_recurrent_raw_state_rings_bytes": 4713984,
+    "total_experimental_inference_state_bytes": 33289728
+  },
+  "B64": {
+    "b1_local_kv_bytes": 196608,
+    "b2_local_kv_bytes": 6094848,
+    "b3_local_kv_bytes": 12386304,
+    "b4_b12_ordinary_kv_bytes": 1810169856,
+    "batch_size": 64,
+    "delta_bytes_vs_final_2d2d": -88178688,
+    "delta_bytes_vs_standard_gpt2": -283017216,
+    "final_2d2d_inference_state_bytes": 2218721280,
+    "mib": {
+      "saving_vs_standard": 269.90625,
+      "total": 2031.84375
+    },
+    "saving_bytes_vs_standard_gpt2": 283017216,
+    "standard_gpt2_w1024_kv_bytes": 2413559808,
+    "three_recurrent_raw_state_rings_bytes": 301694976,
+    "total_experimental_inference_state_bytes": 2130542592
+  },
+  "bytes_per_element": 2,
+  "deployment_accounting_dtype": "BF16",
+  "observed_final_incremental_storage": {
+    "cache_bytes": 1828847616,
+    "control": "all_real",
+    "physical_storage_exact": true,
+    "position": 1024,
+    "raw_ring_bytes": 603389952,
+    "total_physical_state_bytes": 2432237568
+  },
+  "state_limits": {
+    "B1 ordinary historical KV": 1,
+    "B10/B11/B12 raw recurrent states each": 1023,
+    "B2 ordinary historical KV": 31,
+    "B3 ordinary historical KV": 63,
+    "B4-B12 ordinary historical KV each": 1023
+  }
+}

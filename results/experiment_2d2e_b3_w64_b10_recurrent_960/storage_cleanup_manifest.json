@@ -14,12 +14,109 @@
       "observed_bytes_before_removal": 82551333,
       "path": "/workspace/exp2d2d_run/venv-report",
       "reason": "disposable report-only virtual environment"
+    },
+    {
+      "observed_bytes_before_removal": 567058663,
+      "path": "/workspace/venvs",
+      "reason": "recreatable legacy virtual environments"
+    },
+    {
+      "observed_bytes_before_removal": 73739717,
+      "path": "/workspace/exp2d2b_venv",
+      "reason": "recreatable legacy Experiment 2D2B virtual environment"
+    },
+    {
+      "observed_bytes_before_removal": 82551344,
+      "path": "/workspace/exp2d2e_run/venv-report",
+      "reason": "report environment copied to pod scratch disk before removal from the network volume"
+    },
+    {
+      "local_backup_verified": true,
+      "observed_bytes_before_removal": 62607554,
+      "path": "/workspace/build-nanogpt-exp2d1r-dev",
+      "reason": "obsolete development checkout with unique content preserved in the local recovery backup"
+    },
+    {
+      "observed_bytes_before_removal": 71007027,
+      "path": "/workspace/build-nanogpt-exp2d1r-result",
+      "reason": "clean redundant Git checkout reproducible from origin"
+    },
+    {
+      "local_backup_verified": true,
+      "observed_bytes_before_removal": 63514163,
+      "path": "/workspace/build-nanogpt-exp2d1a-run",
+      "reason": "obsolete working checkout preserved in the local recovery backup"
+    },
+    {
+      "local_backup_verified": true,
+      "observed_bytes_before_removal": 64258069,
+      "path": "/workspace/build-nanogpt-exp2d1a-report",
+      "reason": "obsolete working checkout preserved in the local recovery backup"
+    },
+    {
+      "local_backup_verified": true,
+      "observed_bytes_before_removal": 64363097,
+      "path": "/workspace/build-nanogpt-exp2d1a-final",
+      "reason": "obsolete working checkout preserved in the local recovery backup"
+    },
+    {
+      "local_backup_verified": true,
+      "observed_bytes_before_removal": 62340491,
+      "path": "/workspace/build-nanogpt-exp2d1a",
+      "reason": "obsolete working checkout preserved in the local recovery backup"
+    },
+    {
+      "observed_bytes_before_removal": 64561367,
+      "path": "/workspace/build-nanogpt-exp2d1a-synced",
+      "reason": "clean redundant Git checkout reproducible from origin"
+    },
+    {
+      "observed_bytes_before_removal": 81620896,
+      "path": "/workspace/build-nanogpt-exp2d2a",
+      "reason": "clean redundant Git checkout reproducible from origin"
+    },
+    {
+      "observed_bytes_before_removal": 91453529,
+      "path": "/workspace/build-nanogpt-exp2d2b",
+      "reason": "clean redundant Git checkout reproducible from origin"
+    },
+    {
+      "local_backup_verified": true,
+      "observed_bytes_before_removal": 92010560,
+      "path": "/workspace/build-nanogpt-exp2d2c-dev",
+      "reason": "obsolete development checkout with unique content preserved in the local recovery backup"
+    },
+    {
+      "observed_bytes_before_removal": 104276829,
+      "path": "/workspace/build-nanogpt-exp2d2c",
+      "reason": "clean redundant Git checkout; subsequently restored from origin because the 2D2E checkout used it as a Git object alternate",
+      "subsequently_restored_from_origin": true
+    },
+    {
+      "observed_bytes_before_removal": 72487999,
+      "path": "/workspace/build-nanogpt-exp2d2d",
+      "reason": "clean redundant Git checkout reproducible from origin; the finalized run directory and checkpoints were preserved"
     }
   ],
-  "filesystem_bytes_reclaimed": 154969827,
+  "cleanup_segment_1_reclaimed_bytes": 154969827,
+  "cleanup_segment_2_reclaimed_bytes_before_git_alternate_restore": 1596383954,
+  "final_measured_free_bytes": 22440878103,
+  "final_measured_used_bytes": 77559121897,
+  "git_alternate_repair": {
+    "connectivity_check_passed": true,
+    "restored_checkout": "/workspace/build-nanogpt-exp2d2c",
+    "restored_checkout_bytes": 97026171,
+    "source": "origin/experiment-2d2c-b12-b1-b11-b2-full-recurrent-kv",
+    "all_origin_branches_and_tags_fetched": true
+  },
   "historical_artifacts_removed": false,
+  "local_recovery_backup": {
+    "dirty_checkout_rsync_dry_run_matches": true,
+    "path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-workspace-recovery/exp2d2e_storage_cleanup_20260827",
+    "preserved_checkout_count": 6
+  },
   "schema": "exp2d2e_storage_cleanup_manifest_v1",
   "scientific_or_source_checkpoint_removed": false,
-  "workspace_free_bytes_after_cleanup": 24034822248,
-  "workspace_used_bytes_after_cleanup": 75965177752
+  "workspace_free_bytes_after_cleanup": 22440878103,
+  "workspace_used_bytes_after_cleanup": 77559121897
 }

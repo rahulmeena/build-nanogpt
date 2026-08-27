@@ -16,5 +16,22 @@
     "timestamp": 1787821391.5555937,
     "torch": "2.8.0+cu128"
   },
-  "preflight_command": "scripts/experiment_2d2e.py preflight --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2e/results/experiment_2d2e_b3_w64_b10_recurrent_960 --run-root /workspace/exp2d2e_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl pod stop 7kk5yyti00rnrp -o json --stop-authenticated --stop-audit-path /workspace/exp2d2e_run/runpod_stop_capability_preflight.json"
+  "preflight_command": "scripts/experiment_2d2e.py preflight --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2e/results/experiment_2d2e_b3_w64_b10_recurrent_960 --run-root /workspace/exp2d2e_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl pod stop 7kk5yyti00rnrp -o json --stop-authenticated --stop-audit-path /workspace/exp2d2e_run/runpod_stop_capability_preflight.json",
+  "smoke_command": "scripts/experiment_2d2e.py smoke --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2e/results/experiment_2d2e_b3_w64_b10_recurrent_960 --run-root /workspace/exp2d2e_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl pod stop 7kk5yyti00rnrp -o json --stop-authenticated --stop-audit-path /workspace/exp2d2e_run/runpod_stop_capability_preflight.json",
+  "training_segment_1_command": "scripts/experiment_2d2e.py train --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2e/results/experiment_2d2e_b3_w64_b10_recurrent_960 --run-root /workspace/exp2d2e_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl pod stop 7kk5yyti00rnrp -o json --stop-authenticated --stop-audit-path /workspace/exp2d2e_run/runpod_stop_capability_preflight.json --end-update 96",
+  "training_segment_2_command": "scripts/experiment_2d2e.py train --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2e/results/experiment_2d2e_b3_w64_b10_recurrent_960 --run-root /workspace/exp2d2e_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl pod stop 7kk5yyti00rnrp -o json --stop-authenticated --stop-audit-path /workspace/exp2d2e_run/runpod_stop_capability_preflight.json --end-update 191 --resume /workspace/exp2d2e_run/checkpoints/scientific_update_0096.pt",
+  "finalize_command": "scripts/experiment_2d2e.py finalize --source-checkpoint /workspace/exp2d2d_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/build-nanogpt-exp2d2e/results/experiment_2d2e_b3_w64_b10_recurrent_960 --run-root /workspace/exp2d2e_run --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --gpu-type NVIDIA_A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl pod stop 7kk5yyti00rnrp -o json --stop-authenticated --stop-audit-path /workspace/exp2d2e_run/runpod_stop_capability_preflight.json --final-checkpoint /workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt",
+  "finalization_reporting_correction": {
+    "artifact": "finalization_recovery_audit.json",
+    "checkpoint_changed": false,
+    "implementation_files_modified": false,
+    "incremental_evaluation_rerun": false,
+    "science_changed": false
+  },
+  "report_environment": {
+    "location": "pod scratch disk outside /workspace",
+    "matplotlib": "3.11.1",
+    "python": "3.12.3",
+    "torch": "2.8.0+cu128"
+  }
 }

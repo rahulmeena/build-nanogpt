@@ -1,0 +1,14 @@
+{
+  "checkpoint_changed": false,
+  "implementation_files_modified": false,
+  "incremental_evaluation_rerun": false,
+  "incremental_targets_per_control": 262144,
+  "incremental_validation_path": "/workspace/build-nanogpt-exp2d2e/results/experiment_2d2e_b3_w64_b10_recurrent_960/incremental_validation.json",
+  "incremental_validation_sha256": "cc82db0632653dbaa431c64ca06191f582e7f6a9baec16c2be578acb67cda47f",
+  "paired_sequences": 256,
+  "reporting_correction": "The completed finalizer saved all incremental controls and diagnostics, then raised KeyError because load_final_model omitted the top-level tanh_g_rec_b3 audit field. This recovery adds that already-checkpointed gate value to the in-memory reporting audit and reuses the exact saved incremental_validation.json.",
+  "schema": "exp2d2e_finalization_recovery_v1",
+  "science_changed": false,
+  "timestamp": 1787825298.5599556,
+  "training_changed": false
+}
