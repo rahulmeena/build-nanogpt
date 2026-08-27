@@ -67,6 +67,15 @@ def test_exact_matched_data_cursors_are_preregistered():
     )
 
 
+def test_milestone_key_audit_requires_exact_preregistered_set():
+    exact = {str(update): {} for update in exp.MILESTONES}
+    assert exp.milestone_key_audit(exact)["passed"]
+    with_duplicate = {**exact, "191_final": {}}
+    audit = exp.milestone_key_audit(with_duplicate)
+    assert not audit["passed"]
+    assert audit["unexpected_keys"] == ["191_final"]
+
+
 def test_classification_thresholds():
     assert exp.classify_result(incremental(3.0, 3.0004, 3.0003)) == "POSITIVE UTILITY ESTABLISHED"
     assert exp.classify_result(
@@ -81,6 +90,9 @@ def test_classification_thresholds():
     assert exp.classify_result(
         incremental(3.0, 2.9998, 2.9999, 100, 100)
     ) == "HARMFUL"
+    assert exp.classify_result(
+        incremental(3.0, 3.002, 3.0015, 180, 180), integrity=False
+    ) == "INVALID"
 
 
 def test_memory_accounting_has_no_b11_ring():

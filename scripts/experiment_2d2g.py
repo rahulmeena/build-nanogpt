@@ -1828,6 +1828,18 @@ def merge_keyed(path, key, value):
     durable_json(path, payload)
 
 
+def milestone_key_audit(payload: dict) -> dict:
+    expected = {str(update) for update in MILESTONES}
+    observed = set(payload)
+    return {
+        "expected_keys": sorted(expected, key=int),
+        "observed_keys": sorted(observed),
+        "missing_keys": sorted(expected - observed),
+        "unexpected_keys": sorted(observed - expected),
+        "passed": observed == expected,
+    }
+
+
 def incremental_control(model, x, y, name, permutation=None):
     state = model.init_incremental_state(
         x.size(0), device=x.device, b3_full_cache=name == "b3_full_counterfactual"
@@ -2143,7 +2155,6 @@ def run_finalize(args):
     temporal = temporal_gradient_diagnostics(model, val)
     stability = stability_8pass(model, val)
     memory = memory_accounting()
-    classification = classify_result(incremental, stability["passed"], True)
     cache = incremental["controls"]["real"]["cache_rows"][-1]
     stage_a_match = read_json(output / "stage_a_data_match.json")
     stage_b_match = read_json(output / "stage_b_data_match.json")
@@ -2154,6 +2165,11 @@ def run_finalize(args):
     restart_b = read_json(output / "stage_b_forced_restart_update_96.json")
     checkpoint_manifest = read_json(output / "checkpoint_manifest.json")
     milestones = read_json(output / "milestone_validation.json")
+    training_milestone_191_present = "191" in milestones
+    legacy_191_final_removed = milestones.pop("191_final", None) is not None
+    milestones["191"] = parallel
+    milestone_keys = milestone_key_audit(milestones)
+    durable_json(output / "milestone_validation.json", milestones)
     checks = {
         "final_checkpoint_update_191": payload["completed_local_updates"] == 191,
         "final_cursor_matched_2d2e": (
@@ -2174,7 +2190,8 @@ def run_finalize(args):
         "stage_b_transition": transition["passed"],
         "stage_a_fresh_process_update_96": restart_a["passed"],
         "stage_b_fresh_process_update_96": restart_b["passed"],
-        "all_milestones": all(str(update) in milestones for update in MILESTONES),
+        "training_milestone_191_present": training_milestone_191_present,
+        "exact_milestone_set": milestone_keys["passed"],
         "stage_a_checkpoints": all(
             key in checkpoint_manifest["stage_a"] for key in ("96", "191")
         ),
@@ -2188,7 +2205,16 @@ def run_finalize(args):
         "model_finite": model_finite(model),
         "optimizer_finite": optimizer_finite(optimizer),
     }
+    scientific_integrity = all(checks.values())
+    classification = classify_result(
+        incremental, stability["passed"], scientific_integrity
+    )
     audit = {"checks": checks, "passed": all(checks.values()), "classification": classification}
+    audit["milestone_reconciliation"] = {
+        "final_evaluation_overwrote_update_191": True,
+        "legacy_191_final_removed": legacy_191_final_removed,
+        "key_audit": milestone_keys,
+    }
     summary = {
         "experiment": EXPERIMENT,
         "primary_classification": classification,
@@ -2212,10 +2238,6 @@ def run_finalize(args):
         },
         "git": {"branch": BRANCH, "implementation_commit": git_output("rev-parse", "HEAD")},
     }
-    durable_json(output / "milestone_validation.json", {
-        **(read_json(output / "milestone_validation.json") if (output / "milestone_validation.json").exists() else {}),
-        "191_final": parallel,
-    })
     durable_json(output / "paired_controls.json", {
         "parallel": {
             "real_vs_off": parallel["real_vs_off_batches"],
@@ -2269,9 +2291,16 @@ def run_finalize(args):
     })
     inventory = required_artifact_inventory(output)
     checks["required_artifacts"] = inventory["passed"]
+    final_integrity = all(checks.values())
+    classification = classify_result(
+        incremental, stability["passed"], final_integrity
+    )
+    summary["primary_classification"] = classification
+    audit["classification"] = classification
     audit["checks"] = checks
-    audit["passed"] = all(checks.values())
+    audit["passed"] = final_integrity
     durable_json(output / "artifact_inventory.json", inventory)
+    durable_json(output / "result_summary.json", summary)
     durable_json(output / "FINAL_AUDIT.json", audit)
     durable_text(output / "FINAL_REPORT.md", render_report(summary, audit))
     durable_text(output / "UNATTENDED_FINAL_HANDOFF.md", render_report(summary, audit))
