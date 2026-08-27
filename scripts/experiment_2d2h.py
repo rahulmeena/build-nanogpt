@@ -785,7 +785,11 @@ def load_source_bundle(source_checkpoint, device, restore_rng=False):
     optimizer.param_groups = [
         group for group in optimizer.param_groups if group.get("name") != "gate"
     ]
-    if any(source_model.g_rec in group["params"] for group in optimizer.param_groups):
+    if any(
+        parameter is source_model.g_rec
+        for group in optimizer.param_groups
+        for parameter in group["params"]
+    ):
         raise SystemExit("B1 gate remained in optimizer groups")
     optimizer.add_param_group(
         {

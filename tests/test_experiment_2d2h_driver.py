@@ -1,5 +1,5 @@
-import json
 import inspect
+import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -7,6 +7,12 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import experiment_2d2h as exp  # noqa: E402
+
+
+def test_removed_b1_gate_optimizer_membership_uses_identity():
+    source = inspect.getsource(exp.load_source_bundle)
+    assert "parameter is source_model.g_rec" in source
+    assert 'source_model.g_rec in group["params"]' not in source
 
 
 def incremental(real, off, shuffled, wins, count=256):
