@@ -20,6 +20,7 @@ import math
 import os
 import pickle
 import random
+import shutil
 import statistics
 import subprocess
 import sys
@@ -146,6 +147,11 @@ FROZEN_2D2D_REFERENCE = {
     "true_wins_vs_shuffled": 61,
     "final_tanh_g_rec_b2": 0.008991245180368423,
 }
+FROZEN_2D2D_COMMIT = "a9300a9800f2e2c46f3892cff52b0a4a2a547d11"
+FROZEN_2D2D_DATA_AUDIT = (
+    "results/experiment_2d2d_b2_w32_b11_recurrent_992/"
+    "matched_2d2c_data_replay_audit.json"
+)
 CONFIG_PATH = REPO_ROOT / "configs" / "exp2d2h_no_b1_recurrence_b2_w32.json"
 OUTPUT_NAME = "experiment_2d2h_no_b1_recurrence_b2_w32"
 CHECKPOINT_SCHEMA = "exp2d2h_no_b1_recurrence_b2_w32_checkpoint_v1"
@@ -242,6 +248,7 @@ IMPLEMENTATION_FILES = (
     "tests/test_experiment_2d2h_driver.py",
 )
 REQUIRED_ARTIFACTS = (
+    "FINAL_REPORT.md",
     "EXPERIMENT_2D2H_FINAL_REPORT.md",
     "FINAL_AUDIT.json",
     "result_summary.json",
@@ -257,6 +264,8 @@ REQUIRED_ARTIFACTS = (
     "milestone_validation.json",
     "paired_controls.json",
     "gate_diagnostics.json",
+    "attention_diagnostics.json",
+    "temporal_gradient_diagnostics.json",
     "b2_local_attention_lag_bins.json",
     "b2_recurrent_attention_lag_bins.json",
     "b2_attention_head_distance.json",
@@ -452,7 +461,10 @@ def workspace_mount_audit(output_dir, run_root, supplied_identity) -> dict:
         subprocess.check_output(["du", "-sb", "/workspace"], text=True).split()[0]
     )
     free_bytes = quota_bytes - used_bytes
-    required_free_bytes = 20 * 1024**3
+    # The master preflight has already projected and reserved space for all four
+    # final checkpoints.  Requiring the original one-lane 20-GiB threshold again
+    # after a verified final is persisted would make finalization impossible.
+    required_free_bytes = 8 * 1024**3
     checks = {
         "target_exact": target == "/workspace",
         "persistent_identity_exact": f"/networkvolumes/{PERSISTENT_VOLUME_IDENTITY}"
@@ -460,7 +472,7 @@ def workspace_mount_audit(output_dir, run_root, supplied_identity) -> dict:
         "fuse_network_mount": filesystem == "fuse",
         "canonical_result_directory": output == expected_output,
         "run_root_on_workspace": str(run).startswith("/workspace/"),
-        "at_least_20_gib_free": free_bytes >= required_free_bytes,
+        "at_least_8_gib_master_reserve": free_bytes >= required_free_bytes,
     }
     if not all(checks.values()):
         raise SystemExit(f"persistent workspace audit failed: {checks}")
@@ -487,17 +499,24 @@ def authenticated_stop_audit(args) -> dict:
     payload = read_json(path)
     response = payload.get("authenticated_pod_identity_response", {})
     checks = {
-        "schema": payload.get("schema") == "exp2d2h_runpod_stop_capability_v1",
+        "schema": payload.get("schema")
+        == "parallel_2d2_runpod_stop_capability_v1",
         "authenticated_probe": payload.get("authenticated_list_probe") is True,
         "credential_available": payload.get("stop_credential_available") is True,
         "secret_not_recorded": payload.get("secret_recorded") is False,
-        "pod_id": response.get("id") == args.pod_id == "7kk5yyti00rnrp",
+        "pod_id": response.get("id") == args.pod_id == payload.get("pod_id"),
         "pod_name": response.get("name")
         == args.pod_name
-        == "grand_amber_catshark",
-        "gpu_count": response.get("gpuCount") == 1,
+        == payload.get("pod_name"),
+        "gpu_count": response.get("gpuCount") == payload.get("gpu_count") == 4,
+        "volume_id": response.get("networkVolumeId")
+        == payload.get("volume_id")
+        == PERSISTENT_VOLUME_IDENTITY,
         "runtime_running": response.get("runtimeStatus") == "running",
-        "exact_stop_target": payload.get("exact_stop_target") == "7kk5yyti00rnrp",
+        "exact_stop_target": payload.get("exact_stop_target") == args.pod_id,
+        "stop_only": payload.get("pod_delete_forbidden") is True
+        and payload.get("pod_delete_authorized") is False
+        and payload.get("persistent_volume_delete_authorized") is False,
         "passed": payload.get("passed") is True,
         "cli_authorized": bool(args.stop_authenticated),
     }
@@ -2103,6 +2122,93 @@ def global_batch_stream_hash(loader, accumulation) -> str:
     return hashlib.sha256((x_hash.hexdigest() + y_hash.hexdigest()).encode()).hexdigest()
 
 
+def frozen_2d2d_data_cursor_reference() -> dict:
+    """Read the exact frozen 2D2D continuation cursors from its sealed commit."""
+
+    payload = json.loads(
+        git_output("show", f"{FROZEN_2D2D_COMMIT}:{FROZEN_2D2D_DATA_AUDIT}")
+    )
+    expected_updates = (48, 50, 96, 100, 143, 150, 191)
+    rows = payload.get("checkpoint_cursor_comparisons", {})
+    reference = {}
+    for update in expected_updates:
+        row = rows.get(str(update), {})
+        if not row.get("exact"):
+            raise SystemExit(f"frozen 2D2D cursor {update} is not exact")
+        reference[str(update)] = {
+            "kind": row["2d2c_cursor_kind"],
+            "next_batch_sha256": row[
+                "observed_2d2d_next_global_batch_sha256"
+            ],
+            "next_stream_sha256": row[
+                "observed_2d2d_next_global_batch_stream_sha256"
+            ],
+        }
+    return {
+        "commit": FROZEN_2D2D_COMMIT,
+        "artifact": FROZEN_2D2D_DATA_AUDIT,
+        "artifact_blob": git_output(
+            "rev-parse", f"{FROZEN_2D2D_COMMIT}:{FROZEN_2D2D_DATA_AUDIT}"
+        ),
+        "cursor_hashes": reference,
+        "source_audit_passed": payload.get("passed_so_far") is True,
+        "passed": payload.get("passed_so_far") is True
+        and set(reference) == {str(update) for update in expected_updates},
+    }
+
+
+def record_matched_2d2d_cursor(
+    output, update, loader=None, accumulation=None, verification=None
+) -> None:
+    """Compare one untouched loader cursor with the frozen 2D2D trajectory."""
+
+    if int(update) not in (48, 50, 96, 100, 143, 150, 191):
+        return
+    path = Path(output) / "matched_2d2d_data_audit.json"
+    audit = read_json(path)
+    reference = audit["frozen_2d2d_cursor_reference"]["cursor_hashes"].get(
+        str(update)
+    )
+    if reference is None:
+        return
+    if verification is None:
+        if loader is None or accumulation is None:
+            raise ValueError("loader and accumulation are required")
+        observed_batch = next_global_batch_hash(loader, accumulation)
+        observed_stream = global_batch_stream_hash(loader, accumulation)
+        method = "in-memory loader clone; no checkpoint binary written"
+    else:
+        observed_batch = verification["next_global_batch_sha256"]
+        observed_stream = verification["next_global_batch_stream_sha256"]
+        method = "strictly reopened scientific checkpoint"
+    row = {
+        "frozen_2d2d_cursor_kind": reference["kind"],
+        "expected_next_global_batch_sha256": reference["next_batch_sha256"],
+        "observed_next_global_batch_sha256": observed_batch,
+        "expected_next_global_batch_stream_sha256": reference[
+            "next_stream_sha256"
+        ],
+        "observed_next_global_batch_stream_sha256": observed_stream,
+        "batch_exact": observed_batch == reference["next_batch_sha256"],
+        "stream_exact": observed_stream == reference["next_stream_sha256"],
+        "observation_method": method,
+    }
+    row["exact"] = row["batch_exact"] and row["stream_exact"]
+    existing = audit.setdefault("cursor_comparisons", {}).get(str(update))
+    if existing is not None and existing != row:
+        raise SystemExit(f"2D2H cursor audit changed at update {update}")
+    audit["cursor_comparisons"][str(update)] = row
+    audit["passed_so_far"] = (
+        audit["same_first_batch"]
+        and audit["same_target_stream"]
+        and audit["frozen_2d2d_cursor_reference"]["passed"]
+        and all(item["exact"] for item in audit["cursor_comparisons"].values())
+    )
+    durable_json(path, audit)
+    if not audit["passed_so_far"]:
+        raise SystemExit(f"2D2H data diverged from 2D2D at update {update}")
+
+
 def loader_at_source_cursor(source_state: dict, micro_batch: int):
     state = copy.deepcopy(source_state)
     state["batch_size"] = int(micro_batch)
@@ -2526,6 +2632,7 @@ def run_preflight(args):
         source_loader, int(source_payload["metadata"]["gradient_accumulation"])
     )
     scientific_stream = global_batch_stream_hash(scientific_loader, accumulation)
+    frozen_2d2d_cursors = frozen_2d2d_data_cursor_reference()
     data_match = {
         "reference": "historical 2D2D continuation from the same final 2D2B cursor",
         "source_next_global_batch_sha256": SOURCE_NEXT_BATCH_SHA256,
@@ -2538,10 +2645,13 @@ def run_preflight(args):
         == SOURCE_NEXT_STREAM_SHA256,
         "matched_updates": MAX_UPDATES,
         "matched_targets": ADDITIONAL_TARGETS,
+        "frozen_2d2d_cursor_reference": frozen_2d2d_cursors,
+        "cursor_comparisons": {},
     }
     data_match["passed"] = data_match["same_first_batch"] and data_match[
         "same_target_stream"
-    ]
+    ] and frozen_2d2d_cursors["passed"]
+    data_match["passed_so_far"] = data_match["passed"]
     fingerprint = implementation_fingerprint()
     checks = {
         "source_exact": source_audit["checks"]["passed"],
@@ -3421,28 +3531,73 @@ def milestone_diagnostics(runtime, update, val_path):
 def save_run_checkpoint(runtime, update, kind):
     prefix = "scientific" if kind == "scientific" else "recovery"
     persistent = kind == "scientific" and int(update) == MAX_UPDATES
-    checkpoint_root = (
-        Path(runtime.run_root) / "checkpoints"
-        if persistent
-        else Path(runtime.ephemeral_checkpoint_root)
+    local_path = (
+        Path(runtime.ephemeral_checkpoint_root)
+        / f"{prefix}_update_{update:04d}.pt"
     )
     checkpoint_path = (
-        checkpoint_root / f"{prefix}_update_{update:04d}.pt"
+        Path(runtime.run_root) / "checkpoints" / local_path.name
+        if persistent
+        else local_path
     )
     previous = runtime.training_state.get("last_checkpoint")
     runtime.training_state["last_checkpoint"] = str(checkpoint_path.resolve())
     try:
         if persistent:
+            # First make and strictly reopen the immutable result checkpoint on
+            # node-local storage. Only that verified file is copied to FUSE.
+            local_verification = save_checkpoint(
+                local_path, runtime.model, runtime.optimizer,
+                runtime.loader, runtime.training_state, runtime.metadata,
+                runtime.accumulation,
+            )
             lock_path = Path(runtime.checkpoint_persist_lock)
             lock_path.parent.mkdir(parents=True, exist_ok=True)
             with lock_path.open("a+") as lock_handle:
                 fcntl.flock(lock_handle.fileno(), fcntl.LOCK_EX)
-                verification = save_checkpoint(
-                    checkpoint_path, runtime.model, runtime.optimizer,
-                    runtime.loader, runtime.training_state, runtime.metadata,
-                    runtime.accumulation,
-                )
-                fcntl.flock(lock_handle.fileno(), fcntl.LOCK_UN)
+                try:
+                    checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+                    if checkpoint_path.exists():
+                        raise SystemExit(
+                            f"refusing to overwrite checkpoint: {checkpoint_path}"
+                        )
+                    temporary = checkpoint_path.with_name(
+                        f".{checkpoint_path.name}.{os.getpid()}.incomplete"
+                    )
+                    try:
+                        shutil.copyfile(local_path, temporary)
+                        with temporary.open("rb") as handle:
+                            os.fsync(handle.fileno())
+                        os.replace(temporary, checkpoint_path)
+                        legacy.d0.fsync_directory(checkpoint_path.parent)
+                    finally:
+                        if temporary.exists():
+                            temporary.unlink()
+                    verification = strict_reopen_checkpoint(
+                        checkpoint_path, runtime.model, runtime.optimizer,
+                        runtime.loader, runtime.training_state,
+                        runtime.accumulation, runtime.metadata,
+                    )
+                    if verification["sha256"] != local_verification["sha256"]:
+                        raise SystemExit(
+                            "persistent final checkpoint differs from verified local stage"
+                        )
+                    verification["local_stage"] = local_verification
+                    verification["persisted_under_global_lock"] = True
+                    durable_text(
+                        checkpoint_path.with_suffix(
+                            checkpoint_path.suffix + ".sha256"
+                        ),
+                        f"{verification['sha256']}  {checkpoint_path.name}\n",
+                    )
+                    durable_json(
+                        checkpoint_path.with_suffix(
+                            checkpoint_path.suffix + ".verification.json"
+                        ),
+                        verification,
+                    )
+                finally:
+                    fcntl.flock(lock_handle.fileno(), fcntl.LOCK_UN)
         else:
             verification = save_checkpoint(
                 checkpoint_path, runtime.model, runtime.optimizer,
@@ -3519,15 +3674,14 @@ def reconcile_uncheckpointed_artifacts(output, completed):
 
 
 def run_train(args):
-    require_git(clean=not bool(args.resume))
-    if args.resume:
-        dirty = [
-            line
-            for line in git_output("status", "--porcelain").splitlines()
-            if line and OUTPUT_NAME not in line
-        ]
-        if dirty:
-            raise SystemExit(f"resume has non-result worktree changes: {dirty}")
+    require_git(clean=False)
+    dirty = [
+        line
+        for line in git_output("status", "--porcelain").splitlines()
+        if line and OUTPUT_NAME not in line
+    ]
+    if dirty:
+        raise SystemExit(f"training has non-result worktree changes: {dirty}")
     require_config()
     if int(args.end_update) not in (FORCED_RESTART_UPDATE, MAX_UPDATES):
         raise SystemExit("2D2H train segments must end at local update 96 or 191")
@@ -3554,7 +3708,7 @@ def run_train(args):
         print(
             f"2D2H update={update:03d}/{MAX_UPDATES} "
             f"loss={metrics['weighted_total_ce']:.6f} "
-            f"b1={metrics['tanh_g_rec_b1']:+.8f} "
+            "b1=REMOVED "
             f"b2={metrics['tanh_g_rec_b2']:+.8f} "
             f"dt={metrics['wall_seconds']:.2f}s",
             flush=True,
@@ -3566,6 +3720,13 @@ def run_train(args):
             verification = save_run_checkpoint(runtime, update, "recovery")
         if update in MILESTONES[1:]:
             milestone_diagnostics(runtime, update, val_path)
+        record_matched_2d2d_cursor(
+            runtime.output,
+            update,
+            loader=runtime.loader,
+            accumulation=runtime.accumulation,
+            verification=verification,
+        )
         if update == FORCED_RESTART_UPDATE:
             durable_json(
                 runtime.output / "restart_required_update_96.json",
@@ -4838,6 +4999,7 @@ def incremental_position_bins(incremental):
 def build_artifact_inventory(output):
     output = Path(output)
     mutable = {
+        "FINAL_REPORT.md",
         "EXPERIMENT_2D2H_FINAL_REPORT.md",
         "FINAL_AUDIT.json",
         "result_summary.json",
@@ -5649,6 +5811,15 @@ def run_finalize(args):
     initial = read_json(output / "initial_combined_damage.json")
     temporal = read_json(output / "b11_to_b2_temporal_gradient.json")
     attention = read_json(output / "b2_recurrent_attention_lag_bins.json")
+    data_match = read_json(output / "matched_2d2d_data_audit.json")
+    expected_cursor_updates = {"48", "50", "96", "100", "143", "150", "191"}
+    data_match_complete = (
+        data_match.get("passed_so_far") is True
+        and set(data_match.get("cursor_comparisons", {})) == expected_cursor_updates
+        and all(
+            row["exact"] for row in data_match["cursor_comparisons"].values()
+        )
+    )
 
     real_cache_rows = incremental["controls"]["real"]["cache_rows"]
     cache_bounds_passed = all(
@@ -5683,6 +5854,7 @@ def run_finalize(args):
             row["all_parameters_finite"]
             and row["all_optimizer_moments_finite"] for row in training
         ),
+        "exact_2d2d_data_trajectory": data_match_complete,
     }
     scientific_integrity = all(integrity_checks.values())
     classification = classify_result(
@@ -5749,6 +5921,7 @@ def run_finalize(args):
         "parallel_final": parallel,
         "true_incremental": incremental,
         "historical_2d2d_reference": FROZEN_2D2D_REFERENCE,
+        "matched_2d2d_data_audit": data_match,
         "memory_accounting": memory,
         "gate_diagnostics": gate,
         "stability_8pass": stability,
@@ -5805,6 +5978,23 @@ delete—the pod only after repository/local artifact synchronization is verifie
     durable_json(output / "stability_8pass.json", stability)
     durable_json(output / "paired_controls.json", paired)
     durable_json(output / "gate_diagnostics.json", gate)
+    durable_json(
+        output / "attention_diagnostics.json",
+        {
+            "destination": "B2",
+            "recurrent_lag_bins": attention,
+            "local_lag_bins": read_json(
+                output / "b2_local_attention_lag_bins.json"
+            ),
+            "per_head_distance": read_json(
+                output / "b2_attention_head_distance.json"
+            ),
+        },
+    )
+    durable_json(
+        output / "temporal_gradient_diagnostics.json",
+        {"link": "B11→B2", "milestones": temporal},
+    )
     durable_json(output / "performance.json", performance)
     durable_json(output / "position_bin_metrics.json", {
         "parallel": parallel["position_bins"],
@@ -5812,6 +6002,7 @@ delete—the pod only after repository/local artifact synchronization is verifie
     })
     durable_json(output / "commands_and_runtime.json", commands)
     durable_json(output / "result_summary.json", summary)
+    durable_text(output / "FINAL_REPORT.md", report)
     durable_text(output / "EXPERIMENT_2D2H_FINAL_REPORT.md", report)
     durable_text(output / "UNATTENDED_FINAL_HANDOFF.md", report)
     make_2d2h_plots(

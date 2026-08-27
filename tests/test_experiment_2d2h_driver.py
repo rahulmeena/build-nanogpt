@@ -1,6 +1,8 @@
 import json
+import inspect
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -64,3 +66,92 @@ def test_ephemeral_and_persistent_checkpoint_cli_are_distinct():
     options = {option for action in train._actions for option in action.option_strings}
     assert "--ephemeral-checkpoint-root" in options
     assert "--checkpoint-persist-lock" in options
+
+
+def test_master_four_gpu_stop_audit_targets_only_current_pod(tmp_path):
+    manifest = {
+        "schema": "parallel_2d2_runpod_stop_capability_v1",
+        "authenticated_list_probe": True,
+        "stop_credential_available": True,
+        "secret_recorded": False,
+        "authenticated_pod_identity_response": {
+            "id": "7i2zyd53ytspwz",
+            "name": "empirical_tan_panda",
+            "gpuCount": 4,
+            "runtimeStatus": "running",
+            "networkVolumeId": exp.PERSISTENT_VOLUME_IDENTITY,
+        },
+        "pod_id": "7i2zyd53ytspwz",
+        "pod_name": "empirical_tan_panda",
+        "gpu_count": 4,
+        "volume_id": exp.PERSISTENT_VOLUME_IDENTITY,
+        "exact_stop_target": "7i2zyd53ytspwz",
+        "pod_delete_forbidden": True,
+        "pod_delete_authorized": False,
+        "persistent_volume_delete_authorized": False,
+        "passed": True,
+    }
+    path = tmp_path / "AUTO_STOP_PREFLIGHT.json"
+    path.write_text(json.dumps(manifest))
+    args = SimpleNamespace(
+        stop_audit_path=str(path),
+        pod_id="7i2zyd53ytspwz",
+        pod_name="empirical_tan_panda",
+        stop_authenticated=True,
+    )
+    audit = exp.authenticated_stop_audit(args)
+    assert audit["driver_passed"]
+    assert all(audit["driver_checks"].values())
+
+
+def test_active_training_progress_does_not_read_removed_b1_gate():
+    source = inspect.getsource(exp.run_train)
+    assert "tanh_g_rec_b1" not in source
+    assert "b1=REMOVED" in source
+    assert "require_git(clean=False)" in source
+    assert "training has non-result worktree changes" in source
+
+
+def test_master_artifact_names_and_local_first_persistence_are_preregistered():
+    assert {
+        "FINAL_REPORT.md",
+        "attention_diagnostics.json",
+        "temporal_gradient_diagnostics.json",
+    }.issubset(exp.REQUIRED_ARTIFACTS)
+    source = inspect.getsource(exp.save_run_checkpoint)
+    assert source.index("local_verification = save_checkpoint") < source.index(
+        "fcntl.flock(lock_handle.fileno(), fcntl.LOCK_EX)"
+    )
+    assert 'verification["persisted_under_global_lock"] = True' in source
+
+
+def test_matched_2d2d_cursor_audit_requires_exact_hashes(tmp_path):
+    expected_batch = "a" * 64
+    expected_stream = "b" * 64
+    audit_path = tmp_path / "matched_2d2d_data_audit.json"
+    audit_path.write_text(json.dumps({
+        "same_first_batch": True,
+        "same_target_stream": True,
+        "frozen_2d2d_cursor_reference": {
+            "passed": True,
+            "cursor_hashes": {
+                "96": {
+                    "kind": "scientific",
+                    "next_batch_sha256": expected_batch,
+                    "next_stream_sha256": expected_stream,
+                }
+            },
+        },
+        "cursor_comparisons": {},
+    }))
+    exp.record_matched_2d2d_cursor(
+        tmp_path,
+        96,
+        verification={
+            "next_global_batch_sha256": expected_batch,
+            "next_global_batch_stream_sha256": expected_stream,
+        },
+    )
+    observed = json.loads(audit_path.read_text())
+    assert observed["passed_so_far"]
+    assert observed["cursor_comparisons"]["96"]["exact"]
