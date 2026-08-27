@@ -1,0 +1,30 @@
+{
+  "architecture_changes": [
+    {
+      "field": "B4 ordinary local window",
+      "new": 128,
+      "old": 1024
+    },
+    {
+      "field": "new recurrent link",
+      "new": "B9->B4 lags 128...1023",
+      "old": null
+    },
+    {
+      "field": "new learnable tensor",
+      "new": "scalar g_rec_b4",
+      "old": null
+    }
+  ],
+  "b1_gate_resumed": true,
+  "b2_gate_resumed": true,
+  "b3_gate_resumed": true,
+  "b4_gate_zero": true,
+  "baseline": "final Experiment 2D2E",
+  "memory_efficient_source_storage": true,
+  "new_learnable_tensors": [
+    "g_rec_b4"
+  ],
+  "passed": true,
+  "source_state_dict_keys_preserved": true
+}

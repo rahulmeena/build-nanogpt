@@ -1,0 +1,56 @@
+{
+  "cleanup_actions": [
+    {
+      "checkpoint_bytes": 1493944943,
+      "phase": "post_smoke_reload",
+      "reason": "disposable 3-update checkpoint and sidecars removed after successful strict reload",
+      "removed": [
+        {
+          "bytes": 1493944943,
+          "path": "/tmp/parallel_2d2_ephemeral/2d2i/smoke/2d2i_disposable_update_0003.pt"
+        },
+        {
+          "bytes": 97,
+          "path": "/tmp/parallel_2d2_ephemeral/2d2i/smoke/2d2i_disposable_update_0003.pt.sha256"
+        },
+        {
+          "bytes": 1060,
+          "path": "/tmp/parallel_2d2_ephemeral/2d2i/smoke/2d2i_disposable_update_0003.pt.verification.json"
+        }
+      ],
+      "scientific_or_source_checkpoint_removed": false
+    },
+    {
+      "path": "/tmp/parallel_2d2_ephemeral/2d2i/checkpoints/scientific_update_0191.pt",
+      "phase": "post_persistent_final_verification",
+      "reason": "local staged final removed only after SHA-matched persistent copy",
+      "scientific_final_preserved_at": "/workspace/exp2d2i_run/checkpoints/scientific_update_0191.pt"
+    },
+    {
+      "phase": "post_final_persistent_verification",
+      "reason": "superseded local update-96 checkpoint removed after final scientific checkpoint persisted",
+      "removed": [
+        {
+          "bytes": 1493945363,
+          "path": "/tmp/parallel_2d2_ephemeral/2d2i/checkpoints/scientific_update_0096.pt"
+        },
+        {
+          "bytes": 92,
+          "path": "/tmp/parallel_2d2_ephemeral/2d2i/checkpoints/scientific_update_0096.pt.sha256"
+        },
+        {
+          "bytes": 1062,
+          "path": "/tmp/parallel_2d2_ephemeral/2d2i/checkpoints/scientific_update_0096.pt.verification.json"
+        }
+      ],
+      "update_96_sha_retained_in_checkpoint_manifest": true
+    }
+  ],
+  "fuse_df_treated_as_volume_quota": false,
+  "historical_artifacts_removed": false,
+  "master_logical_free_bytes_at_preflight": 22037210816,
+  "master_logical_used_bytes_at_preflight": 77962789184,
+  "per_command_recursive_volume_rescan_performed": false,
+  "schema": "exp2d2i_storage_cleanup_manifest_v1",
+  "scientific_or_source_checkpoint_removed": false
+}

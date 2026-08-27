@@ -1,0 +1,145 @@
+{
+  "scientific": {
+    "191": {
+      "bytes": 1493946047,
+      "checkpoint": "/workspace/exp2d2i_run/checkpoints/scientific_update_0191.pt",
+      "completed_2d2i_updates": 191,
+      "cumulative_2d2_targets": 450887680,
+      "local_and_persistent_sha_match": true,
+      "local_staged_checkpoint": "/tmp/parallel_2d2_ephemeral/2d2i/checkpoints/scientific_update_0191.pt",
+      "next_global_batch_sha256": "2bffbd8922576fe378ec12709a334f33d4ab217af96804b4f5e7b882922fc77c",
+      "next_global_batch_stream_sha256": "b66312661ca4fa709ba51f5566bbfcbc0e402a2b7f0e95211df679898ce0ce75",
+      "passed": true,
+      "persist_lock": "/workspace/parallel_2d2_master/locks/checkpoint_persist.lock",
+      "sha256": "bed882a3c9af073f96e4adc82246f9b23b4546f23d974ac5746522ce0e07694e",
+      "strict_reopen": {
+        "additional_targets": true,
+        "architecture": true,
+        "b2_gate_duplicate": true,
+        "b3_gate_duplicate": true,
+        "b4_gate_duplicate": true,
+        "cumulative_targets": true,
+        "fields_exact": true,
+        "gate_duplicate": true,
+        "loader_state": true,
+        "metadata": true,
+        "model_finite": true,
+        "model_keys": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer_finite": true,
+        "passed": true,
+        "schema": true,
+        "source": true,
+        "training_state": true,
+        "updates": true,
+        "weight_tying": true
+      }
+    },
+    "96": {
+      "bytes": 1493945363,
+      "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2i/checkpoints/scientific_update_0096.pt",
+      "completed_2d2i_updates": 96,
+      "cumulative_2d2_targets": 401080320,
+      "next_global_batch_sha256": "2eedb73868ff088160a33e813cd377ebbdf1005b05121dfd83f36a2eaeb0a55e",
+      "next_global_batch_stream_sha256": "25cc94e2b9efc0ffb50f60f533c1ed5430c85626a869a0bfcd8947e570eee9a9",
+      "passed": true,
+      "sha256": "18d22d6b9ef8c8ea669f3022a3a29916ae6f04561d146bd188d0a6b200ead2cb",
+      "strict_reopen": {
+        "additional_targets": true,
+        "architecture": true,
+        "b2_gate_duplicate": true,
+        "b3_gate_duplicate": true,
+        "b4_gate_duplicate": true,
+        "cumulative_targets": true,
+        "fields_exact": true,
+        "gate_duplicate": true,
+        "loader_state": true,
+        "metadata": true,
+        "model_finite": true,
+        "model_keys": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer_finite": true,
+        "passed": true,
+        "schema": true,
+        "source": true,
+        "training_state": true,
+        "updates": true,
+        "weight_tying": true
+      }
+    }
+  },
+  "smoke": {
+    "3": {
+      "binary_retained": false,
+      "bytes": 1493944943,
+      "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2i/smoke/2d2i_disposable_update_0003.pt",
+      "completed_2d2i_updates": 3,
+      "cumulative_2d2_targets": 350754816,
+      "disposable": true,
+      "next_global_batch_sha256": "bab14eab1108c955c625a8942e299c86679a51c2be388e95907d865afcfe5fc8",
+      "next_global_batch_stream_sha256": "f0c408f27043321895cb01157700e18e96dace2ccf68e75639d57918e8e8e9e8",
+      "passed": true,
+      "restore_audit": {
+        "checks": {
+          "checkpoint_sha_reverified": true,
+          "exactly_three_updates_in_checkpoint": true,
+          "full_checkpoint_strict_reopen": true,
+          "loader_and_counters_restored": true,
+          "model_optimizer_finite_after_restore": true,
+          "rng_restored_exactly": true,
+          "saved_process_recorded": true
+        },
+        "rng": {
+          "expected_fingerprints": {
+            "numpy": "6811db8db134168b5c74615ae4823b411a6b1f366707ccbec8f7646767ae8e12",
+            "python": "efa4da0349af84d90c76c68c2382a12ce2bea9cb1ce2c1afdc5124098be6fad5",
+            "torch_cpu": "715f42de835c377d54671cfc55302d6257c87ea22d957de046988477fddfd87d",
+            "torch_cuda": "d4e9f28b642b44e18d2d01f6d043791487e8efb9f9821d5e4d4b1ffc23dab14f"
+          },
+          "observed_fingerprints": {
+            "numpy": "6811db8db134168b5c74615ae4823b411a6b1f366707ccbec8f7646767ae8e12",
+            "python": "efa4da0349af84d90c76c68c2382a12ce2bea9cb1ce2c1afdc5124098be6fad5",
+            "torch_cpu": "715f42de835c377d54671cfc55302d6257c87ea22d957de046988477fddfd87d",
+            "torch_cuda": "d4e9f28b642b44e18d2d01f6d043791487e8efb9f9821d5e4d4b1ffc23dab14f"
+          },
+          "passed": true,
+          "per_generator_exact": {
+            "numpy": true,
+            "python": true,
+            "torch_cpu": true,
+            "torch_cuda": true
+          }
+        },
+        "saved_process_id": 8694
+      },
+      "sha256": "94ceaf3325fc5b9477ee28108e1bf0ec12a4f6a4b4f6adb6afeb1d65f4a3541a",
+      "sidecars_retained": false,
+      "strict_reopen": {
+        "additional_targets": true,
+        "architecture": true,
+        "b2_gate_duplicate": true,
+        "b3_gate_duplicate": true,
+        "b4_gate_duplicate": true,
+        "cumulative_targets": true,
+        "fields_exact": true,
+        "gate_duplicate": true,
+        "loader_state": true,
+        "metadata": true,
+        "model_finite": true,
+        "model_keys": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer_finite": true,
+        "passed": true,
+        "schema": true,
+        "source": true,
+        "training_state": true,
+        "updates": true,
+        "weight_tying": true
+      },
+      "updates": 3
+    }
+  }
+}

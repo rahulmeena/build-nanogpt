@@ -1,0 +1,53 @@
+{
+  "audit_path": "/workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json",
+  "audit_sha256": "90fda6ab3aad815a3aeac23d9039cfe48e1b36eb5a0668618deb50df36f23a4b",
+  "authenticated": true,
+  "authenticated_list_probe": true,
+  "authenticated_pod_identity_response": {
+    "desiredStatus": "RUNNING",
+    "gpuCount": 4,
+    "id": "7i2zyd53ytspwz",
+    "name": "empirical_tan_panda",
+    "networkVolumeId": "yhzyb27fb5",
+    "runtimeStatus": "running"
+  },
+  "checked_utc": "2026-08-27T11:59:14Z",
+  "checks": {
+    "authenticated": true,
+    "gpu_count_four": true,
+    "passed": true,
+    "pod_id_exact": true,
+    "pod_name_exact": true,
+    "volume_id_exact": true
+  },
+  "desired_status": "RUNNING",
+  "driver_checks": {
+    "authenticated_probe": true,
+    "cli_authorized": true,
+    "delete_forbidden": true,
+    "exact_stop_target": true,
+    "gpu_count": true,
+    "passed": true,
+    "pod_id": true,
+    "pod_name": true,
+    "runtime_running": true,
+    "volume_preserved": true
+  },
+  "driver_passed": true,
+  "exact_stop_command": "runpodctl pod stop 7i2zyd53ytspwz -o json",
+  "exact_stop_target": "7i2zyd53ytspwz",
+  "gpu_count": 4,
+  "mechanism": "Authenticated runpodctl pod get/stop using local macOS Keychain credential",
+  "network_volume_preservation_required": true,
+  "passed": true,
+  "persistent_volume_delete_authorized": false,
+  "pod_delete_authorized": false,
+  "pod_delete_forbidden": true,
+  "pod_id": "7i2zyd53ytspwz",
+  "pod_name": "empirical_tan_panda",
+  "runtime_status": "running",
+  "schema": "parallel_2d2_runpod_stop_capability_v1",
+  "secret_recorded": false,
+  "stop_credential_available": true,
+  "volume_id": "yhzyb27fb5"
+}

@@ -1,0 +1,109 @@
+{
+  "environment": {
+    "autocast": "cuda bfloat16",
+    "cublas_workspace_config": ":4096:8",
+    "cuda": "12.8",
+    "cuda_device_count": 1,
+    "cudnn": 91002,
+    "experiment": "2D2I",
+    "float32_matmul_precision": "high",
+    "git_branch": "experiment-2d2i-b4-w128-b9-recurrent",
+    "git_commit": "8b05f13c13acd7e517e87044aeafa5dd0fdab911",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "matplotlib": "3.11.1",
+    "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+    "timestamp": 1787835566.6600873,
+    "torch": "2.8.0+cu128"
+  },
+  "finalize_command": "scripts/experiment_2d2i.py finalize --source-checkpoint /workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2i/results/experiment_2d2i_b4_w128_b9_recurrent --run-root /tmp/parallel_2d2_ephemeral/2d2i --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json --final-checkpoint /workspace/exp2d2i_run/checkpoints/scientific_update_0191.pt",
+  "finalize_timestamp": 1787838422.882492,
+  "preflight_command": "scripts/experiment_2d2i.py preflight --source-checkpoint /workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2i/results/experiment_2d2i_b4_w128_b9_recurrent --run-root /tmp/parallel_2d2_ephemeral/2d2i --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json",
+  "smoke_checkpoint_reload": {
+    "bytes": 1493944943,
+    "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2i/smoke/2d2i_disposable_update_0003.pt",
+    "completed_2d2i_updates": 3,
+    "cumulative_2d2_targets": 350754816,
+    "next_global_batch_sha256": "bab14eab1108c955c625a8942e299c86679a51c2be388e95907d865afcfe5fc8",
+    "next_global_batch_stream_sha256": "f0c408f27043321895cb01157700e18e96dace2ccf68e75639d57918e8e8e9e8",
+    "passed": true,
+    "restore_audit": {
+      "checks": {
+        "checkpoint_sha_reverified": true,
+        "exactly_three_updates_in_checkpoint": true,
+        "full_checkpoint_strict_reopen": true,
+        "loader_and_counters_restored": true,
+        "model_optimizer_finite_after_restore": true,
+        "rng_restored_exactly": true,
+        "saved_process_recorded": true
+      },
+      "rng": {
+        "expected_fingerprints": {
+          "numpy": "6811db8db134168b5c74615ae4823b411a6b1f366707ccbec8f7646767ae8e12",
+          "python": "efa4da0349af84d90c76c68c2382a12ce2bea9cb1ce2c1afdc5124098be6fad5",
+          "torch_cpu": "715f42de835c377d54671cfc55302d6257c87ea22d957de046988477fddfd87d",
+          "torch_cuda": "d4e9f28b642b44e18d2d01f6d043791487e8efb9f9821d5e4d4b1ffc23dab14f"
+        },
+        "observed_fingerprints": {
+          "numpy": "6811db8db134168b5c74615ae4823b411a6b1f366707ccbec8f7646767ae8e12",
+          "python": "efa4da0349af84d90c76c68c2382a12ce2bea9cb1ce2c1afdc5124098be6fad5",
+          "torch_cpu": "715f42de835c377d54671cfc55302d6257c87ea22d957de046988477fddfd87d",
+          "torch_cuda": "d4e9f28b642b44e18d2d01f6d043791487e8efb9f9821d5e4d4b1ffc23dab14f"
+        },
+        "passed": true,
+        "per_generator_exact": {
+          "numpy": true,
+          "python": true,
+          "torch_cpu": true,
+          "torch_cuda": true
+        }
+      },
+      "saved_process_id": 8694
+    },
+    "sha256": "94ceaf3325fc5b9477ee28108e1bf0ec12a4f6a4b4f6adb6afeb1d65f4a3541a",
+    "strict_reopen": {
+      "additional_targets": true,
+      "architecture": true,
+      "b2_gate_duplicate": true,
+      "b3_gate_duplicate": true,
+      "b4_gate_duplicate": true,
+      "cumulative_targets": true,
+      "fields_exact": true,
+      "gate_duplicate": true,
+      "loader_state": true,
+      "metadata": true,
+      "model_finite": true,
+      "model_keys": true,
+      "next_batch": true,
+      "next_stream": true,
+      "optimizer_finite": true,
+      "passed": true,
+      "schema": true,
+      "source": true,
+      "training_state": true,
+      "updates": true,
+      "weight_tying": true
+    }
+  },
+  "smoke_command": "scripts/experiment_2d2i.py smoke --source-checkpoint /workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2i/results/experiment_2d2i_b4_w128_b9_recurrent --run-root /tmp/parallel_2d2_ephemeral/2d2i --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json",
+  "training_segments": {
+    "191": {
+      "checkpoint": "/workspace/exp2d2i_run/checkpoints/scientific_update_0191.pt",
+      "command": "scripts/experiment_2d2i.py train --source-checkpoint /workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2i/results/experiment_2d2i_b4_w128_b9_recurrent --run-root /tmp/parallel_2d2_ephemeral/2d2i --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json --end-update 191 --resume /tmp/parallel_2d2_ephemeral/2d2i/checkpoints/scientific_update_0096.pt",
+      "completed_at": 1787838095.1196363,
+      "end_local_update": 191,
+      "process_id": 11672,
+      "start_local_update": 96,
+      "started_at": 1787836811.076964
+    },
+    "96": {
+      "checkpoint": "/tmp/parallel_2d2_ephemeral/2d2i/checkpoints/scientific_update_0096.pt",
+      "command": "scripts/experiment_2d2i.py train --source-checkpoint /workspace/exp2d2e_run/checkpoints/scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir /workspace/parallel_2d2_master/worktrees/2d2i/results/experiment_2d2i_b4_w128_b9_recurrent --run-root /tmp/parallel_2d2_ephemeral/2d2i --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --gpu-type NVIDIA A100-SXM4-80GB --persistent-volume-identity yhzyb27fb5 --stop-mechanism runpodctl_exact_pod_stop --stop-authenticated --stop-audit-path /workspace/parallel_2d2_master/runs/e8c7fb77-213d-4f2b-9cbc-968aa779fc68/AUTO_STOP_PREFLIGHT.json --end-update 96",
+      "completed_at": 1787836799.0964415,
+      "end_local_update": 96,
+      "process_id": 9004,
+      "start_local_update": 0,
+      "started_at": 1787835596.1803246
+    }
+  }
+}

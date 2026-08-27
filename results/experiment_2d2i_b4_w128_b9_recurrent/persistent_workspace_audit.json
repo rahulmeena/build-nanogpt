@@ -1,0 +1,37 @@
+{
+  "checks": {
+    "canonical_result_directory": true,
+    "fuse_network_mount": true,
+    "lane_final_plus_reserved_margin_fits": true,
+    "logical_quota_snapshot_consistent": true,
+    "master_projection_reserved_all_lane_finals": true,
+    "master_quota_exact": true,
+    "master_storage_preflight_passed": true,
+    "persistent_identity_exact": true,
+    "preregistered_safety_margin_exact": true,
+    "run_root_is_node_local": true,
+    "target_exact": true
+  },
+  "configured_quota_bytes": 100000000000,
+  "filesystem": "fuse",
+  "master_logical_free_bytes_at_preflight": 22037210816,
+  "master_logical_used_bytes_at_preflight": 77962789184,
+  "measured_free_bytes": 22037210816,
+  "measured_used_bytes": 77962789184,
+  "output_dir": "/workspace/parallel_2d2_master/worktrees/2d2i/results/experiment_2d2i_b4_w128_b9_recurrent",
+  "passed": true,
+  "persistent_volume_identity": "yhzyb27fb5",
+  "preregistered_safety_margin_bytes": 8000000000,
+  "quota_source": "master logical-volume scan; FUSE df is non-authoritative",
+  "required_final_checkpoint_bytes": 1493942757,
+  "required_free_bytes": 9493942757,
+  "run_root": "/tmp/parallel_2d2_ephemeral/2d2i",
+  "run_root_mount": {
+    "filesystem": "overlay",
+    "source": "overlay",
+    "target": "/"
+  },
+  "shared_master_storage_manifest": "/workspace/parallel_2d2_master/storage_preflight.json",
+  "source": "mfs#us-md-1.runpod.net:9421[/networkvolumes/yhzyb27fb5]",
+  "target": "/workspace"
+}

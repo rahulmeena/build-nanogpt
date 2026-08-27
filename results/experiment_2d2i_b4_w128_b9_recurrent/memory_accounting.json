@@ -1,0 +1,58 @@
+{
+  "B1": {
+    "b1_local_kv_bytes": 3072,
+    "b2_local_kv_bytes": 95232,
+    "b3_local_kv_bytes": 193536,
+    "b4_local_kv_bytes": 390144,
+    "b5_b12_ordinary_kv_bytes": 25141248,
+    "batch_size": 1,
+    "delta_bytes_vs_final_2d2e": -1181184,
+    "delta_bytes_vs_standard_gpt2": -5603328,
+    "final_2d2e_inference_state_bytes": 33289728,
+    "four_recurrent_raw_state_rings_bytes": 6285312,
+    "mib": {
+      "saving_vs_standard": 5.34375,
+      "total": 30.62109375
+    },
+    "saving_bytes_vs_standard_gpt2": 5603328,
+    "standard_gpt2_w1024_kv_bytes": 37711872,
+    "total_experimental_inference_state_bytes": 32108544
+  },
+  "B64": {
+    "b1_local_kv_bytes": 196608,
+    "b2_local_kv_bytes": 6094848,
+    "b3_local_kv_bytes": 12386304,
+    "b4_local_kv_bytes": 24969216,
+    "b5_b12_ordinary_kv_bytes": 1609039872,
+    "batch_size": 64,
+    "delta_bytes_vs_final_2d2e": -75595776,
+    "delta_bytes_vs_standard_gpt2": -358612992,
+    "final_2d2e_inference_state_bytes": 2130542592,
+    "four_recurrent_raw_state_rings_bytes": 402259968,
+    "mib": {
+      "saving_vs_standard": 342.0,
+      "total": 1959.75
+    },
+    "saving_bytes_vs_standard_gpt2": 358612992,
+    "standard_gpt2_w1024_kv_bytes": 2413559808,
+    "total_experimental_inference_state_bytes": 2054946816
+  },
+  "bytes_per_element": 2,
+  "deployment_accounting_dtype": "BF16",
+  "observed_final_incremental_storage": {
+    "cache_bytes": 1652686848,
+    "control": "all_real",
+    "physical_storage_exact": true,
+    "position": 1024,
+    "raw_ring_bytes": 804519936,
+    "total_physical_state_bytes": 2457206784
+  },
+  "state_limits": {
+    "B1 ordinary historical KV": 1,
+    "B2 ordinary historical KV": 31,
+    "B3 ordinary historical KV": 63,
+    "B4 ordinary historical KV": 127,
+    "B5-B12 ordinary historical KV each": 1023,
+    "B9/B10/B11/B12 raw recurrent states each": 1023
+  }
+}
