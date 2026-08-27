@@ -14,12 +14,16 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
+import shlex
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
+
+import parallel_2d2_supervisor as supervisor
 
 
 LANES = {
@@ -92,8 +96,13 @@ LANES = {
         "recovery_reason": (
             "2D2G-B recovery attempt 1 stopped before science because its "
             "experiment preflight fingerprint named the pre-device-fix implementation; "
-            "rerun the 2D2G preflight from frozen 2D2B, retain exact Stage-A-191, "
-            "then rerun smoke-B plus Stage B"
+            "attempt 3 then completed the corrected preflight and three disposable "
+            "smoke updates but its strict-reopen gate audit compared exact CPU/CUDA "
+            "scalars without device normalization, after that preflight also reset "
+            "the published Stage-A provenance files; preserve both failed-attempt "
+            "trees, restore independently verified original Stage-A provenance, "
+            "remove only the sealed disposable checkpoint, and rerun smoke-B plus "
+            "Stage B from exact Stage-A-191"
         ),
         "tests": [
             "tests/test_experiment_2d2g_core.py",
@@ -151,6 +160,45 @@ GPU0_COMPLETED_C1_FILES = {
     "result_summary.json",
     "subset_manifest.json",
 }
+COORDINATOR_FOCUSED_TESTS = [
+    "scripts/test_parallel_2d2_recovery_preflight.py",
+    "scripts/test_parallel_2d2_orchestration.py",
+]
+GPU1_ATTEMPT3_REQUIRED_OUTPUT_FILES = {
+    "HEARTBEAT.json",
+    "architecture_manifest.json",
+    "checkpoint_manifest.json",
+    "commands_and_runtime.json",
+    "gate_diagnostics.json",
+    "milestone_validation.json",
+    "parameter_manifest.json",
+    "preflight_audit.json",
+    "source_manifest.json",
+    "stage_a_data_match.json",
+    "stage_a_forced_restart_update_96.json",
+    "stage_a_restart_required_update_96.json",
+    "stage_a_training_metrics.jsonl",
+    "stage_b_data_match.json",
+    "storage_cleanup_manifest.json",
+}
+GPU1_RETAINED_STAGE_A_SUPPORT_FILES = {
+    "HEARTBEAT.json",
+    "stage_a_forced_restart_update_96.json",
+    "stage_a_restart_required_update_96.json",
+    "stage_a_training_metrics.jsonl",
+}
+GPU1_RETAINED_STAGE_A_REQUIRED_FILES = {
+    "checkpoint_manifest.json",
+    "commands_and_runtime.json",
+    "stage_a_data_match.json",
+    *GPU1_RETAINED_STAGE_A_SUPPORT_FILES,
+}
+GPU1_ORIGINAL_STAGE_A_PHASES = (
+    "2D2G_PREFLIGHT",
+    "2D2G_A_TRAIN_TO_96",
+    "2D2G_A_RESUME_TO_191",
+)
+MAX_GPU1_SMALL_TREE_BYTES = 256 * 1024 * 1024
 
 
 def render_bash_percent_q(argv) -> str:
@@ -238,10 +286,16 @@ def expected_recovery_argv(master_root: Path, run_root: Path, lane: str) -> list
             "--pod-name", "empirical_tan_panda",
         ]
         driver = ["python", "scripts/experiment_2d2g.py"]
+        recovery_provenance = (
+            run_root
+            / "retained_science_provenance"
+            / "gpu1_2d2g_stage_a_before_attempt3_preflight"
+        )
         return [
             [
                 *driver, "preflight", *common, "--source-checkpoint", source,
-                "--data-root", data_root,
+                "--data-root", data_root, "--recovery-provenance-dir",
+                str(recovery_provenance),
             ],
             [
                 *driver, "smoke-b", *common, "--stage-a-checkpoint", a191,
@@ -646,6 +700,111 @@ def exact_tree_inventory(root: Path, expected_files: set[str]) -> dict:
     }
 
 
+def small_text_tree_inventory(root: Path, required_files: set[str]) -> dict:
+    """Inventory a bounded, flat-or-nested tree of small result text files."""
+
+    if not root.is_dir() or root.is_symlink():
+        raise RuntimeError(f"small result tree is unavailable: {root}")
+    paths = list(root.rglob("*"))
+    if any(path.is_symlink() for path in paths):
+        raise RuntimeError(f"small result tree contains a symlink: {root}")
+    files = [path for path in paths if path.is_file()]
+    relative_files = {path.relative_to(root).as_posix() for path in files}
+    if not required_files.issubset(relative_files):
+        raise RuntimeError(
+            f"small result tree lacks required files: {root}: "
+            f"{sorted(required_files - relative_files)}"
+        )
+    unsupported = {
+        relative
+        for relative in relative_files
+        if Path(relative).suffix.lower() not in {".json", ".jsonl", ".md", ".log"}
+    }
+    if unsupported:
+        raise RuntimeError(
+            f"small result tree contains unsupported files: {root}: "
+            f"{sorted(unsupported)}"
+        )
+    total_bytes = sum(path.stat().st_size for path in files)
+    if total_bytes <= 0 or total_bytes > MAX_GPU1_SMALL_TREE_BYTES:
+        raise RuntimeError(
+            f"small result tree byte budget is invalid: {root}: {total_bytes}"
+        )
+    return {
+        relative: {
+            "bytes": (root / relative).stat().st_size,
+            "sha256": file_sha256(root / relative),
+        }
+        for relative in sorted(relative_files)
+    }
+
+
+def validate_tree_inventory(root: Path, expected: dict) -> None:
+    observed = small_text_tree_inventory(root, set(expected))
+    if observed != expected:
+        raise RuntimeError(f"sealed small-tree inventory changed: {root}")
+
+
+def durable_copy_exact(source: Path, destination: Path) -> dict:
+    if not source.is_file() or source.is_symlink():
+        raise RuntimeError(f"exact-copy source is unavailable: {source}")
+    source_metadata = {
+        "bytes": source.stat().st_size,
+        "sha256": file_sha256(source),
+    }
+    if destination.exists():
+        if (
+            not destination.is_file()
+            or destination.is_symlink()
+            or destination.stat().st_size != source_metadata["bytes"]
+            or file_sha256(destination) != source_metadata["sha256"]
+        ):
+            raise RuntimeError(f"refusing changed exact-copy destination: {destination}")
+        return source_metadata
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporary = destination.with_name(destination.name + f".tmp.{os.getpid()}")
+    with source.open("rb") as reader, temporary.open("xb") as writer:
+        while chunk := reader.read(16 * 1024 * 1024):
+            writer.write(chunk)
+        writer.flush()
+        os.fsync(writer.fileno())
+    os.replace(temporary, destination)
+    descriptor = os.open(destination.parent, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+    if (
+        destination.stat().st_size != source_metadata["bytes"]
+        or file_sha256(destination) != source_metadata["sha256"]
+    ):
+        raise RuntimeError(f"exact-copy verification failed: {destination}")
+    return source_metadata
+
+
+def copy_or_verify_small_tree(
+    source: Path, destination: Path, required_files: set[str]
+) -> dict:
+    source_inventory = small_text_tree_inventory(source, required_files)
+    destination.mkdir(parents=True, exist_ok=True)
+    destination_paths = list(destination.rglob("*"))
+    if any(path.is_symlink() for path in destination_paths):
+        raise RuntimeError(f"exact-copy destination contains a symlink: {destination}")
+    destination_files = {
+        path.relative_to(destination).as_posix()
+        for path in destination_paths
+        if path.is_file()
+    }
+    if not destination_files.issubset(set(source_inventory)):
+        raise RuntimeError(
+            f"exact-copy destination has ambiguous extra files: {destination}"
+        )
+    for relative in source_inventory:
+        durable_copy_exact(source / relative, destination / relative)
+    validate_tree_inventory(destination, source_inventory)
+    return source_inventory
+
+
 def move_or_verify_exact_tree(
     source: Path, destination: Path, expected_files: set[str]
 ) -> dict:
@@ -664,6 +823,597 @@ def move_or_verify_exact_tree(
             finally:
                 os.close(descriptor)
     return exact_tree_inventory(destination, expected_files)
+
+
+def validate_gpu1_original_runtime_lineage(
+    provenance_root: Path, run_root: Path
+) -> dict:
+    """Bind archived Stage-A worker provenance to the original lane command log."""
+
+    runtime_path = provenance_root / "commands_and_runtime.json"
+    runtime = read_json(runtime_path)
+    commands = runtime.get("commands")
+    rows = commands if isinstance(commands, list) else []
+    preflight = rows[0] if len(rows) > 0 and isinstance(rows[0], dict) else {}
+    first = rows[1] if len(rows) > 1 and isinstance(rows[1], dict) else {}
+    second = rows[2] if len(rows) > 2 and isinstance(rows[2], dict) else {}
+    segment_contracts = ((first, 1, 96), (second, 97, 191))
+
+    checks = {
+        "runtime_top_level_shape_exact": set(runtime) == {"commands"},
+        "runtime_three_rows_exact": len(rows) == 3
+        and all(isinstance(row, dict) for row in rows),
+        "preflight_row_exact": set(preflight) == {"command", "kind"}
+        and preflight.get("kind") == "preflight"
+        and isinstance(preflight.get("command"), str)
+        and bool(preflight.get("command")),
+        "training_segment_rows_exact": all(
+            set(row)
+            == {
+                "command",
+                "stage",
+                "start_update",
+                "end_update",
+                "pid",
+                "wall_seconds",
+            }
+            and row.get("stage") == "a"
+            and (row.get("start_update"), row.get("end_update")) == (start, end)
+            and isinstance(row.get("command"), str)
+            and bool(row.get("command"))
+            for row, start, end in segment_contracts
+        ),
+        "training_pids_positive_distinct": all(
+            isinstance(row.get("pid"), int)
+            and not isinstance(row.get("pid"), bool)
+            and row["pid"] > 0
+            for row, _, _ in segment_contracts
+        )
+        and first.get("pid") != second.get("pid"),
+        "training_wall_seconds_finite_positive": all(
+            isinstance(row.get("wall_seconds"), (int, float))
+            and not isinstance(row.get("wall_seconds"), bool)
+            and math.isfinite(float(row["wall_seconds"]))
+            and float(row["wall_seconds"]) > 0
+            for row, _, _ in segment_contracts
+        ),
+    }
+
+    master_path = run_root / "MASTER_COMMANDS.log"
+    master_rows = supervisor.parse_master_command_log(master_path)
+    original_rows = [
+        row for row in master_rows if row.get("phase") in GPU1_ORIGINAL_STAGE_A_PHASES
+    ]
+    checks.update(
+        {
+            "master_original_phase_rows_exact": len(original_rows) == 3
+            and [row.get("phase") for row in original_rows]
+            == list(GPU1_ORIGINAL_STAGE_A_PHASES),
+            "master_original_lane_and_run_exact": len(original_rows) == 3
+            and all(
+                row.get("lane") == "GPU1" and row.get("run_id") == run_root.name
+                for row in original_rows
+            ),
+            "master_original_order_exact": len(original_rows) == 3
+            and [row["line_number"] for row in original_rows]
+            == sorted(row["line_number"] for row in original_rows),
+            "master_original_shell_exact": len(original_rows) == 3
+            and len({row.get("shell_pid") for row in original_rows}) == 1
+            and len({row.get("pgid") for row in original_rows}) == 1,
+        }
+    )
+    command_links = []
+    if len(original_rows) == 3 and len(rows) == 3:
+        for phase, master_row, runtime_row in zip(
+            GPU1_ORIGINAL_STAGE_A_PHASES, original_rows, rows
+        ):
+            try:
+                master_argv = shlex.split(master_row["command"])
+                runtime_argv = shlex.split(runtime_row.get("command", ""))
+            except ValueError:
+                master_argv = []
+                runtime_argv = []
+            command_links.append(
+                {
+                    "phase": phase,
+                    "master_line_number": master_row["line_number"],
+                    "master_interpreter_exact": master_argv[:1] == ["python"],
+                    "runtime_argv_exact": bool(runtime_argv)
+                    and master_argv[1:] == runtime_argv,
+                }
+            )
+    checks["runtime_commands_bind_exact_master_rows"] = len(command_links) == 3 and all(
+        row["master_interpreter_exact"] and row["runtime_argv_exact"]
+        for row in command_links
+    )
+
+    restart_required = read_json(
+        provenance_root / "stage_a_restart_required_update_96.json"
+    )
+    forced_restart = read_json(
+        provenance_root / "stage_a_forced_restart_update_96.json"
+    )
+    heartbeat = read_json(provenance_root / "HEARTBEAT.json")
+    checks.update(
+        {
+            "restart_required_pid_exact": restart_required.get("saved_process_id")
+            == first.get("pid"),
+            "forced_restart_pids_exact": forced_restart.get(
+                "checkpoint_process_id"
+            )
+            == first.get("pid")
+            and forced_restart.get("resumed_process_id") == second.get("pid")
+            and forced_restart.get("fresh_process") is True
+            and forced_restart.get("passed") is True,
+            "heartbeat_resume_pid_exact": heartbeat.get("pid") == second.get("pid")
+            and heartbeat.get("stage") == "a"
+            and heartbeat.get("local_update") == 191,
+        }
+    )
+    return {
+        "runtime": {
+            "path": str(runtime_path),
+            "sha256": file_sha256(runtime_path),
+            "rows": len(rows),
+        },
+        "master_commands": {
+            "path": str(master_path),
+            "sha256": file_sha256(master_path),
+            "bytes": master_path.stat().st_size,
+            "original_gpu1_rows": original_rows,
+        },
+        "command_links": command_links,
+        "process_boundary": {
+            "first_segment_pid": first.get("pid"),
+            "second_segment_pid": second.get("pid"),
+            "restart_required_saved_pid": restart_required.get("saved_process_id"),
+            "forced_restart_checkpoint_pid": forced_restart.get(
+                "checkpoint_process_id"
+            ),
+            "forced_restart_resumed_pid": forced_restart.get("resumed_process_id"),
+            "heartbeat_pid": heartbeat.get("pid"),
+        },
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
+def validate_retained_gpu1_stage_a_provenance(
+    provenance_root: Path, current_output: Path, run_root: Path
+) -> dict:
+    inventory = small_text_tree_inventory(
+        provenance_root, GPU1_RETAINED_STAGE_A_REQUIRED_FILES
+    )
+    support_files = {}
+    for name in sorted(GPU1_RETAINED_STAGE_A_SUPPORT_FILES):
+        archived = provenance_root / name
+        current = current_output / name
+        exact = (
+            current.is_file()
+            and not current.is_symlink()
+            and archived.read_bytes() == current.read_bytes()
+        )
+        support_files[name] = {
+            "archived_sha256": file_sha256(archived),
+            "current_sha256": file_sha256(current) if current.is_file() else None,
+            "exact_copy": exact,
+        }
+    checkpoint_manifest = read_json(provenance_root / "checkpoint_manifest.json")
+    stage_a_rows = checkpoint_manifest.get("stage_a")
+    stage_b_rows = checkpoint_manifest.get("stage_b")
+    expected_checkpoints = {
+        "96": Path(
+            "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/"
+            "stage_a_scientific_update_0096.pt"
+        ),
+        "191": Path(
+            "/tmp/parallel_2d2_ephemeral/2d2g/checkpoints/"
+            "stage_a_scientific_update_0191.pt"
+        ),
+    }
+    checkpoints = {}
+    manifest_exact = isinstance(stage_a_rows, dict) and set(stage_a_rows) == {
+        "96",
+        "191",
+    } and stage_b_rows == {}
+    if manifest_exact:
+        for update, checkpoint in expected_checkpoints.items():
+            row = stage_a_rows[update]
+            sidecars = audit_checkpoint_sidecars(checkpoint, row.get("sha256"))
+            checks = {
+                "path_exact": row.get("checkpoint") == str(checkpoint),
+                "bytes_exact": row.get("bytes") == checkpoint.stat().st_size,
+                "sha_exact": row.get("sha256") == sidecars["sha256"],
+                "strict_reopen_exact": row.get("strict_reopen")
+                == read_json(
+                    checkpoint.with_suffix(
+                        checkpoint.suffix + ".verification.json"
+                    )
+                ),
+                "sidecars_exact": sidecars["passed"],
+            }
+            checkpoints[update] = {
+                "checkpoint": str(checkpoint),
+                "manifest_row": row,
+                "sidecar_audit": sidecars,
+                "checks": checks,
+                "passed": all(checks.values()),
+            }
+    runtime = read_json(provenance_root / "commands_and_runtime.json")
+    commands = runtime.get("commands")
+    runtime_exact = (
+        isinstance(commands, list)
+        and len(commands) == 3
+        and commands[0].get("kind") == "preflight"
+        and commands[1].get("stage") == "a"
+        and commands[1].get("start_update") == 1
+        and commands[1].get("end_update") == 96
+        and commands[2].get("stage") == "a"
+        and commands[2].get("start_update") == 97
+        and commands[2].get("end_update") == 191
+        and all(isinstance(row.get("command"), str) and row["command"] for row in commands)
+    )
+    metrics = [
+        json.loads(line)
+        for line in (provenance_root / "stage_a_training_metrics.jsonl")
+        .read_text()
+        .splitlines()
+        if line
+    ]
+    metrics_exact = (
+        len(metrics) == 191
+        and [row.get("local_update") for row in metrics] == list(range(1, 192))
+        and all(row.get("stage") == "a" for row in metrics)
+    )
+    data_match = read_json(provenance_root / "stage_a_data_match.json")
+    data_match_exact = (
+        data_match.get("passed") is True
+        and data_match.get("update_96", {}).get("exact") is True
+        and data_match.get("update_191", {}).get("exact") is True
+    )
+    runtime_lineage = validate_gpu1_original_runtime_lineage(
+        provenance_root, run_root
+    )
+    checks = {
+        "small_tree_exact": bool(inventory),
+        "support_files_match_current": all(
+            row["exact_copy"] for row in support_files.values()
+        ),
+        "checkpoint_manifest_shape_exact": manifest_exact,
+        "stage_a_checkpoints_and_sidecars_exact": len(checkpoints) == 2
+        and all(row["passed"] for row in checkpoints.values()),
+        "original_runtime_three_rows_exact": runtime_exact,
+        "runtime_master_command_restart_lineage_exact": runtime_lineage["passed"],
+        "stage_a_metrics_191_rows_exact": metrics_exact,
+        "stage_a_data_match_exact": data_match_exact,
+    }
+    return {
+        "root": str(provenance_root),
+        "inventory": inventory,
+        "support_files": support_files,
+        "checkpoints": checkpoints,
+        "runtime": {
+            "sha256": file_sha256(provenance_root / "commands_and_runtime.json"),
+            "rows": len(commands) if isinstance(commands, list) else None,
+        },
+        "runtime_lineage": runtime_lineage,
+        "metrics": {
+            "sha256": file_sha256(
+                provenance_root / "stage_a_training_metrics.jsonl"
+            ),
+            "rows": len(metrics),
+        },
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
+def append_exact_cleanup_records(path: Path, records: list[dict]) -> dict:
+    payload = read_json(path)
+    actions = payload.get("cleanup_actions")
+    if not isinstance(actions, list) or payload.get("scientific_source_removed") is not False:
+        raise RuntimeError("2D2G cleanup manifest is not appendable")
+    for record in records:
+        matching = [row for row in actions if row.get("path") == record["path"]]
+        if len(matching) > 1 or (matching and matching[0] != record):
+            raise RuntimeError(
+                f"conflicting prior cleanup record for {record['path']}"
+            )
+        if not matching:
+            actions.append(record)
+    durable_json(path, payload)
+    observed = read_json(path)
+    if any(record not in observed["cleanup_actions"] for record in records):
+        raise RuntimeError("2D2G disposable cleanup records were not preserved")
+    return observed
+
+
+def gpu1_retained_provenance_source(run_id: str) -> Path:
+    return (
+        Path("/tmp/parallel_2d2_recovery_archive")
+        / run_id
+        / "2d2g_stage_b_smoke_failed_cpu_input/results"
+    )
+
+
+def gpu1_disposable_smoke_root() -> Path:
+    return Path("/tmp/parallel_2d2_ephemeral/2d2g/smoke")
+
+
+def archive_gpu1_attempt3_smoke(
+    master_root: Path,
+    run_root: Path,
+    recovery_attempt: int,
+    prior_attempt_evidence: dict,
+) -> dict:
+    """Seal attempt-3 G smoke evidence before deleting only its disposable checkpoint."""
+
+    if recovery_attempt != 4 or prior_attempt_evidence.get(
+        "failed_recovery_attempt"
+    ) != 3:
+        raise RuntimeError("GPU1 failed-smoke archive is attempt-4 specific")
+    plan_path = versioned_plan_path(run_root, 3)
+    plan = read_json(plan_path)
+    expected = plan["recovered_lanes"]["GPU1"][
+        "expected_resumed_command_records"
+    ]
+    command_path = run_root / "lane_gpu1.recovery_commands.jsonl"
+    completed = [
+        json.loads(line) for line in command_path.read_text().splitlines() if line
+    ]
+    error_path = run_root / "lane_gpu1.error.json"
+    status_path = run_root / "lane_gpu1.status.json"
+    error = read_json(error_path)
+    status = read_json(status_path)
+    lineage_checks = {
+        "attempt3_plan_has_full_gpu1_sequence": len(expected) == 6,
+        "only_preflight_completed": completed == expected[:1],
+        "failed_command_is_exact_smoke": error.get("command") == expected[1],
+        "status_command_matches_error": status.get("command")
+        == error.get("command"),
+        "failure_identity_exact": error.get("run_id") == run_root.name
+        and status.get("run_id") == run_root.name
+        and error.get("lane") == status.get("lane") == "GPU1"
+        and error.get("status") == status.get("status") == "HARD_FAILURE"
+        and error.get("phase")
+        == status.get("phase")
+        == "2D2G_B_RECOVERY_SMOKE"
+        and error.get("exit_code") == status.get("exit_code") == 1,
+        "prior_attempt_evidence_present": Path(
+            prior_attempt_evidence["manifest_path"]
+        ).is_file()
+        and file_sha256(Path(prior_attempt_evidence["manifest_path"]))
+        == prior_attempt_evidence["manifest_sha256"],
+    }
+    if not all(lineage_checks.values()):
+        raise RuntimeError(
+            f"GPU1 attempt-3 command lineage is not exact: {lineage_checks}"
+        )
+
+    archive_root = (
+        run_root / "failed_science_attempts/gpu1_recovery_attempt_0003"
+    )
+    archive_root.mkdir(parents=True, exist_ok=True)
+    evidence_path = archive_root / "PRE_CLEANUP_EVIDENCE.json"
+    final_manifest_path = run_root / "GPU1_FAILED_SCIENCE_RECOVERY_ATTEMPT_0003.json"
+    current_output = (
+        master_root
+        / "worktrees/2d2g/results/experiment_2d2g_b2_full_b3_w64"
+    )
+    provenance_destination = (
+        run_root
+        / "retained_science_provenance"
+        / "gpu1_2d2g_stage_a_before_attempt3_preflight"
+    )
+
+    if evidence_path.exists():
+        evidence = read_json(evidence_path)
+        if (
+            evidence.get("run_id") != run_root.name
+            or evidence.get("lane") != "GPU1"
+            or evidence.get("failed_recovery_attempt") != 3
+            or evidence.get("lineage_checks") != lineage_checks
+        ):
+            raise RuntimeError("GPU1 pre-cleanup evidence identity changed")
+        validate_tree_inventory(
+            Path(evidence["attempt3_output_snapshot"]["path"]),
+            evidence["attempt3_output_snapshot"]["inventory"],
+        )
+        validate_tree_inventory(
+            Path(evidence["retained_stage_a_provenance"]["path"]),
+            evidence["retained_stage_a_provenance"]["inventory"],
+        )
+        for row in evidence["preserved_small_files"].values():
+            preserved = Path(row["preserved_path"])
+            if (
+                not preserved.is_file()
+                or preserved.stat().st_size != row["bytes"]
+                or file_sha256(preserved) != row["sha256"]
+            ):
+                raise RuntimeError(f"preserved GPU1 evidence changed: {preserved}")
+    else:
+        attempt3_snapshot = archive_root / "attempt3_output_snapshot"
+        attempt3_inventory = copy_or_verify_small_tree(
+            current_output,
+            attempt3_snapshot,
+            GPU1_ATTEMPT3_REQUIRED_OUTPUT_FILES,
+        )
+        provenance_source = gpu1_retained_provenance_source(run_root.name)
+        provenance_inventory = copy_or_verify_small_tree(
+            provenance_source,
+            provenance_destination,
+            GPU1_RETAINED_STAGE_A_REQUIRED_FILES,
+        )
+        provenance_audit = validate_retained_gpu1_stage_a_provenance(
+            provenance_destination, current_output, run_root
+        )
+        if not provenance_audit["passed"]:
+            raise RuntimeError(
+                f"retained GPU1 Stage-A provenance is not exact: "
+                f"{provenance_audit['checks']}"
+            )
+
+        smoke_root = gpu1_disposable_smoke_root()
+        smoke_paths = list(smoke_root.iterdir()) if smoke_root.is_dir() else []
+        if any(path.is_symlink() or not path.is_file() for path in smoke_paths):
+            raise RuntimeError("GPU1 orphan smoke directory is not a regular-file tree")
+        checkpoint_candidates = [
+            path
+            for path in smoke_paths
+            if re.fullmatch(
+                r"stage_b_disposable_smoke_update_0003_pid_[0-9]+\.pt",
+                path.name,
+            )
+        ]
+        if len(checkpoint_candidates) != 1:
+            raise RuntimeError("expected exactly one orphan GPU1 smoke checkpoint")
+        checkpoint = checkpoint_candidates[0]
+        sha_path = checkpoint.with_suffix(checkpoint.suffix + ".sha256")
+        verification_path = checkpoint.with_suffix(
+            checkpoint.suffix + ".verification.json"
+        )
+        if set(smoke_paths) != {checkpoint, sha_path, verification_path}:
+            raise RuntimeError("GPU1 orphan smoke checkpoint file set is not exact")
+        checkpoint_sha = file_sha256(checkpoint)
+        if sha_path.read_text().split() != [checkpoint_sha, checkpoint.name]:
+            raise RuntimeError("GPU1 orphan smoke checkpoint SHA sidecar differs")
+        verification = read_json(verification_path)
+        if verification.get("passed") is not True:
+            raise RuntimeError("GPU1 orphan smoke checkpoint was not strictly reopened")
+        disposable_files = {
+            path.name: {
+                "source_path": str(path),
+                "bytes": path.stat().st_size,
+                "sha256": file_sha256(path),
+                "kind": (
+                    "disposable_smoke_checkpoint"
+                    if path == checkpoint
+                    else "disposable_smoke_checkpoint_sidecar"
+                ),
+            }
+            for path in sorted(smoke_paths)
+        }
+
+        preserved_small_files = {}
+        sidecar_root = archive_root / "orphan_smoke_checkpoint_sidecars"
+        for path in (sha_path, verification_path):
+            destination = sidecar_root / path.name
+            metadata = durable_copy_exact(path, destination)
+            preserved_small_files[f"smoke/{path.name}"] = {
+                "source_path": str(path),
+                "preserved_path": str(destination),
+                **metadata,
+            }
+        logs_root = archive_root / "logs"
+        for name in ("lane_gpu1.log", "lane_gpu1.recovery.console.log"):
+            source = run_root / name
+            destination = logs_root / name
+            metadata = durable_copy_exact(source, destination)
+            preserved_small_files[f"logs/{name}"] = {
+                "source_path": str(source),
+                "preserved_path": str(destination),
+                **metadata,
+            }
+        console = (logs_root / "lane_gpu1.recovery.console.log").read_text()
+        trace_exact = (
+            "torch.equal" in console and "cpu" in console.lower() and "cuda" in console.lower()
+        )
+        if not trace_exact:
+            raise RuntimeError("GPU1 CPU/CUDA gate failure trace is unavailable")
+        evidence = {
+            "schema_version": 1,
+            "run_id": run_root.name,
+            "lane": "GPU1",
+            "failed_recovery_attempt": 3,
+            "next_recovery_attempt": 4,
+            "phase": "2D2G_B_RECOVERY_SMOKE",
+            "successful_command_records": completed,
+            "failed_command_record": error["command"],
+            "lineage_checks": lineage_checks,
+            "prior_attempt_evidence": prior_attempt_evidence,
+            "attempt3_output_snapshot": {
+                "path": str(attempt3_snapshot),
+                "inventory": attempt3_inventory,
+            },
+            "retained_stage_a_provenance": {
+                "source_path": str(provenance_source),
+                "path": str(provenance_destination),
+                "inventory": provenance_inventory,
+                "audit": provenance_audit,
+            },
+            "disposable_files": disposable_files,
+            "preserved_small_files": preserved_small_files,
+            "failure_trace_exact": trace_exact,
+            "passed": True,
+        }
+        preserve_exact_json(evidence_path, evidence)
+
+    evidence_sha = file_sha256(evidence_path)
+    disposable_files = evidence["disposable_files"]
+    cleanup_records = []
+    touched_parents = set()
+    for row in disposable_files.values():
+        source = Path(row["source_path"])
+        if source.exists():
+            if (
+                not source.is_file()
+                or source.is_symlink()
+                or source.stat().st_size != row["bytes"]
+                or file_sha256(source) != row["sha256"]
+            ):
+                raise RuntimeError(
+                    f"refusing changed disposable GPU1 smoke file: {source}"
+                )
+            source.unlink()
+            touched_parents.add(source.parent)
+        cleanup_records.append(
+            {
+                "path": str(source),
+                "bytes": row["bytes"],
+                "sha256": row["sha256"],
+                "kind": row["kind"],
+                "removed": not source.exists(),
+                "failed_recovery_attempt": 3,
+                "evidence_manifest": str(evidence_path),
+                "evidence_manifest_sha256": evidence_sha,
+            }
+        )
+    for parent in touched_parents:
+        descriptor = os.open(parent, os.O_RDONLY)
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+    if not all(row["removed"] for row in cleanup_records):
+        raise RuntimeError("GPU1 disposable smoke cleanup did not complete")
+    cleanup_path = current_output / "storage_cleanup_manifest.json"
+    append_exact_cleanup_records(cleanup_path, cleanup_records)
+
+    final_payload = {
+        "schema_version": 1,
+        "run_id": run_root.name,
+        "lane": "GPU1",
+        "failed_recovery_attempt": 3,
+        "next_recovery_attempt": 4,
+        "pre_cleanup_evidence": {
+            "path": str(evidence_path),
+            "sha256": evidence_sha,
+        },
+        "attempt3_output_snapshot": evidence["attempt3_output_snapshot"],
+        "retained_stage_a_provenance": evidence[
+            "retained_stage_a_provenance"
+        ],
+        "disposable_cleanup_records": cleanup_records,
+        "cleanup_manifest": str(cleanup_path),
+        "only_verified_disposable_files_removed": True,
+        "passed": True,
+    }
+    preserve_exact_json(final_manifest_path, final_payload)
+    return {
+        "manifest_path": str(final_manifest_path),
+        "manifest_sha256": file_sha256(final_manifest_path),
+        **final_payload,
+    }
 
 
 def archive_gpu0_attempt2_science(
@@ -1013,7 +1763,30 @@ def audit_worktree_artifacts(worktree: Path, allowed_roots) -> dict:
     }
 
 
-def audit_patched_worktree(spec: dict, original_git: dict) -> dict:
+def run_focused_tests(
+    worktree: Path, tests: list[str], assigned_gpu_index: int
+) -> tuple[list[str], subprocess.CompletedProcess, str]:
+    """Run recovery tests with only the lane's physical GPU visible."""
+
+    assigned_gpu_index = int(assigned_gpu_index)
+    if assigned_gpu_index not in range(EXPECTED_POD["gpu_count"]):
+        raise RuntimeError("focused-test GPU index is outside the expected pod")
+    test_command = [sys.executable, "-m", "pytest", "-q", *tests]
+    test_environment = os.environ.copy()
+    test_environment["CUDA_VISIBLE_DEVICES"] = str(assigned_gpu_index)
+    test = subprocess.run(
+        test_command,
+        cwd=worktree,
+        text=True,
+        capture_output=True,
+        env=test_environment,
+    )
+    return test_command, test, test_environment["CUDA_VISIBLE_DEVICES"]
+
+
+def audit_patched_worktree(
+    spec: dict, original_git: dict, assigned_gpu_index: int
+) -> dict:
     """Seal one additional lane worktree whose implementation needed recovery."""
 
     worktree = Path(spec["worktree"]).resolve()
@@ -1035,9 +1808,8 @@ def audit_patched_worktree(spec: dict, original_git: dict) -> dict:
     worktree_audit = audit_worktree_artifacts(
         worktree, spec["allowed_untracked_result_roots"]
     )
-    test_command = [sys.executable, "-m", "pytest", "-q", *spec["tests"]]
-    test = subprocess.run(
-        test_command, cwd=worktree, text=True, capture_output=True
+    test_command, test, test_cuda_visible_devices = run_focused_tests(
+        worktree, spec["tests"], assigned_gpu_index
     )
     checks = {
         "old_commit_is_ancestor": ancestor,
@@ -1060,10 +1832,34 @@ def audit_patched_worktree(spec: dict, original_git: dict) -> dict:
         "changed_files": sorted(changed),
         "worktree_artifact_audit": worktree_audit,
         "focused_test_command": test_command,
+        "focused_test_cuda_visible_devices": test_cuda_visible_devices,
         "focused_test_stdout": test.stdout,
         "focused_test_stderr": test.stderr,
         "checks": checks,
         "passed": all(checks.values()),
+    }
+
+
+def audit_coordinator_worktree(
+    original_git: dict, assigned_gpu_index: int
+) -> dict:
+    """Re-audit the recovery coordinator even when GPU0 is only retained."""
+
+    master = LANES["GPU0"]
+    spec = {
+        "branch": master["branch"],
+        "worktree": master["worktree"],
+        "allowed_changed_files": set(master["allowed_changed_files"]),
+        "allowed_untracked_result_roots": set(
+            master["allowed_untracked_result_roots"]
+        ),
+        "tests": list(COORDINATOR_FOCUSED_TESTS),
+    }
+    audit = audit_patched_worktree(spec, original_git, assigned_gpu_index)
+    return {
+        **audit,
+        "role": "recovery_coordinator",
+        "assigned_test_gpu_index": int(assigned_gpu_index),
     }
 
 
@@ -1154,10 +1950,14 @@ def audit_lane(
     worktree_audit = audit_worktree_artifacts(
         worktree, spec["allowed_untracked_result_roots"]
     )
-    test_command = [sys.executable, "-m", "pytest", "-q", *spec["tests"]]
-    test = subprocess.run(test_command, cwd=worktree, text=True, capture_output=True)
+    assigned_gpu_index = int(lane.removeprefix("GPU"))
+    test_command, test, test_cuda_visible_devices = run_focused_tests(
+        worktree, spec["tests"], assigned_gpu_index
+    )
     dependent_worktree_patches = [
-        audit_patched_worktree(patch_spec, original_git)
+        audit_patched_worktree(
+            patch_spec, original_git, assigned_gpu_index
+        )
         for patch_spec in spec.get("dependent_worktree_patches", [])
     ]
     checks = {
@@ -1185,7 +1985,7 @@ def audit_lane(
             row["passed"] for row in dependent_worktree_patches
         ),
     }
-    idle = gpu_idle(int(lane.removeprefix("GPU")))
+    idle = gpu_idle(assigned_gpu_index)
     checks["assigned_gpu_idle"] = idle["passed"]
     return {
         "lane": lane,
@@ -1210,6 +2010,7 @@ def audit_lane(
             else None
         ),
         "focused_test_command": test_command,
+        "focused_test_cuda_visible_devices": test_cuda_visible_devices,
         "focused_test_stdout": test.stdout,
         "focused_test_stderr": test.stderr,
         "dependent_worktree_patches": dependent_worktree_patches,
@@ -1229,13 +2030,24 @@ def run(args) -> dict:
         raise RuntimeError("recovery attempt must be a positive integer")
     lanes = list(dict.fromkeys(args.lane))
     retained_lanes = list(dict.fromkeys(args.retain_active_lane or []))
+    retained_completed_lanes = list(
+        dict.fromkeys(args.retain_completed_lane or [])
+    )
     if not lanes or any(lane not in LANES for lane in lanes):
         raise RuntimeError("only the registered failed lanes can be recovered")
+    retained_sets = [set(lanes), set(retained_lanes), set(retained_completed_lanes)]
     if (
         any(lane not in LANES for lane in retained_lanes)
-        or set(lanes) & set(retained_lanes)
+        or any(lane not in LANES for lane in retained_completed_lanes)
+        or any(
+            retained_sets[left] & retained_sets[right]
+            for left, right in ((0, 1), (0, 2), (1, 2))
+        )
     ):
-        raise RuntimeError("retained recovery lanes must be registered and disjoint")
+        raise RuntimeError(
+            "fresh, active-retained, and completed-retained lanes must be "
+            "registered and pairwise disjoint"
+        )
     original_terminal_gate = audit_original_terminal_recovery(
         master_root, run_root, args.allow_original_terminal_recovery
     )
@@ -1254,9 +2066,19 @@ def run(args) -> dict:
             recovery_attempt,
             prior_attempt_evidence,
         )
+    if recovery_attempt == 4 and "GPU1" in lanes:
+        failed_science_archives["GPU1"] = archive_gpu1_attempt3_smoke(
+            master_root,
+            run_root,
+            recovery_attempt,
+            prior_attempt_evidence,
+        )
     top_preflight = read_json(master_root / "MASTER_PREFLIGHT.json")
     scoped_preflight = read_json(run_root / "MASTER_PREFLIGHT.json")
     original_git = read_json(run_root / "git_worktree_manifest.json")
+    coordinator_worktree_audit = audit_coordinator_worktree(
+        original_git, int(lanes[0].removeprefix("GPU"))
+    )
     immutable_names = (
         "hardware_manifest.json",
         "storage_preflight.json",
@@ -1284,11 +2106,19 @@ def run(args) -> dict:
         )
         for lane in lanes
     }
+    previous = (
+        read_json(run_root / "RECOVERY_PREFLIGHT.json")
+        if retained_lanes or retained_completed_lanes
+        else None
+    )
+    previous_schemas = (
+        previous.get("recovery_evidence_schemas", {})
+        if isinstance(previous, dict)
+        else {}
+    )
     retained_checks = {}
     retained_schemas = {}
     if retained_lanes:
-        previous = read_json(run_root / "RECOVERY_PREFLIGHT.json")
-        previous_schemas = previous.get("recovery_evidence_schemas", {})
         for lane in retained_lanes:
             evidence = previous.get("lane_evidence", {}).get(lane)
             status = read_json(run_root / f"lane_{lane.lower()}.status.json")
@@ -1331,8 +2161,103 @@ def run(args) -> dict:
                 else None
             )
             lane_evidence[lane] = evidence
-    authorized_lanes = [*retained_lanes, *lanes]
+
+    retained_completed_checks = {}
+    retained_completed_schemas = {}
+    if retained_completed_lanes:
+        plan_metadata = previous.get("recovery_command_plan", {})
+        previous_plan_path = Path(plan_metadata.get("path", "")).resolve()
+        expected_previous_plan_path = versioned_plan_path(
+            run_root, recovery_attempt - 1
+        ).resolve()
+        if (
+            previous.get("passed") is not True
+            or previous.get("recovery_attempt") != recovery_attempt - 1
+            or previous_plan_path != expected_previous_plan_path
+            or not previous_plan_path.is_file()
+            or file_sha256(previous_plan_path) != plan_metadata.get("sha256")
+        ):
+            raise RuntimeError(
+                "completed-lane retention requires the exact prior recovery plan"
+            )
+        previous_plan = read_json(previous_plan_path)
+        previous_rows = previous_plan.get("recovered_lanes", {})
+        master_commands = supervisor.parse_master_command_log(
+            run_root / "MASTER_COMMANDS.log"
+        )
+        for lane in retained_completed_lanes:
+            evidence = previous.get("lane_evidence", {}).get(lane)
+            plan_row = previous_rows.get(lane)
+            schema = previous_schemas.get(lane)
+            if (
+                lane not in previous.get("authorized_lanes", [])
+                or not isinstance(evidence, dict)
+                or evidence.get("passed") is not True
+                or not isinstance(plan_row, dict)
+                or schema
+                not in {
+                    "v2_with_recovery_reason",
+                    "legacy_v1_without_recovery_reason",
+                }
+            ):
+                raise RuntimeError(
+                    f"completed retained recovery lane is absent from prior evidence: {lane}"
+                )
+            expected_commands = plan_row.get("expected_resumed_command_records")
+            expected_reason = LANES[lane]["recovery_reason"]
+            if (
+                not isinstance(expected_commands, list)
+                or not expected_commands
+                or plan_row.get("recovery_reason") != expected_reason
+                or plan_row.get("recovery_evidence_schema") != schema
+            ):
+                raise RuntimeError(
+                    f"completed retained recovery plan row is not exact: {lane}"
+                )
+            completed_audit = supervisor.validate_recovery_lane(
+                run_root,
+                args.run_id,
+                lane,
+                previous,
+                expected_commands,
+                expected_reason,
+                schema,
+                master_commands,
+            )
+            idle = gpu_idle(int(lane.removeprefix("GPU")))
+            terminal_path = run_root / f"lane_{lane.lower()}.terminal.json"
+            checks = {
+                "prior_recovery_evidence_exact": completed_audit.get("status")
+                == "RECOVERABLE_FAILURE_RESUMED",
+                "assigned_gpu_idle": idle["passed"],
+                "original_terminal_still_sealed": terminal_is_sealed_for_lane(
+                    original_terminal_gate, lane, terminal_path
+                ),
+            }
+            if not all(checks.values()):
+                raise RuntimeError(
+                    f"completed retained recovery lane is not exact: {lane}: {checks}"
+                )
+            retained_completed_checks[lane] = {
+                "checks": checks,
+                "completed_recovery_audit": completed_audit,
+                "assigned_gpu": idle,
+                "passed": True,
+            }
+            retained_completed_schemas[lane] = schema
+            evidence = dict(evidence)
+            evidence["recovery_reason"] = expected_reason
+            evidence["completed_recovery_retention"] = retained_completed_checks[
+                lane
+            ]
+            evidence["original_terminal"] = original_terminal_gate.get(
+                "lanes", {}
+            ).get(lane)
+            lane_evidence[lane] = evidence
+
+    authorized_lanes = [*retained_completed_lanes, *retained_lanes, *lanes]
     recovery_evidence_schemas = {
+        **retained_completed_schemas,
         **retained_schemas,
         **{lane: "v2_with_recovery_reason" for lane in lanes},
     }
@@ -1361,10 +2286,16 @@ def run(args) -> dict:
         "failed_lane_patches_narrow_and_pushed": all(
             row["passed"] for row in lane_evidence.values()
         ),
+        "recovery_coordinator_patch_narrow_pushed_clean_and_tested": (
+            coordinator_worktree_audit["passed"]
+        ),
         "unaffected_lanes_same_run_without_error": all(
             row["same_run"] and row["no_error_marker"] for row in unaffected.values()
         ),
         "retained_active_recovery_lanes_exact": all(retained_checks.values()),
+        "retained_completed_recovery_lanes_exact": all(
+            row["passed"] for row in retained_completed_checks.values()
+        ),
         "original_supervisor_terminal_recovery_exact": original_terminal_gate.get(
             "passed"
         )
@@ -1377,6 +2308,8 @@ def run(args) -> dict:
         "recovery_attempt": recovery_attempt,
         "authorized_lanes": authorized_lanes,
         "retained_active_lanes": retained_lanes,
+        "retained_completed_lanes": retained_completed_lanes,
+        "retained_completed_lane_audits": retained_completed_checks,
         "recovery_evidence_schemas": recovery_evidence_schemas,
         "reason": (
             next(iter(recovery_reasons.values()))
@@ -1386,6 +2319,7 @@ def run(args) -> dict:
         "recovery_reasons": recovery_reasons,
         "original_master_preflight": str(run_root / "MASTER_PREFLIGHT.json"),
         "original_terminal_recovery_gate": original_terminal_gate,
+        "coordinator_worktree_audit": coordinator_worktree_audit,
         "immutable_manifest_audit": immutable,
         "lane_evidence": lane_evidence,
         "unaffected_lanes": unaffected,
@@ -1437,6 +2371,7 @@ def main() -> None:
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--lane", action="append", required=True)
     parser.add_argument("--retain-active-lane", action="append")
+    parser.add_argument("--retain-completed-lane", action="append")
     parser.add_argument("--recovery-attempt", type=int, default=1)
     parser.add_argument("--allow-original-terminal-recovery", action="store_true")
     args = parser.parse_args()

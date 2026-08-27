@@ -8,6 +8,7 @@ OUTPUT="$WORKTREE/results/experiment_2d2g_b2_full_b3_w64"
 EPHEMERAL=/tmp/parallel_2d2_ephemeral/2d2g/checkpoints
 SMOKE_EPHEMERAL=/tmp/parallel_2d2_ephemeral/2d2g/smoke
 PERSISTENT=/workspace/exp2d2g_run/checkpoints
+RECOVERY_PROVENANCE="$MASTER_ROOT/runs/$MASTER_RUN_ID/retained_science_provenance/gpu1_2d2g_stage_a_before_attempt3_preflight"
 
 export CUDA_VISIBLE_DEVICES=1
 export PYTHONUNBUFFERED=1
@@ -29,7 +30,8 @@ B96="$EPHEMERAL/stage_b_scientific_update_0096.pt"
 B191="$EPHEMERAL/stage_b_scientific_update_0191.pt"
 
 log_command 2D2G_RECOVERY_PREFLIGHT python scripts/experiment_2d2g.py preflight "${COMMON[@]}" \
-  --source-checkpoint "$SOURCE" --data-root "$DATA_ROOT"
+  --source-checkpoint "$SOURCE" --data-root "$DATA_ROOT" \
+  --recovery-provenance-dir "$RECOVERY_PROVENANCE"
 log_command 2D2G_B_RECOVERY_SMOKE python scripts/experiment_2d2g.py smoke-b "${COMMON[@]}" \
   --stage-a-checkpoint "$A191" --checkpoint-dir "$SMOKE_EPHEMERAL" \
   --data-root "$DATA_ROOT"
