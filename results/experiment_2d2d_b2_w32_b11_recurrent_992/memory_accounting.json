@@ -1,0 +1,531 @@
+{
+  "B1": {
+    "b11_recurrent_raw_state_bytes": 1571328,
+    "b12_recurrent_raw_state_bytes": 1571328,
+    "b1_local_kv_bytes": 3072,
+    "b2_local_kv_bytes": 95232,
+    "b3_b12_ordinary_kv_bytes": 31426560,
+    "batch_size": 1,
+    "delta_bytes_vs_final_2d2b": -1476096,
+    "delta_bytes_vs_final_2d2c": 92160,
+    "delta_bytes_vs_standard_gpt2": -3044352,
+    "final_2d2b_inference_state_bytes": 36143616,
+    "final_2d2c_inference_state_bytes": 34575360,
+    "mib": {
+      "b11_recurrent_raw_state": 1.49853515625,
+      "b12_recurrent_raw_state": 1.49853515625,
+      "b1_local_kv": 0.0029296875,
+      "b2_local_kv": 0.0908203125,
+      "b3_b12_ordinary_kv": 29.970703125,
+      "delta_vs_final_2d2b": -1.40771484375,
+      "delta_vs_final_2d2c": 0.087890625,
+      "delta_vs_standard_gpt2": -2.9033203125,
+      "total": 33.0615234375
+    },
+    "standard_gpt2_w1024_kv_bytes": 37711872,
+    "total_experimental_inference_state_bytes": 34667520
+  },
+  "B64": {
+    "b11_recurrent_raw_state_bytes": 100564992,
+    "b12_recurrent_raw_state_bytes": 100564992,
+    "b1_local_kv_bytes": 196608,
+    "b2_local_kv_bytes": 6094848,
+    "b3_b12_ordinary_kv_bytes": 2011299840,
+    "batch_size": 64,
+    "delta_bytes_vs_final_2d2b": -94470144,
+    "delta_bytes_vs_final_2d2c": 5898240,
+    "delta_bytes_vs_standard_gpt2": -194838528,
+    "final_2d2b_inference_state_bytes": 2313191424,
+    "final_2d2c_inference_state_bytes": 2212823040,
+    "mib": {
+      "b11_recurrent_raw_state": 95.90625,
+      "b12_recurrent_raw_state": 95.90625,
+      "b1_local_kv": 0.1875,
+      "b2_local_kv": 5.8125,
+      "b3_b12_ordinary_kv": 1918.125,
+      "delta_vs_final_2d2b": -90.09375,
+      "delta_vs_final_2d2c": 5.625,
+      "delta_vs_standard_gpt2": -185.8125,
+      "total": 2115.9375
+    },
+    "standard_gpt2_w1024_kv_bytes": 2413559808,
+    "total_experimental_inference_state_bytes": 2218721280
+  },
+  "bytes_per_element": 2,
+  "comparison_note": "B1/B64 are exact theoretical all-BF16 deployment-state comparisons at a full 1024-token context. The mixed-precision section and observed final cache prevent those deployment figures from being misreported as the current evaluator's physical allocation.",
+  "current_evaluation_runtime_mixed_precision": {
+    "B1": {
+      "batch_size": 1,
+      "delta_bytes_vs_final_2d2b": 95232,
+      "delta_bytes_vs_final_2d2c": 92160,
+      "delta_bytes_vs_standard_gpt2": 98304,
+      "final_2d2b_inference_state_bytes": 37714944,
+      "final_2d2c_inference_state_bytes": 37718016,
+      "mib": {
+        "total": 36.05859375
+      },
+      "ordinary_kv_dtype": "torch.bfloat16",
+      "raw_recurrent_state_dtype": "torch.float32",
+      "standard_gpt2_w1024_kv_bytes": 37711872,
+      "total_experimental_inference_state_bytes": 37810176
+    },
+    "B64": {
+      "batch_size": 64,
+      "delta_bytes_vs_final_2d2b": 6094848,
+      "delta_bytes_vs_final_2d2c": 5898240,
+      "delta_bytes_vs_standard_gpt2": 6291456,
+      "final_2d2b_inference_state_bytes": 2413756416,
+      "final_2d2c_inference_state_bytes": 2413953024,
+      "mib": {
+        "total": 2307.75
+      },
+      "ordinary_kv_dtype": "torch.bfloat16",
+      "raw_recurrent_state_dtype": "torch.float32",
+      "standard_gpt2_w1024_kv_bytes": 2413559808,
+      "total_experimental_inference_state_bytes": 2419851264
+    },
+    "note": "The current PyTorch autocast implementation retains raw B11/B12 residual rings in FP32 while projected KV caches are BF16."
+  },
+  "deployment_accounting_dtype": "BF16",
+  "observed_final_incremental_storage": {
+    "cache_bytes": 2017591296,
+    "cache_storage": [
+      {
+        "block": 1,
+        "key": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            64,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 98304,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 98304,
+          "shape": [
+            64,
+            12,
+            1,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 2,
+        "key": {
+          "actual_bytes": 3047424,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 3047424,
+          "shape": [
+            64,
+            12,
+            31,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 3047424,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 3047424,
+          "shape": [
+            64,
+            12,
+            31,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 3,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 4,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 5,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 6,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 7,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 8,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 9,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 10,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 11,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      },
+      {
+        "block": 12,
+        "key": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        },
+        "value": {
+          "actual_bytes": 100564992,
+          "contiguous": true,
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "exact": true,
+          "expected_bytes": 100564992,
+          "shape": [
+            64,
+            12,
+            1023,
+            64
+          ],
+          "storage_offset": 0
+        }
+      }
+    ],
+    "control": "both_real",
+    "h11_ring_storage": {
+      "actual_bytes": 201129984,
+      "contiguous": true,
+      "dtype": "torch.float32",
+      "element_size_bytes": 4,
+      "exact": true,
+      "expected_bytes": 201129984,
+      "shape": [
+        64,
+        1023,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "h12_ring_storage": {
+      "actual_bytes": 201129984,
+      "contiguous": true,
+      "dtype": "torch.float32",
+      "element_size_bytes": 4,
+      "exact": true,
+      "expected_bytes": 201129984,
+      "shape": [
+        64,
+        1023,
+        768
+      ],
+      "storage_offset": 0
+    },
+    "physical_storage_exact": true,
+    "position": 1024,
+    "raw_ring_bytes": 402259968,
+    "total_physical_state_bytes": 2419851264
+  },
+  "state_limits": {
+    "B1 ordinary historical KV": 1,
+    "B11 raw recurrent states": 1023,
+    "B12 raw recurrent states": 1023,
+    "B2 ordinary historical KV": 31,
+    "B3-B12 ordinary historical KV each": 1023
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "authoritative_finalize": {
+    "classification": "B2 W32 SECOND RECURRENT LINK REMAINS NEAR ZERO",
+    "completed": true,
+    "log": "/workspace/exp2d2d_run/finalize_rerun.log",
+    "marker": "EXPERIMENT_2D2D_FINALIZED_PENDING_GIT_SEAL",
+    "process_id": 4788
+  },
+  "checkpoint_changed": false,
+  "dependency_environment": {
+    "matplotlib": "3.11.1",
+    "numpy": "2.1.2",
+    "python": "3.12.3",
+    "torch": "2.8.0+cu128",
+    "venv": "/workspace/exp2d2d_run/venv-report",
+    "venv_uses_system_site_packages": true
+  },
+  "failed_attempt": {
+    "completed_both_incremental_batches": true,
+    "failure": "ModuleNotFoundError: No module named 'matplotlib'",
+    "failure_stage": "plot generation after scientific diagnostics",
+    "log_artifact": "FINALIZE_MISSING_MATPLOTLIB_FAILED.log",
+    "log_sha256": "2a27b433f53b08ea963687d92f3cb7933f9c0c712ad7cc711356fd0a0ab55abb",
+    "process_id": 4196
+  },
+  "recovery": {
+    "base_environment_overridden": false,
+    "finalize_command_changed": false,
+    "isolated_environment_created": true,
+    "scientific_evaluation_rerun_from_verified_checkpoint": true,
+    "system_python_mutated": false
+  },
+  "schema": "exp2d2d_finalize_dependency_recovery_v1",
+  "scientific_metric_definition_changed": false,
+  "training_changed": false
+}

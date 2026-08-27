@@ -1,0 +1,13 @@
+2D2D incremental batch=01/2
+2D2D incremental batch=02/2
+Traceback (most recent call last):
+  File "/workspace/build-nanogpt-exp2d2d-runtime/scripts/experiment_2d2d.py", line 5220, in <module>
+    main()
+  File "/workspace/build-nanogpt-exp2d2d-runtime/scripts/experiment_2d2d.py", line 5216, in main
+    return args.function(args)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/build-nanogpt-exp2d2d-runtime/scripts/experiment_2d2d.py", line 5006, in run_finalize
+    make_plots(
+  File "/workspace/build-nanogpt-exp2d2d-runtime/scripts/experiment_2d2d.py", line 4186, in make_plots
+    import matplotlib
+ModuleNotFoundError: No module named 'matplotlib'
