@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 import numpy as np
+import torch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +32,11 @@ class FrozenHeadToHeadTests(unittest.TestCase):
         self.assertTrue(row["passed"])
         self.assertEqual(row["f_saving_bytes"], 3_047_424)
         self.assertLess(row["2D2F"]["total_inference_state_bytes_B1"], row["2D2G"]["total_inference_state_bytes_B1"])
+
+    def test_scalar_tensor_hashing(self):
+        scalar = torch.tensor(0.125, dtype=torch.float32)
+        self.assertEqual(exp.tensor_bytes(scalar), scalar.numpy().tobytes())
+        self.assertEqual(exp.state_dict_sha256({"gate": scalar}), exp.state_dict_sha256({"gate": scalar.clone()}))
 
     def test_absolute_classification_boundaries(self):
         self.assertEqual(

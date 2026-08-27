@@ -195,7 +195,9 @@ def torch_load(path: Path):
 
 
 def tensor_bytes(value: torch.Tensor) -> bytes:
-    return value.detach().contiguous().view(torch.uint8).cpu().numpy().tobytes()
+    # Flatten first because PyTorch cannot reinterpret a zero-dimensional
+    # scalar directly as bytes when the element sizes differ.
+    return value.detach().contiguous().reshape(-1).view(torch.uint8).cpu().numpy().tobytes()
 
 
 def state_dict_sha256(state: dict[str, torch.Tensor]) -> str:
