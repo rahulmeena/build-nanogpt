@@ -115616,39 +115616,39 @@ Exact next recommendation: **RUN MATCHED NO-B11→B2 CONTROL BEFORE ADDING B9→
 
 ## Integrity audit
 
-- PASS — source 2D2D checkpoint SHA exact
-- PASS — source final tag exact
-- PASS — parameter count 124,475,906
-- PASS — exactly one new parameter
+- PASS — 191 updates and 100,139,008 targets
+- PASS — 8-pass stability passed
 - PASS — B1 W2 and recurrent lags exact
+- PASS — B1 resumed; B2 gate dropped; B3 zero initialized
 - PASS — B2 W32 local-only and recurrent machinery absent
 - PASS — B3 W64 and recurrent lags exact
-- PASS — B3 max recurrent width 960
+- PASS — B3 attention diagnostics complete
 - PASS — B3 local/recurrent non-overlap
-- PASS — existing projections and one c_proj reused
-- PASS — B1 resumed; B2 gate dropped; B3 zero initialized
-- PASS — shared source optimizer state resumed; B2 state dropped; B3 fresh
-- PASS — data stream continues after 2D2D
-- PASS — matched 2D2E target stream exact
-- PASS — global batch 524,288
+- PASS — B3 max recurrent width 960
 - PASS — CE-only exact pass cadence
-- PASS — no detach and all writer gradients
-- PASS — 191 updates and 100,139,008 targets
-- PASS — trajectory compared to frozen 2D2E at every milestone
-- PASS — mandatory update-96 fresh-process restart
+- PASS — Git synchronized
 - PASS — checkpoint hashes verified
+- PASS — data stream continues after 2D2D
+- PASS — exactly one new parameter
+- PASS — existing projections and one c_proj reused
 - PASS — final checkpoint staged locally then copied under shared lock
+- PASS — global batch 524,288
+- PASS — mandatory update-96 fresh-process restart
+- PASS — matched 2D2E target stream exact
+- PASS — no detach and all writer gradients
+- PASS — parameter count 124,475,906
+- PASS — persistent volume preserved
+- PASS — physical cache audit passed
+- PASS — required artifact set complete
+- FAIL — sealed report commit synchronized
+- PASS — shared source optimizer state resumed; B2 state dropped; B3 fresh
 - PASS — smoke checkpoint strict fresh-model reload
 - PASS — smoke writer gradient after gate opened
-- PASS — B3 attention diagnostics complete
-- PASS — true incremental evaluation completed
-- PASS — physical cache audit passed
-- PASS — 8-pass stability passed
+- PASS — source 2D2D checkpoint SHA exact
+- PASS — source final tag exact
 - PASS — storage audit passed
-- FAIL — Git synchronized
-- FAIL — sealed report commit synchronized
-- PASS — persistent volume preserved
-- PASS — required artifact set complete
+- PASS — trajectory compared to frozen 2D2E at every milestone
+- PASS — true incremental evaluation completed
 
 ## Scientific questions Q1–Q40
 
@@ -115814,4 +115814,4 @@ true
 
 # EXPERIMENT 2D2F COMPLETE
 
-GPU remains running until local backup, Git seal, attestation, and verified stop.
+Commit and push this sealed report, then attest it before stopping the pod.
