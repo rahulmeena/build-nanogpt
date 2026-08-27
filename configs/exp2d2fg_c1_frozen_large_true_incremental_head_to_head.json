@@ -1,0 +1,63 @@
+{
+  "experiment": "2D2FG-C1",
+  "protocol": "frozen_large_true_incremental_head_to_head_v1",
+  "mode": "evaluation_only",
+  "branch": "experiment-2d2fg-c1-frozen-large-head-to-head",
+  "hardware": {
+    "cuda_visible_devices": "0",
+    "gpu_count": 1,
+    "gpu_model": "NVIDIA A100-SXM4-80GB",
+    "ddp": false,
+    "nccl_multi_rank": false,
+    "pod_id": "rvgztsr0azrwyo",
+    "pod_name": "happy_apricot_stork",
+    "persistent_volume_id": "yhzyb27fb5"
+  },
+  "frozen_checkpoints": {
+    "2D2F": {
+      "path": "/workspace/exp2d2f_run/checkpoints/scientific_update_0191.pt",
+      "sha256": "a58dd647e7aa70c22b5c1cd49cc708d85576e95c0a0c30fc93b1f0c02eae0ea6",
+      "parameters": 124475906
+    },
+    "2D2G": {
+      "path": "/workspace/exp2d2g_run/checkpoints/stage_b_scientific_update_0191.pt",
+      "sha256": "36ec3fa28741fa8ce999c43e309baa175112b795c079575d2a89525f134c3da0",
+      "parameters": 124475906
+    }
+  },
+  "validation": {
+    "batch_size": 64,
+    "sequence_length": 1024,
+    "skip_batches": 20,
+    "batch_count": 16,
+    "sequences": 1024,
+    "targets_per_control": 1048576,
+    "conditions": [
+      "F_REAL",
+      "F_B3_OFF",
+      "F_B3_SHUFFLED",
+      "G_REAL",
+      "G_B3_OFF",
+      "G_B3_SHUFFLED"
+    ],
+    "mandatory_prior_subset_sha256": "8befbf790b3e522747cd39da306ec124464bf8dde1604caf64f299efa7e36216",
+    "optional_c1_subset_sha256": "8c0a01e707a5d3928cf856e3d89d086321cd27b42962dd4dec6181ff30a48fcc"
+  },
+  "bootstrap": {
+    "resamples": 20000,
+    "seed": 20260828,
+    "sampling_unit": "sequence",
+    "method": "paired_percentile"
+  },
+  "canonical_policy": {
+    "keep_2d2f_max_ce_cost": 0.005,
+    "require_2d2f_state_smaller": true
+  },
+  "mutation_counters_required": {
+    "optimizer_steps": 0,
+    "backward_calls": 0,
+    "parameter_updates": 0,
+    "scheduler_steps": 0,
+    "training_targets": 0
+  }
+}
