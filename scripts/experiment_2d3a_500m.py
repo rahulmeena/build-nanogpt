@@ -466,7 +466,7 @@ def run_train(args):
     end = int(args.end_update)
     if (start, end) not in ((SOURCE_UPDATE, RESTART_UPDATE), (572, RESTART_UPDATE),
                             (620, RESTART_UPDATE), (RESTART_UPDATE, FINAL_UPDATE),
-                            (835, FINAL_UPDATE)):
+                            (835, FINAL_UPDATE), (FINAL_UPDATE, FINAL_UPDATE)):
         raise SystemExit(f"unauthorized segment {start}->{end}")
     if start in MILESTONES and not milestone_complete(output, MILESTONES[start]):
         run_milestone(args, model, start)
