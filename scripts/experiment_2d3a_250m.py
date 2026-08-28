@@ -227,7 +227,31 @@ def save_checkpoint(path, source, model, optimizer, loader, completed, accumulat
 
 
 def persist_checkpoint(path, persistent_dir):
-    return base.persist_triplet(Path(path), Path(persistent_dir))
+    path = Path(path).resolve(); persistent_dir = Path(persistent_dir).resolve()
+    try:
+        return base.persist_triplet(path, persistent_dir)
+    except OSError as error:
+        # RunPod's FUSE volume can report EIO after a large copy has reached
+        # its full byte count.  Recover only when every byte hashes exactly;
+        # otherwise preserve the local strict checkpoint and fail closed.
+        rows = []
+        for source in (path, path.with_suffix(path.suffix + ".sha256"),
+                       path.with_suffix(path.suffix + ".verification.json")):
+            destination = persistent_dir / source.name
+            temporary = destination.with_suffix(destination.suffix + f".tmp.{os.getpid()}")
+            if not temporary.exists():
+                if source == path:
+                    raise
+                shutil.copyfile(source, temporary)
+            if temporary.stat().st_size != source.stat().st_size:
+                raise
+            if sha256(temporary) != sha256(source):
+                raise
+            os.replace(temporary, destination)
+            rows.append({"source": str(source), "destination": str(destination),
+                         "sha256": sha256(destination), "bytes": destination.stat().st_size})
+        return {"files": rows, "passed": True, "checkpoint": rows[0]["destination"],
+                "sha256": rows[0]["sha256"], "recovered_after_copy_eio": str(error)}
 
 
 def output_args(parser):
@@ -450,20 +474,44 @@ def run_train(args):
     if args.resume_checkpoint:
         parent_source = base.d0.torch_load(Path(args.source_checkpoint), mmap=False)
         saved_pid = source.get("saved_process_id")
-        restart = {
-            "required_update": RESTART_UPDATE, "loaded_update": start,
-            "saved_process_id": saved_pid, "resumed_process_id": os.getpid(),
-            "fresh_process": saved_pid != os.getpid(),
-            "next_batch_sha256": base.next_batch_hash(loader, accumulation),
-            "expected_next_batch_sha256": source["next_global_batch_sha256"],
-            "next_stream_sha256": base.next_stream_hash(loader, accumulation),
-            "expected_next_stream_sha256": source["next_global_batch_stream_sha256"],
-        }
-        restart["passed"] = (start == RESTART_UPDATE and restart["fresh_process"]
+        restart = {"loaded_update": start, "saved_process_id": saved_pid,
+                   "resumed_process_id": os.getpid(), "fresh_process": saved_pid != os.getpid(),
+                   "next_batch_sha256": base.next_batch_hash(loader, accumulation),
+                   "expected_next_batch_sha256": source["next_global_batch_sha256"],
+                   "next_stream_sha256": base.next_stream_hash(loader, accumulation),
+                   "expected_next_stream_sha256": source["next_global_batch_stream_sha256"]}
+        restart["passed"] = (restart["fresh_process"]
                              and restart["next_batch_sha256"] == restart["expected_next_batch_sha256"]
                              and restart["next_stream_sha256"] == restart["expected_next_stream_sha256"])
-        durable_json(output / "mandatory_fresh_process_restart_update_334.json", restart)
-        if not restart["passed"]: raise SystemExit(f"mandatory restart failed: {restart}")
+        if start == RESTART_UPDATE:
+            restart["required_update"] = RESTART_UPDATE
+            durable_json(output / "mandatory_fresh_process_restart_update_334.json", restart)
+            if not restart["passed"]: raise SystemExit(f"mandatory restart failed: {restart}")
+        elif start in MILESTONES:
+            restart["reason"] = "fresh-process recovery from strict scientific milestone checkpoint"
+            durable_json(output / f"scientific_recovery_update_{start}.json", restart)
+            if not restart["passed"]: raise SystemExit(f"scientific recovery failed: {restart}")
+            manifest_path = output / "checkpoint_manifest.json"
+            manifest = read_json(manifest_path)
+            if str(start) not in manifest:
+                reopen = strict_reopen(args.resume_checkpoint, start, source["metadata"], device)
+                persistent = Path(args.persistent_checkpoint_dir) / Path(args.resume_checkpoint).name
+                persistent_sha = sha256(persistent)
+                local_sha = sha256(args.resume_checkpoint)
+                if not reopen["passed"] or persistent_sha != local_sha:
+                    raise SystemExit("recovered scientific checkpoint failed local/persistent verification")
+                manifest[str(start)] = {
+                    "checkpoint": str(Path(args.resume_checkpoint).resolve()), "sha256": local_sha,
+                    "bytes": Path(args.resume_checkpoint).stat().st_size,
+                    "next_global_batch_sha256": source["next_global_batch_sha256"],
+                    "next_global_batch_stream_sha256": source["next_global_batch_stream_sha256"],
+                    "strict_reopen": reopen,
+                    "persistent": {"checkpoint": str(persistent.resolve()), "sha256": persistent_sha,
+                                   "passed": True, "recovered_from_verified_full_size_temporary": True},
+                }
+                durable_json(manifest_path, manifest)
+        else:
+            raise SystemExit(f"unauthorized resume update {start}")
         metadata = source["metadata"]
     else:
         parent_source = source
@@ -471,7 +519,8 @@ def run_train(args):
         if not all(checks.values()): raise SystemExit(f"source checks failed at train start: {checks}")
         metadata = continuation_metadata(args, source, accumulation)
     end = int(args.end_update)
-    if (start, end) not in ((SOURCE_UPDATE, RESTART_UPDATE), (RESTART_UPDATE, FINAL_UPDATE)):
+    if (start, end) not in ((SOURCE_UPDATE, RESTART_UPDATE), (286, RESTART_UPDATE),
+                            (RESTART_UPDATE, FINAL_UPDATE), (381, FINAL_UPDATE)):
         raise SystemExit(f"unauthorized segment {start}->{end}")
     if start in MILESTONES and not milestone_complete(output, MILESTONES[start]):
         run_milestone(args, model, start)
