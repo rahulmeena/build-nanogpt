@@ -56,6 +56,10 @@ INCREMENTAL_CONTROLS = (
     "b6_full_native",
 )
 
+# Frozen M500 factorial-only controls.  Keeping these separate prevents them
+# from changing the canonical maturation-control inventory above.
+FACTORIAL_CONTROLS = ("b3_b5_off", "b3_b6_off", "b5_b6_off")
+
 
 @dataclass(frozen=True)
 class PyramidIncrementalState:
@@ -750,6 +754,9 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
             "b5_off": {4},
             "b6_off": {5},
             "b6_full_native": {5},
+            "b3_b5_off": {2, 4},
+            "b3_b6_off": {2, 5},
+            "b5_b6_off": {4, 5},
         }.get(control, set())
         shuffled = {
             "b1_shuffled": {0},
@@ -773,7 +780,7 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
     ):
         self._validate_incremental_state(state)
         mode = self._validate_bank_mode(bank_mode)
-        if control not in INCREMENTAL_CONTROLS:
+        if control not in INCREMENTAL_CONTROLS + FACTORIAL_CONTROLS:
             raise ValueError(f"unknown incremental control: {control}")
         wants_full_b6 = control == "b6_full_native"
         if state.b6_full_native != wants_full_b6:
