@@ -33,6 +33,16 @@ B6 TRUE SEQUENCE GAP:
 - Parameters: 124,475,908
 - Runtime: 1807.128s; mean 9.461s/update.
 
+| Destination | Local window | Recurrent source | Recurrent lags |
+|---|---:|---|---|
+| B1 | 2 | B12 post-MLP residual | 2–1023 |
+| B2 | 1024 | — | — |
+| B3 | 32 | B10 post-MLP residual | 32–1023 |
+| B4 | 1024 | — | — |
+| B5 | 64 | B8 post-MLP residual | 64–1023 |
+| B6 | 512 | B7 post-MLP residual | 512–1023 |
+| B7–B12 | 1024 | — | — |
+
 ## Link classifications
 - B3: POSITIVE UTILITY
 - B5: POSITIVE UTILITY
@@ -43,6 +53,15 @@ B6 TRUE SEQUENCE GAP:
 - SHA: `8727e86c6f18164f3a8104af3c726290536136d9f8d0efe810dcc29656d33667`
 - Exact next-batch SHA: `91fa2cae4e6e52cfddd2b470175ec704f0548b447f02861917ec548736fe18e7`
 - The checkpoint is resume-ready; no gate, optimizer, scheduler, loader, warmup, or RNG reset is permitted.
+
+## Operational closure
+- Git branch: `experiment-2d3a-alternating-integration-pyramid-100m`
+- Final evidence commit before postflight metadata: `d27a6a0c`
+- Artifact directory: `results/experiment_2d3a_alternating_integration_pyramid_100m`
+- Local backup: `/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d3a_alternating_integration_pyramid_100m/scientific_cumulative_000100139008.pt`
+- Independently verified local SHA-256: `8727e86c6f18164f3a8104af3c726290536136d9f8d0efe810dcc29656d33667`
+- Persistent network volume retained: `yhzyb27fb5`
+- Exact pod scheduled to stop after final Git synchronization: `7i2zyd53ytspwz` (`empirical_tan_panda`); pod will not be deleted.
 
 ## Q1–Q45
 - **Q1. What exact Stage-A source path was resolved?**

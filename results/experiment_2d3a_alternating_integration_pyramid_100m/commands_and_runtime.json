@@ -1,8 +1,21 @@
 {
   "commands": [
-    {
-      "command": "scripts/experiment_2d3a.py preflight --source-checkpoint /workspace/exp2d3a_source/stage_a_scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir results/experiment_2d3a_alternating_integration_pyramid_100m --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --stop-capability-verified",
-      "kind": "preflight"
-    }
-  ]
+    {"kind": "preflight", "command": "python scripts/experiment_2d3a.py preflight --source-checkpoint /workspace/exp2d3a_source/stage_a_scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir results/experiment_2d3a_alternating_integration_pyramid_100m --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --stop-capability-verified"},
+    {"kind": "smoke", "command": "python scripts/experiment_2d3a.py smoke --source-checkpoint /workspace/exp2d3a_source/stage_a_scientific_update_0191.pt --data-root /workspace/build-nanogpt/edu_fineweb10B --output-dir results/experiment_2d3a_alternating_integration_pyramid_100m --pod-id 7i2zyd53ytspwz --pod-name empirical_tan_panda --checkpoint-dir /tmp/exp2d3a/smoke"},
+    {"kind": "train_0_to_96", "command": "python scripts/experiment_2d3a.py train ... --end-update 96"},
+    {"kind": "train_96_to_191", "command": "python scripts/experiment_2d3a.py train ... --resume-checkpoint /workspace/exp2d3a_run/checkpoints/scientific_cumulative_000050331648.pt --end-update 191"},
+    {"kind": "finalize", "command": "python scripts/experiment_2d3a.py finalize ... --final-checkpoint /workspace/exp2d3a_run/checkpoints/scientific_cumulative_000100139008.pt"}
+  ],
+  "infrastructure_recovery": {
+    "event": "network-volume FUSE request became kernel-uninterruptible during an uncheckpointed post-96 attempt",
+    "action": "trimmed aborted metrics to update 96, stopped/started the same pod, reverified persistent checkpoint SHA, and resumed from exact update-96 checkpoint",
+    "scientific_checkpoint_affected": false,
+    "final_metrics_rows": 191
+  },
+  "runtime": {
+    "training_wall_seconds": 1807.1276280842721,
+    "mean_seconds_per_update": 9.461401194158492,
+    "aggregate_targets_per_second": 55413.35677887727,
+    "incremental_wall_seconds": 887.6740356273949
+  }
 }

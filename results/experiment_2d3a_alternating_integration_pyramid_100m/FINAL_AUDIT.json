@@ -1,21 +1,70 @@
 {
-  "checks": {
-    "architecture": true,
-    "cache": true,
-    "causality": true,
-    "continuation": true,
-    "gradients": true,
-    "no_training_after_191": true,
-    "parameters": true,
-    "persistence": true,
-    "restart": true,
-    "source": true,
-    "stability": true,
-    "training": true
-  },
-  "classification": "MULTI-LINK POSITIVE RECURRENT PYRAMID",
   "experiment": "2D3A",
+  "classification": "MULTI-LINK POSITIVE RECURRENT PYRAMID",
+  "checks": {
+    "source": {
+      "exact_2d2g_a_sha": true,
+      "strict_reopen": true,
+      "only_b1_recurrent_gate": true,
+      "optimizer_restored": true,
+      "loader_restored": true,
+      "rng_restored": true
+    },
+    "architecture": {
+      "windows_b1_to_b12": [2, 1024, 32, 1024, 64, 512, 1024, 1024, 1024, 1024, 1024, 1024],
+      "b12_to_b1_exact": true,
+      "b10_to_b3_exact": true,
+      "b8_to_b5_exact": true,
+      "b7_to_b6_exact": true,
+      "no_b11_to_b2": true,
+      "no_b9_to_b4": true,
+      "recurrent_lag_ranges": {"b1": [2, 1023], "b3": [32, 1023], "b5": [64, 1023], "b6": [512, 1023]}
+    },
+    "parameters_and_readout": {
+      "exactly_three_new_scalars": true,
+      "total_parameters_124475908": true,
+      "destination_ln_qkv_reused": true,
+      "separate_local_recurrent_softmax": true,
+      "one_c_proj": true
+    },
+    "training": {
+      "all_gpt2_parameters_trainable": true,
+      "b1_gate_resumed": true,
+      "b3_b5_b6_zero_initialized": true,
+      "no_detach": true,
+      "cross_entropy_only": true,
+      "pass_weights_exact": true,
+      "pass3_cadence_exact": true,
+      "targets_per_update_524288": true,
+      "updates_191": true,
+      "targets_100139008": true,
+      "no_training_after_191": true
+    },
+    "gradients": {"b12_writer": true, "b10_writer": true, "b8_writer": true, "b7_writer": true},
+    "causality": {"future_token_invariance": true, "row_isolation": true, "local_recurrent_nonoverlap": true},
+    "state": {"cache_bounds": true, "raw_ring_bounds": true, "no_hidden_full_recurrent_destination_cache": true},
+    "stability": {"all_finite": true, "eight_pass_probe_finite": true},
+    "restart": {"mandatory_update_96_fresh_process_exact": true},
+    "continuation": {
+      "optimizer": true,
+      "scheduler": true,
+      "loader": true,
+      "rng": true,
+      "next_batch": true,
+      "counters": true,
+      "architecture": true,
+      "manifest_complete": true
+    },
+    "persistence": {
+      "final_sha_verified": true,
+      "local_backup_sha_verified": true,
+      "git_clean_and_pushed": true,
+      "persistent_volume_retained": true
+    }
+  },
+  "source_checkpoint_sha256": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
   "final_checkpoint_sha256": "8727e86c6f18164f3a8104af3c726290536136d9f8d0efe810dcc29656d33667",
+  "local_backup_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d3a_alternating_integration_pyramid_100m/scientific_cumulative_000100139008.pt",
   "no_further_training_after_100m": true,
   "passed": true
 }
