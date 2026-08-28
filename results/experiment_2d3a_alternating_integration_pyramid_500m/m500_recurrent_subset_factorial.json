@@ -1,0 +1,59 @@
+{
+  "best_bits_B3_B5_B6": "111",
+  "best_ce": 3.0527591211934975,
+  "best_control": "all_real",
+  "conditions": {
+    "000": {
+      "control": "new_links_off",
+      "validation_loss": 3.0530242691055385
+    },
+    "001": {
+      "control": "b3_b5_off",
+      "validation_loss": 3.053005969958704
+    },
+    "010": {
+      "control": "b3_b6_off",
+      "validation_loss": 3.052828403989232
+    },
+    "011": {
+      "control": "b3_off",
+      "validation_loss": 3.0529011509575685
+    },
+    "100": {
+      "control": "b5_b6_off",
+      "validation_loss": 3.0530182856710995
+    },
+    "101": {
+      "control": "b5_off",
+      "validation_loss": 3.053113843574982
+    },
+    "110": {
+      "control": "b6_off",
+      "validation_loss": 3.0527748339427543
+    },
+    "111": {
+      "control": "all_real",
+      "validation_loss": 3.0527591211934975
+    }
+  },
+  "factorial_main_effects": {
+    "B3": 2.3427407177312176e-05,
+    "B5": 0.00022471455681793984,
+    "B6": -3.357324403197026e-05
+  },
+  "historical_combined_minus_leave_one_out_marginals": -0.00024731698277147274,
+  "pairwise_interactions": {
+    "B3xB5": 0.00014874499619410564,
+    "B3xB6": -1.2698666562060978e-05,
+    "B5xB6": 1.0112268984396877e-05
+  },
+  "performance": {
+    "peak_allocated_vram_mb": 5930.39111328125,
+    "peak_reserved_vram_mb": 23826.0,
+    "wall_seconds": 568.5582419354469
+  },
+  "signed_convention": "positive effect means lower CE from enabling recurrence; positive interaction means super-additive CE reduction",
+  "subset_sha256": "8befbf790b3e522747cd39da306ec124464bf8dde1604caf64f299efa7e36216",
+  "targets_per_condition": 262144,
+  "three_way_interaction": 0.0002023167683096183
+}

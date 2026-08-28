@@ -1,0 +1,42 @@
+{
+  "authorized": true,
+  "checks": {
+    "architecture": true,
+    "architecture_manifest_exact": true,
+    "branch": true,
+    "canonical_sha": true,
+    "causality": true,
+    "checkpoint_sha256": true,
+    "ephemeral_free_ge_12gb": true,
+    "incremental_cache_smoke": true,
+    "incremental_regression_exact": true,
+    "maturation_core_geometry": true,
+    "model_finite": true,
+    "next_batch": true,
+    "next_stream": true,
+    "optimizer_finite": true,
+    "optimizer_state_complete": true,
+    "optimizer_steps_exact": true,
+    "parallel_regression_exact": true,
+    "parameters": true,
+    "rng_complete": true,
+    "row_isolation": true,
+    "scheduler_present": true,
+    "schema": true,
+    "source_commit_ancestor": true,
+    "stop_capability": true,
+    "storage_free_ge_80gb": true,
+    "stored_next_batch": true,
+    "stored_next_stream": true,
+    "tag_exact": true,
+    "targets": true,
+    "updates": true
+  },
+  "experiment": "2D3A-500M",
+  "hardware": {
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "gpu_count": 1
+  },
+  "pod_id": "h6of430yxncf6h",
+  "pod_name": "opposite_azure_ladybug"
+}

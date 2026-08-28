@@ -1,0 +1,34 @@
+{
+  "M100_retained": true,
+  "M250_retained": true,
+  "M300_retained": true,
+  "M375_retained": true,
+  "M500_retained": true,
+  "dataset_removed": false,
+  "deleted": [
+    {
+      "bytes": 498177785,
+      "later_update_381_and_final_update_477_checkpoints_retained": true,
+      "local_archive": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/storage_cleanup_recovery/experiment_2a3_250m/checkpoint_updates_000286.pt",
+      "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a3_250m/checkpoints/checkpoint_updates_000286.pt",
+      "reason": "recover persistent-volume capacity after the M500 checkpoint copy hit quota",
+      "recoverable_from_local_archive": true,
+      "sha256": "48afa92fcc1174f80278a3024edc9b05ca689c47eb1f24eea31bf3eb018aa364"
+    }
+  ],
+  "ephemeral_relocations": [
+    {
+      "destination": "/tmp/exp2d3a500m_git_pack_backup",
+      "kind": "disposable_current-clone_git_pack",
+      "source": "/workspace/build-nanogpt-exp2d3a500m_sparse/.git/objects/pack"
+    },
+    {
+      "destination": "/tmp/exp2d3a500m_source_250m_results",
+      "kind": "duplicate_source-results-copy",
+      "source": "/workspace/build-nanogpt-exp2d3a500m_sparse/results/experiment_2d3a_alternating_integration_pyramid_250m"
+    }
+  ],
+  "passed": true,
+  "persistent_volume_retained": true,
+  "scientific_2d3a_checkpoint_removed": false
+}
