@@ -1,0 +1,45 @@
+{
+  "schema": "experiment_2d3a_500m_postflight_v1",
+  "experiment": "Experiment 2D3A — Continue Alternating-Integration Recurrent Pyramid from 250M to 500M",
+  "branch": "experiment-2d3a-alternating-integration-pyramid-500m",
+  "sealed_report_commit": "67921010f83d9e7a6694ad4b4a511039b481d6c0",
+  "remote_branch_exact_at_sealed_report_commit": true,
+  "final_tag_to_create_after_this_audit_commit": "experiment-2d3a-alternating-integration-pyramid-500m-final",
+  "cumulative_updates": 954,
+  "cumulative_targets": 500170752,
+  "no_training_beyond_final_endpoint": true,
+  "final_checkpoint": {
+    "sha256": "a0cdf438ae44b76fcee1badc67faa1025203914af9645a86043adf1d332ca619",
+    "pod_local_match": true,
+    "persistent_volume_match": true,
+    "mac_archive_match": true,
+    "strict_reopen_passed": true
+  },
+  "final_audit": {
+    "sha256": "d626906b7e0aab2d21818eba54384a044cdeae03092dfb4623c808733afb016f",
+    "checks_passed": 18,
+    "checks_total": 18,
+    "pod_local_match": true,
+    "persistent_volume_match": true,
+    "worktree_match": true
+  },
+  "artifacts": {
+    "worktree_file_count_before_postflight": 69,
+    "pod_to_worktree_all_files_sha256_match": true,
+    "persistent_results_copy_present": true,
+    "final_report_completion_sentinel_present": true
+  },
+  "verification": {
+    "static_tests_passed": true,
+    "static_tests_count": 4,
+    "python_compile_passed": true,
+    "result_final_audit_passed": true,
+    "no_experiment_process_running": true,
+    "pod_stop_capability_preflight_passed": true
+  },
+  "storage_cleanup_recorded": true,
+  "pod_id": "h6of430yxncf6h",
+  "pod_name": "opposite_azure_ladybug",
+  "shutdown_sequence": "commit and push this audit, create and verify the exact final tag, verify local archives, then stop the exact pod",
+  "passed": true
+}
