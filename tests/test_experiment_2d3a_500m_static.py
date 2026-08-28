@@ -33,6 +33,13 @@ class Experiment2D3A500MStaticTests(unittest.TestCase):
         self.assertNotIn("b3_b6_off", canonical)
         self.assertNotIn("b5_b6_off", canonical)
 
+    def test_finalize_can_recover_a_quota_interrupted_manifest(self):
+        text = (ROOT / "scripts/experiment_2d3a_500m.py").read_text()
+        self.assertIn('p.add_argument("--persistent-checkpoint-dir", required=True)', text)
+        self.assertIn('if str(FINAL_UPDATE) not in manifest:', text)
+        self.assertIn('"recovered_after_quota_failure": True', text)
+        self.assertIn("48afa92fcc1174f80278a3024edc9b05ca689c47eb1f24eea31bf3eb018aa364", text)
+
 
 if __name__ == "__main__":
     unittest.main()

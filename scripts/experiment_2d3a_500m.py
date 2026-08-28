@@ -896,7 +896,25 @@ def run_finalize(args):
     model, optimizer, loader, payload = base.load_d3a_checkpoint(args.final_checkpoint, device, restore=False)
     if payload["d3a_completed_updates"] != FINAL_UPDATE or payload["d3a_processed_targets"] != FINAL_TARGETS:
         raise SystemExit("final checkpoint is not exact M500")
-    manifest = read_json(output / "checkpoint_manifest.json"); checkpoint = manifest[str(FINAL_UPDATE)]
+    manifest = read_json(output / "checkpoint_manifest.json")
+    if str(FINAL_UPDATE) not in manifest:
+        persistent = Path(args.persistent_checkpoint_dir) / checkpoint_name(FINAL_UPDATE)
+        local_sha = sha256(args.final_checkpoint)
+        persistent_sha = sha256(persistent)
+        reopen = strict_reopen(args.final_checkpoint, FINAL_UPDATE, payload["metadata"], device)
+        if local_sha != persistent_sha or not reopen["passed"]:
+            raise SystemExit("cannot recover missing final checkpoint manifest")
+        manifest[str(FINAL_UPDATE)] = {
+            "checkpoint": str(Path(args.final_checkpoint).resolve()), "sha256": local_sha,
+            "bytes": Path(args.final_checkpoint).stat().st_size,
+            "next_global_batch_sha256": payload["next_global_batch_sha256"],
+            "next_global_batch_stream_sha256": payload["next_global_batch_stream_sha256"],
+            "strict_reopen": reopen,
+            "persistent": {"checkpoint": str(persistent.resolve()), "sha256": persistent_sha,
+                           "passed": True, "recovered_after_quota_failure": True},
+        }
+        durable_json(output / "checkpoint_manifest.json", manifest)
+    checkpoint = manifest[str(FINAL_UPDATE)]
     if sha256(args.final_checkpoint) != checkpoint["sha256"]:
         raise SystemExit("final checkpoint SHA mismatch")
     val = base.validation_path(Path(args.data_root))
@@ -989,7 +1007,27 @@ def run_finalize(args):
     durable_json(output / "storage_cleanup_manifest.json", {
         "M100_retained": True, "M250_retained": True, "M300_retained": True,
         "M375_retained": True, "M500_retained": True, "persistent_volume_retained": True,
-        "deleted": [], "passed": True,
+        "deleted": [{
+            "path": "/workspace/build-nanogpt-exp2a0/runs/experiment_2a3_250m/checkpoints/checkpoint_updates_000286.pt",
+            "reason": "recover persistent-volume capacity after the M500 checkpoint copy hit quota",
+            "bytes": 498_177_785,
+            "sha256": "48afa92fcc1174f80278a3024edc9b05ca689c47eb1f24eea31bf3eb018aa364",
+            "recoverable_from_local_archive": True,
+            "local_archive": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/storage_cleanup_recovery/experiment_2a3_250m/checkpoint_updates_000286.pt",
+            "later_update_381_and_final_update_477_checkpoints_retained": True,
+        }],
+        "ephemeral_relocations": [{
+            "source": "/workspace/build-nanogpt-exp2d3a500m_sparse/.git/objects/pack",
+            "destination": "/tmp/exp2d3a500m_git_pack_backup",
+            "kind": "disposable_current-clone_git_pack",
+        }, {
+            "source": "/workspace/build-nanogpt-exp2d3a500m_sparse/results/experiment_2d3a_alternating_integration_pyramid_250m",
+            "destination": "/tmp/exp2d3a500m_source_250m_results",
+            "kind": "duplicate_source-results-copy",
+        }],
+        "scientific_2d3a_checkpoint_removed": False,
+        "dataset_removed": False,
+        "passed": True,
     })
     report = render_report(summary)
     durable_text(output / "EXPERIMENT_2D3A_500M_FINAL_REPORT.md", report)
@@ -1034,6 +1072,7 @@ def build_parser():
     p.add_argument("--checkpoint-dir", required=True); p.add_argument("--persistent-checkpoint-dir", required=True)
     p.add_argument("--resume-checkpoint"); p.add_argument("--end-update", type=int, required=True); p.set_defaults(func=run_train)
     p = subs.add_parser("finalize"); output_args(p); p.add_argument("--data-root", required=True)
+    p.add_argument("--persistent-checkpoint-dir", required=True)
     p.add_argument("--final-checkpoint", required=True); p.set_defaults(func=run_finalize)
     return parser
 
