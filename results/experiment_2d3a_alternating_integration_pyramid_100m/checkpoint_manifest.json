@@ -1,4 +1,55 @@
 {
+  "191": {
+    "bytes": 1493952843,
+    "checkpoint": "/tmp/exp2d3a/checkpoints/scientific_cumulative_000100139008.pt",
+    "next_global_batch_sha256": "91fa2cae4e6e52cfddd2b470175ec704f0548b447f02861917ec548736fe18e7",
+    "next_global_batch_stream_sha256": "4da6fed71755e523030a2d8e9e7cc96d19691a8c9b3ac8c490426bafe3d44e82",
+    "persistent": {
+      "checkpoint": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_000100139008.pt",
+      "files": [
+        {
+          "bytes": 1493952843,
+          "destination": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_000100139008.pt",
+          "sha256": "8727e86c6f18164f3a8104af3c726290536136d9f8d0efe810dcc29656d33667",
+          "source": "/tmp/exp2d3a/checkpoints/scientific_cumulative_000100139008.pt"
+        },
+        {
+          "bytes": 104,
+          "destination": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_000100139008.pt.sha256",
+          "sha256": "f5d06ce41f78c192354ab741882fc2cb009e44114cf8201b74121c1d25c117fc",
+          "source": "/tmp/exp2d3a/checkpoints/scientific_cumulative_000100139008.pt.sha256"
+        },
+        {
+          "bytes": 427,
+          "destination": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_000100139008.pt.verification.json",
+          "sha256": "d1631afe3b768c23a3844b412b158f418d2d3c962869ff8c77d6b3c7d2400acd",
+          "source": "/tmp/exp2d3a/checkpoints/scientific_cumulative_000100139008.pt.verification.json"
+        }
+      ],
+      "passed": true,
+      "sha256": "8727e86c6f18164f3a8104af3c726290536136d9f8d0efe810dcc29656d33667"
+    },
+    "sha256": "8727e86c6f18164f3a8104af3c726290536136d9f8d0efe810dcc29656d33667",
+    "strict_reopen": {
+      "checks": {
+        "architecture": true,
+        "continuation_fields": true,
+        "loader_next_batch": true,
+        "loader_next_stream": true,
+        "metadata": true,
+        "model_finite": true,
+        "model_parameters": true,
+        "optimizer_finite": true,
+        "preregistered_next_cursor": true,
+        "rng_complete": true,
+        "scheduler_present": true,
+        "schema": true,
+        "targets": true,
+        "updates": true
+      },
+      "passed": true
+    }
+  },
   "96": {
     "bytes": 1493952523,
     "checkpoint": "/tmp/exp2d3a/checkpoints/scientific_cumulative_000050331648.pt",
@@ -41,6 +92,56 @@
         "model_parameters": true,
         "optimizer_finite": true,
         "preregistered_next_cursor": true,
+        "rng_complete": true,
+        "scheduler_present": true,
+        "schema": true,
+        "targets": true,
+        "updates": true
+      },
+      "passed": true
+    }
+  },
+  "recovery_100": {
+    "bytes": 1493944219,
+    "checkpoint": "/tmp/exp2d3a/checkpoints/recovery_update_0100.pt",
+    "next_global_batch_sha256": "8538167afb1737ef95351ac68e00cb3a0bc2a7f641f7f36a479ca990b60e2d29",
+    "next_global_batch_stream_sha256": "283b08781abb1f56aceb1ff7b72f1b848f078a4a798cb73fc248d1c0252ea0f8",
+    "sha256": "3b2facddb91ef80a1ac943338f47c29139627ee65d802c1fa3c9699dd664f798",
+    "strict_reopen": {
+      "checks": {
+        "architecture": true,
+        "continuation_fields": true,
+        "loader_next_batch": true,
+        "loader_next_stream": true,
+        "metadata": true,
+        "model_finite": true,
+        "model_parameters": true,
+        "optimizer_finite": true,
+        "rng_complete": true,
+        "scheduler_present": true,
+        "schema": true,
+        "targets": true,
+        "updates": true
+      },
+      "passed": true
+    }
+  },
+  "recovery_150": {
+    "bytes": 1493944219,
+    "checkpoint": "/tmp/exp2d3a/checkpoints/recovery_update_0150.pt",
+    "next_global_batch_sha256": "1aac0fc868e457f6a7429a6b6c1da613bab642831cefbb1197aafbd21ffd5397",
+    "next_global_batch_stream_sha256": "c24e3cff38228565819ad49a15fe4c605d4be0714dddf725d293ae8376c32230",
+    "sha256": "16adbf14d631cd2cb5eb0a1f33078c492d23a9041784f8b57ffe40f20d364105",
+    "strict_reopen": {
+      "checks": {
+        "architecture": true,
+        "continuation_fields": true,
+        "loader_next_batch": true,
+        "loader_next_stream": true,
+        "metadata": true,
+        "model_finite": true,
+        "model_parameters": true,
+        "optimizer_finite": true,
         "rng_complete": true,
         "scheduler_present": true,
         "schema": true,

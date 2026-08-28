@@ -1,108 +1,105 @@
 {
-  "checkpoint": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_000050331648.pt",
-  "d3a_processed_targets": 50331648,
+  "checkpoint": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_000100139008.pt",
+  "d3a_processed_targets": 100139008,
   "experiment": "2D3A",
   "latest_metrics": {
     "approximate_pass_forward_seconds": [
-      1.7216047433515391,
-      1.7216047433515391,
-      1.7216047433515391
+      1.8832858800888062,
+      1.8832858800888062
     ],
-    "d3a_processed_targets": 50331648,
+    "d3a_processed_targets": 100139008,
     "gate_after": {
       "b1": {
-        "effective": 0.1511562466621399,
-        "raw": 0.15232351422309875
+        "effective": 0.1707163006067276,
+        "raw": 0.17240437865257263
       },
       "b3": {
-        "effective": 0.013945032842457294,
-        "raw": 0.013945937156677246
+        "effective": 0.01344364881515503,
+        "raw": 0.013444459065794945
       },
       "b5": {
-        "effective": 0.02403562143445015,
-        "raw": 0.024040251970291138
+        "effective": 0.04241001233458519,
+        "raw": 0.04243546724319458
       },
       "b6": {
-        "effective": 0.020104624330997467,
-        "raw": 0.020107334479689598
+        "effective": 0.04041137546300888,
+        "raw": 0.04043339565396309
       }
     },
     "gate_before": {
       "b1": {
-        "effective": 0.15091635286808014,
-        "raw": 0.15207801759243011
+        "effective": 0.1704859584569931,
+        "raw": 0.1721671223640442
       },
       "b3": {
-        "effective": 0.01392312627285719,
-        "raw": 0.013924025930464268
+        "effective": 0.013413790613412857,
+        "raw": 0.013414595276117325
       },
       "b5": {
-        "effective": 0.02382192388176918,
-        "raw": 0.02382643148303032
+        "effective": 0.04228132963180542,
+        "raw": 0.042306553572416306
       },
       "b6": {
-        "effective": 0.01986750401556492,
-        "raw": 0.01987011916935444
+        "effective": 0.04024508222937584,
+        "raw": 0.04026683047413826
       }
     },
     "gate_gradients": {
-      "b1": -0.0035876797046512365,
-      "b3": -0.0018101849127560854,
-      "b5": 0.0001577491348143667,
-      "b6": -0.000785435491707176
+      "b1": -0.0032184761948883533,
+      "b3": -0.0028226065915077925,
+      "b5": 0.0006075350102037191,
+      "b6": -0.00021128353546373546
     },
     "gradient_groups": {
       "b1_gate": {
         "finite": true,
         "nonzero": true,
-        "norm": 0.0035876797046512365,
+        "norm": 0.0032184761948883533,
         "tensors": 1
       },
       "b3_gate": {
         "finite": true,
         "nonzero": true,
-        "norm": 0.0018101849127560854,
+        "norm": 0.0028226065915077925,
         "tensors": 1
       },
       "b5_gate": {
         "finite": true,
         "nonzero": true,
-        "norm": 0.0001577491348143667,
+        "norm": 0.0006075350102037191,
         "tensors": 1
       },
       "b6_gate": {
         "finite": true,
         "nonzero": true,
-        "norm": 0.000785435491707176,
+        "norm": 0.00021128353546373546,
         "tensors": 1
       },
       "base": {
         "finite": true,
         "nonzero": true,
-        "norm": 0.4799748659133911,
+        "norm": 0.4092916250228882,
         "tensors": 148
       }
     },
-    "gradient_norm_before_clip": 0.4799923896789551,
-    "local_update": 96,
-    "pass_count": 3,
+    "gradient_norm_before_clip": 0.4093143939971924,
+    "local_update": 191,
+    "pass_count": 2,
     "pass_losses": [
-      3.1173431873321533,
-      3.1091912239789963,
-      3.1092336922883987
+      3.0749769508838654,
+      3.0669784396886826
     ],
     "pass_weights": [
-      0.2,
-      0.4,
-      0.4
+      0.25,
+      0.75
     ],
-    "peak_allocated_vram_mb": 51193.33349609375,
-    "peak_reserved_vram_mb": 54044.0,
-    "targets_per_second": 37100.20566424178,
-    "wall_seconds": 14.13167368248105
+    "peak_allocated_vram_mb": 36271.888671875,
+    "peak_reserved_vram_mb": 52708.0,
+    "targets_per_second": 56825.91228274253,
+    "wall_seconds": 9.226213516667485
   },
-  "local_update": 96,
-  "pid": 1849,
-  "status": "training",
-  "updated_at_unix": 1787900761.4225428
+  "local_update": 191,
+  "pid": 165,
+  "status": "training_complete",
+  "updated_at_unix": 1787902562.8858027
 }
