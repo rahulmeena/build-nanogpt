@@ -1,0 +1,51 @@
+{
+  "experiment": "2D3A",
+  "branch": "experiment-2d3a-alternating-integration-pyramid-100m",
+  "source": {
+    "experiment": "2D2G-A",
+    "checkpoint_sha256": "cb5dd5904779617959b5619982a9dfe69f0c4d705679652f4f99a8285879b5e8",
+    "schema": "exp2d2g_stage_a_matched_age_checkpoint_v1",
+    "parameters": 124475905,
+    "next_global_batch_sha256": "39808d08e7e15e9f160e32ba838fd28839067827095b023d4f475b30df392086",
+    "next_global_batch_stream_sha256": "110e232ab330611a8d23cddc6e914c8a2d912fd8191873ae67488b0d52f48daa"
+  },
+  "architecture": {
+    "B1": {"local_window": 2, "source": "B12", "recurrent_lags": [2, 1023]},
+    "B2": {"local_window": 1024, "recurrent": false},
+    "B3": {"local_window": 32, "source": "B10", "recurrent_lags": [32, 1023]},
+    "B4": {"local_window": 1024, "recurrent": false},
+    "B5": {"local_window": 64, "source": "B8", "recurrent_lags": [64, 1023]},
+    "B6": {"local_window": 512, "source": "B7", "recurrent_lags": [512, 1023]},
+    "B7-B12": {"local_window": 1024, "recurrent": false},
+    "parameters": 124475908,
+    "new_parameters": ["g_rec_b3", "g_rec_b5", "g_rec_b6"]
+  },
+  "training": {
+    "updates": 191,
+    "targets_per_update": 524288,
+    "targets": 100139008,
+    "milestones": [0, 20, 48, 96, 143, 191],
+    "two_pass_weights": [0.25, 0.75],
+    "three_pass_weights": [0.2, 0.4, 0.4],
+    "three_pass_every": 32,
+    "mandatory_fresh_process_restart": 96,
+    "base_lr": 0.00003,
+    "new_gate_lr": 0.0003,
+    "betas": [0.9, 0.95],
+    "eps": 1e-8,
+    "weight_decay": 0.1
+  },
+  "validation": {
+    "parallel": {"batches": 20, "batch_size": 64, "sequence_length": 1024,
+      "collection_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb"},
+    "true_incremental": {"batches": 4, "batch_size": 64, "sequence_length": 1024,
+      "targets_per_control": 262144}
+  },
+  "hardware": {"gpu_count": 1, "gpu": "NVIDIA A100-SXM4-80GB"},
+  "future_boundaries": {
+    "100M": {"updates": 191, "targets": 100139008},
+    "250M": {"updates": 477, "targets": 250085376},
+    "500M": {"updates": 954, "targets": 500170752},
+    "1B": {"updates": 1908, "targets": 1000341504}
+  }
+}
