@@ -862,7 +862,12 @@ def attention_diagnostic(model, val_path, link):
     def summarize(weights, mask, bins):
         per_head_num = torch.zeros(weights.size(1)); per_head_den = torch.zeros(weights.size(1))
         lag_mass = {name: 0.0 for name, _, _ in bins}; lag_count = {name: 0 for name, _, _ in bins}
-        samples = [[] for _ in range(weights.size(1))]; entropy = 0.0; rows = 0
+        # Aggregate mass by lag directly.  This is mathematically identical to
+        # sorting every (lag, mass) tuple, because the requested quantiles are
+        # over lag and all equal-lag entries are contiguous in that ordering.
+        # It avoids materializing and sorting millions of Python tuples.
+        head_lag_mass = torch.zeros((weights.size(1), T), dtype=torch.float64)
+        entropy = 0.0; rows = 0
         for query in range(weights.size(2)):
             source = torch.where(mask[query])[0]
             if not source.numel(): continue
@@ -873,19 +878,17 @@ def attention_diagnostic(model, val_path, link):
                 selected = (lags >= low) & (lags <= high)
                 lag_mass[name] += mean[selected].sum().item(); lag_count[name] += int(selected.sum())
             per_head_num += (current * lags.float()).sum(1); per_head_den += current.sum(1)
-            for head in range(weights.size(1)):
-                samples[head].extend(zip(lags.tolist(), current[head].tolist()))
+            head_lag_mass[:, lags] += current.double()
             entropy += (-(current.clamp_min(1e-30).log() * current).sum(1)).mean().item(); rows += 1
         means = (per_head_num / per_head_den.clamp_min(1e-30)).tolist()
         quantiles = []
-        for sample in samples:
-            ordered = sorted(sample); total = sum(mass for _, mass in ordered)
+        for sample in head_lag_mass:
+            total = sample.sum().item()
+            cumulative = sample.cumsum(0)
             values = []
             for q in (.5, .9):
-                threshold = total * q; cumulative = 0.0; answer = ordered[-1][0]
-                for lag, mass in ordered:
-                    cumulative += mass
-                    if cumulative >= threshold: answer = lag; break
+                threshold = total * q
+                answer = int(torch.searchsorted(cumulative, torch.tensor(threshold, dtype=cumulative.dtype)).clamp_max(T - 1).item())
                 values.append(answer)
             quantiles.append({"median_lag": values[0], "p90_lag": values[1]})
         return {"bins": {name: {"raw_mass": lag_mass[name] / max(rows, 1),
@@ -1364,8 +1367,23 @@ def run_finalize(args):
     if payload["d3a_completed_updates"] != 191 or payload["d3a_processed_targets"] != MAX_TARGETS: raise SystemExit("final checkpoint is not exact 100M endpoint")
     milestones = read_json(output / "milestone_validation.json")
     if set(milestones) != {str(value) for value in MILESTONES}: raise SystemExit("milestone set incomplete")
-    incremental = evaluate_incremental(model, validation_path(args.data_root))
-    attention = {link: attention_diagnostic(model, validation_path(args.data_root), link) for link in GATE_BLOCKS}
+    incremental_path = output / "incremental_validation.json"
+    if incremental_path.exists():
+        incremental = read_json(incremental_path)
+    else:
+        incremental = evaluate_incremental(model, validation_path(args.data_root))
+        durable_json(incremental_path, incremental)
+        durable_json(output / "incremental_cache_audit.json", {
+            name: control["cache_rows"] for name, control in incremental["controls"].items()
+        })
+    attention = {}
+    for link in GATE_BLOCKS:
+        path = output / f"{link}_attention_diagnostics.json"
+        if path.exists():
+            attention[link] = read_json(path)
+        else:
+            attention[link] = attention_diagnostic(model, validation_path(args.data_root), link)
+            durable_json(path, attention[link])
     temporal = temporal_gradients(model, validation_path(args.data_root)); stable = stability_8pass(model, validation_path(args.data_root))
     b6 = b6_representation_control(model, validation_path(args.data_root)); memory = memory_accounting()
     position = position_bin_metrics(incremental); training = [json.loads(line) for line in (output / "training_metrics.jsonl").read_text().splitlines() if line]
@@ -1393,7 +1411,7 @@ def run_finalize(args):
         "training": len(training) == 191 and payload["d3a_processed_targets"] == MAX_TARGETS,
         "gradients": all(temporal[link]["all_eligible_bins_nonzero"] for link in GATE_BLOCKS),
         "causality": read_json(output / "preflight_audit.json")["causality"]["passed"],
-        "cache": all(row["final_cache_audit"]["passed"] for row in incremental["controls"]["all_real"]["cache_rows"]),
+        "cache": all(row["passed"] for row in incremental["controls"]["all_real"]["cache_rows"]),
         "stability": stable["passed"], "restart": read_json(output / "mandatory_fresh_process_restart_update_96.json")["passed"],
         "continuation": final["strict_reopen"]["passed"] and final["next_global_batch_sha256"] == FINAL_NEXT_BATCH,
         "persistence": final["persistent"]["passed"], "no_training_after_191": True,
@@ -1452,7 +1470,7 @@ def run_finalize(args):
              "classification": primary, "final_checkpoint_sha256": final["sha256"],
              "no_further_training_after_100m": True}
     durable_json(output / "incremental_validation.json", incremental)
-    durable_json(output / "incremental_cache_audit.json", {name: [row["final_cache_audit"] for row in control["cache_rows"]] for name, control in incremental["controls"].items()})
+    durable_json(output / "incremental_cache_audit.json", {name: control["cache_rows"] for name, control in incremental["controls"].items()})
     durable_json(output / "paired_controls.json", incremental["paired"]); durable_json(output / "position_bin_metrics.json", position)
     durable_json(output / "b6_representation_control.json", b6); durable_json(output / "memory_accounting.json", memory)
     durable_json(output / "performance.json", performance); durable_json(output / "gate_diagnostics.json", {"final": gates, "trajectory": [row["gate_after"] for row in training]})
