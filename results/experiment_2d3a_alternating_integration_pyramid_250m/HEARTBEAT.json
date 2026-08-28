@@ -1,0 +1,115 @@
+{
+  "checkpoint": "/workspace/exp2d3a_run/checkpoints/restart_cumulative_000175112192.pt",
+  "cumulative_targets": 175112192,
+  "cumulative_update": 334,
+  "experiment": "2D3A-250M",
+  "latest_metrics": {
+    "approximate_pass_forward_seconds": [
+      1.860134620219469,
+      1.860134620219469
+    ],
+    "cumulative_targets": 175112192,
+    "cumulative_update": 334,
+    "d3a_processed_targets": 175112192,
+    "gate_after": {
+      "b1": {
+        "effective": 0.1906968057155609,
+        "raw": 0.19306017458438873
+      },
+      "b3": {
+        "effective": 0.013378347270190716,
+        "raw": 0.013379145413637161
+      },
+      "b5": {
+        "effective": 0.046214450150728226,
+        "raw": 0.046247392892837524
+      },
+      "b6": {
+        "effective": 0.050425752997398376,
+        "raw": 0.050468556582927704
+      }
+    },
+    "gate_before": {
+      "b1": {
+        "effective": 0.19057601690292358,
+        "raw": 0.1929348260164261
+      },
+      "b3": {
+        "effective": 0.01342929806560278,
+        "raw": 0.013430105522274971
+      },
+      "b5": {
+        "effective": 0.04618655517697334,
+        "raw": 0.046219438314437866
+      },
+      "b6": {
+        "effective": 0.05038461834192276,
+        "raw": 0.05042731761932373
+      }
+    },
+    "gate_gradients": {
+      "b1": -0.0015856127720326185,
+      "b3": 0.000215968131669797,
+      "b5": -0.00017578573897480965,
+      "b6": -0.0003419644490350038
+    },
+    "gradient_groups": {
+      "b1_gate": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.0015856127720326185,
+        "tensors": 1
+      },
+      "b3_gate": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.000215968131669797,
+        "tensors": 1
+      },
+      "b5_gate": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.00017578573897480965,
+        "tensors": 1
+      },
+      "b6_gate": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.0003419644490350038,
+        "tensors": 1
+      },
+      "base": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.3535112738609314,
+        "tensors": 148
+      }
+    },
+    "gradient_norm_before_clip": 0.353515088558197,
+    "local_update": 334,
+    "optimizer_lrs": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "gate": 0.0003
+    },
+    "pass_count": 2,
+    "pass_losses": [
+      3.0886292904615402,
+      3.0805633664131165
+    ],
+    "pass_weights": [
+      0.25,
+      0.75
+    ],
+    "peak_allocated_vram_mb": 36273.138671875,
+    "peak_reserved_vram_mb": 68466.0,
+    "targets_per_second": 56764.48560406717,
+    "wall_seconds": 9.23619749955833
+  },
+  "pid": 1019,
+  "status": "checkpoint_verified",
+  "updated_at_unix": 1787913396.2366862
+}
