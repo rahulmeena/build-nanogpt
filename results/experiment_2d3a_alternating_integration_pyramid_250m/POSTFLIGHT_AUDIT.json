@@ -1,0 +1,37 @@
+{
+  "experiment": "2D3A-250M",
+  "passed": true,
+  "checks": {
+    "final_scientific_audit_passed": true,
+    "exact_final_update_477": true,
+    "exact_final_targets_250085376": true,
+    "no_training_beyond_final_target": true,
+    "no_scientific_process_before_stop": true,
+    "persistent_m100_retained": true,
+    "persistent_m250_retained": true,
+    "persistent_m250_sha_verified_before_stop": true,
+    "local_m250_backup_sha_verified": true,
+    "origin_results_commit_verified": true,
+    "gpu_pod_stopped": true,
+    "network_volume_retained": true
+  },
+  "gpu_pod": {
+    "id": "nagj1hv18p3z2c",
+    "name": "electrical_aqua_worm",
+    "desired_status": "EXITED",
+    "deleted": false
+  },
+  "network_volume": {
+    "id": "yhzyb27fb5",
+    "retained": true
+  },
+  "persistent_checkpoint": {
+    "path": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_000250085376.pt",
+    "sha256": "e60de74aad3c295e8b3dae18ad42c5004e4c55faf47f5da0997a658467875194"
+  },
+  "local_backup": {
+    "path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d3a_alternating_integration_pyramid_250m/scientific_cumulative_000250085376.pt",
+    "sha256": "e60de74aad3c295e8b3dae18ad42c5004e4c55faf47f5da0997a658467875194"
+  },
+  "origin_results_commit": "45deb2b565d1d6da0bede09bc678f77ab3a62290"
+}
