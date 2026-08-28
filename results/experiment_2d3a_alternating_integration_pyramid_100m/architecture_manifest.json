@@ -1,0 +1,98 @@
+{
+  "absent_links": [
+    "B11->B2",
+    "B9->B4"
+  ],
+  "architecture_version": "2D3A-AIRP-v1",
+  "blocks": {
+    "B1": {
+      "c_proj_applications": 1,
+      "destination_ln_qkv_reused": true,
+      "local_window": 2,
+      "recurrent_lags": [
+        2,
+        1023
+      ],
+      "separate_softmax": true,
+      "source": "B12 post-MLP residual"
+    },
+    "B10": {
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "B11": {
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "B12": {
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "B2": {
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "B3": {
+      "c_proj_applications": 1,
+      "destination_ln_qkv_reused": true,
+      "local_window": 32,
+      "recurrent_lags": [
+        32,
+        1023
+      ],
+      "separate_softmax": true,
+      "source": "B10 post-MLP residual"
+    },
+    "B4": {
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "B5": {
+      "c_proj_applications": 1,
+      "destination_ln_qkv_reused": true,
+      "local_window": 64,
+      "recurrent_lags": [
+        64,
+        1023
+      ],
+      "separate_softmax": true,
+      "source": "B8 post-MLP residual"
+    },
+    "B6": {
+      "c_proj_applications": 1,
+      "destination_ln_qkv_reused": true,
+      "local_window": 512,
+      "recurrent_lags": [
+        512,
+        1023
+      ],
+      "separate_softmax": true,
+      "source": "B7 post-MLP residual"
+    },
+    "B7": {
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "B8": {
+      "local_window": 1024,
+      "recurrent": false
+    },
+    "B9": {
+      "local_window": 1024,
+      "recurrent": false
+    }
+  },
+  "experiment": "2D3A",
+  "no_attnres": true,
+  "no_auxiliary_loss": true,
+  "no_dedicated_recurrent_projection": true,
+  "no_teacher": true,
+  "parameter_count": 124475908,
+  "raw_source_rings": [
+    "B12",
+    "B10",
+    "B8",
+    "B7"
+  ],
+  "sequence_length": 1024
+}

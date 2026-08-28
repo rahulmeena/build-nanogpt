@@ -1,0 +1,175 @@
+{
+  "betas": [
+    0.9,
+    0.95
+  ],
+  "d3a_groups": [
+    {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 3e-05,
+      "maximize": false,
+      "name": "base_decay",
+      "weight_decay": 0.1
+    },
+    {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 3e-05,
+      "maximize": false,
+      "name": "base_nodecay",
+      "weight_decay": 0.0
+    },
+    {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 0.0003,
+      "maximize": false,
+      "name": "gate",
+      "weight_decay": 0.0
+    },
+    {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 0.0003,
+      "maximize": false,
+      "name": "b3_gate",
+      "weight_decay": 0.0
+    },
+    {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 0.0003,
+      "maximize": false,
+      "name": "b5_gate",
+      "weight_decay": 0.0
+    },
+    {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 0.0003,
+      "maximize": false,
+      "name": "b6_gate",
+      "weight_decay": 0.0
+    }
+  ],
+  "eps": 1e-08,
+  "new_gate_lr": 0.0003,
+  "only_new_gate_states_fresh": true,
+  "source_groups": [
+    {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 3e-05,
+      "maximize": false,
+      "name": "base_decay",
+      "weight_decay": 0.1
+    },
+    {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 3e-05,
+      "maximize": false,
+      "name": "base_nodecay",
+      "weight_decay": 0.0
+    },
+    {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 0.0003,
+      "maximize": false,
+      "name": "gate",
+      "weight_decay": 0.0
+    }
+  ],
+  "transplant": {
+    "fresh_gate_state_absent": true,
+    "parameters": true,
+    "source_optimizer_state_entries": true,
+    "source_parameter_identity": true,
+    "three_fresh_zero_gates": true,
+    "weight_tying": true
+  },
+  "weight_decay": 0.0
+}
