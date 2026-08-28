@@ -684,7 +684,9 @@ def answer_questions(table, classifications, interaction, increments, final_payl
     relative = max(LINKS, key=lambda l: classifications[l]["ratio"])
     absolute = max(LINKS, key=lambda l: classifications[l]["m250_gain"] - classifications[l]["m100_gain"])
     def spread(link):
-        rows = att[link]; return np.mean([r["mean_lag"] for r in rows["250m"]["recurrent"]["per_head"]]) > np.mean([r["mean_lag"] for r in rows["100m"]["recurrent"]["per_head"]])
+        rows = att[link]
+        return bool(np.mean([r["mean_lag"] for r in rows["250m"]["recurrent"]["per_head"]])
+                    > np.mean([r["mean_lag"] for r in rows["100m"]["recurrent"]["per_head"]]))
     questions = {
         "Q1": True, "Q2": True, "Q3": True, "Q4": True,
         "Q5": first["optimizer_lrs"], "Q6": first.get("consumed_global_batch_sha256") == SOURCE_NEXT_BATCH,
