@@ -1,0 +1,63 @@
+{
+  "cadence_uses_cumulative_update": true,
+  "constant_group_lrs": {
+    "b3_gate": 0.0003,
+    "b5_gate": 0.0003,
+    "b6_gate": 0.0003,
+    "base_decay": 3e-05,
+    "base_nodecay": 3e-05,
+    "gate": 0.0003
+  },
+  "reset": false,
+  "source_scheduler": {
+    "current_lrs": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "gate": 0.0003
+    },
+    "expected_lrs": {
+      "100M": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      },
+      "1B": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      },
+      "250M": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      },
+      "500M": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      }
+    },
+    "inherited_scheduler_present_in_source": false,
+    "policy": "constant optimizer-group learning rates; no scheduler object in 2D2G-A checkpoint",
+    "scheduler_state": null,
+    "scheduler_step": null,
+    "warmup_restarted": false,
+    "well_defined_through_100m": true
+  },
+  "warmup_restarted": false
+}
