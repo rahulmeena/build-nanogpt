@@ -45,7 +45,7 @@ class Experiment2D4A250MStaticTests(unittest.TestCase):
 
     def test_only_authorized_training_segments_exist(self):
         text = (ROOT / "scripts/experiment_2d4a_250m.py").read_text()
-        self.assertIn("((191, 334), (334, 477))", text)
+        self.assertIn("((191, 334), (334, 477), (384, 477))", text)
         self.assertIn("if local_update in MILESTONES", text)
         self.assertIn("first 2D4A-250M continuation batch/stream mismatch", text)
 

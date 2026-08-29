@@ -1071,7 +1071,10 @@ def run_preflight(args):
 
 
 def allowed_segment(start, end):
-    return (start, end) in ((191, 334), (334, 477))
+    # The first two entries are the preregistered process segments.  The final
+    # entry is a fail-closed infrastructure-recovery path from the independently
+    # verified rotating checkpoint written at local update 384.
+    return (start, end) in ((191, 334), (334, 477), (384, 477))
 
 
 def load_fixed_ledger(path):
