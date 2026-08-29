@@ -1,0 +1,358 @@
+{
+  "architecture": {
+    "absent_links": [
+      "B11->B2",
+      "B9->B4"
+    ],
+    "architecture_version": "2D3A-AIRP-v1",
+    "blocks": {
+      "B1": {
+        "c_proj_applications": 1,
+        "destination_ln_qkv_reused": true,
+        "local_window": 2,
+        "recurrent_lags": [
+          2,
+          1023
+        ],
+        "separate_softmax": true,
+        "source": "B12 post-MLP residual"
+      },
+      "B10": {
+        "local_window": 1024,
+        "recurrent": false
+      },
+      "B11": {
+        "local_window": 1024,
+        "recurrent": false
+      },
+      "B12": {
+        "local_window": 1024,
+        "recurrent": false
+      },
+      "B2": {
+        "local_window": 1024,
+        "recurrent": false
+      },
+      "B3": {
+        "c_proj_applications": 1,
+        "destination_ln_qkv_reused": true,
+        "local_window": 32,
+        "recurrent_lags": [
+          32,
+          1023
+        ],
+        "separate_softmax": true,
+        "source": "B10 post-MLP residual"
+      },
+      "B4": {
+        "local_window": 1024,
+        "recurrent": false
+      },
+      "B5": {
+        "c_proj_applications": 1,
+        "destination_ln_qkv_reused": true,
+        "local_window": 64,
+        "recurrent_lags": [
+          64,
+          1023
+        ],
+        "separate_softmax": true,
+        "source": "B8 post-MLP residual"
+      },
+      "B6": {
+        "c_proj_applications": 1,
+        "destination_ln_qkv_reused": true,
+        "local_window": 512,
+        "recurrent_lags": [
+          512,
+          1023
+        ],
+        "separate_softmax": true,
+        "source": "B7 post-MLP residual"
+      },
+      "B7": {
+        "local_window": 1024,
+        "recurrent": false
+      },
+      "B8": {
+        "local_window": 1024,
+        "recurrent": false
+      },
+      "B9": {
+        "local_window": 1024,
+        "recurrent": false
+      }
+    },
+    "experiment": "2D3A",
+    "no_attnres": true,
+    "no_auxiliary_loss": true,
+    "no_dedicated_recurrent_projection": true,
+    "no_teacher": true,
+    "parameter_count": 124475908,
+    "raw_source_rings": [
+      "B12",
+      "B10",
+      "B8",
+      "B7"
+    ],
+    "sequence_length": 1024
+  },
+  "canonical_fixed_2d3a_1b_baseline": true,
+  "checkpoint_path": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_001000341504.pt",
+  "checkpoint_sha256": "de80d0886a42e4142fa8b30d27eae4302a298bb207961b593f9401e908faaf7b",
+  "gates": {
+    "b1": {
+      "effective": 0.2811218202114105,
+      "raw": 0.2888997495174408
+    },
+    "b3": {
+      "effective": 0.011555109173059464,
+      "raw": 0.011555623263120651
+    },
+    "b5": {
+      "effective": 0.04475307837128639,
+      "raw": 0.04478299245238304
+    },
+    "b6": {
+      "effective": 0.03864416480064392,
+      "raw": 0.03866341710090637
+    }
+  },
+  "git_implementation_commit": "ee6d7e5b6474fc464e0eb288b123463005b7ca5f",
+  "longitudinal_artifact_hashes": {
+    "boundary_memory_maturation.json": "2e9d9a7103b69265552396d3f427e32f4c02482040d979a5f88ff4ea8a7e3505",
+    "factorial_maturation.json": "299c798f669b77c07a1f6aad44a45150c0233a3b12871c40050eb13d598aa397",
+    "gate_maturation.json": "65c2d657543989351b1d6e7b5398224a26fe8bcca90e1b2c3093b41516d54b9e",
+    "m1000_fresh_final_bootstrap.json": "0ed3c591949f6c90e53875d96756aa7d526b81eec6e9e1faf69a337edb2cb932",
+    "m1000_fresh_final_confirmation.json": "414c2423618117393f2ec8e290c666899e8c628f179dc7082e12b9ea55e3519f",
+    "m1000_matched_large.json": "f9354207f0f32b8f8695d4e39d223f7f196f26ed4f9d62249b3784984d14032b",
+    "m1000_matched_large_bootstrap.json": "e26c65a09643c497bb9f8ba01a0f1fb3ffcda55c6545cd962105b24544e2825c",
+    "maturation_interval_deltas.json": "271476269925dd06475e482a7427eea3a9d9ede0a31cce5856f500dafd88f132",
+    "maturation_table_100m_to_1b.json": "5e95659b8c4668a7082ac1bb7218289022ddf1df07b20e2fc35c41cf6fed6f92",
+    "paired_maturation_controls.json": "ba26b26582e8c2a0a3a0175ad357a6c9fb64fae31102a4dd91ba79de58615291",
+    "stability_16pass_terminal.json": "962420fee9b68f326da6dcafbef7dc8d19ca4238bb2433bcfe4e4d14de74880f",
+    "stability_8pass_maturation.json": "d8d59227c792abb5eacc1517a6b12dcec14b3b4838a86163bdf115a1200cdca4"
+  },
+  "next_batch_sha256": "61dd83544d83c0cf7b4d61005f5a9cf64e2cafa930af1819cba2aae4538e7e61",
+  "next_stream_sha256": "39f6599f552803150fad33d32aa9c4df5843b058410ff1ba38b5afa469046e97",
+  "optimizer_state_summary": {
+    "group_lrs": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "gate": 0.0003
+    },
+    "reset": false,
+    "state_tensors": 152,
+    "step_values": [
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      2386,
+      1908,
+      1908,
+      1908
+    ]
+  },
+  "parameter_count": 124475908,
+  "planned_final_tag": "experiment-2d3a-alternating-integration-pyramid-1b-final",
+  "scheduler_state_summary": {
+    "current_lrs": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "gate": 0.0003
+    },
+    "expected_lrs": {
+      "100M": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      },
+      "1B": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      },
+      "250M": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      },
+      "500M": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      }
+    },
+    "inherited_scheduler_present_in_source": false,
+    "policy": "constant optimizer-group learning rates; no scheduler object in 2D2G-A checkpoint",
+    "scheduler_state": null,
+    "scheduler_step": null,
+    "warmup_restarted": false,
+    "well_defined_through_100m": true
+  },
+  "training_targets": 1000341504,
+  "training_updates": 1908
+}

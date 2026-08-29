@@ -1,0 +1,43 @@
+{
+  "schema": "experiment_2d3a_1b_checkpoint_recovery_v1",
+  "incident": {
+    "event": "The first update-1908 save to the network volume produced an unreadable checkpoint container.",
+    "failed_checkpoint_accepted": false,
+    "failed_checkpoint_quarantined": true,
+    "quarantine_path": "/workspace/exp2d3a_run/checkpoints/quarantine/scientific_cumulative_001000341504.pt.corrupt_network_20260829T0053Z"
+  },
+  "recovery_source": {
+    "checkpoint": "/tmp/exp2d3a1b_recovery/rotating_recovery.pt",
+    "cumulative_update": 1861,
+    "sha256": "e4d524f5611070b55b5062bfd2b636d57d3b264bd646d27105a901d3256dffcb",
+    "strict_reopen_passed": true,
+    "next_global_batch_sha256": "a1d237b75d213c7330ada17617e69e9b0a0eac0d12d7d66787856c35d5143f8b",
+    "next_global_batch_stream_sha256": "55084ab064ab7b7163d8d24049fc6bb931ef2db5c2cdd8710695a162de7064f9"
+  },
+  "replay": {
+    "start_update": 1862,
+    "end_update": 1908,
+    "updates_replayed": 47,
+    "exact_expected_next_batch_and_stream": true,
+    "failed_attempt_metrics_artifact": "failed_final_attempt_metrics.jsonl",
+    "failed_attempt_rows_preserved": 47,
+    "accepted_training_log_rows": 954,
+    "accepted_training_log_first_update": 955,
+    "accepted_training_log_last_update": 1908,
+    "max_pass_loss_abs_delta_between_attempts": 0.00018037855625152588,
+    "max_gate_gradient_abs_delta_between_attempts": 0.00019067968241870403,
+    "max_effective_gate_abs_delta_between_attempts": 0.00006071850657463074,
+    "numerical_note": "The GPU replay followed the same batches and stream but did not reproduce the abandoned in-memory trajectory bit-for-bit; the accepted checkpoint and every reported final analysis use the replayed trajectory."
+  },
+  "accepted_final_checkpoint": {
+    "checkpoint": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_001000341504.pt",
+    "cumulative_update": 1908,
+    "cumulative_targets": 1000341504,
+    "sha256": "de80d0886a42e4142fa8b30d27eae4302a298bb207961b593f9401e908faaf7b",
+    "pod_local_strict_reopen_passed": true,
+    "persistent_volume_strict_reopen_passed": true,
+    "mac_archive_sha256_match": true,
+    "no_training_beyond_endpoint": true
+  },
+  "passed": true
+}

@@ -1,0 +1,37 @@
+{
+  "commands": [
+    {
+      "command": "scripts/experiment_2d3a_1b.py preflight --source-checkpoint /workspace/exp2d3a_run/checkpoints/scientific_cumulative_000500170752.pt --source-results /workspace/exp2d3a_run/results_500m_final --output-dir /tmp/exp2d3a1b_results --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --data-root /workspace/build-nanogpt/edu_fineweb10B --stop-capability-verified --storage-inventory-verified --network-volume-size-gb 120 --network-volume-used-bytes 100561428992",
+      "kind": "preflight",
+      "pid": 652
+    },
+    {
+      "command": "scripts/experiment_2d3a_1b.py train --source-checkpoint /workspace/exp2d3a_run/checkpoints/scientific_cumulative_000500170752.pt --source-results /workspace/exp2d3a_run/results_500m_final --output-dir /tmp/exp2d3a1b_results --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --data-root /workspace/build-nanogpt/edu_fineweb10B --scientific-checkpoint-dir /workspace/exp2d3a_run/checkpoints --recovery-dir /tmp/exp2d3a1b_recovery --end-update 1431",
+      "kind": "train",
+      "pid": 785,
+      "started_at_unix": 1787948924.6051
+    },
+    {
+      "command": "scripts/experiment_2d3a_1b.py train --source-checkpoint /workspace/exp2d3a_run/checkpoints/scientific_cumulative_000500170752.pt --source-results /workspace/exp2d3a_run/results_500m_final --output-dir /tmp/exp2d3a1b_results --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --data-root /workspace/build-nanogpt/edu_fineweb10B --scientific-checkpoint-dir /workspace/exp2d3a_run/checkpoints --recovery-dir /tmp/exp2d3a1b_recovery --resume-checkpoint /workspace/exp2d3a_run/checkpoints/scientific_cumulative_000750256128.pt --end-update 1908",
+      "kind": "train",
+      "pid": 2313,
+      "started_at_unix": 1787957827.5973089
+    },
+    {
+      "command": "scripts/experiment_2d3a_1b.py train --source-checkpoint /workspace/exp2d3a_run/checkpoints/scientific_cumulative_000500170752.pt --source-results /workspace/exp2d3a_run/results_500m_final --output-dir /tmp/exp2d3a1b_results --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --data-root /workspace/build-nanogpt/edu_fineweb10B --scientific-checkpoint-dir /tmp/exp2d3a1b_local_science --recovery-dir /tmp/exp2d3a1b_recovery --resume-checkpoint /tmp/exp2d3a1b_recovery/rotating_recovery.pt --end-update 1908",
+      "kind": "train",
+      "pid": 3348,
+      "started_at_unix": 1787965457.7619507
+    },
+    {
+      "command": "scripts/experiment_2d3a_1b.py finalize --source-checkpoint /workspace/exp2d3a_run/checkpoints/scientific_cumulative_000500170752.pt --source-results /workspace/exp2d3a_run/results_500m_final --output-dir /tmp/exp2d3a1b_results --pod-id 7kk5yyti00rnrp --pod-name grand_amber_catshark --data-root /workspace/build-nanogpt/edu_fineweb10B --final-checkpoint /tmp/exp2d3a1b_local_science/scientific_cumulative_001000341504.pt",
+      "kind": "finalize",
+      "pid": 3812,
+      "started_at_unix": 1787968242.2121096
+    }
+  ],
+  "pod_id": "7kk5yyti00rnrp",
+  "pod_name": "grand_amber_catshark",
+  "preflight_complete": true,
+  "started_at_unix": 1787948900.017688
+}

@@ -1,0 +1,53 @@
+{
+  "authorized": true,
+  "checks": {
+    "architecture": true,
+    "architecture_manifest_exact": true,
+    "branch": true,
+    "canonical_sha": true,
+    "causality": true,
+    "checkpoint_sha256": true,
+    "ephemeral_free_ge_2gb": true,
+    "incremental_cache_smoke": true,
+    "incremental_regression_exact": true,
+    "maturation_core_geometry": true,
+    "model_finite": true,
+    "network_volume_free_ge_10gb": true,
+    "next_batch": true,
+    "next_stream": true,
+    "one_a100_sxm4_80gb": true,
+    "optimizer_finite": true,
+    "optimizer_state_complete": true,
+    "optimizer_steps_exact": true,
+    "parallel_regression_exact": true,
+    "parameters": true,
+    "persistent_free_ge_10gb": true,
+    "rng_complete": true,
+    "row_isolation": true,
+    "scheduler_present": true,
+    "schema": true,
+    "source_commit_ancestor": true,
+    "source_strict_reopen": true,
+    "stop_capability": true,
+    "storage_inventory_verified": true,
+    "stored_next_batch": true,
+    "stored_next_stream": true,
+    "tag_exact": true,
+    "targets": true,
+    "updates": true
+  },
+  "experiment": "2D3A-1B",
+  "hardware": {
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "gpu_count": 1
+  },
+  "pod_id": "7kk5yyti00rnrp",
+  "pod_name": "grand_amber_catshark",
+  "stop_command": "runpodctl pod stop 7kk5yyti00rnrp -o json",
+  "storage": {
+    "ephemeral_free_bytes": 5244903424,
+    "network_volume_size_gb": 120,
+    "network_volume_used_bytes": 100561428992,
+    "persistent_free_bytes": 121504129155072
+  }
+}
