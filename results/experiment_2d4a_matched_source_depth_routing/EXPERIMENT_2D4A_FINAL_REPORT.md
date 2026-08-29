@@ -112,6 +112,11 @@ Q60. `"CONTINUE MATCHED FIXED-vs-ROUTED 2D4A TO 250M"`
 
 CONTINUE MATCHED FIXED-vs-ROUTED 2D4A TO 250M
 
+## Terminal infrastructure
+
+- Pod `grand_amber_catshark` (`7kk5yyti00rnrp`) is stopped, not deleted.
+- Persistent volume `yhzyb27fb5` is retained, not deleted.
+
 NO TRAINING BEYOND 100,139,008 2D4A TARGETS PER ARM WAS RUN.
 
 # EXPERIMENT 2D4A COMPLETE
