@@ -3068,12 +3068,18 @@ def create_plots_250m(result_dir, fixed_milestones, routed_milestones,
     fixed_ce = [fixed_milestones[str(u)]["conditions"]["fixed_real"]["validation_loss"] for u in updates]
     routed_ce = [routed_milestones[str(u)]["conditions"]["routed_real"]["validation_loss"] for u in updates]
     route_off_ce = [routed_milestones[str(u)]["conditions"]["routed_all_route_off"]["validation_loss"] for u in updates]
-    uniform_ce = [routed_milestones[str(u)]["conditions"]["routed_uniform_depth"]["validation_loss"] for u in updates]
     targets_m = [u * base.GLOBAL_TARGETS / 1e6 for u in updates]
     save("Fixed vs Routed canonical CE", "CE", lambda ax: (ax.plot(targets_m, fixed_ce, marker="o", label="Fixed"), ax.plot(targets_m, routed_ce, marker="o", label="Routed"), ax.legend()))
     save("Fixed − Routed vs age", "CE gain", lambda ax: ax.plot(targets_m, np.asarray(fixed_ce) - routed_ce, marker="o"))
     save("Route-Off − Routed vs age", "CE gain", lambda ax: ax.plot(targets_m, np.asarray(route_off_ce) - routed_ce, marker="o"))
-    save("Uniform − Routed vs age", "CE gain", lambda ax: ax.plot(targets_m, np.asarray(uniform_ce) - routed_ce, marker="o"))
+    longitudinal_rows = [longitudinal[label] for label in ("150m", "200m", "250m")]
+    uniform_targets_m = [row["d4a_local_targets"] / 1e6 for row in longitudinal_rows]
+    uniform_gains = [
+        row["routed"]["conditions"]["uniform_depth"]["validation_loss"]
+        - row["routed"]["conditions"]["routed_real"]["validation_loss"]
+        for row in longitudinal_rows
+    ]
+    save("Uniform − Routed vs age", "CE gain", lambda ax: ax.plot(uniform_targets_m, uniform_gains, marker="o"))
     route_updates = sorted(map(int, route_milestones))
     route_targets = [u * base.GLOBAL_TARGETS / 1e6 for u in route_updates]
     for metric, title in (("gamma", "Route gates"), ("query_norm", "Query norms"), ("mean_normalized_entropy", "Normalized routing entropy")):
