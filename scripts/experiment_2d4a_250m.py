@@ -2668,7 +2668,8 @@ def run_continuation_preflight(args):
     matched_smoke["passed"] = all(matched_smoke.values())
     durable_json(output / "continuation_smoke_audit.json", matched_smoke)
 
-    storage = shutil.disk_usage(output)
+    local_storage = shutil.disk_usage(output)
+    network_volume_free_bytes = int(args.network_volume_free_bytes)
     checks = {
         "branch_exact": git("branch", "--show-current") == BRANCH,
         "start_commit_ancestor": subprocess.run(["git", "merge-base", "--is-ancestor", CONTINUATION_FINAL_COMMIT, "HEAD"], cwd=REPO_ROOT).returncode == 0,
@@ -2691,14 +2692,22 @@ def run_continuation_preflight(args):
         "one_a100_80gb": torch.cuda.device_count() == 1 and "A100" in torch.cuda.get_device_name(device),
         "stop_capability_verified": bool(args.stop_capability_verified),
         "storage_inventory_verified": bool(args.storage_inventory_verified),
-        "workspace_free_ge_10gb": storage.free >= 10 * 1024**3,
+        "workspace_free_ge_10gb": network_volume_free_bytes >= 10 * 1024**3,
+        "local_staging_free_ge_3gb": local_storage.free >= 3 * 1024**3,
         "git_clean": not bool(git("status", "--porcelain")),
     }
     audit = {
         "experiment": EXPERIMENT, "checks": checks,
         "authorized": all(checks.values()),
         "hardware": {"gpu": torch.cuda.get_device_name(device), "gpu_count": torch.cuda.device_count()},
-        "storage": {"total_bytes": storage.total, "used_bytes": storage.used, "free_bytes": storage.free},
+        "storage": {
+            "network_volume_size_bytes": int(args.network_volume_size_bytes),
+            "network_volume_used_bytes": int(args.network_volume_used_bytes),
+            "network_volume_free_bytes": network_volume_free_bytes,
+            "local_staging_total_bytes": local_storage.total,
+            "local_staging_used_bytes": local_storage.used,
+            "local_staging_free_bytes": local_storage.free,
+        },
         "persistent_state": {"fixed_bytes": fixed_cache["final_persistent_state_bytes"], "routed_bytes": routed_cache["final_persistent_state_bytes"], "delta_bytes": routed_cache["final_persistent_state_bytes"] - fixed_cache["final_persistent_state_bytes"]},
     }
     durable_json(output / "continuation_preflight_audit.json", audit)
@@ -3311,6 +3320,9 @@ def build_parser():
     preflight.add_argument("--output-dir", required=True)
     preflight.add_argument("--stop-capability-verified", action="store_true")
     preflight.add_argument("--storage-inventory-verified", action="store_true")
+    preflight.add_argument("--network-volume-size-bytes", type=int, required=True)
+    preflight.add_argument("--network-volume-used-bytes", type=int, required=True)
+    preflight.add_argument("--network-volume-free-bytes", type=int, required=True)
     preflight.set_defaults(func=run_continuation_preflight)
 
     train = subparsers.add_parser("train")

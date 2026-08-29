@@ -55,6 +55,8 @@ class Experiment2D4A250MStaticTests(unittest.TestCase):
         self.assertIn('persistent_stage.open("xb")', text)
         self.assertIn("checkpoint staging/persistent hash mismatch", text)
         self.assertIn('"rotating_recovery.pt"', text)
+        self.assertIn("network_volume_free_bytes >= 10 * 1024**3", text)
+        self.assertIn("local_storage.free >= 3 * 1024**3", text)
 
 
 if __name__ == "__main__":
