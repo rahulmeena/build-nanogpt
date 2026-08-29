@@ -325,6 +325,7 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
         full_counterfactual_blocks=(),
         activation_checkpointing=False,
         return_diagnostics=False,
+        capture_all_block_states=False,
         bank_mode="full",
     ):
         if not torch.is_tensor(tokens) or tokens.ndim != 2:
@@ -371,6 +372,7 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
             activation_checkpointing and self.training and torch.is_grad_enabled()
         )
         captures = {}
+        all_block_states = {} if capture_all_block_states else None
         diagnostics = {}
         previous_mode = self._active_bank_mode
         self._active_bank_mode = mode
@@ -430,6 +432,8 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
                         residual = block(residual)
                 if block_index in SOURCE_BLOCKS:
                     captures[block_index] = residual
+                if all_block_states is not None:
+                    all_block_states[block_index] = residual
             h7, h8, h10, h12 = (
                 captures[6], captures[7], captures[9], captures[11]
             )
@@ -453,6 +457,7 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
                 "logits": logits,
                 "loss": loss,
                 "diagnostics": diagnostics if return_diagnostics else None,
+                "all_block_states": all_block_states,
                 "full_counterfactual_blocks": tuple(sorted(full)),
             }
         finally:
@@ -777,6 +782,7 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
         return_diagnostics=False,
         bank_mode="full",
         diagnostic_attention_weights=True,
+        return_block_states=False,
     ):
         self._validate_incremental_state(state)
         mode = self._validate_bank_mode(bank_mode)
@@ -812,6 +818,7 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
         updated_caches = []
         diagnostics = {}
         captures = {}
+        all_block_states = {} if return_block_states else None
         upper_capacity = int(self.config.block_size) - 1
         for block_index in range(TOTAL_LAYERS):
             if block_index in SPECIAL_BLOCKS and not (
@@ -848,6 +855,8 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
             updated_caches.append(cache)
             if block_index in SOURCE_BLOCKS:
                 captures[block_index] = residual
+            if all_block_states is not None:
+                all_block_states[block_index] = residual
         h7, h8, h10, h12 = captures[6], captures[7], captures[9], captures[11]
         logits = self.base.lm_head(self.base.transformer.ln_f(h12))
         next_h7, next_h7_pos = self._append_ring(
@@ -877,13 +886,14 @@ class AlternatingIntegrationRecurrentPyramidGPT(FullB12ToB1RecurrentKVGPT):
             b6_full_native=state.b6_full_native,
         )
         self._validate_incremental_state(next_state)
-        if not return_diagnostics:
+        if not return_diagnostics and not return_block_states:
             return logits, next_state
         return logits, next_state, {
             "position": state.position,
             "control": control,
             "links": {f"b{index + 1}": row for index, row in diagnostics.items()},
             "cache_audit": self.incremental_cache_audit(next_state),
+            "block_states": all_block_states,
         }
 
     def incremental_cache_audit(self, state):

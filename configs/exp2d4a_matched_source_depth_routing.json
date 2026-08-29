@@ -1,0 +1,93 @@
+{
+  "experiment": "2D4A",
+  "protocol": "matched_attnres_style_recurrent_source_depth_routing_100m_v1",
+  "source": {
+    "checkpoint": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_001000341504.pt",
+    "checkpoint_sha256": "de80d0886a42e4142fa8b30d27eae4302a298bb207961b593f9401e908faaf7b",
+    "next_global_batch_sha256": "61dd83544d83c0cf7b4d61005f5a9cf64e2cafa930af1819cba2aae4538e7e61",
+    "next_global_stream_sha256": "39f6599f552803150fad33d32aa9c4df5843b058410ff1ba38b5afa469046e97",
+    "tag": "experiment-2d3a-alternating-integration-pyramid-1b-final",
+    "commit": "bf977013f5ca359e64d86eb896d445160c49c6bf",
+    "parameters": 124475908,
+    "cumulative_updates": 1908,
+    "cumulative_targets": 1000341504
+  },
+  "arms": {
+    "fixed": {
+      "architecture": "exact frozen 2D3A-1B architecture",
+      "parameters": 124475908,
+      "run_directory": "/workspace/exp2d4a_fixed_run"
+    },
+    "routed": {
+      "parameters": 124482056,
+      "new_parameters": 6148,
+      "new_parameter_tensors": 12,
+      "run_directory": "/workspace/exp2d4a_routed_run"
+    }
+  },
+  "routing": {
+    "write_time_only": true,
+    "ordinary_residual_path_unchanged": true,
+    "candidate_blocks": {
+      "B1": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "B3": [4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "B5": [6, 7, 8, 9, 10, 11, 12],
+      "B6": [7, 8, 9, 10, 11, 12]
+    },
+    "baseline_blocks": {"B1": 12, "B3": 10, "B5": 8, "B6": 7},
+    "per_destination_parameters": {
+      "query": 768,
+      "rmsnorm_scale": 768,
+      "route_gate": 1
+    },
+    "initialization": {"query": 0, "rmsnorm_scale": 1, "route_gate": 0},
+    "gamma": "tanh(route_gate)",
+    "memory_equation": "base + gamma * (softmax(query^T RMSNorm(candidate)) weighted raw candidates - base)",
+    "score_scale": null,
+    "value_projection": false
+  },
+  "training": {
+    "updates_per_arm": 191,
+    "targets_per_update": 524288,
+    "targets_per_arm": 100139008,
+    "source_stream_updates": [1909, 2099],
+    "milestones": [0, 20, 48, 96, 143, 191],
+    "mandatory_fresh_process_restart_local_update": 96,
+    "two_pass_weights": [0.25, 0.75],
+    "three_pass_weights": [0.2, 0.4, 0.4],
+    "three_pass_every_cumulative_updates": 32,
+    "global_batch_targets": 524288,
+    "base_lr": 0.00003,
+    "existing_recurrent_gate_lr": 0.0003,
+    "route_query_and_norm_lr": 0.00003,
+    "route_gate_lr": 0.0003,
+    "betas": [0.9, 0.95],
+    "epsilon": 1e-8,
+    "route_weight_decay": 0
+  },
+  "evaluation": {
+    "canonical_parallel": {
+      "batches": 20,
+      "batch_size": 64,
+      "sequence_length": 1024,
+      "collection_sha256": "3331f585ae53e8fa5be3690aeb82345bf43c9270559403f113e717e937f5cdeb"
+    },
+    "true_incremental_core": {"start_batch": 0, "batches": 4, "targets": 262144},
+    "large_confirmation": {
+      "start_batch": 52,
+      "batches": 32,
+      "sequences": 2048,
+      "targets_per_control": 2097152,
+      "bootstrap_resamples": 50000,
+      "bootstrap_seed": 20260829
+    }
+  },
+  "hardware": {
+    "pod_id": "7kk5yyti00rnrp",
+    "pod_name": "grand_amber_catshark",
+    "gpu_count": 1,
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "execution": "sequential sibling arms",
+    "persistent_volume_id": "yhzyb27fb5"
+  }
+}
