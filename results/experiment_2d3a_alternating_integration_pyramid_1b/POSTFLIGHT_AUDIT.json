@@ -1,0 +1,70 @@
+{
+  "schema": "experiment_2d3a_1b_postflight_v1",
+  "experiment": "Experiment 2D3A — Continue Alternating-Integration Recurrent Pyramid from 500M to 1B",
+  "branch": "experiment-2d3a-alternating-integration-pyramid-1b",
+  "implementation_commit": "ee6d7e5b6474fc464e0eb288b123463005b7ca5f",
+  "results_commit": "4358ddee96edfef1a3b1730b496acbad7364ebe8",
+  "sealed_report_commit": "80c55b3ddb2b187b8f6311ee4e4d22b2eb6dcb3d",
+  "remote_branch_exact_at_sealed_report_commit": true,
+  "final_tag_to_create_after_this_audit_commit": "experiment-2d3a-alternating-integration-pyramid-1b-final",
+  "cumulative_updates": 1908,
+  "cumulative_targets": 1000341504,
+  "no_training_beyond_final_endpoint": true,
+  "final_checkpoint": {
+    "sha256": "de80d0886a42e4142fa8b30d27eae4302a298bb207961b593f9401e908faaf7b",
+    "pod_local_match": true,
+    "persistent_volume_match": true,
+    "mac_archive_match": true,
+    "pod_local_strict_reopen_passed": true,
+    "persistent_volume_strict_reopen_passed": true,
+    "persistent_path": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_001000341504.pt",
+    "mac_archive_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d3a_alternating_integration_pyramid_1b/scientific_cumulative_001000341504.pt"
+  },
+  "final_audit": {
+    "sha256": "1942ea5601e5e412aa44d69eef28f1cfd1debfe7bdffd95c0098548886778c90",
+    "checks_passed": 24,
+    "checks_total": 24,
+    "pod_persistent_match": true,
+    "worktree_match": true,
+    "mac_archive_match": true
+  },
+  "checkpoint_recovery": {
+    "first_network_save_rejected_and_quarantined": true,
+    "strict_update_1861_recovery_replayed_to_1908": true,
+    "exact_next_batch_and_stream_verified": true,
+    "failed_attempt_rows_preserved": 47,
+    "accepted_replay_rows_preserved": 47,
+    "provenance_artifact": "checkpoint_recovery_provenance.json"
+  },
+  "artifacts": {
+    "worktree_file_count_before_postflight": 90,
+    "pod_to_worktree_all_files_checksum_match": true,
+    "worktree_to_mac_archive_all_files_match": true,
+    "persistent_results_copy_present": true,
+    "plots_present": 21,
+    "scientific_questions_answered": 70,
+    "final_report_completion_sentinel_present": true
+  },
+  "verification": {
+    "static_tests_passed": true,
+    "static_tests_count": 7,
+    "python_compile_passed": true,
+    "all_json_valid": true,
+    "result_final_audit_passed": true,
+    "no_experiment_process_running": true,
+    "pod_stop_capability_preflight_passed": true
+  },
+  "storage": {
+    "persistent_results_path": "/workspace/exp2d3a_run/results_1b_final",
+    "persistent_volume_id": "yhzyb27fb5",
+    "persistent_volume_name": "unlikely_lime_flamingo",
+    "persistent_volume_retained": true,
+    "checkpoint_quarantine_retained": true,
+    "dataset_retained": true,
+    "storage_cleanup_recorded": true
+  },
+  "pod_id": "7kk5yyti00rnrp",
+  "pod_name": "grand_amber_catshark",
+  "shutdown_sequence": "Commit and push this audit, create and verify the exact final tag, resync the postflight artifact, verify local archives, then stop the exact pod.",
+  "passed": true
+}
