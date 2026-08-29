@@ -1,0 +1,85 @@
+{
+  "experiment": "2D4A-250M",
+  "accepted_scientific_result": true,
+  "volume_expansion": {
+    "original_size_gb": 120,
+    "expanded_size_gb": 150,
+    "user_authorized": true,
+    "volume_id": "yhzyb27fb5"
+  },
+  "fixed_arm": {
+    "accepted_run_directory": "/workspace/exp2d4a_fixed_250m_accepted",
+    "accepted_final_checkpoint": "/workspace/exp2d4a_fixed_250m_accepted/checkpoints/scientific_local_0477.pt",
+    "accepted_final_sha256": "2a0f9344bc2a03e42bc3c2fb96c2e1f309f4108eaaadfa0f3e95d44e66ddecfc",
+    "accepted_ledger_rows": 286,
+    "mandatory_restart_audit": "fixed_restart_audit_334.json",
+    "preserved_invalid_attempts": [
+      {
+        "path": "/workspace/exp2d4a_fixed_250m_run",
+        "accepted": false,
+        "reason": "Network-volume quota exhaustion caused the first continuation attempt to stall during a heartbeat/write path."
+      },
+      {
+        "path": "/workspace/exp2d4a_fixed_250m_run_replay2",
+        "accepted": false,
+        "reason": "A direct FUSE checkpoint write failed during the local-update-239 save."
+      }
+    ]
+  },
+  "routed_arm": {
+    "accepted_run_directory": "/workspace/exp2d4a_routed_250m_accepted",
+    "accepted_final_checkpoint": "/workspace/exp2d4a_routed_250m_accepted/checkpoints/scientific_local_0477.pt",
+    "accepted_final_sha256": "44e4d049f10e69757398b4aa99d4645c5114288efc26bd47e9d9f7c9306d788e",
+    "accepted_ledger_rows": 286,
+    "mandatory_restart_audit": "routed_restart_audit_334.json",
+    "infrastructure_recovery_restart_audit": "routed_recovery_restart_audit_384.json",
+    "incident": {
+      "utc_time_of_last_update_384_heartbeat": "2026-08-29T18:21:54Z",
+      "stalled_process_id": 2712,
+      "stalled_operation": "Persistent-volume durability/read-back path for the rotating update-384 recovery checkpoint",
+      "last_prior_verified_scientific_checkpoint_update": 382,
+      "last_prior_verified_scientific_checkpoint_sha256": "e4afed4c001156cf59eba0c4df305fb58afd720816cfaee05e5df697e5cbada2",
+      "pod_stop_requested_utc": "2026-08-29T18:31:33Z",
+      "pod_resume_requested_utc": "2026-08-29T18:31:43Z",
+      "stalled_output_snapshot": "/workspace/exp2d4a_routed_250m_accepted/output_stalled_update384_20260829T1821Z",
+      "stalled_log": "/workspace/exp2d4a_routed_250m_accepted/segment2_stalled_update384.log"
+    },
+    "recovered_update_384_candidate": {
+      "path": "/workspace/exp2d4a_routed_250m_accepted/recovery/rotating_recovery.pt.copy.2712.1788027716069414617",
+      "sha256_first_read": "6aef70a44bba9cfb6a28c7ad905c9e7d67de1a40d9a324e036d17867bc54ab17",
+      "sha256_second_read": "6aef70a44bba9cfb6a28c7ad905c9e7d67de1a40d9a324e036d17867bc54ab17",
+      "strict_reopen_checks_passed": 15,
+      "strict_reopen_passed": true,
+      "accepted_after_independent_post_restart_verification": true,
+      "training_updates_replayed": 0,
+      "next_batch_sha256": "20be4c42051d9f480f8e586124b4c4f71dd59ca48daecbf70c4ea8a688841205",
+      "next_stream_sha256": "103b5d0c197f0d4e755fc1dc54dbe67cb26ab670be1aba9f7b060dc9698a584a"
+    }
+  },
+  "implementation_provenance": {
+    "initial_storage_safe_training_commit": "d36370122c83c579c5b7b73d94682cbc3e5d3d05",
+    "verified_update_384_recovery_commit": "e616e79f4e95711dbfe5ad9a71d5d4b09505816f",
+    "uniform_plot_source_fix_commit": "f906fa8c1162dddc92013cdb042789eb5110ec55",
+    "sixteen_plot_inventory_fix_commit": "f28667491b1481b5c834ce62187a70de17a94f6f"
+  },
+  "acceptance_checks": {
+    "fixed_updates_exact_192_through_477": true,
+    "routed_updates_exact_192_through_477": true,
+    "fixed_routed_batch_hashes_match": true,
+    "fixed_routed_stream_hashes_match": true,
+    "fixed_routed_pass_cadence_matches": true,
+    "mandatory_update_334_restarts_passed": true,
+    "routed_update_384_recovery_restart_passed": true,
+    "no_update_478": true,
+    "no_training_beyond_250085376_targets_per_arm": true
+  },
+  "preservation": {
+    "historical_checkpoints_deleted": false,
+    "historical_results_deleted": false,
+    "failed_attempt_evidence_deleted": false,
+    "quarantine_deleted": false,
+    "dataset_deleted": false,
+    "pod_deleted": false,
+    "persistent_volume_deleted": false
+  }
+}

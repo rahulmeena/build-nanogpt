@@ -1,0 +1,47 @@
+{
+  "authorized": true,
+  "checks": {
+    "baseline_effective_sources": true,
+    "branch_exact": true,
+    "causality": true,
+    "disposable_smoke": true,
+    "existing_100m_tag_unchanged": true,
+    "fixed_cache": true,
+    "fixed_source": true,
+    "git_clean": true,
+    "local_staging_free_ge_3gb": true,
+    "next_batch_match": true,
+    "next_stream_match": true,
+    "one_a100_80gb": true,
+    "original_fixed_sha_unchanged": true,
+    "original_routed_sha_unchanged": true,
+    "persistent_state_delta_zero": true,
+    "route_off_identity": true,
+    "route_state_reproduced": true,
+    "routed_cache": true,
+    "routed_source": true,
+    "router_optimizer_moments": true,
+    "start_commit_ancestor": true,
+    "stop_capability_verified": true,
+    "storage_inventory_verified": true,
+    "workspace_free_ge_10gb": true
+  },
+  "experiment": "2D4A-250M",
+  "hardware": {
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "gpu_count": 1
+  },
+  "persistent_state": {
+    "delta_bytes": 0,
+    "fixed_bytes": 33288192,
+    "routed_bytes": 33288192
+  },
+  "storage": {
+    "local_staging_free_bytes": 5350699008,
+    "local_staging_total_bytes": 5368709120,
+    "local_staging_used_bytes": 18010112,
+    "network_volume_free_bytes": 11578842948,
+    "network_volume_size_bytes": 150000000000,
+    "network_volume_used_bytes": 138421157052
+  }
+}

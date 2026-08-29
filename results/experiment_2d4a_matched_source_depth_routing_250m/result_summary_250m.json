@@ -1,0 +1,99 @@
+{
+  "bootstrap": {
+    "fixed_minus_routed": {
+      "lower_2_5": -2.171243304528666e-05,
+      "mean": 4.60589669476067e-05,
+      "resamples": 50000,
+      "seed": 20260829,
+      "upper_97_5": 0.00011457920295187707
+    },
+    "route_off_minus_routed": {
+      "lower_2_5": -2.65198029759834e-05,
+      "mean": 4.267217516561151e-05,
+      "resamples": 50000,
+      "seed": 20260829,
+      "upper_97_5": 0.00011116878723479939
+    },
+    "sequences_favoring_fixed_vs_routed": 1011,
+    "sequences_favoring_routed_vs_fixed": 1037,
+    "ties": 0,
+    "uniform_minus_routed": {
+      "lower_2_5": -4.8005934405282965e-05,
+      "mean": 8.074941417153926e-06,
+      "resamples": 50000,
+      "seed": 20260829,
+      "upper_97_5": 6.366626823040437e-05
+    }
+  },
+  "classification": "SOURCE-DEPTH ROUTING DIRECTIONALLY POSITIVE BUT NOT ESTABLISHED",
+  "experiment": "2D4A-250M",
+  "integrity": true,
+  "integrity_checks": {
+    "backups": true,
+    "causality": true,
+    "fixed_286_updates": true,
+    "fixed_cache": true,
+    "fixed_checkpoint": true,
+    "fixed_final_counter": true,
+    "fixed_restart_334": true,
+    "fixed_stability": true,
+    "large_disjointness": true,
+    "matched_continuation": true,
+    "persistent_state_zero_delta": true,
+    "preflight": true,
+    "routed_286_updates": true,
+    "routed_cache": true,
+    "routed_checkpoint": true,
+    "routed_final_counter": true,
+    "routed_restart_334": true,
+    "routed_stability": true
+  },
+  "large": {
+    "fixed_real_ce": 3.0943195742768994,
+    "paired_sequences": 2048,
+    "route_off_ce": 3.0943161874851173,
+    "routed_real_ce": 3.0942735153099514,
+    "subset_sha256": "fba7d1d7f5c123b348d5c7e7dd6a05277b32364547f4762954c8580418739000",
+    "targets_per_control": 2097152,
+    "uniform_ce": 3.094281590251368
+  },
+  "no_training_beyond_250085376_targets_per_arm": true,
+  "persistent_inference_state_delta": 0,
+  "prior_100m": {
+    "bootstrap": {
+      "fixed_minus_routed": {
+        "lower_2_5": -3.7916959257554677e-05,
+        "mean": 2.887454251898191e-05,
+        "resamples": 50000,
+        "seed": 20260829,
+        "upper_97_5": 9.610690815707007e-05
+      },
+      "route_off_minus_routed": {
+        "lower_2_5": -3.24474599913361e-05,
+        "mean": 2.9068038065281328e-05,
+        "resamples": 50000,
+        "seed": 20260829,
+        "upper_97_5": 9.003923124767845e-05
+      },
+      "sequences_favoring_fixed_vs_routed": 986,
+      "sequences_favoring_routed_vs_fixed": 1062,
+      "ties": 0,
+      "uniform_minus_routed": {
+        "lower_2_5": -2.95302464243456e-05,
+        "mean": 2.624567749672001e-05,
+        "resamples": 50000,
+        "seed": 20260829,
+        "upper_97_5": 8.18482579874864e-05
+      }
+    },
+    "classification": "SOURCE-DEPTH ROUTING DIRECTIONALLY POSITIVE BUT NOT ESTABLISHED"
+  },
+  "recommendation": "RETURN SEALED 250M RESULT FOR SCIENTIFIC REVIEW",
+  "runtime_overhead": 0.8264003039210193,
+  "training": {
+    "continuation_targets_per_arm": 149946368,
+    "continuation_updates": 286,
+    "total_local_updates": 477,
+    "total_targets_per_arm": 250085376
+  }
+}

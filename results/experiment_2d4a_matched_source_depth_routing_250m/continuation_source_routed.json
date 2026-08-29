@@ -1,0 +1,324 @@
+{
+  "baseline_effective_source_checks": {
+    "b1": true,
+    "b3": true,
+    "b5": true,
+    "b6": true
+  },
+  "checkpoint": "/workspace/exp2d4a_routed_run/checkpoints/scientific_local_0191.pt",
+  "checks": {
+    "arm": true,
+    "global_update_2099": true,
+    "lineage_targets_1100480512": true,
+    "loader_next_batch": true,
+    "loader_next_stream": true,
+    "loader_state_present": true,
+    "local_targets_100m": true,
+    "local_update_191": true,
+    "model_finite": true,
+    "next_batch": true,
+    "next_stream": true,
+    "optimizer_finite": true,
+    "optimizer_groups_present": true,
+    "optimizer_present": true,
+    "parameters": true,
+    "pass_cadence_present": true,
+    "rng_complete": true,
+    "scheduler_present": true,
+    "schema": true,
+    "sha256": true,
+    "strict_reopen": true
+  },
+  "optimizer_groups": [
+    "base_decay",
+    "base_nodecay",
+    "gate",
+    "b3_gate",
+    "b5_gate",
+    "b6_gate",
+    "route_nodecay",
+    "route_gate"
+  ],
+  "route_state": {
+    "b1": {
+      "gamma": 0.026373375207185745,
+      "norm_scale_max": 1.0013834238052368,
+      "norm_scale_mean": 1.0000227689743042,
+      "norm_scale_min": 0.9999672770500183,
+      "norm_scale_rms_displacement": 8.24393646325916e-05,
+      "query_norm": 0.02974429912865162,
+      "raw_gate": 0.02637949213385582
+    },
+    "b3": {
+      "gamma": 0.03561512008309364,
+      "norm_scale_max": 1.0000691413879395,
+      "norm_scale_mean": 1.0000005960464478,
+      "norm_scale_min": 0.9999969601631165,
+      "norm_scale_rms_displacement": 3.7677500586141832e-06,
+      "query_norm": 0.013047308661043644,
+      "raw_gate": 0.03563018888235092
+    },
+    "b5": {
+      "gamma": 0.020626813173294067,
+      "norm_scale_max": 1.0002158880233765,
+      "norm_scale_mean": 1.0000008344650269,
+      "norm_scale_min": 0.9999932050704956,
+      "norm_scale_rms_displacement": 8.574482308176812e-06,
+      "query_norm": 0.012962279841303825,
+      "raw_gate": 0.02062973938882351
+    },
+    "b6": {
+      "gamma": 0.010216516442596912,
+      "norm_scale_max": 1.00005042552948,
+      "norm_scale_mean": 1.0000004768371582,
+      "norm_scale_min": 0.9999985098838806,
+      "norm_scale_rms_displacement": 3.3213416372745996e-06,
+      "query_norm": 0.012662626802921295,
+      "raw_gate": 0.010216872207820415
+    }
+  },
+  "route_state_checks": {
+    "b1": {
+      "gamma": true,
+      "query_norm": true
+    },
+    "b3": {
+      "gamma": true,
+      "query_norm": true
+    },
+    "b5": {
+      "gamma": true,
+      "query_norm": true
+    },
+    "b6": {
+      "gamma": true,
+      "query_norm": true
+    }
+  },
+  "router_optimizer_moments": {
+    "parameter_count": 12,
+    "parameters": {
+      "source_routers.b1.gate": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": []
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": []
+        }
+      },
+      "source_routers.b1.norm.weight": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        }
+      },
+      "source_routers.b1.query": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        }
+      },
+      "source_routers.b3.gate": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": []
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": []
+        }
+      },
+      "source_routers.b3.norm.weight": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        }
+      },
+      "source_routers.b3.query": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        }
+      },
+      "source_routers.b5.gate": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": []
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": []
+        }
+      },
+      "source_routers.b5.norm.weight": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        }
+      },
+      "source_routers.b5.query": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        }
+      },
+      "source_routers.b6.gate": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": []
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": []
+        }
+      },
+      "source_routers.b6.norm.weight": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        }
+      },
+      "source_routers.b6.query": {
+        "exp_avg": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        },
+        "exp_avg_sq": {
+          "finite": true,
+          "nonzero": true,
+          "present": true,
+          "shape": [
+            768
+          ]
+        }
+      }
+    },
+    "passed": true
+  },
+  "sha256": "9e0e96f6bf0201f52b51bb6d22a29ddb8491df86da434274a869c81e96df39e5",
+  "strict_reopen": {
+    "checks": {
+      "arm": true,
+      "git_commit": true,
+      "global_update": true,
+      "local_targets": true,
+      "local_updates": true,
+      "model_finite": true,
+      "next_batch": true,
+      "next_stream": true,
+      "optimizer_finite": true,
+      "parameters": true,
+      "parent": true,
+      "rng_complete": true,
+      "scheduler_present": true,
+      "schema": true
+    },
+    "passed": true
+  }
+}

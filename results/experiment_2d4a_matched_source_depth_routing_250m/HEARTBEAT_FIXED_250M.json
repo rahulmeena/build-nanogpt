@@ -1,0 +1,126 @@
+{
+  "arm": "fixed",
+  "checkpoint": "/workspace/exp2d4a_fixed_250m_accepted/checkpoints/scientific_local_0477.pt",
+  "checkpoint_sha256": "2a0f9344bc2a03e42bc3c2fb96c2e1f309f4108eaaadfa0f3e95d44e66ddecfc",
+  "d4a_local_targets": 250085376,
+  "experiment": "2D4A-250M",
+  "global_update": 2385,
+  "last_batch_sha256": "3d633c93ff0dbb4c0887a0e65e367198ae3f5f22ab622773300cbdd666472b28",
+  "last_stream_sha256": "0caf9624c25c8c6eebeb84345b649c486e84a24fb997c3e483a441cf6d54dfe9",
+  "latest_metrics": {
+    "approximate_pass_forward_seconds": [
+      1.80665398016572,
+      1.80665398016572
+    ],
+    "consumed_batch_sha256": "3d633c93ff0dbb4c0887a0e65e367198ae3f5f22ab622773300cbdd666472b28",
+    "consumed_stream_sha256": "0caf9624c25c8c6eebeb84345b649c486e84a24fb997c3e483a441cf6d54dfe9",
+    "d3a_processed_targets": 1250426880,
+    "d4a_local_targets": 250085376,
+    "gate_after": {
+      "b1": {
+        "effective": 0.29728958010673523,
+        "raw": 0.30654376745224
+      },
+      "b3": {
+        "effective": 0.011465190909802914,
+        "raw": 0.011465692892670631
+      },
+      "b5": {
+        "effective": 0.04260070621967316,
+        "raw": 0.042626503854990005
+      },
+      "b6": {
+        "effective": 0.0393446646630764,
+        "raw": 0.03936498612165451
+      }
+    },
+    "gate_before": {
+      "b1": {
+        "effective": 0.2973078787326813,
+        "raw": 0.3065638542175293
+      },
+      "b3": {
+        "effective": 0.011476568877696991,
+        "raw": 0.011477072723209858
+      },
+      "b5": {
+        "effective": 0.04266585037112236,
+        "raw": 0.04269176721572876
+      },
+      "b6": {
+        "effective": 0.039374835789203644,
+        "raw": 0.039395201951265335
+      }
+    },
+    "gate_gradients": {
+      "b1": -0.00044555586646310985,
+      "b3": -0.002122074132785201,
+      "b5": -9.293295443058014e-05,
+      "b6": -0.00041474075987935066
+    },
+    "global_update": 2385,
+    "gradient_groups": {
+      "b1_gate": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.00044555586646310985,
+        "tensors": 1
+      },
+      "b3_gate": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.002122074132785201,
+        "tensors": 1
+      },
+      "b5_gate": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 9.293295443058014e-05,
+        "tensors": 1
+      },
+      "b6_gate": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.00041474075987935066,
+        "tensors": 1
+      },
+      "base": {
+        "finite": true,
+        "nonzero": true,
+        "norm": 0.43106502294540405,
+        "tensors": 148
+      }
+    },
+    "gradient_norm_before_clip": 0.43107062578201294,
+    "local_update": 477,
+    "optimizer_lrs": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "gate": 0.0003
+    },
+    "parent_d3a_targets": 1000341504,
+    "pass_count": 2,
+    "pass_losses": [
+      3.096419796347618,
+      3.086124211549759
+    ],
+    "pass_weights": [
+      0.25,
+      0.75
+    ],
+    "peak_allocated_vram_mb": 36270.763671875,
+    "peak_reserved_vram_mb": 59024.0,
+    "targets_per_second": 58321.4795806005,
+    "total_lineage_targets": 1250426880,
+    "wall_seconds": 8.989621041342616
+  },
+  "local_update": 477,
+  "pid": 1038,
+  "status": "milestone_complete",
+  "total_lineage_targets": 1250426880,
+  "updated_at_unix": 1788024875.325492,
+  "updated_at_utc": "2026-08-29T17:34:35Z"
+}
