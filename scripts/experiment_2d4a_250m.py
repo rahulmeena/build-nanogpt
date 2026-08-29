@@ -825,22 +825,42 @@ def save_checkpoint(path, arm, model, optimizer, loader, local_update, accumulat
                     metadata, source_checkpoint, device, sidecars=True):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        raise SystemExit(f"refusing to overwrite checkpoint: {path}")
     payload = checkpoint_payload(
         arm, model, optimizer, loader, local_update, accumulation, metadata
     )
-    temporary = path.with_suffix(path.suffix + f".tmp.{os.getpid()}")
-    torch.save(payload, temporary)
-    os.replace(temporary, path)
+    staging_root = Path(os.environ.get(
+        "EXP2D4A_LOCAL_CHECKPOINT_STAGING", "/tmp/exp2d4a_checkpoint_staging"
+    ))
+    staging_root.mkdir(parents=True, exist_ok=True)
+    stage = staging_root / (
+        f"{arm}_{int(local_update):04d}_{os.getpid()}_{time.time_ns()}.pt"
+    )
+    torch.save(payload, stage)
+    stage_digest = sha256(stage)
+    with stage.open("rb") as source, path.open("xb") as destination:
+        shutil.copyfileobj(source, destination, length=16 * 1024 * 1024)
+        destination.flush()
+        os.fsync(destination.fileno())
     digest = sha256(path)
+    if digest != stage_digest:
+        raise SystemExit(
+            f"checkpoint staging/persistent hash mismatch: {stage_digest} != {digest}"
+        )
     audit = strict_reopen(path, source_checkpoint, device)
     if not audit["passed"]:
         raise SystemExit(f"strict 2D4A checkpoint reopen failed: {audit}")
     if sidecars:
         durable_text(path.with_suffix(path.suffix + ".sha256"), f"{digest}  {path.name}\n")
         durable_json(path.with_suffix(path.suffix + ".verification.json"), audit)
+    stage.unlink()
     return {
         "checkpoint": str(path.resolve()),
         "sha256": digest,
+        "local_staging_sha256": stage_digest,
+        "storage_write_mode": "local_stage_then_exclusive_fsynced_copy",
+        "local_staging_removed": not stage.exists(),
         "bytes": path.stat().st_size,
         "next_global_batch_sha256": payload["next_global_batch_sha256"],
         "next_global_batch_stream_sha256": payload["next_global_batch_stream_sha256"],
@@ -849,8 +869,15 @@ def save_checkpoint(path, arm, model, optimizer, loader, local_update, accumulat
 
 
 def heartbeat(output, arm, local_update, status, row=None, checkpoint=None):
-    checkpoint_sha = sha256(checkpoint) if checkpoint and Path(checkpoint).is_file() else None
-    durable_json(Path(output) / f"HEARTBEAT_{arm.upper()}_250M.json", {
+    heartbeat_path = Path(output) / f"HEARTBEAT_{arm.upper()}_250M.json"
+    previous = read_json(heartbeat_path) if heartbeat_path.is_file() else {}
+    if checkpoint is None:
+        checkpoint = previous.get("checkpoint")
+    checkpoint_sha = (
+        sha256(checkpoint) if checkpoint and Path(checkpoint).is_file()
+        else previous.get("checkpoint_sha256")
+    )
+    durable_json(heartbeat_path, {
         "experiment": EXPERIMENT,
         "arm": arm,
         "status": status,
@@ -1152,7 +1179,9 @@ def run_train(args):
         append_jsonl(ledger_path, ledger_row)
         heartbeat(output, args.arm, local_update, "training", row=row)
         if local_update in RECOVERY_UPDATES:
-            recovery_path = Path(args.recovery_dir) / "rotating_recovery.pt"
+            recovery_path = (
+                Path(args.recovery_dir) / f"recovery_local_{local_update:04d}.pt"
+            )
             verification = save_checkpoint(
                 recovery_path, args.arm, model, optimizer, loader, local_update,
                 accumulation, metadata, args.source_checkpoint, device, sidecars=False,

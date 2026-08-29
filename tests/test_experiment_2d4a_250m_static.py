@@ -49,6 +49,13 @@ class Experiment2D4A250MStaticTests(unittest.TestCase):
         self.assertIn("if local_update in MILESTONES", text)
         self.assertIn("first 2D4A-250M continuation batch/stream mismatch", text)
 
+    def test_checkpoint_writes_stage_off_fuse_and_never_overwrite(self):
+        text = (ROOT / "scripts/experiment_2d4a_250m.py").read_text()
+        self.assertIn("EXP2D4A_LOCAL_CHECKPOINT_STAGING", text)
+        self.assertIn('path.open("xb")', text)
+        self.assertIn("checkpoint staging/persistent hash mismatch", text)
+        self.assertIn('f"recovery_local_{local_update:04d}.pt"', text)
+
 
 if __name__ == "__main__":
     unittest.main()
