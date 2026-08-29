@@ -3095,8 +3095,6 @@ def create_plots_250m(result_dir, fixed_milestones, routed_milestones,
     save("Final paired 95% confidence intervals", "CE gain", lambda ax: ax.errorbar(range(3), [bootstrap[key]["mean"] for key in contrasts], yerr=[[bootstrap[key]["mean"] - bootstrap[key]["lower_2_5"] for key in contrasts], [bootstrap[key]["upper_97_5"] - bootstrap[key]["mean"] for key in contrasts]], fmt="o", capsize=5))
     save("Persistent inference memory", "bytes", lambda ax: ax.bar(["Fixed", "Routed"], [persistent["fixed_bytes"], persistent["routed_bytes"]]))
     save("Incremental research-kernel runtime", "milliseconds/token", lambda ax: ax.bar(["Fixed", "Routed"], [performance["fixed"]["milliseconds_per_token"], performance["routed"]["milliseconds_per_token"]]))
-    prior = prior_summary["bootstrap"]
-    save("100M vs 250M paired gains", "CE gain", lambda ax: ([ax.plot([100, 250], [prior[key]["mean"], bootstrap[key]["mean"]], marker="o", label=key) for key in contrasts], ax.legend()))
     if counter != 16:
         raise SystemExit(f"expected 16 continuation plots, created {counter}")
 
