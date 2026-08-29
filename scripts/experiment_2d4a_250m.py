@@ -825,7 +825,8 @@ def save_checkpoint(path, arm, model, optimizer, loader, local_update, accumulat
                     metadata, source_checkpoint, device, sidecars=True):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists():
+    rotating_recovery = path.name == "rotating_recovery.pt"
+    if path.exists() and not rotating_recovery:
         raise SystemExit(f"refusing to overwrite checkpoint: {path}")
     payload = checkpoint_payload(
         arm, model, optimizer, loader, local_update, accumulation, metadata
@@ -839,15 +840,23 @@ def save_checkpoint(path, arm, model, optimizer, loader, local_update, accumulat
     )
     torch.save(payload, stage)
     stage_digest = sha256(stage)
-    with stage.open("rb") as source, path.open("xb") as destination:
+    persistent_stage = path.with_suffix(
+        path.suffix + f".copy.{os.getpid()}.{time.time_ns()}"
+    )
+    with stage.open("rb") as source, persistent_stage.open("xb") as destination:
         shutil.copyfileobj(source, destination, length=16 * 1024 * 1024)
         destination.flush()
         os.fsync(destination.fileno())
+    persistent_stage_digest = sha256(persistent_stage)
+    if persistent_stage_digest != stage_digest:
+        raise SystemExit(
+            "checkpoint staging/persistent hash mismatch: "
+            f"{stage_digest} != {persistent_stage_digest}"
+        )
+    os.replace(persistent_stage, path)
     digest = sha256(path)
     if digest != stage_digest:
-        raise SystemExit(
-            f"checkpoint staging/persistent hash mismatch: {stage_digest} != {digest}"
-        )
+        raise SystemExit(f"checkpoint final hash mismatch: {stage_digest} != {digest}")
     audit = strict_reopen(path, source_checkpoint, device)
     if not audit["passed"]:
         raise SystemExit(f"strict 2D4A checkpoint reopen failed: {audit}")
@@ -1179,9 +1188,7 @@ def run_train(args):
         append_jsonl(ledger_path, ledger_row)
         heartbeat(output, args.arm, local_update, "training", row=row)
         if local_update in RECOVERY_UPDATES:
-            recovery_path = (
-                Path(args.recovery_dir) / f"recovery_local_{local_update:04d}.pt"
-            )
+            recovery_path = Path(args.recovery_dir) / "rotating_recovery.pt"
             verification = save_checkpoint(
                 recovery_path, args.arm, model, optimizer, loader, local_update,
                 accumulation, metadata, args.source_checkpoint, device, sidecars=False,
