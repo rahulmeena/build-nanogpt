@@ -1,0 +1,221 @@
+{
+  "arm": "routed",
+  "checkpoint": null,
+  "d4a_local_targets": 100139008,
+  "experiment": "2D4A",
+  "global_update": 2099,
+  "latest_metrics": {
+    "consumed_batch_sha256": "86d2f26ceef153745acc36aeacff87ff50a689784a2afa7a068a6c97930a8ed1",
+    "consumed_stream_sha256": "87de39938121f49358662345853e430f7cee56f15d1c6d138b16ce30a1705473",
+    "d4a_local_targets": 100139008,
+    "global_update": 2099,
+    "gradient_diagnostics": {
+      "existing_recurrent_gates": {
+        "b1": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.0007933690794743598
+        },
+        "b3": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.0006486085476353765
+        },
+        "b5": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.0011203703470528126
+        },
+        "b6": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 6.700777885271236e-05
+        }
+      },
+      "routers": {
+        "b1_gate": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 0.0002392367459833622
+        },
+        "b1_norm": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 3.9538981866371614e-08
+        },
+        "b1_query": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 4.2331106669735163e-05
+        },
+        "b3_gate": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 2.301888798683649e-06
+        },
+        "b3_norm": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 3.719150765135737e-09
+        },
+        "b3_query": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 6.119222689449089e-06
+        },
+        "b5_gate": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 1.3366616258281283e-05
+        },
+        "b5_norm": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 3.9585037470146744e-09
+        },
+        "b5_query": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 7.732907761237584e-06
+        },
+        "b6_gate": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 2.5605762857594527e-05
+        },
+        "b6_norm": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 2.0152692847830167e-09
+        },
+        "b6_query": {
+          "connected": true,
+          "finite": true,
+          "nonzero": true,
+          "norm": 2.4025316633924376e-06
+        }
+      }
+    },
+    "gradient_norm_before_clip": 0.3965615928173065,
+    "local_update": 191,
+    "optimizer_lrs": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "gate": 0.0003,
+      "route_gate": 0.0003,
+      "route_nodecay": 3e-05
+    },
+    "parent_d3a_targets": 1000341504,
+    "pass_count": 2,
+    "pass_losses": [
+      3.120424523949623,
+      3.109695792198181
+    ],
+    "pass_weights": [
+      0.25,
+      0.75
+    ],
+    "peak_allocated_vram_mb": 37816.375,
+    "peak_reserved_vram_mb": 57468.0,
+    "route_after": {
+      "b1": {
+        "gamma": 0.026373375207185745,
+        "norm_scale_max": 1.0013834238052368,
+        "norm_scale_mean": 1.0000227689743042,
+        "norm_scale_min": 0.9999672770500183,
+        "norm_scale_rms_displacement": 8.24393646325916e-05,
+        "query_norm": 0.02974429912865162,
+        "raw_gate": 0.02637949213385582
+      },
+      "b3": {
+        "gamma": 0.03561512008309364,
+        "norm_scale_max": 1.0000691413879395,
+        "norm_scale_mean": 1.0000005960464478,
+        "norm_scale_min": 0.9999969601631165,
+        "norm_scale_rms_displacement": 3.7677500586141832e-06,
+        "query_norm": 0.013047308661043644,
+        "raw_gate": 0.03563018888235092
+      },
+      "b5": {
+        "gamma": 0.020626813173294067,
+        "norm_scale_max": 1.0002158880233765,
+        "norm_scale_mean": 1.0000008344650269,
+        "norm_scale_min": 0.9999932050704956,
+        "norm_scale_rms_displacement": 8.574482308176812e-06,
+        "query_norm": 0.012962279841303825,
+        "raw_gate": 0.02062973938882351
+      },
+      "b6": {
+        "gamma": 0.010216516442596912,
+        "norm_scale_max": 1.00005042552948,
+        "norm_scale_mean": 1.0000004768371582,
+        "norm_scale_min": 0.9999985098838806,
+        "norm_scale_rms_displacement": 3.3213416372745996e-06,
+        "query_norm": 0.012662626802921295,
+        "raw_gate": 0.010216872207820415
+      }
+    },
+    "route_before": {
+      "b1": {
+        "gamma": 0.026197440922260284,
+        "norm_scale_max": 1.0013662576675415,
+        "norm_scale_mean": 1.000022292137146,
+        "norm_scale_min": 0.9999671578407288,
+        "norm_scale_rms_displacement": 8.124546002363786e-05,
+        "query_norm": 0.02954048104584217,
+        "raw_gate": 0.02620343677699566
+      },
+      "b3": {
+        "gamma": 0.03545483574271202,
+        "norm_scale_max": 1.0000689029693604,
+        "norm_scale_mean": 1.0000005960464478,
+        "norm_scale_min": 0.9999969601631165,
+        "norm_scale_rms_displacement": 3.7384922961791744e-06,
+        "query_norm": 0.013028871268033981,
+        "raw_gate": 0.03546970337629318
+      },
+      "b5": {
+        "gamma": 0.020527098327875137,
+        "norm_scale_max": 1.0002121925354004,
+        "norm_scale_mean": 1.0000008344650269,
+        "norm_scale_min": 0.9999932050704956,
+        "norm_scale_rms_displacement": 8.442910257144831e-06,
+        "query_norm": 0.012906481511890888,
+        "raw_gate": 0.020529981702566147
+      },
+      "b6": {
+        "gamma": 0.010135269723832607,
+        "norm_scale_max": 1.0000497102737427,
+        "norm_scale_mean": 1.0000004768371582,
+        "norm_scale_min": 0.9999985098838806,
+        "norm_scale_rms_displacement": 3.2863720207387814e-06,
+        "query_norm": 0.01260956097394228,
+        "raw_gate": 0.010135617107152939
+      }
+    },
+    "targets_per_second": 44589.78365468857,
+    "wall_seconds": 11.75802968814969
+  },
+  "local_update": 191,
+  "pid": 2222,
+  "status": "milestone_complete",
+  "updated_at_unix": 1787990945.188333
+}

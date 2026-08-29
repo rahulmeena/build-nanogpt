@@ -1,0 +1,659 @@
+{
+  "checkpoint": {
+    "checkpoint_sha256": "d28cf7e32f59227ae40fdc660055a02d6f1a18f222a82ad131b477925bbf2593",
+    "strict_reopen": {
+      "checks": {
+        "arm": true,
+        "git_commit": true,
+        "global_update": true,
+        "local_targets": true,
+        "local_updates": true,
+        "model_finite": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer_finite": true,
+        "parameters": true,
+        "parent": true,
+        "rng_complete": true,
+        "scheduler_present": true,
+        "schema": true
+      },
+      "passed": true
+    },
+    "temporary_checkpoint_removed": true
+  },
+  "discarded": true,
+  "passed": true,
+  "staged_activation": {
+    "b1": {
+      "norm_appears_by_step3": true,
+      "query_appears_by_step3": true,
+      "step1_gate_finite_nonzero": true,
+      "step1_norm_zero": true,
+      "step1_query_zero": true
+    },
+    "b3": {
+      "norm_appears_by_step3": true,
+      "query_appears_by_step3": true,
+      "step1_gate_finite_nonzero": true,
+      "step1_norm_zero": true,
+      "step1_query_zero": true
+    },
+    "b5": {
+      "norm_appears_by_step3": true,
+      "query_appears_by_step3": true,
+      "step1_gate_finite_nonzero": true,
+      "step1_norm_zero": true,
+      "step1_query_zero": true
+    },
+    "b6": {
+      "norm_appears_by_step3": true,
+      "query_appears_by_step3": true,
+      "step1_gate_finite_nonzero": true,
+      "step1_norm_zero": true,
+      "step1_query_zero": true
+    }
+  },
+  "updates": [
+    {
+      "consumed_batch_sha256": "61dd83544d83c0cf7b4d61005f5a9cf64e2cafa930af1819cba2aae4538e7e61",
+      "consumed_stream_sha256": "39f6599f552803150fad33d32aa9c4df5843b058410ff1ba38b5afa469046e97",
+      "d4a_local_targets": 524288,
+      "global_update": 1909,
+      "gradient_diagnostics": {
+        "existing_recurrent_gates": {
+          "b1": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.00022287006140686572
+          },
+          "b3": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.003384545911103487
+          },
+          "b5": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.000933855480980128
+          },
+          "b6": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.00014960739645175636
+          }
+        },
+        "routers": {
+          "b1_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0007074683089740574
+          },
+          "b1_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b1_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b3_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.37416209327057e-05
+          },
+          "b3_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b3_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b5_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.0557467248872854e-05
+          },
+          "b5_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b5_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b6_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.958711800398305e-05
+          },
+          "b6_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b6_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          }
+        }
+      },
+      "gradient_norm_before_clip": 0.4409961700439453,
+      "local_update": 1,
+      "parent_d3a_targets": 1000341504,
+      "pass_count": 2,
+      "pass_losses": [
+        3.159672349691391,
+        3.1482200622558594
+      ],
+      "pass_weights": [
+        0.25,
+        0.75
+      ],
+      "peak_allocated_vram_mb": 37816.443359375,
+      "peak_reserved_vram_mb": 45238.0,
+      "route_after": {
+        "b1": {
+          "gamma": -0.0002999957068823278,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": -0.0002999957068823278
+        },
+        "b3": {
+          "gamma": 0.0002997818519361317,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": 0.0002997818519361317
+        },
+        "b5": {
+          "gamma": -0.00029971610638312995,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": -0.00029971610638312995
+        },
+        "b6": {
+          "gamma": 0.0002998468989972025,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": 0.0002998468989972025
+        }
+      },
+      "route_before": {
+        "b1": {
+          "gamma": 0.0,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": 0.0
+        },
+        "b3": {
+          "gamma": 0.0,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": 0.0
+        },
+        "b5": {
+          "gamma": 0.0,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": 0.0
+        },
+        "b6": {
+          "gamma": 0.0,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": 0.0
+        }
+      },
+      "targets_per_second": 44809.97633753918,
+      "wall_seconds": 11.70025165937841
+    },
+    {
+      "consumed_batch_sha256": "2de8c175398bd8ec16e76f47604189aa59ae5c713230e63f79a81055f5dbc0eb",
+      "consumed_stream_sha256": "886247e96a6d1f55aacd81bf640355e602057290beb163ca2f6947f333c1be87",
+      "d4a_local_targets": 1048576,
+      "global_update": 1910,
+      "gradient_diagnostics": {
+        "existing_recurrent_gates": {
+          "b1": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.001237212447449565
+          },
+          "b3": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0010412720730528235
+          },
+          "b5": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0001249185879714787
+          },
+          "b6": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0003231682348996401
+          }
+        },
+        "routers": {
+          "b1_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.00046989612746983767
+          },
+          "b1_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b1_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 7.254326988004323e-07
+          },
+          "b3_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 4.59050261270022e-06
+          },
+          "b3_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b3_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 4.451563384577639e-08
+          },
+          "b5_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 3.369128535268828e-05
+          },
+          "b5_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b5_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.3520309494197136e-07
+          },
+          "b6_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.4731241208210122e-05
+          },
+          "b6_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": false,
+            "norm": 0.0
+          },
+          "b6_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 4.044428436600356e-08
+          }
+        }
+      },
+      "gradient_norm_before_clip": 0.4515438973903656,
+      "local_update": 2,
+      "parent_d3a_targets": 1000341504,
+      "pass_count": 2,
+      "pass_losses": [
+        3.084436535835266,
+        3.0741897225379944
+      ],
+      "pass_weights": [
+        0.25,
+        0.75
+      ],
+      "peak_allocated_vram_mb": 37816.5,
+      "peak_reserved_vram_mb": 45238.0,
+      "route_after": {
+        "b1": {
+          "gamma": -0.0005923978751525283,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.00022310421627480537,
+          "raw_gate": -0.0005923979333601892
+        },
+        "b3": {
+          "gamma": 0.0005636050482280552,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 5.914892244618386e-05,
+          "raw_gate": 0.0005636051064357162
+        },
+        "b5": {
+          "gamma": -0.00014837503840681165,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.00011783412628574297,
+          "raw_gate": -0.00014837503840681165
+        },
+        "b6": {
+          "gamma": 0.0005955590168014169,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 4.456620808923617e-05,
+          "raw_gate": 0.0005955590750090778
+        }
+      },
+      "route_before": {
+        "b1": {
+          "gamma": -0.0002999957068823278,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": -0.0002999957068823278
+        },
+        "b3": {
+          "gamma": 0.0002997818519361317,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": 0.0002997818519361317
+        },
+        "b5": {
+          "gamma": -0.00029971610638312995,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": -0.00029971610638312995
+        },
+        "b6": {
+          "gamma": 0.0002998468989972025,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0,
+          "raw_gate": 0.0002998468989972025
+        }
+      },
+      "targets_per_second": 45133.70178353989,
+      "wall_seconds": 11.616330575197935
+    },
+    {
+      "consumed_batch_sha256": "8dcf9689d1317a600bc9823b77401cefd12411eaa60f691f2a13f5a1253043c4",
+      "consumed_stream_sha256": "9878c315385c27e59f49d983b0156d39701aabaff4003b165df39235f974a105",
+      "d4a_local_targets": 1572864,
+      "global_update": 1911,
+      "gradient_diagnostics": {
+        "existing_recurrent_gates": {
+          "b1": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0017169623170047998
+          },
+          "b3": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0013410485116764903
+          },
+          "b5": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.00029278453439474106
+          },
+          "b6": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0001189783652080223
+          }
+        },
+        "routers": {
+          "b1_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 0.0006606674869544804
+          },
+          "b1_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 4.4389266568023444e-11
+          },
+          "b1_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 2.277806061101728e-06
+          },
+          "b3_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 6.05443256063154e-06
+          },
+          "b3_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 4.4940329127322876e-13
+          },
+          "b3_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.133355169713468e-07
+          },
+          "b5_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 3.828442459052894e-06
+          },
+          "b5_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 6.493370836684054e-13
+          },
+          "b5_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 6.691098519695515e-08
+          },
+          "b6_gate": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 1.5477526176255196e-06
+          },
+          "b6_norm": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 2.5692889113991535e-13
+          },
+          "b6_query": {
+            "connected": true,
+            "finite": true,
+            "nonzero": true,
+            "norm": 7.183712824598842e-08
+          }
+        }
+      },
+      "gradient_norm_before_clip": 0.38081076741218567,
+      "local_update": 3,
+      "parent_d3a_targets": 1000341504,
+      "pass_count": 2,
+      "pass_losses": [
+        3.1111497431993484,
+        3.1003980487585068
+      ],
+      "pass_weights": [
+        0.25,
+        0.75
+      ],
+      "peak_allocated_vram_mb": 37816.5,
+      "peak_reserved_vram_mb": 45238.0,
+      "route_after": {
+        "b1": {
+          "gamma": -0.0008879873785190284,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.0005526677705347538,
+          "raw_gate": -0.0008879876113496721
+        },
+        "b3": {
+          "gamma": 0.0008277797023765743,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.00012196257739560679,
+          "raw_gate": 0.000827779876999557
+        },
+        "b5": {
+          "gamma": -5.132437945576385e-05,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.00021094146359246224,
+          "raw_gate": -5.132437945576385e-05
+        },
+        "b6": {
+          "gamma": 0.0008142918231897056,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 8.452465408481658e-05,
+          "raw_gate": 0.0008142919978126884
+        }
+      },
+      "route_before": {
+        "b1": {
+          "gamma": -0.0005923978751525283,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.00022310421627480537,
+          "raw_gate": -0.0005923979333601892
+        },
+        "b3": {
+          "gamma": 0.0005636050482280552,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 5.914892244618386e-05,
+          "raw_gate": 0.0005636051064357162
+        },
+        "b5": {
+          "gamma": -0.00014837503840681165,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 0.00011783412628574297,
+          "raw_gate": -0.00014837503840681165
+        },
+        "b6": {
+          "gamma": 0.0005955590168014169,
+          "norm_scale_max": 1.0,
+          "norm_scale_mean": 1.0,
+          "norm_scale_min": 1.0,
+          "norm_scale_rms_displacement": 0.0,
+          "query_norm": 4.456620808923617e-05,
+          "raw_gate": 0.0005955590750090778
+        }
+      },
+      "targets_per_second": 45090.31298095698,
+      "wall_seconds": 11.627508556470275
+    }
+  ]
+}

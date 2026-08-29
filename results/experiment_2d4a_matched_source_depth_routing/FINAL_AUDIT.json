@@ -1,0 +1,81 @@
+{
+  "experiment": "2D4A",
+  "passed": true,
+  "scientific_integrity_passed": true,
+  "sections": {
+    "ARCHITECTURE": {
+      "existing_readout_unchanged": true,
+      "no_B11_to_B2": true,
+      "no_B9_to_B4": true,
+      "no_full_attnres_modification": true,
+      "temporal_lags_unchanged": true,
+      "windows_unchanged": true
+    },
+    "CAUSALITY": {
+      "no_future_leakage": true,
+      "no_same_token_feedback": true,
+      "row_isolation": true
+    },
+    "EVALUATION": {
+      "bootstrap_50k": true,
+      "canonical_milestones": true,
+      "core_262k": true,
+      "fixed_vs_routed": true,
+      "fresh_2m": true,
+      "route_off_vs_routed": true,
+      "uniform_vs_routed": true
+    },
+    "FIXED": {
+      "architecture_exactly_2d3a": true,
+      "no_new_params": true
+    },
+    "INFERENCE": {
+      "no_candidate_history_caches": true,
+      "no_prefix_recomputation": true,
+      "persistent_state_unchanged": true,
+      "true_incremental": true
+    },
+    "MATCH": {
+      "same_191_data_batches": true,
+      "same_first_batch": true,
+      "same_global_batch": true,
+      "same_old_optimizer_state": true,
+      "same_old_tensors": true,
+      "same_parent": true,
+      "same_pass_cadence": true
+    },
+    "PERSISTENCE": {
+      "final_checkpoints_strict_reopen": true,
+      "git_pushed": true,
+      "local_backups_hash_match": true,
+      "pod_stopped": false,
+      "volume_retained": true
+    },
+    "ROUTED": {
+      "baseline_sources_exact": true,
+      "candidate_sets_exact": true,
+      "exact_zero_forward_effect": true,
+      "exactly_6148_new_params": true,
+      "norm_one_init": true,
+      "q_zero_init": true,
+      "route_gate_zero_init": true,
+      "total_124482056": true
+    },
+    "SOURCE": {
+      "accepted_1b_sha_exact": true,
+      "accepted_checkpoint_not_quarantine": true,
+      "next_batch_exact": true,
+      "next_stream_exact": true
+    },
+    "TRAINING": {
+      "attached_temporal_gradients": true,
+      "ce_only": true,
+      "exactly_100139008_targets_per_arm": true,
+      "exactly_191_updates_per_arm": true,
+      "mandatory_update96_restart_each": true,
+      "only_new_router_state_fresh": true,
+      "optimizer_old_state_continuity": true
+    }
+  },
+  "terminal_infrastructure_pending_pod_stop": true
+}
