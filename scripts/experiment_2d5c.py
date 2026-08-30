@@ -4027,6 +4027,58 @@ def diagnostic_link_accumulator(heads):
     }
 
 
+def accumulate_device_scalar(row, key, value, *, integer=False):
+    """Accumulate one detached scalar without synchronizing its device.
+
+    Gradient diagnostics produce thousands of scalar sufficient statistics.
+    Calling ``float``/``int`` for each one serializes CUDA execution and copying
+    the underlying gradients to CPU materializes gigabytes of transient data.
+    Keep only scalar totals on the gradient device and materialize them once in
+    ``finalize_diagnostic_link``.
+    """
+    if not torch.is_tensor(value) or value.numel() != 1:
+        raise ValueError("device scalar accumulation requires one tensor element")
+    dtype = torch.int64 if integer else torch.float64
+    detached = value.detach().to(dtype=dtype)
+    current = row[key]
+    if torch.is_tensor(current):
+        if current.numel() != 1 or current.device != detached.device:
+            raise ValueError("incompatible device scalar accumulator")
+        current.add_(detached)
+    else:
+        row[key] = detached + detached.new_tensor(current, dtype=dtype)
+
+
+def materialize_device_scalar(row, key, *, integer=False):
+    """Convert one finalized scalar sufficient statistic to JSON-safe Python."""
+    value = row[key]
+    if torch.is_tensor(value):
+        if value.numel() != 1:
+            raise ValueError("finalized diagnostic statistic is not scalar")
+        value = value.detach().item()
+    row[key] = int(value) if integer else float(value)
+
+
+def accumulate_actual_writer_gradient(writer, value):
+    """Reduce one retained writer gradient entirely on its current device."""
+    writer["positions"] += 1
+    if value.grad is None:
+        return
+    writer["positions_with_gradient"] += 1
+    gradient = value.grad.detach().float()
+    norm = gradient.norm()
+    accumulate_device_scalar(writer, "sum_norm", norm)
+    accumulate_device_scalar(
+        writer, "sum_squared_gradient", gradient.square().sum()
+    )
+    accumulate_device_scalar(
+        writer,
+        "positions_with_nonzero_gradient",
+        norm > 0.0,
+        integer=True,
+    )
+
+
 def lag_bin_name(lag, include_native=False):
     lag = int(lag)
     if include_native and lag in (0, 1):
@@ -4124,7 +4176,6 @@ def accumulate_gradient_bins(accumulator, diagnostic):
     positions = diagnostic["recurrent_positions"]
     if positions is None or positions.numel() == 0:
         return
-    lags = int(diagnostic["query_position"]) - positions.detach().cpu().reshape(-1)
     tensors = {
         "source": diagnostic["recurrent_source_reads"],
         "key": diagnostic["recurrent_key_reads"],
@@ -4133,37 +4184,62 @@ def accumulate_gradient_bins(accumulator, diagnostic):
     for kind, tensor in tensors.items():
         if tensor is None or tensor.grad is None:
             continue
-        gradient = tensor.grad.detach().float().cpu()
-        for name, _, _ in RECURRENT_BINS:
-            mask = torch.tensor(
-                [lag_bin_name(value) == name for value in lags.tolist()],
-                dtype=torch.bool,
-            )
-            if not int(mask.sum()):
-                continue
+        gradient = tensor.grad.detach().float()
+        lags = (
+            int(diagnostic["query_position"])
+            - positions.detach().reshape(-1).to(gradient.device)
+        )
+        for name, low, high in RECURRENT_BINS:
+            mask = (lags >= low) & (lags <= high)
             row = accumulator["gradient"][kind][name]
             if kind == "source":
                 selected = gradient[:, mask, :]
                 pair_norm = selected.norm(dim=-1)
                 row["opportunities"] += int(pair_norm.numel())
-                row["sum_pair_norm"] += float(pair_norm.sum())
-                row["sum_squared_gradient"] += float(selected.square().sum())
-                row["nonzero_pairs"] += int((pair_norm > 0).sum())
+                accumulate_device_scalar(
+                    row, "sum_pair_norm", pair_norm.sum()
+                )
+                accumulate_device_scalar(
+                    row, "sum_squared_gradient", selected.square().sum()
+                )
+                accumulate_device_scalar(
+                    row, "nonzero_pairs", (pair_norm > 0).sum(), integer=True
+                )
             else:
                 selected = gradient[:, :, mask, :]
                 pair_norm = selected.norm(dim=-1)
                 row["opportunities"] += int(pair_norm.numel())
-                row["sum_pair_norm"] += float(pair_norm.sum())
-                row["sum_squared_gradient"] += float(selected.square().sum())
-                row["nonzero_pairs"] += int((pair_norm > 0).sum())
+                accumulate_device_scalar(
+                    row, "sum_pair_norm", pair_norm.sum()
+                )
+                accumulate_device_scalar(
+                    row, "sum_squared_gradient", selected.square().sum()
+                )
+                accumulate_device_scalar(
+                    row, "nonzero_pairs", (pair_norm > 0).sum(), integer=True
+                )
+                head_sum_norm = pair_norm.sum(dim=(0, 2))
+                head_sum_squared = selected.square().sum(dim=(0, 2, 3))
+                head_nonzero = (pair_norm > 0).sum(dim=(0, 2))
                 for head in range(pair_norm.size(1)):
                     head_row = row["per_head"][head]
-                    head_norm = pair_norm[:, head]
-                    head_selected = selected[:, head]
-                    head_row["opportunities"] += int(head_norm.numel())
-                    head_row["sum_pair_norm"] += float(head_norm.sum())
-                    head_row["sum_squared_gradient"] += float(head_selected.square().sum())
-                    head_row["nonzero_pairs"] += int((head_norm > 0).sum())
+                    head_row["opportunities"] += int(
+                        pair_norm[:, head].numel()
+                    )
+                    accumulate_device_scalar(
+                        head_row, "sum_pair_norm", head_sum_norm[head]
+                    )
+                    accumulate_device_scalar(
+                        head_row,
+                        "sum_squared_gradient",
+                        head_sum_squared[head],
+                    )
+                    accumulate_device_scalar(
+                        head_row,
+                        "nonzero_pairs",
+                        head_nonzero[head],
+                        integer=True,
+                    )
 
 
 def finalize_diagnostic_link(accumulator, family, block):
@@ -4204,6 +4280,19 @@ def finalize_diagnostic_link(accumulator, family, block):
         for name, value in accumulator["contribution_aggregate"].items()
     }
     for kind, bins in accumulator["gradient"].items():
+        for row in bins.values():
+            materialize_device_scalar(row, "sum_pair_norm")
+            materialize_device_scalar(row, "sum_squared_gradient")
+            materialize_device_scalar(row, "nonzero_pairs", integer=True)
+            if row["per_head"] is not None:
+                for head_row in row["per_head"]:
+                    materialize_device_scalar(head_row, "sum_pair_norm")
+                    materialize_device_scalar(
+                        head_row, "sum_squared_gradient"
+                    )
+                    materialize_device_scalar(
+                        head_row, "nonzero_pairs", integer=True
+                    )
         total_norm = sum(row["sum_pair_norm"] for row in bins.values())
         for row in bins.values():
             row["l2_norm_of_all_elements"] = math.sqrt(row["sum_squared_gradient"])
@@ -4222,6 +4311,11 @@ def finalize_diagnostic_link(accumulator, family, block):
                         head_row["sum_pair_norm"], head_row["opportunities"]
                     )
     writer = accumulator["actual_writer_gradient"]
+    materialize_device_scalar(writer, "sum_norm")
+    materialize_device_scalar(writer, "sum_squared_gradient")
+    materialize_device_scalar(
+        writer, "positions_with_nonzero_gradient", integer=True
+    )
     writer["l2_norm_of_all_elements"] = math.sqrt(writer["sum_squared_gradient"])
     writer["nonzero_back_to_actual_writer"] = writer["positions_with_nonzero_gradient"] > 0
     writer["gradient_scope"] = (
@@ -4354,15 +4448,7 @@ def one_sequence_representation_diagnostic(model, x, y, family, scale):
             accumulate_gradient_bins(accumulators[link], row)
         writer = accumulators[link]["actual_writer_gradient"]
         for value in writer_records[link]:
-            writer["positions"] += 1
-            if value.grad is None:
-                continue
-            writer["positions_with_gradient"] += 1
-            gradient = value.grad.detach().float()
-            norm = float(gradient.norm())
-            writer["sum_norm"] += norm
-            writer["sum_squared_gradient"] += float(gradient.square().sum())
-            writer["positions_with_nonzero_gradient"] += int(norm > 0.0)
+            accumulate_actual_writer_gradient(writer, value)
         finalize_diagnostic_link(accumulators[link], family, link)
     finite_statistics = finite_numeric_tree(accumulators)
     return {
