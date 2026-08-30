@@ -81,6 +81,9 @@ SHUFFLE_SEED = 2_026_083_002
 BOOTSTRAP_SEED = 2_026_083_003
 BOOTSTRAP_RESAMPLES = 50_000
 NONINFERIORITY_MARGIN = 0.001
+REPRESENTATION_DIAGNOSTIC_SCHEMA = (
+    "experiment_2d5c_representation_pressure_diagnostic_v2"
+)
 POD_ID = "h6of430yxncf6h"
 POD_NAME = "opposite_azure_ladybug"
 VOLUME_ID = "yhzyb27fb5"
@@ -2080,6 +2083,7 @@ def attached_gradient_test(model, optimizer, val_path, device):
     loader = base.d1.ExplicitShardLoader([val_path], 2, 96)
     cpu_x, cpu_y = loader.next_batch()
     x, y = cpu_x.to(device), cpu_y.to(device)
+    was_training = model.training
     model.train()
     model.zero_grad(set_to_none=True)
     with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
@@ -2110,6 +2114,8 @@ def attached_gradient_test(model, optimizer, val_path, device):
         }
         rows[name]["passed"] = all(value for key, value in rows[name].items() if key.endswith("finite") or key.endswith("nonzero"))
     model.zero_grad(set_to_none=True)
+    if not was_training:
+        model.eval()
     model_after = parameter_manifest(model)["aggregate_sha256"]
     optimizer_after = optimizer_manifest(model, optimizer)["state_aggregate_sha256"]
     return {
@@ -4218,7 +4224,24 @@ def finalize_diagnostic_link(accumulator, family, block):
     writer = accumulator["actual_writer_gradient"]
     writer["l2_norm_of_all_elements"] = math.sqrt(writer["sum_squared_gradient"])
     writer["nonzero_back_to_actual_writer"] = writer["positions_with_nonzero_gradient"] > 0
+    writer["gradient_scope"] = (
+        "temporal_recurrent_ring_write_edge_only; excludes the same-token "
+        "ordinary residual path"
+    )
     return accumulator
+
+
+def finite_numeric_tree(value):
+    """Require every emitted numeric diagnostic to be finite, allowing N/A."""
+    if value is None or isinstance(value, (str, bool)):
+        return True
+    if isinstance(value, (int, float)):
+        return math.isfinite(float(value))
+    if isinstance(value, dict):
+        return all(finite_numeric_tree(item) for item in value.values())
+    if isinstance(value, (list, tuple)):
+        return all(finite_numeric_tree(item) for item in value)
+    return False
 
 
 def load_diagnostic_bundle(family, checkpoint, source_checkpoint, device,
@@ -4341,11 +4364,13 @@ def one_sequence_representation_diagnostic(model, x, y, family, scale):
             writer["sum_squared_gradient"] += float(gradient.square().sum())
             writer["positions_with_nonzero_gradient"] += int(norm > 0.0)
         finalize_diagnostic_link(accumulators[link], family, link)
+    finite_statistics = finite_numeric_tree(accumulators)
     return {
         "mean_ce": float(mean_ce.detach()),
         "loss_gradient_scale": float(scale),
         "links": accumulators,
-        "finite": math.isfinite(float(mean_ce.detach())),
+        "finite_statistics": finite_statistics,
+        "finite": math.isfinite(float(mean_ce.detach())) and finite_statistics,
     }
 
 
@@ -4405,6 +4430,7 @@ def merge_representation_rows(rows, family, gates):
     combined["passed"] = (
         len(rows) == 32
         and all(row["finite"] for row in rows)
+        and finite_numeric_tree(combined["links"])
         and all(
             combined["links"][link]["actual_writer_gradient"]["nonzero_back_to_actual_writer"]
             and sum(
@@ -4414,6 +4440,7 @@ def merge_representation_rows(rows, family, gates):
             for link in ("b3", "b5")
         )
     )
+    combined["finite_statistics"] = finite_numeric_tree(combined["links"])
     return combined
 
 
@@ -4460,6 +4487,15 @@ def run_representation_diagnostics(args):
         else SOURCE_SHA256
     )
     run_identity = {
+        "diagnostic_schema": REPRESENTATION_DIAGNOSTIC_SCHEMA,
+        "diagnostic_implementation_sha256": {
+            name: digest
+            for name, digest in implementation_file_sha256().items()
+            if name in {
+                "scripts/experiment_2d5c.py",
+                "scripts/experiment_2d5c_core.py",
+            }
+        },
         "experiment": EXPERIMENT,
         "label": args.label,
         "family": args.family,
@@ -4634,6 +4670,7 @@ EVALUATION_IDENTITY_KEYS = frozenset({
 })
 
 REPRESENTATION_IDENTITY_KEYS = frozenset({
+    "diagnostic_schema", "diagnostic_implementation_sha256",
     "experiment", "label", "family", "local_update", "checkpoint_sha256",
     "architecture_fingerprint", "model_state_sha256",
     "optimizer_state_sha256", "optimizer_model_binding_sha256",
@@ -4753,7 +4790,23 @@ def representation_artifact_identity_checks(row, spec, core_manifest,
     expected_sequence_hashes = [item.get("combined_sha256") for item in selected]
     actual_sequence_hashes = [item.get("combined_sha256") for item in per_sequence] \
         if isinstance(per_sequence, list) else []
+    current_implementation = implementation_file_sha256()
+    expected_diagnostic_implementation = {
+        name: current_implementation[name]
+        for name in (
+            "scripts/experiment_2d5c.py",
+            "scripts/experiment_2d5c_core.py",
+        )
+    }
     checks = {
+        "diagnostic_schema_exact": (
+            identity.get("diagnostic_schema")
+            == REPRESENTATION_DIAGNOSTIC_SCHEMA
+        ),
+        "diagnostic_implementation_exact": (
+            identity.get("diagnostic_implementation_sha256")
+            == expected_diagnostic_implementation
+        ),
         "experiment_exact": row.get("experiment") == EXPERIMENT,
         "family_exact": row.get("family") == spec["family"],
         "local_update_exact": (

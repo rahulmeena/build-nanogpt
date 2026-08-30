@@ -37,10 +37,7 @@ BRANCH = "experiment-2d5c-fixed-writer-b3-b5-w2-matched-100m"
 FINAL_TAG = "experiment-2d5c-fixed-writer-b3-b5-w2-matched-100m-final"
 GIT_VERIFICATION_SCHEMA = "experiment_2d5c_git_verification_v1"
 
-HOST = "154.54.102.28"
-PORT = 10_302
 IDENTITY_FILE = Path("/Users/rahul/.ssh/id_ed25519")
-REMOTE = f"root@{HOST}"
 REMOTE_REPO = Path("/tmp/exp2d5c-official")
 RUN_ROOT = Path("/workspace/exp2d5c_w2w2_100m")
 PRETRAIN = RUN_ROOT / "pretrain"
@@ -123,25 +120,30 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def ssh_prefix() -> list[str]:
-    return [
-        "ssh", "-o", "BatchMode=yes", "-o", "ServerAliveInterval=30",
-        "-o", "ServerAliveCountMax=6", "-i", str(IDENTITY_FILE),
-        "-p", str(PORT), REMOTE,
-    ]
-
-
-def rsync_shell() -> str:
-    return shlex.join([
-        "ssh", "-o", "BatchMode=yes", "-o", "ServerAliveInterval=30",
-        "-o", "ServerAliveCountMax=6", "-i", str(IDENTITY_FILE),
-        "-p", str(PORT),
-    ])
-
-
 class Workflow:
-    def __init__(self, runtime_log: Path):
+    def __init__(self, runtime_log: Path, ssh_host: str, ssh_port: int):
+        if not ssh_host or any(character.isspace() for character in ssh_host):
+            raise WorkflowError("SSH host must be a nonempty address without whitespace")
+        if not 1 <= int(ssh_port) <= 65_535:
+            raise WorkflowError("SSH port must be between 1 and 65535")
         self.runtime_log = runtime_log.resolve()
+        self.ssh_host = ssh_host
+        self.ssh_port = int(ssh_port)
+        self.remote = f"root@{ssh_host}"
+
+    def ssh_prefix(self) -> list[str]:
+        return [
+            "ssh", "-o", "BatchMode=yes", "-o", "ServerAliveInterval=30",
+            "-o", "ServerAliveCountMax=6", "-i", str(IDENTITY_FILE),
+            "-p", str(self.ssh_port), self.remote,
+        ]
+
+    def rsync_shell(self) -> str:
+        return shlex.join([
+            "ssh", "-o", "BatchMode=yes", "-o", "ServerAliveInterval=30",
+            "-o", "ServerAliveCountMax=6", "-i", str(IDENTITY_FILE),
+            "-p", str(self.ssh_port),
+        ])
 
     def run(
         self,
@@ -186,7 +188,7 @@ class Workflow:
         return "" if result.stdout is None else result.stdout.strip()
 
     def remote_capture(self, script: str, stage: str) -> str:
-        return self.run([*ssh_prefix(), script], stage, capture=True)
+        return self.run([*self.ssh_prefix(), script], stage, capture=True)
 
     def driver(self, stage: str, *arguments: str) -> None:
         remote_command = shlex.join([
@@ -202,20 +204,20 @@ class Workflow:
                 *arguments,
             ])
         )
-        self.run([*ssh_prefix(), remote_command], stage)
+        self.run([*self.ssh_prefix(), remote_command], stage)
 
     def rsync_from(self, remote_path: Path | str, local_path: Path | str, stage: str) -> None:
         local_path = Path(local_path)
         local_path.parent.mkdir(parents=True, exist_ok=True)
         self.run([
             "rsync", "-a", "--partial", "--human-readable", "--progress",
-            "-e", rsync_shell(), f"{REMOTE}:{remote_path}", str(local_path),
+            "-e", self.rsync_shell(), f"{self.remote}:{remote_path}", str(local_path),
         ], stage)
 
     def rsync_to(self, local_path: Path, remote_path: Path, stage: str) -> None:
         self.run([
-            "rsync", "-a", "--partial", "-e", rsync_shell(),
-            str(local_path), f"{REMOTE}:{remote_path}",
+            "rsync", "-a", "--partial", "-e", self.rsync_shell(),
+            str(local_path), f"{self.remote}:{remote_path}",
         ], stage)
 
 
@@ -717,13 +719,13 @@ def preserve_failure_best_effort(workflow: Workflow, error: Exception) -> dict:
         canonical_json(report),
     ])
     written = subprocess.run(
-        [*ssh_prefix(), remote_command], check=False,
+        [*workflow.ssh_prefix(), remote_command], check=False,
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
     ).returncode == 0
     report["preservation"]["remote_failure_report_written"] = written
 
     latest_result = subprocess.run(
-        [*ssh_prefix(),
+        [*workflow.ssh_prefix(),
          f"find {shlex.quote(str(CHECKPOINTS))} -maxdepth 1 -type f "
          "-name '*.pt' -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1"],
         check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
@@ -732,14 +734,14 @@ def preserve_failure_best_effort(workflow: Workflow, error: Exception) -> dict:
     if latest_result.returncode == 0 and latest_result.stdout.strip():
         latest = Path(latest_result.stdout.strip().split(" ", 1)[1])
         checkpoint_ok = subprocess.run([
-            "rsync", "-a", "--partial", "-e", rsync_shell(),
-            f"{REMOTE}:{latest}", str(attempt / latest.name),
+            "rsync", "-a", "--partial", "-e", workflow.rsync_shell(),
+            f"{workflow.remote}:{latest}", str(attempt / latest.name),
         ], check=False).returncode == 0
         sidecars = {}
         for suffix in (".sha256", ".verification.json"):
             sidecars[suffix] = subprocess.run([
-                "rsync", "-a", "--partial", "-e", rsync_shell(),
-                f"{REMOTE}:{latest}{suffix}", str(attempt / f"{latest.name}{suffix}"),
+                "rsync", "-a", "--partial", "-e", workflow.rsync_shell(),
+                f"{workflow.remote}:{latest}{suffix}", str(attempt / f"{latest.name}{suffix}"),
             ], check=False).returncode == 0
         report["preservation"]["latest_checkpoint"] = {
             "remote_path": str(latest),
@@ -758,8 +760,8 @@ def preserve_failure_best_effort(workflow: Workflow, error: Exception) -> dict:
         destination = attempt / label
         destination.mkdir(parents=True, exist_ok=True)
         copied_roots[label] = subprocess.run([
-            "rsync", "-a", "--partial", "-e", rsync_shell(),
-            f"{REMOTE}:{remote_root}/", f"{destination}/",
+            "rsync", "-a", "--partial", "-e", workflow.rsync_shell(),
+            f"{workflow.remote}:{remote_root}/", f"{destination}/",
         ], check=False).returncode == 0
     report["preservation"]["artifact_roots_copied"] = copied_roots
     report["preservation"]["attempt_directory"] = str(attempt)
@@ -772,6 +774,8 @@ def build_parser() -> argparse.ArgumentParser:
         description="Supervised host-side official Experiment 2D5C workflow"
     )
     parser.add_argument("--authorization-artifact", type=Path, required=True)
+    parser.add_argument("--ssh-host", required=True)
+    parser.add_argument("--ssh-port", type=int, required=True)
     parser.add_argument(
         "--runtime-log", type=Path,
         default=LOCAL_ARCHIVE / "WORKFLOW_RUNTIME.jsonl",
@@ -781,7 +785,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    workflow = Workflow(args.runtime_log)
+    workflow = Workflow(args.runtime_log, args.ssh_host, args.ssh_port)
     try:
         result = run_scientific_workflow(workflow, args.authorization_artifact.resolve())
     except Exception as error:

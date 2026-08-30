@@ -418,7 +418,8 @@ class Experiment2D5CStaticTests(unittest.TestCase):
 
     def test_analysis_raw_artifact_identity_helpers_fail_closed(self):
         names = (
-            "nested_value", "valid_sha256", "canonical_identity_matches",
+            "implementation_file_sha256", "nested_value", "valid_sha256",
+            "canonical_identity_matches",
             "evaluation_artifact_identity_checks",
             "representation_artifact_identity_checks",
         )
@@ -432,12 +433,19 @@ class Experiment2D5CStaticTests(unittest.TestCase):
         environment = {
             "hashlib": hashlib,
             "math": math,
+            "REPO_ROOT": ROOT,
+            "sha256": lambda path: hashlib.sha256(
+                Path(path).read_bytes()
+            ).hexdigest(),
             "base": types.SimpleNamespace(T=1024),
             "canonical_sha": canonical_sha,
             "EXPERIMENT": "2D5C",
             "CORE_SHA256": DRIVER_CONSTANTS["CORE_SHA256"],
             "EVALUATION_IDENTITY_KEYS": DRIVER_CONSTANTS["EVALUATION_IDENTITY_KEYS"],
             "REPRESENTATION_IDENTITY_KEYS": DRIVER_CONSTANTS["REPRESENTATION_IDENTITY_KEYS"],
+            "REPRESENTATION_DIAGNOSTIC_SCHEMA": DRIVER_CONSTANTS[
+                "REPRESENTATION_DIAGNOSTIC_SCHEMA"
+            ],
         }
         exec(compile(module, str(DRIVER_PATH), "exec"), environment)
 
@@ -517,6 +525,16 @@ class Experiment2D5CStaticTests(unittest.TestCase):
         diagnostic_sha = canonical_sha(selected)
         optimizer_binding = {"method": "test", "checks": {"exact": True}, "passed": True}
         representation_identity = {
+            "diagnostic_schema": DRIVER_CONSTANTS[
+                "REPRESENTATION_DIAGNOSTIC_SCHEMA"
+            ],
+            "diagnostic_implementation_sha256": {
+                name: environment["implementation_file_sha256"]()[name]
+                for name in (
+                    "scripts/experiment_2d5c.py",
+                    "scripts/experiment_2d5c_core.py",
+                )
+            },
             "experiment": "2D5C", "label": "c96", "family": "C",
             "local_update": 96, "checkpoint_sha256": checkpoint_sha,
             "architecture_fingerprint": fingerprint,
@@ -716,6 +734,9 @@ class Experiment2D5CStaticTests(unittest.TestCase):
             diagnostic_source.count("model.zero_grad(set_to_none=True)"), 2
         )
         self.assertIn('"optimizer_model_binding"', diagnostic_source)
+        self.assertIn('"diagnostic_schema"', diagnostic_source)
+        self.assertIn('"diagnostic_implementation_sha256"', diagnostic_source)
+        self.assertIn("finite_numeric_tree", DRIVER_TEXT)
         self.assertIn(
             "optimizer_model_binding_sha256",
             DRIVER_CONSTANTS["REPRESENTATION_IDENTITY_KEYS"],

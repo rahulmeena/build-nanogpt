@@ -611,14 +611,21 @@ class _B3B5ControlledFixedWriterGPT(
             if diagnostic_retain_grad
             else self._append_ring
         )
+        # In diagnostic autograd mode, clone the two preregistered writer
+        # representations at the exact ring-write edge.  Their retained
+        # gradients then isolate the temporal recurrent path and exclude each
+        # writer's ordinary same-token residual path while remaining attached
+        # to the actual B8/B10 activations and parameters.
+        h8_ring_write = h8.clone() if diagnostic_retain_grad else h8
+        h10_ring_write = h10.clone() if diagnostic_retain_grad else h10
         next_h7, next_h7_positions = append_ring(
             state.h7_ring, state.h7_positions, h7, state.position
         )
         next_h8, next_h8_positions = append_ring(
-            state.h8_ring, state.h8_positions, h8, state.position
+            state.h8_ring, state.h8_positions, h8_ring_write, state.position
         )
         next_h10, next_h10_positions = append_ring(
-            state.h10_ring, state.h10_positions, h10, state.position
+            state.h10_ring, state.h10_positions, h10_ring_write, state.position
         )
         next_h12, next_h12_positions = append_ring(
             state.h12_ring, state.h12_positions, h12, state.position
@@ -642,10 +649,13 @@ class _B3B5ControlledFixedWriterGPT(
             return logits, next_state
         writer_block_states = None
         if diagnostic_retain_grad:
-            for value in (h8, h10):
+            for value in (h8_ring_write, h10_ring_write):
                 if value.requires_grad:
                     value.retain_grad()
-            writer_block_states = {"b8": h8, "b10": h10}
+            writer_block_states = {
+                "b8": h8_ring_write,
+                "b10": h10_ring_write,
+            }
         return logits, next_state, {
             "position": state.position,
             "control": control,
@@ -655,6 +665,10 @@ class _B3B5ControlledFixedWriterGPT(
             "cache_audit": self.incremental_cache_audit(next_state),
             "block_states": all_block_states,
             "writer_block_states": writer_block_states,
+            "writer_gradient_scope": (
+                None if not diagnostic_retain_grad else
+                "temporal_recurrent_ring_write_edge_only"
+            ),
             "diagnostic_retain_grad": bool(diagnostic_retain_grad),
         }
 

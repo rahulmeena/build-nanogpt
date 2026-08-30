@@ -401,6 +401,9 @@ def test_diagnostic_retain_grad_reaches_actual_b10_b8_writers_and_sdpa_reads():
         assert writer.grad is not None, writer_name
         assert torch.isfinite(writer.grad).all(), writer_name
         assert torch.count_nonzero(writer.grad), writer_name
+        assert rows[0]["writer_gradient_scope"] == (
+            "temporal_recurrent_ring_write_edge_only"
+        )
     assert inventory(current) == before
     for name, value in current.state_dict().items():
         assert torch.equal(value, before_state[name]), name

@@ -82,6 +82,12 @@ class Experiment2D5CCompletionTests(unittest.TestCase):
         function = source[source.index("def implementation_file_sha256"):source.index("def require_branch")]
         self.assertIn('"scripts/experiment_2d5c_complete.py"', function)
 
+    def test_completion_forwards_runtime_ssh_endpoint(self):
+        source = COMPLETE.read_text(encoding="utf-8")
+        self.assertIn('"--ssh-host", args.ssh_host', source)
+        self.assertIn('"--ssh-port", str(args.ssh_port)', source)
+        self.assertNotIn("10302", source)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -129,6 +129,8 @@ def run_guarded_workflow(args: argparse.Namespace) -> None:
         str(LOCAL_REPO / "scripts" / "experiment_2d5c_workflow.py"),
         "--authorization-artifact", str(args.authorization_artifact),
         "--runtime-log", str(args.runtime_log),
+        "--ssh-host", args.ssh_host,
+        "--ssh-port", str(args.ssh_port),
     ]
     result = subprocess.run(command, cwd=str(LOCAL_REPO), check=False)
     if not args.stop_report.is_file():
@@ -248,6 +250,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--authorization-artifact", type=Path, required=True)
     parser.add_argument("--trigger-file", type=Path, required=True)
     parser.add_argument("--stop-report", type=Path, required=True)
+    parser.add_argument("--ssh-host", required=True)
+    parser.add_argument("--ssh-port", type=int, required=True)
     parser.add_argument(
         "--runtime-log", type=Path,
         default=LOCAL_ARCHIVE / "WORKFLOW_RUNTIME.jsonl",

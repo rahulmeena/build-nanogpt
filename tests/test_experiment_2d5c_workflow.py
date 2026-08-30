@@ -58,6 +58,26 @@ class Experiment2D5CWorkflowTests(unittest.TestCase):
         self.assertEqual(module.SOURCE_SHA256[:16], "de80d0886a42e414")
         self.assertEqual(module.CONTROL_SHA256[:16], "e108e47b68a13b36")
 
+    def test_ephemeral_ssh_endpoint_is_runtime_bound(self):
+        module = load_module()
+        workflow = module.Workflow(
+            ROOT / "runtime-test.jsonl", "192.0.2.10", 42_222
+        )
+        self.assertEqual(
+            workflow.ssh_prefix()[-3:], ["-p", "42222", "root@192.0.2.10"]
+        )
+        self.assertIn("-p 42222", workflow.rsync_shell())
+        self.assertNotIn("10302", SOURCE)
+        parser_source = ast.get_source_segment(
+            SOURCE,
+            next(
+                node for node in TREE.body
+                if isinstance(node, ast.FunctionDef) and node.name == "build_parser"
+            ),
+        )
+        self.assertIn('"--ssh-host"', parser_source)
+        self.assertIn('"--ssh-port"', parser_source)
+
     def test_evaluation_surface_cannot_reduce_required_c_or_fixed_controls(self):
         module = load_module()
         c = module.evaluate_args(
