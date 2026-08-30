@@ -2320,10 +2320,41 @@ def forbidden_component_audit(model):
     runtime_config = {
         str(name).lower(): value for name, value in vars(model.config).items()
     }
+    # ``attnres_rms_eps`` is an unconditional GPTConfig compatibility field.  It
+    # is consulted only inside GPT.__init__'s ``residual_mode ==
+    # "full_attnres"`` branch; the accepted fixed-writer Parent uses
+    # ``residual_mode == "standard"``.  Treat the field itself as evidence to
+    # inspect, not as evidence that AttnRes executes.  Active modes/flags,
+    # registered modules, parameters, and buffers remain fail-closed below.
+    inert_compatibility_fields = (
+        {"attnres_rms_eps"}
+        if runtime_config.get("residual_mode") == "standard"
+        else set()
+    )
     runtime_config_hits = sorted(
         name for name, value in runtime_config.items()
-        if any(term in name for term in forbidden_terms) and bool(value)
+        if name not in inert_compatibility_fields
+        and bool(value)
+        and (
+            any(term in name for term in forbidden_terms)
+            or any(term in str(value).lower() for term in forbidden_terms)
+        )
     )
+    runtime_config_checks = {
+        "residual_mode_standard": runtime_config.get("residual_mode") == "standard",
+        "topdown_feedback_disabled": not bool(
+            runtime_config.get("enable_topdown_feedback", False)
+        ),
+        "topdown_feedback_destinations_empty": not bool(
+            runtime_config.get("topdown_feedback_destinations", ())
+        ),
+        "memory_writers_disabled": not bool(
+            runtime_config.get("enable_memory_writers", False)
+        ),
+        "attnres_rms_eps_compatibility_field_inert": (
+            runtime_config.get("residual_mode") == "standard"
+        ),
+    }
     config_architecture_text = json.dumps(
         config_architecture, sort_keys=True, separators=(",", ":")
     ).lower()
@@ -2349,6 +2380,7 @@ def forbidden_component_audit(model):
         "forbidden_registered_names_absent": not registered_name_hits,
         "forbidden_runtime_config_absent": not runtime_config_hits,
         "unexpected_projection_modules_absent": not unexpected_projection_modules,
+        **runtime_config_checks,
     }
     return {
         "configuration_path": str(config_path),
@@ -2357,6 +2389,13 @@ def forbidden_component_audit(model):
         "module_checks": module_checks,
         "forbidden_registered_name_hits": registered_name_hits,
         "forbidden_runtime_config_hits": runtime_config_hits,
+        "runtime_config_checks": runtime_config_checks,
+        "attnres_rms_eps_compatibility_field": {
+            "present": "attnres_rms_eps" in runtime_config,
+            "value": runtime_config.get("attnres_rms_eps"),
+            "execution_guard": "residual_mode == full_attnres",
+            "inactive": runtime_config.get("residual_mode") == "standard",
+        },
         "registered_projection_modules": projection_modules,
         "unexpected_projection_modules": unexpected_projection_modules,
         "registered_buffers": buffer_names,
