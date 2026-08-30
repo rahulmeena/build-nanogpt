@@ -1,0 +1,814 @@
+{
+  "bytes": 1493947523,
+  "checkpoint": "/workspace/exp2d4a_fixed_run/checkpoints/scientific_local_0191.pt",
+  "checks": {
+    "cumulative_targets": true,
+    "global_update": true,
+    "local_targets": true,
+    "local_updates": true,
+    "next_batch": true,
+    "next_stream": true,
+    "no_router_parameters": true,
+    "optimizer_rebound_by_exact_parameter_name": true,
+    "parameters": true,
+    "parent": true,
+    "sha256": true,
+    "strict_reopen": true,
+    "unique_sha_match": true
+  },
+  "metadata": {
+    "architecture": {
+      "absent_links": [
+        "B11->B2",
+        "B9->B4"
+      ],
+      "arm": "fixed",
+      "blocks": {
+        "B1": {
+          "c_proj_applications": 1,
+          "destination_ln_qkv_reused": true,
+          "local_window": 2,
+          "recurrent_lags": [
+            2,
+            1023
+          ],
+          "separate_softmax": true,
+          "source": "B12 post-MLP residual"
+        },
+        "B10": {
+          "local_window": 1024,
+          "recurrent": false
+        },
+        "B11": {
+          "local_window": 1024,
+          "recurrent": false
+        },
+        "B12": {
+          "local_window": 1024,
+          "recurrent": false
+        },
+        "B2": {
+          "local_window": 1024,
+          "recurrent": false
+        },
+        "B3": {
+          "c_proj_applications": 1,
+          "destination_ln_qkv_reused": true,
+          "local_window": 32,
+          "recurrent_lags": [
+            32,
+            1023
+          ],
+          "separate_softmax": true,
+          "source": "B10 post-MLP residual"
+        },
+        "B4": {
+          "local_window": 1024,
+          "recurrent": false
+        },
+        "B5": {
+          "c_proj_applications": 1,
+          "destination_ln_qkv_reused": true,
+          "local_window": 64,
+          "recurrent_lags": [
+            64,
+            1023
+          ],
+          "separate_softmax": true,
+          "source": "B8 post-MLP residual"
+        },
+        "B6": {
+          "c_proj_applications": 1,
+          "destination_ln_qkv_reused": true,
+          "local_window": 512,
+          "recurrent_lags": [
+            512,
+            1023
+          ],
+          "separate_softmax": true,
+          "source": "B7 post-MLP residual"
+        },
+        "B7": {
+          "local_window": 1024,
+          "recurrent": false
+        },
+        "B8": {
+          "local_window": 1024,
+          "recurrent": false
+        },
+        "B9": {
+          "local_window": 1024,
+          "recurrent": false
+        }
+      },
+      "candidate_order": {},
+      "existing_recurrent_readout_unchanged": true,
+      "experiment": "2D4A",
+      "fixed_sources": {
+        "B1": "B12",
+        "B3": "B10",
+        "B5": "B8",
+        "B6": "B7"
+      },
+      "full_attnres": false,
+      "new_parameters": 0,
+      "ordinary_low_to_high_residual_unchanged": true,
+      "parameters": 124475908,
+      "persistent_rings": 4,
+      "recurrent_lags": {
+        "B1": [
+          2,
+          1023
+        ],
+        "B3": [
+          32,
+          1023
+        ],
+        "B5": [
+          64,
+          1023
+        ],
+        "B6": [
+          512,
+          1023
+        ]
+      },
+      "recurrent_windows": {
+        "B1": 2,
+        "B3": 32,
+        "B5": 64,
+        "B6": 512
+      },
+      "routing_write_time_only": false,
+      "vectors_per_destination_token": 1
+    },
+    "cumulative_targets": 1100480512,
+    "global_update": 2099,
+    "local_updates": 191,
+    "new_targets": 100139008,
+    "parent_sha256": "de80d0886a42e4142fa8b30d27eae4302a298bb207961b593f9401e908faaf7b"
+  },
+  "optimizer_rebinding": {
+    "checks": {
+      "group_parameter_names_and_metadata_exact": true,
+      "optimizer_defaults_exact": true,
+      "optimizer_type_exact": true,
+      "parameter_names_exact": true,
+      "parameter_shapes_and_dtypes_exact": true,
+      "rebound_group_coverage_exact": true,
+      "rebound_optimizer_manifest_passed": true,
+      "source_group_coverage_exact": true,
+      "source_optimizer_manifest_passed": true,
+      "state_aggregate_sha256_exact": true,
+      "state_parameter_names_exact": true,
+      "state_tensor_storage_independent": true,
+      "state_values_exact": true
+    },
+    "method": "optimizer groups and all state cloned onto evaluator parameters by exact named-parameter mapping",
+    "passed": true,
+    "rebound_defaults": {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 0.001,
+      "maximize": false,
+      "weight_decay": 0.01
+    },
+    "rebound_group_manifest": [
+      {
+        "index": 0,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 3e-05,
+          "maximize": false,
+          "name": "base_decay",
+          "weight_decay": 0.1
+        },
+        "parameter_names": [
+          "base.transformer.wte.weight",
+          "base.transformer.wpe.weight",
+          "base.transformer.h.0.attn.c_attn.weight",
+          "base.transformer.h.0.attn.c_proj.weight",
+          "base.transformer.h.0.mlp.c_fc.weight",
+          "base.transformer.h.0.mlp.c_proj.weight",
+          "base.transformer.h.1.attn.c_attn.weight",
+          "base.transformer.h.1.attn.c_proj.weight",
+          "base.transformer.h.1.mlp.c_fc.weight",
+          "base.transformer.h.1.mlp.c_proj.weight",
+          "base.transformer.h.2.attn.c_attn.weight",
+          "base.transformer.h.2.attn.c_proj.weight",
+          "base.transformer.h.2.mlp.c_fc.weight",
+          "base.transformer.h.2.mlp.c_proj.weight",
+          "base.transformer.h.3.attn.c_attn.weight",
+          "base.transformer.h.3.attn.c_proj.weight",
+          "base.transformer.h.3.mlp.c_fc.weight",
+          "base.transformer.h.3.mlp.c_proj.weight",
+          "base.transformer.h.4.attn.c_attn.weight",
+          "base.transformer.h.4.attn.c_proj.weight",
+          "base.transformer.h.4.mlp.c_fc.weight",
+          "base.transformer.h.4.mlp.c_proj.weight",
+          "base.transformer.h.5.attn.c_attn.weight",
+          "base.transformer.h.5.attn.c_proj.weight",
+          "base.transformer.h.5.mlp.c_fc.weight",
+          "base.transformer.h.5.mlp.c_proj.weight",
+          "base.transformer.h.6.attn.c_attn.weight",
+          "base.transformer.h.6.attn.c_proj.weight",
+          "base.transformer.h.6.mlp.c_fc.weight",
+          "base.transformer.h.6.mlp.c_proj.weight",
+          "base.transformer.h.7.attn.c_attn.weight",
+          "base.transformer.h.7.attn.c_proj.weight",
+          "base.transformer.h.7.mlp.c_fc.weight",
+          "base.transformer.h.7.mlp.c_proj.weight",
+          "base.transformer.h.8.attn.c_attn.weight",
+          "base.transformer.h.8.attn.c_proj.weight",
+          "base.transformer.h.8.mlp.c_fc.weight",
+          "base.transformer.h.8.mlp.c_proj.weight",
+          "base.transformer.h.9.attn.c_attn.weight",
+          "base.transformer.h.9.attn.c_proj.weight",
+          "base.transformer.h.9.mlp.c_fc.weight",
+          "base.transformer.h.9.mlp.c_proj.weight",
+          "base.transformer.h.10.attn.c_attn.weight",
+          "base.transformer.h.10.attn.c_proj.weight",
+          "base.transformer.h.10.mlp.c_fc.weight",
+          "base.transformer.h.10.mlp.c_proj.weight",
+          "base.transformer.h.11.attn.c_attn.weight",
+          "base.transformer.h.11.attn.c_proj.weight",
+          "base.transformer.h.11.mlp.c_fc.weight",
+          "base.transformer.h.11.mlp.c_proj.weight"
+        ]
+      },
+      {
+        "index": 1,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 3e-05,
+          "maximize": false,
+          "name": "base_nodecay",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "base.transformer.h.0.ln_1.weight",
+          "base.transformer.h.0.ln_1.bias",
+          "base.transformer.h.0.attn.c_attn.bias",
+          "base.transformer.h.0.attn.c_proj.bias",
+          "base.transformer.h.0.ln_2.weight",
+          "base.transformer.h.0.ln_2.bias",
+          "base.transformer.h.0.mlp.c_fc.bias",
+          "base.transformer.h.0.mlp.c_proj.bias",
+          "base.transformer.h.1.ln_1.weight",
+          "base.transformer.h.1.ln_1.bias",
+          "base.transformer.h.1.attn.c_attn.bias",
+          "base.transformer.h.1.attn.c_proj.bias",
+          "base.transformer.h.1.ln_2.weight",
+          "base.transformer.h.1.ln_2.bias",
+          "base.transformer.h.1.mlp.c_fc.bias",
+          "base.transformer.h.1.mlp.c_proj.bias",
+          "base.transformer.h.2.ln_1.weight",
+          "base.transformer.h.2.ln_1.bias",
+          "base.transformer.h.2.attn.c_attn.bias",
+          "base.transformer.h.2.attn.c_proj.bias",
+          "base.transformer.h.2.ln_2.weight",
+          "base.transformer.h.2.ln_2.bias",
+          "base.transformer.h.2.mlp.c_fc.bias",
+          "base.transformer.h.2.mlp.c_proj.bias",
+          "base.transformer.h.3.ln_1.weight",
+          "base.transformer.h.3.ln_1.bias",
+          "base.transformer.h.3.attn.c_attn.bias",
+          "base.transformer.h.3.attn.c_proj.bias",
+          "base.transformer.h.3.ln_2.weight",
+          "base.transformer.h.3.ln_2.bias",
+          "base.transformer.h.3.mlp.c_fc.bias",
+          "base.transformer.h.3.mlp.c_proj.bias",
+          "base.transformer.h.4.ln_1.weight",
+          "base.transformer.h.4.ln_1.bias",
+          "base.transformer.h.4.attn.c_attn.bias",
+          "base.transformer.h.4.attn.c_proj.bias",
+          "base.transformer.h.4.ln_2.weight",
+          "base.transformer.h.4.ln_2.bias",
+          "base.transformer.h.4.mlp.c_fc.bias",
+          "base.transformer.h.4.mlp.c_proj.bias",
+          "base.transformer.h.5.ln_1.weight",
+          "base.transformer.h.5.ln_1.bias",
+          "base.transformer.h.5.attn.c_attn.bias",
+          "base.transformer.h.5.attn.c_proj.bias",
+          "base.transformer.h.5.ln_2.weight",
+          "base.transformer.h.5.ln_2.bias",
+          "base.transformer.h.5.mlp.c_fc.bias",
+          "base.transformer.h.5.mlp.c_proj.bias",
+          "base.transformer.h.6.ln_1.weight",
+          "base.transformer.h.6.ln_1.bias",
+          "base.transformer.h.6.attn.c_attn.bias",
+          "base.transformer.h.6.attn.c_proj.bias",
+          "base.transformer.h.6.ln_2.weight",
+          "base.transformer.h.6.ln_2.bias",
+          "base.transformer.h.6.mlp.c_fc.bias",
+          "base.transformer.h.6.mlp.c_proj.bias",
+          "base.transformer.h.7.ln_1.weight",
+          "base.transformer.h.7.ln_1.bias",
+          "base.transformer.h.7.attn.c_attn.bias",
+          "base.transformer.h.7.attn.c_proj.bias",
+          "base.transformer.h.7.ln_2.weight",
+          "base.transformer.h.7.ln_2.bias",
+          "base.transformer.h.7.mlp.c_fc.bias",
+          "base.transformer.h.7.mlp.c_proj.bias",
+          "base.transformer.h.8.ln_1.weight",
+          "base.transformer.h.8.ln_1.bias",
+          "base.transformer.h.8.attn.c_attn.bias",
+          "base.transformer.h.8.attn.c_proj.bias",
+          "base.transformer.h.8.ln_2.weight",
+          "base.transformer.h.8.ln_2.bias",
+          "base.transformer.h.8.mlp.c_fc.bias",
+          "base.transformer.h.8.mlp.c_proj.bias",
+          "base.transformer.h.9.ln_1.weight",
+          "base.transformer.h.9.ln_1.bias",
+          "base.transformer.h.9.attn.c_attn.bias",
+          "base.transformer.h.9.attn.c_proj.bias",
+          "base.transformer.h.9.ln_2.weight",
+          "base.transformer.h.9.ln_2.bias",
+          "base.transformer.h.9.mlp.c_fc.bias",
+          "base.transformer.h.9.mlp.c_proj.bias",
+          "base.transformer.h.10.ln_1.weight",
+          "base.transformer.h.10.ln_1.bias",
+          "base.transformer.h.10.attn.c_attn.bias",
+          "base.transformer.h.10.attn.c_proj.bias",
+          "base.transformer.h.10.ln_2.weight",
+          "base.transformer.h.10.ln_2.bias",
+          "base.transformer.h.10.mlp.c_fc.bias",
+          "base.transformer.h.10.mlp.c_proj.bias",
+          "base.transformer.h.11.ln_1.weight",
+          "base.transformer.h.11.ln_1.bias",
+          "base.transformer.h.11.attn.c_attn.bias",
+          "base.transformer.h.11.attn.c_proj.bias",
+          "base.transformer.h.11.ln_2.weight",
+          "base.transformer.h.11.ln_2.bias",
+          "base.transformer.h.11.mlp.c_fc.bias",
+          "base.transformer.h.11.mlp.c_proj.bias",
+          "base.transformer.ln_f.weight",
+          "base.transformer.ln_f.bias"
+        ]
+      },
+      {
+        "index": 2,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 0.0003,
+          "maximize": false,
+          "name": "gate",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "g_rec"
+        ]
+      },
+      {
+        "index": 3,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 0.0003,
+          "maximize": false,
+          "name": "b3_gate",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "g_rec_b3"
+        ]
+      },
+      {
+        "index": 4,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 0.0003,
+          "maximize": false,
+          "name": "b5_gate",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "g_rec_b5"
+        ]
+      },
+      {
+        "index": 5,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 0.0003,
+          "maximize": false,
+          "name": "b6_gate",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "g_rec_b6"
+        ]
+      }
+    ],
+    "rebound_state_manifest": {
+      "grouped_parameter_tensors": 152,
+      "malformed_state_tensors": [],
+      "parameter_group_coverage_exact": true,
+      "passed": true,
+      "state_aggregate_sha256": "aad391000eec82f23bdb650dda98390a2986fd4db654350151523a3f60f887cb",
+      "state_parameter_entries": 152,
+      "state_tensor_count": 456,
+      "trainable_parameter_tensors": 152
+    },
+    "source_defaults": {
+      "amsgrad": false,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "capturable": false,
+      "decoupled_weight_decay": true,
+      "differentiable": false,
+      "eps": 1e-08,
+      "foreach": null,
+      "fused": true,
+      "lr": 0.001,
+      "maximize": false,
+      "weight_decay": 0.01
+    },
+    "source_group_manifest": [
+      {
+        "index": 0,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 3e-05,
+          "maximize": false,
+          "name": "base_decay",
+          "weight_decay": 0.1
+        },
+        "parameter_names": [
+          "base.transformer.wte.weight",
+          "base.transformer.wpe.weight",
+          "base.transformer.h.0.attn.c_attn.weight",
+          "base.transformer.h.0.attn.c_proj.weight",
+          "base.transformer.h.0.mlp.c_fc.weight",
+          "base.transformer.h.0.mlp.c_proj.weight",
+          "base.transformer.h.1.attn.c_attn.weight",
+          "base.transformer.h.1.attn.c_proj.weight",
+          "base.transformer.h.1.mlp.c_fc.weight",
+          "base.transformer.h.1.mlp.c_proj.weight",
+          "base.transformer.h.2.attn.c_attn.weight",
+          "base.transformer.h.2.attn.c_proj.weight",
+          "base.transformer.h.2.mlp.c_fc.weight",
+          "base.transformer.h.2.mlp.c_proj.weight",
+          "base.transformer.h.3.attn.c_attn.weight",
+          "base.transformer.h.3.attn.c_proj.weight",
+          "base.transformer.h.3.mlp.c_fc.weight",
+          "base.transformer.h.3.mlp.c_proj.weight",
+          "base.transformer.h.4.attn.c_attn.weight",
+          "base.transformer.h.4.attn.c_proj.weight",
+          "base.transformer.h.4.mlp.c_fc.weight",
+          "base.transformer.h.4.mlp.c_proj.weight",
+          "base.transformer.h.5.attn.c_attn.weight",
+          "base.transformer.h.5.attn.c_proj.weight",
+          "base.transformer.h.5.mlp.c_fc.weight",
+          "base.transformer.h.5.mlp.c_proj.weight",
+          "base.transformer.h.6.attn.c_attn.weight",
+          "base.transformer.h.6.attn.c_proj.weight",
+          "base.transformer.h.6.mlp.c_fc.weight",
+          "base.transformer.h.6.mlp.c_proj.weight",
+          "base.transformer.h.7.attn.c_attn.weight",
+          "base.transformer.h.7.attn.c_proj.weight",
+          "base.transformer.h.7.mlp.c_fc.weight",
+          "base.transformer.h.7.mlp.c_proj.weight",
+          "base.transformer.h.8.attn.c_attn.weight",
+          "base.transformer.h.8.attn.c_proj.weight",
+          "base.transformer.h.8.mlp.c_fc.weight",
+          "base.transformer.h.8.mlp.c_proj.weight",
+          "base.transformer.h.9.attn.c_attn.weight",
+          "base.transformer.h.9.attn.c_proj.weight",
+          "base.transformer.h.9.mlp.c_fc.weight",
+          "base.transformer.h.9.mlp.c_proj.weight",
+          "base.transformer.h.10.attn.c_attn.weight",
+          "base.transformer.h.10.attn.c_proj.weight",
+          "base.transformer.h.10.mlp.c_fc.weight",
+          "base.transformer.h.10.mlp.c_proj.weight",
+          "base.transformer.h.11.attn.c_attn.weight",
+          "base.transformer.h.11.attn.c_proj.weight",
+          "base.transformer.h.11.mlp.c_fc.weight",
+          "base.transformer.h.11.mlp.c_proj.weight"
+        ]
+      },
+      {
+        "index": 1,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 3e-05,
+          "maximize": false,
+          "name": "base_nodecay",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "base.transformer.h.0.ln_1.weight",
+          "base.transformer.h.0.ln_1.bias",
+          "base.transformer.h.0.attn.c_attn.bias",
+          "base.transformer.h.0.attn.c_proj.bias",
+          "base.transformer.h.0.ln_2.weight",
+          "base.transformer.h.0.ln_2.bias",
+          "base.transformer.h.0.mlp.c_fc.bias",
+          "base.transformer.h.0.mlp.c_proj.bias",
+          "base.transformer.h.1.ln_1.weight",
+          "base.transformer.h.1.ln_1.bias",
+          "base.transformer.h.1.attn.c_attn.bias",
+          "base.transformer.h.1.attn.c_proj.bias",
+          "base.transformer.h.1.ln_2.weight",
+          "base.transformer.h.1.ln_2.bias",
+          "base.transformer.h.1.mlp.c_fc.bias",
+          "base.transformer.h.1.mlp.c_proj.bias",
+          "base.transformer.h.2.ln_1.weight",
+          "base.transformer.h.2.ln_1.bias",
+          "base.transformer.h.2.attn.c_attn.bias",
+          "base.transformer.h.2.attn.c_proj.bias",
+          "base.transformer.h.2.ln_2.weight",
+          "base.transformer.h.2.ln_2.bias",
+          "base.transformer.h.2.mlp.c_fc.bias",
+          "base.transformer.h.2.mlp.c_proj.bias",
+          "base.transformer.h.3.ln_1.weight",
+          "base.transformer.h.3.ln_1.bias",
+          "base.transformer.h.3.attn.c_attn.bias",
+          "base.transformer.h.3.attn.c_proj.bias",
+          "base.transformer.h.3.ln_2.weight",
+          "base.transformer.h.3.ln_2.bias",
+          "base.transformer.h.3.mlp.c_fc.bias",
+          "base.transformer.h.3.mlp.c_proj.bias",
+          "base.transformer.h.4.ln_1.weight",
+          "base.transformer.h.4.ln_1.bias",
+          "base.transformer.h.4.attn.c_attn.bias",
+          "base.transformer.h.4.attn.c_proj.bias",
+          "base.transformer.h.4.ln_2.weight",
+          "base.transformer.h.4.ln_2.bias",
+          "base.transformer.h.4.mlp.c_fc.bias",
+          "base.transformer.h.4.mlp.c_proj.bias",
+          "base.transformer.h.5.ln_1.weight",
+          "base.transformer.h.5.ln_1.bias",
+          "base.transformer.h.5.attn.c_attn.bias",
+          "base.transformer.h.5.attn.c_proj.bias",
+          "base.transformer.h.5.ln_2.weight",
+          "base.transformer.h.5.ln_2.bias",
+          "base.transformer.h.5.mlp.c_fc.bias",
+          "base.transformer.h.5.mlp.c_proj.bias",
+          "base.transformer.h.6.ln_1.weight",
+          "base.transformer.h.6.ln_1.bias",
+          "base.transformer.h.6.attn.c_attn.bias",
+          "base.transformer.h.6.attn.c_proj.bias",
+          "base.transformer.h.6.ln_2.weight",
+          "base.transformer.h.6.ln_2.bias",
+          "base.transformer.h.6.mlp.c_fc.bias",
+          "base.transformer.h.6.mlp.c_proj.bias",
+          "base.transformer.h.7.ln_1.weight",
+          "base.transformer.h.7.ln_1.bias",
+          "base.transformer.h.7.attn.c_attn.bias",
+          "base.transformer.h.7.attn.c_proj.bias",
+          "base.transformer.h.7.ln_2.weight",
+          "base.transformer.h.7.ln_2.bias",
+          "base.transformer.h.7.mlp.c_fc.bias",
+          "base.transformer.h.7.mlp.c_proj.bias",
+          "base.transformer.h.8.ln_1.weight",
+          "base.transformer.h.8.ln_1.bias",
+          "base.transformer.h.8.attn.c_attn.bias",
+          "base.transformer.h.8.attn.c_proj.bias",
+          "base.transformer.h.8.ln_2.weight",
+          "base.transformer.h.8.ln_2.bias",
+          "base.transformer.h.8.mlp.c_fc.bias",
+          "base.transformer.h.8.mlp.c_proj.bias",
+          "base.transformer.h.9.ln_1.weight",
+          "base.transformer.h.9.ln_1.bias",
+          "base.transformer.h.9.attn.c_attn.bias",
+          "base.transformer.h.9.attn.c_proj.bias",
+          "base.transformer.h.9.ln_2.weight",
+          "base.transformer.h.9.ln_2.bias",
+          "base.transformer.h.9.mlp.c_fc.bias",
+          "base.transformer.h.9.mlp.c_proj.bias",
+          "base.transformer.h.10.ln_1.weight",
+          "base.transformer.h.10.ln_1.bias",
+          "base.transformer.h.10.attn.c_attn.bias",
+          "base.transformer.h.10.attn.c_proj.bias",
+          "base.transformer.h.10.ln_2.weight",
+          "base.transformer.h.10.ln_2.bias",
+          "base.transformer.h.10.mlp.c_fc.bias",
+          "base.transformer.h.10.mlp.c_proj.bias",
+          "base.transformer.h.11.ln_1.weight",
+          "base.transformer.h.11.ln_1.bias",
+          "base.transformer.h.11.attn.c_attn.bias",
+          "base.transformer.h.11.attn.c_proj.bias",
+          "base.transformer.h.11.ln_2.weight",
+          "base.transformer.h.11.ln_2.bias",
+          "base.transformer.h.11.mlp.c_fc.bias",
+          "base.transformer.h.11.mlp.c_proj.bias",
+          "base.transformer.ln_f.weight",
+          "base.transformer.ln_f.bias"
+        ]
+      },
+      {
+        "index": 2,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 0.0003,
+          "maximize": false,
+          "name": "gate",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "g_rec"
+        ]
+      },
+      {
+        "index": 3,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 0.0003,
+          "maximize": false,
+          "name": "b3_gate",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "g_rec_b3"
+        ]
+      },
+      {
+        "index": 4,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 0.0003,
+          "maximize": false,
+          "name": "b5_gate",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "g_rec_b5"
+        ]
+      },
+      {
+        "index": 5,
+        "options": {
+          "amsgrad": false,
+          "betas": [
+            0.9,
+            0.95
+          ],
+          "capturable": false,
+          "decoupled_weight_decay": true,
+          "differentiable": false,
+          "eps": 1e-08,
+          "foreach": null,
+          "fused": true,
+          "lr": 0.0003,
+          "maximize": false,
+          "name": "b6_gate",
+          "weight_decay": 0.0
+        },
+        "parameter_names": [
+          "g_rec_b6"
+        ]
+      }
+    ],
+    "source_state_manifest": {
+      "grouped_parameter_tensors": 152,
+      "malformed_state_tensors": [],
+      "parameter_group_coverage_exact": true,
+      "passed": true,
+      "state_aggregate_sha256": "aad391000eec82f23bdb650dda98390a2986fd4db654350151523a3f60f887cb",
+      "state_parameter_entries": 152,
+      "state_tensor_count": 456,
+      "trainable_parameter_tensors": 152
+    }
+  },
+  "optimizer_steps_in_2d5c": 0,
+  "passed": true,
+  "sha256": "e108e47b68a13b368bbd6a27bd1472b9740613a9d03896e900e158bb3ed708a8",
+  "unique_search": {
+    "same_size_candidates": [
+      {
+        "bytes": 1493947523,
+        "path": "/workspace/exp2d4a_fixed_run/checkpoints/scientific_local_0191.pt",
+        "sha256": "e108e47b68a13b368bbd6a27bd1472b9740613a9d03896e900e158bb3ed708a8"
+      }
+    ],
+    "sha_matches": [
+      {
+        "bytes": 1493947523,
+        "path": "/workspace/exp2d4a_fixed_run/checkpoints/scientific_local_0191.pt",
+        "sha256": "e108e47b68a13b368bbd6a27bd1472b9740613a9d03896e900e158bb3ed708a8"
+      }
+    ],
+    "unique": true
+  }
+}

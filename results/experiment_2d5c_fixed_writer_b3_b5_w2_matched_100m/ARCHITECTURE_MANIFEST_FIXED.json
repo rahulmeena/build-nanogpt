@@ -1,0 +1,121 @@
+{
+  "auxiliary_objective": false,
+  "blocks": {
+    "B1": {
+      "code_index": 0,
+      "local_window": 2,
+      "recurrent_lags": [
+        2,
+        1023
+      ],
+      "writer": "B12"
+    },
+    "B10": {
+      "code_index": 9,
+      "local_window": 1024,
+      "recurrent_lags": null,
+      "writer": null
+    },
+    "B11": {
+      "code_index": 10,
+      "local_window": 1024,
+      "recurrent_lags": null,
+      "writer": null
+    },
+    "B12": {
+      "code_index": 11,
+      "local_window": 1024,
+      "recurrent_lags": null,
+      "writer": null
+    },
+    "B2": {
+      "code_index": 1,
+      "local_window": 1024,
+      "recurrent_lags": null,
+      "writer": null
+    },
+    "B3": {
+      "code_index": 2,
+      "local_window": 32,
+      "recurrent_lags": [
+        32,
+        1023
+      ],
+      "writer": "B10"
+    },
+    "B4": {
+      "code_index": 3,
+      "local_window": 1024,
+      "recurrent_lags": null,
+      "writer": null
+    },
+    "B5": {
+      "code_index": 4,
+      "local_window": 64,
+      "recurrent_lags": [
+        64,
+        1023
+      ],
+      "writer": "B8"
+    },
+    "B6": {
+      "code_index": 5,
+      "local_window": 512,
+      "recurrent_lags": [
+        512,
+        1023
+      ],
+      "writer": "B7"
+    },
+    "B7": {
+      "code_index": 6,
+      "local_window": 1024,
+      "recurrent_lags": null,
+      "writer": null
+    },
+    "B8": {
+      "code_index": 7,
+      "local_window": 1024,
+      "recurrent_lags": null,
+      "writer": null
+    },
+    "B9": {
+      "code_index": 8,
+      "local_window": 1024,
+      "recurrent_lags": null,
+      "writer": null
+    }
+  },
+  "ce_only": true,
+  "code_index_to_block": {
+    "0": "B1",
+    "1": "B2",
+    "10": "B11",
+    "11": "B12",
+    "2": "B3",
+    "3": "B4",
+    "4": "B5",
+    "5": "B6",
+    "6": "B7",
+    "7": "B8",
+    "8": "B9",
+    "9": "B10"
+  },
+  "experiment": "2D5C",
+  "family": "Fixed",
+  "fingerprint_sha256": "be345a9fe3b486f601c3af1564ce90f51de51c84daf6e89885126b094adfaac2",
+  "fixed_writer_identity": {
+    "B1": "B12",
+    "B3": "B10",
+    "B5": "B8",
+    "B6": "B7"
+  },
+  "model_weight_lineage": "e108e47b68a13b368bbd6a27bd1472b9740613a9d03896e900e158bb3ed708a8",
+  "new_parameters": 0,
+  "parameters": 124475908,
+  "recurrent_ring_byte_change_vs_fixed": 0,
+  "ring_capacity": 1023,
+  "router": false,
+  "state_dict_key_changes": 0,
+  "trainable_parameters": 124475908
+}
