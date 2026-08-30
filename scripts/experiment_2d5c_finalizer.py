@@ -23,8 +23,8 @@ from typing import Any, Mapping, Sequence
 EXPERIMENT = "2D5C"
 BRANCH = "experiment-2d5c-fixed-writer-b3-b5-w2-matched-100m"
 FINAL_TAG = "experiment-2d5c-fixed-writer-b3-b5-w2-matched-100m-final"
-POD_ID = "h6of430yxncf6h"
-POD_NAME = "opposite_azure_ladybug"
+POD_ID = "rvgztsr0azrwyo"
+POD_NAME = "happy_apricot_stork"
 VOLUME_ID = "yhzyb27fb5"
 VOLUME_NAME = "unlikely_lime_flamingo"
 VOLUME_SIZE_GB = 150

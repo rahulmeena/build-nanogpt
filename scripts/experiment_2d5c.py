@@ -84,9 +84,64 @@ NONINFERIORITY_MARGIN = 0.001
 REPRESENTATION_DIAGNOSTIC_SCHEMA = (
     "experiment_2d5c_representation_pressure_diagnostic_v2"
 )
-POD_ID = "h6of430yxncf6h"
-POD_NAME = "opposite_azure_ladybug"
+POD_ID = "rvgztsr0azrwyo"
+POD_NAME = "happy_apricot_stork"
 VOLUME_ID = "yhzyb27fb5"
+
+# The inherited A100/CUDA training recipe is not bitwise repeatable in
+# backward: two isolated fresh processes from an exact saved boundary produce
+# identical inputs and forward losses, but small differences in all clipped
+# gradients.  These limits were frozen before official training from the
+# retained fresh-process calibration.  They govern only the disposable
+# continuation comparison; official data, state, and restart boundaries remain
+# byte-exact and the inherited training recipe is unchanged.
+CONTINUATION_GATE_GRADIENT_ABS_TOL = 1.25e-4
+CONTINUATION_GATE_GRADIENT_REL_TOL = 2.0e-2
+CONTINUATION_GRADIENT_NORM_ABS_TOL = 2.0e-3
+CONTINUATION_GRADIENT_NORM_REL_TOL = 1.0e-3
+CONTINUATION_GATE_AFTER_ABS_TOL = 1.0e-6
+CONTINUATION_SENTINEL_ABS_TOL = 5.0e-1
+CONTINUATION_SENTINEL_MEAN_ABS_TOL = 1.0e-1
+CONTINUATION_CALIBRATION_SCHEMA = (
+    "experiment_2d5c_continuation_repeatability_calibration_v2"
+)
+CONTINUATION_CALIBRATION_PIN_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "configs" / "exp2d5c_continuation_calibration_pin.json"
+)
+_CONTINUATION_CALIBRATION_PIN = json.loads(
+    CONTINUATION_CALIBRATION_PIN_PATH.read_text()
+)
+if set(_CONTINUATION_CALIBRATION_PIN) != {
+    "calibration_sha256", "implementation_commit",
+}:
+    raise RuntimeError("2D5C continuation calibration pin schema is not exact")
+CONTINUATION_CALIBRATION_SHA256 = _CONTINUATION_CALIBRATION_PIN[
+    "calibration_sha256"
+]
+CONTINUATION_TENSOR_ENVELOPE_SCHEMA = (
+    "experiment_2d5c_continuation_full_tensor_envelope_v1"
+)
+CONTINUATION_CALIBRATION_IMPLEMENTATION_COMMIT = _CONTINUATION_CALIBRATION_PIN[
+    "implementation_commit"
+]
+CONTINUATION_TENSOR_SECTION_SPECS = {
+    "gradients": {
+        "tensor_count": 152,
+        "max_abs_hard_cap": 1.0,
+        "l2_norm_hard_cap": 100.0,
+    },
+    "model_parameters": {
+        "tensor_count": 152,
+        "max_abs_hard_cap": 1.0e-2,
+        "l2_norm_hard_cap": 1.0,
+    },
+    "optimizer_state": {
+        "tensor_count": 456,
+        "max_abs_hard_cap": 1.0,
+        "l2_norm_hard_cap": 100.0,
+    },
+}
 
 CONTROLS = (
     "all_real",
@@ -142,6 +197,15 @@ def file_identity(path):
     }
 
 
+def same_file_content_identity(record, actual):
+    return (
+        isinstance(record, dict)
+        and isinstance(actual, dict)
+        and record.get("sha256") == actual.get("sha256")
+        and record.get("bytes") == actual.get("bytes")
+    )
+
+
 def tensor_sha256(*values):
     digest = hashlib.sha256()
     for value in values:
@@ -155,6 +219,69 @@ def canonical_sha(value):
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
+
+
+def continuation_runtime_identity():
+    """Return the live software/GPU identity governing CUDA repeatability."""
+    gpu_count = torch.cuda.device_count()
+    gpu_name = None
+    gpu_uuid = None
+    gpu_total_memory_bytes = None
+    gpu_capability = None
+    nvidia_driver = None
+    if gpu_count == 1:
+        properties = torch.cuda.get_device_properties(0)
+        gpu_name = properties.name
+        gpu_total_memory_bytes = int(properties.total_memory)
+        gpu_capability = list(torch.cuda.get_device_capability(0))
+        identity_rows = subprocess.check_output(
+            [
+                "nvidia-smi", "--query-gpu=uuid,driver_version",
+                "--format=csv,noheader,nounits",
+            ],
+            text=True,
+        ).splitlines()
+        if len(identity_rows) == 1:
+            gpu_uuid, nvidia_driver = (
+                value.strip() for value in identity_rows[0].split(",", 1)
+            )
+    cuda_backend = torch.backends.cuda
+    cuda_matmul = cuda_backend.matmul
+    cudnn_backend = torch.backends.cudnn
+    return {
+        "python": ".".join(str(value) for value in sys.version_info[:3]),
+        "torch": torch.__version__,
+        "cuda": torch.version.cuda,
+        "cudnn": cudnn_backend.version(),
+        "nvidia_driver": nvidia_driver,
+        "cublas_workspace_config": os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
+        "nvidia_tf32_override": os.environ.get("NVIDIA_TF32_OVERRIDE"),
+        "deterministic_algorithms": (
+            torch.are_deterministic_algorithms_enabled()
+        ),
+        "float32_matmul_precision": torch.get_float32_matmul_precision(),
+        "cuda_matmul_allow_tf32": bool(cuda_matmul.allow_tf32),
+        "cuda_matmul_allow_fp16_reduced_precision_reduction": bool(
+            cuda_matmul.allow_fp16_reduced_precision_reduction
+        ),
+        "cuda_matmul_allow_bf16_reduced_precision_reduction": bool(
+            cuda_matmul.allow_bf16_reduced_precision_reduction
+        ),
+        "cudnn_allow_tf32": bool(cudnn_backend.allow_tf32),
+        "cudnn_benchmark": bool(cudnn_backend.benchmark),
+        "cudnn_deterministic": bool(cudnn_backend.deterministic),
+        "flash_sdp": bool(cuda_backend.flash_sdp_enabled()),
+        "memory_efficient_sdp": bool(
+            cuda_backend.mem_efficient_sdp_enabled()
+        ),
+        "math_sdp": bool(cuda_backend.math_sdp_enabled()),
+        "cudnn_sdp": bool(cuda_backend.cudnn_sdp_enabled()),
+        "gpu_count": gpu_count,
+        "gpu_name": gpu_name,
+        "gpu_uuid": gpu_uuid,
+        "gpu_total_memory_bytes": gpu_total_memory_bytes,
+        "gpu_capability": gpu_capability,
+    }
 
 
 def git(*args):
@@ -172,9 +299,12 @@ def git_is_ancestor(ancestor, descendant="HEAD"):
 def implementation_file_sha256():
     relative = (
         "configs/exp2d5c_fixed_writer_b3_b5_w2_matched_100m.json",
+        "configs/exp2d5c_continuation_calibration_pin.json",
         "scripts/experiment_2d5c.py",
         "scripts/experiment_2d5c_analysis.py",
         "scripts/experiment_2d5c_artifacts.py",
+        "scripts/experiment_2d5c_build_continuation_calibration.py",
+        "scripts/experiment_2d5c_continuation_probe.py",
         "scripts/experiment_2d5c_core.py",
         "scripts/experiment_2d5c_complete.py",
         "scripts/experiment_2d5c_finalizer.py",
@@ -200,6 +330,254 @@ def require_exact_file(path, expected, label):
     if actual != expected:
         raise SystemExit(f"wrong {label} SHA-256: {actual}")
     return path
+
+
+def _frozen_sha256(value):
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _frozen_git_sha(value):
+    return (
+        isinstance(value, str)
+        and len(value) == 40
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def validate_continuation_tensor_envelope(envelope):
+    """Validate and normalize the SHA-pinned full-state drift envelope."""
+    row_fields = {
+        "key", "shape", "dtype", "observed_max_abs", "observed_l2_norm",
+        "max_abs_tolerance", "l2_norm_tolerance",
+    }
+    top_exact = isinstance(envelope, dict) and set(envelope) == {
+        "schema", "sections",
+    }
+    sections = envelope.get("sections", {}) if isinstance(envelope, dict) else {}
+    checks = {
+        "top_level_fields_exact": top_exact,
+        "schema": isinstance(envelope, dict)
+        and envelope.get("schema") == CONTINUATION_TENSOR_ENVELOPE_SCHEMA,
+        "section_names_exact": isinstance(sections, dict)
+        and set(sections) == set(CONTINUATION_TENSOR_SECTION_SPECS),
+    }
+    normalized_sections = {}
+    for section_name, spec in CONTINUATION_TENSOR_SECTION_SPECS.items():
+        section = sections.get(section_name, {}) if isinstance(sections, dict) else {}
+        rows = section.get("tensors", []) if isinstance(section, dict) else []
+        section_fields_exact = isinstance(section, dict) and set(section) == {
+            "tensor_count", "key_sha256", "tensors",
+        }
+        rows_are_list = isinstance(rows, list)
+        normalized_rows = []
+        rows_valid = rows_are_list
+        for row in rows if rows_are_list else ():
+            valid = isinstance(row, dict) and set(row) == row_fields
+            key = row.get("key") if isinstance(row, dict) else None
+            shape = row.get("shape") if isinstance(row, dict) else None
+            dtype = row.get("dtype") if isinstance(row, dict) else None
+            valid = valid and isinstance(key, str) and bool(key)
+            valid = valid and isinstance(shape, list) and all(
+                type(dimension) is int and dimension >= 0 for dimension in shape
+            )
+            valid = valid and isinstance(dtype, str) and dtype.startswith("torch.")
+            values = {}
+            for field in (
+                "observed_max_abs", "observed_l2_norm",
+                "max_abs_tolerance", "l2_norm_tolerance",
+            ):
+                value = row.get(field) if isinstance(row, dict) else None
+                value_valid = (
+                    type(value) in (int, float)
+                    and math.isfinite(float(value))
+                    and float(value) >= 0.0
+                )
+                valid = valid and value_valid
+                values[field] = float(value) if value_valid else math.inf
+            valid = valid and (
+                values["observed_max_abs"] <= values["max_abs_tolerance"]
+                <= spec["max_abs_hard_cap"]
+                and values["observed_l2_norm"] <= values["l2_norm_tolerance"]
+                <= spec["l2_norm_hard_cap"]
+            )
+            rows_valid = rows_valid and valid
+            if valid:
+                normalized_rows.append({
+                    "key": key,
+                    "shape": list(shape),
+                    "dtype": dtype,
+                    **values,
+                })
+        keys = [row["key"] for row in normalized_rows]
+        expected_count = spec["tensor_count"]
+        count_exact = (
+            type(section.get("tensor_count")) is int
+            and section.get("tensor_count") == expected_count
+            and len(rows) == expected_count
+            and len(normalized_rows) == expected_count
+        ) if isinstance(section, dict) and rows_are_list else False
+        keys_sorted_unique = (
+            len(keys) == expected_count
+            and keys == sorted(keys)
+            and len(set(keys)) == expected_count
+        )
+        key_sha_exact = (
+            isinstance(section, dict)
+            and section.get("key_sha256") == canonical_sha(sorted(keys))
+        )
+        prefix = f"{section_name}."
+        checks.update({
+            prefix + "fields_exact": section_fields_exact,
+            prefix + "count_exact": count_exact,
+            prefix + "rows_valid": rows_valid,
+            prefix + "keys_sorted_unique": keys_sorted_unique,
+            prefix + "key_sha256": key_sha_exact,
+        })
+        normalized_sections[section_name] = {
+            "tensor_count": expected_count,
+            "key_sha256": canonical_sha(sorted(keys)),
+            "tensors": normalized_rows,
+        }
+    return {
+        "envelope": {
+            "schema": CONTINUATION_TENSOR_ENVELOPE_SCHEMA,
+            "sections": normalized_sections,
+        },
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
+def validate_continuation_calibration(path):
+    if not _frozen_sha256(CONTINUATION_CALIBRATION_SHA256):
+        raise SystemExit(
+            "2D5C full-state continuation calibration SHA-256 is not frozen"
+        )
+    path = require_exact_file(
+        path, CONTINUATION_CALIBRATION_SHA256,
+        "2D5C disposable continuation calibration",
+    )
+    payload = read_json(path)
+    limits = {
+        "gate_gradient_absolute": CONTINUATION_GATE_GRADIENT_ABS_TOL,
+        "gate_gradient_relative": CONTINUATION_GATE_GRADIENT_REL_TOL,
+        "gradient_norm_absolute": CONTINUATION_GRADIENT_NORM_ABS_TOL,
+        "gradient_norm_relative": CONTINUATION_GRADIENT_NORM_REL_TOL,
+        "gate_after_absolute": CONTINUATION_GATE_AFTER_ABS_TOL,
+        "sentinel_max_absolute": CONTINUATION_SENTINEL_ABS_TOL,
+        "sentinel_mean_absolute": CONTINUATION_SENTINEL_MEAN_ABS_TOL,
+    }
+    artifact_checks = {
+        name: (path.parent / name).is_file()
+        and sha256(path.parent / name) == digest
+        for name, digest in payload.get("artifact_sha256", {}).items()
+    }
+    disposable = payload.get("disposable_update2_checkpoint", {})
+    disposable_path = Path(disposable.get("path", ""))
+    tensor_envelope = validate_continuation_tensor_envelope(
+        payload.get("continuation_tensor_envelope")
+    )
+    live_runtime = continuation_runtime_identity()
+    tensor_calibration = payload.get("continuation_tensor_calibration", {})
+    tensor_reference = tensor_calibration.get("reference_snapshot", {})
+    calibrated_source_checks = {
+        "probe": same_file_content_identity(
+            tensor_calibration.get("probe_source"),
+            file_identity(
+                REPO_ROOT / "scripts" / "experiment_2d5c_continuation_probe.py"
+            ),
+        ),
+        "driver": same_file_content_identity(
+            tensor_calibration.get("driver_source"), file_identity(Path(__file__)),
+        ),
+        "builder": same_file_content_identity(
+            tensor_calibration.get("builder_source"),
+            file_identity(
+                REPO_ROOT / "scripts"
+                / "experiment_2d5c_build_continuation_calibration.py"
+            ),
+        ),
+    }
+    checks = {
+        "schema": payload.get("schema") == CONTINUATION_CALIBRATION_SCHEMA,
+        "experiment": payload.get("experiment") == EXPERIMENT,
+        "disposable_label": payload.get("label")
+        == "DISPOSABLE_PRETRAIN_CALIBRATION",
+        "before_official_training": payload.get("created_before_official_training")
+        is True and payload.get("official_training_updates_executed") == 0,
+        "implementation_commit": payload.get("implementation_commit")
+        == CONTINUATION_CALIBRATION_IMPLEMENTATION_COMMIT
+        and _frozen_git_sha(CONTINUATION_CALIBRATION_IMPLEMENTATION_COMMIT)
+        and git_is_ancestor(CONTINUATION_CALIBRATION_IMPLEMENTATION_COMMIT),
+        "calibrated_sources_exact": all(calibrated_source_checks.values()),
+        "source_sha": payload.get("source_checkpoint", {}).get("sha256")
+        == SOURCE_SHA256,
+        "pod": payload.get("pod", {}).get("id") == POD_ID
+        and payload.get("pod", {}).get("name") == POD_NAME,
+        "volume": payload.get("pod", {}).get("network_volume_id") == VOLUME_ID
+        and payload.get("pod", {}).get("mount") == "/workspace",
+        "single_a100_80gb": "A100" in payload.get("pod", {}).get("gpu", "")
+        and "81920 MiB" in payload.get("pod", {}).get("gpu", ""),
+        "inherited_nondeterministic_recipe": payload.get("runtime", {}).get(
+            "deterministic_algorithms"
+        ) is False and payload.get("runtime", {}).get("cublas_workspace_config")
+        == ":4096:8",
+        "live_runtime_exact": payload.get("runtime") == live_runtime,
+        "exact_boundary": payload.get("exact_boundary") is True,
+        "forward_losses_exact": payload.get("forward_losses_exact") is True,
+        "all_gradients_demonstrably_nonbitwise": payload.get(
+            "clipped_gradient_hashes", {}
+        ).get("tensor_count") == payload.get("clipped_gradient_hashes", {}).get(
+            "unequal_count"
+        ) == 152,
+        "post_model_nonbitwise": payload.get("post_model_hash_equal") is False,
+        "post_optimizer_nonbitwise": payload.get("post_optimizer_hash_equal")
+        is False,
+        "limits_exact": payload.get("frozen_comparison_limits") == limits,
+        "sentinel_calibration_within_limits": payload.get(
+            "fresh_process_sentinel", {}
+        ).get("max_abs", math.inf) <= CONTINUATION_SENTINEL_ABS_TOL
+        and payload.get("fresh_process_sentinel", {}).get("mean_abs", math.inf)
+        <= CONTINUATION_SENTINEL_MEAN_ABS_TOL,
+        "full_tensor_envelope": tensor_envelope["passed"],
+        "full_tensor_repeat_count_exact": tensor_calibration.get(
+            "comparison_count"
+        ) == 7,
+        "full_tensor_calibration_passed": tensor_calibration.get("passed")
+        is True and tensor_calibration.get("official_training_updates_executed")
+        == 0,
+        "disposable_tensor_reference": (
+            "DISPOSABLE" in Path(tensor_reference.get("path", "")).name
+            and tensor_reference.get("sha256")
+            == payload.get("artifact_sha256", {}).get(
+                Path(tensor_reference.get("path", "")).name
+            )
+        ),
+        "artifact_inventory_nonempty": bool(artifact_checks),
+        "artifact_hashes": bool(artifact_checks) and all(artifact_checks.values()),
+        "disposable_checkpoint": disposable_path.is_file()
+        and sha256(disposable_path) == disposable.get("sha256")
+        and disposable_path.stat().st_size == disposable.get("bytes"),
+        "calibration_passed": payload.get("passed") is True,
+    }
+    return {
+        "path": str(path),
+        "sha256": sha256(path),
+        "implementation_commit": payload.get("implementation_commit"),
+        "artifact_checks": artifact_checks,
+        "calibrated_source_checks": calibrated_source_checks,
+        "frozen_comparison_limits": limits,
+        "fresh_process_sentinel": payload.get("fresh_process_sentinel"),
+        "live_runtime": live_runtime,
+        "tensor_envelope": tensor_envelope["envelope"],
+        "tensor_envelope_checks": tensor_envelope["checks"],
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
 
 
 def architecture_manifest(family="C"):
@@ -2789,7 +3167,415 @@ def smoke_update(model, optimizer, loader, accumulation, local_update, device):
     return row
 
 
-def disposable_smoke(source_checkpoint, val_path, pretrain_dir, device, output):
+def gradient_manifest(model):
+    rows = []
+    for name, parameter in model.named_parameters():
+        if parameter.grad is None:
+            continue
+        rows.append({
+            "parameter": name,
+            "shape": list(parameter.grad.shape),
+            "dtype": str(parameter.grad.dtype),
+            "sha256": tensor_sha256(parameter.grad),
+        })
+    rows.sort(key=lambda row: row["parameter"])
+    return {
+        "tensor_count": len(rows),
+        "aggregate_sha256": canonical_sha(rows),
+        "tensors": rows,
+    }
+
+
+CONTINUATION_TENSOR_SNAPSHOT_SCHEMA = (
+    "experiment_2d5c_continuation_tensor_snapshot_v1"
+)
+CONTINUATION_TENSOR_SNAPSHOT_LABEL = (
+    "DISPOSABLE_CONTINUATION_TENSOR_SNAPSHOT"
+)
+
+
+def continuation_tensor_snapshot(model, optimizer):
+    """Capture all post-update tensors on CPU for isolated comparison."""
+    sections = {
+        "gradients": {},
+        "model_parameters": {},
+        "optimizer_state": {},
+    }
+    names = {parameter: name for name, parameter in model.named_parameters()}
+
+    def add(section, key, value):
+        if key in sections[section]:
+            raise SystemExit(f"duplicate continuation tensor key: {section}:{key}")
+        tensor = value.detach().cpu().contiguous().clone()
+        sections[section][key] = {
+            "shape": list(tensor.shape),
+            "dtype": str(tensor.dtype),
+            "tensor": tensor,
+        }
+
+    for name, parameter in model.named_parameters():
+        add("model_parameters", name, parameter)
+        if parameter.grad is not None:
+            add("gradients", name, parameter.grad)
+    for parameter, state in optimizer.state.items():
+        if parameter not in names:
+            raise SystemExit("optimizer state contains an unknown model parameter")
+        for state_name, value in sorted(state.items()):
+            if torch.is_tensor(value):
+                add("optimizer_state", f"{names[parameter]}::{state_name}", value)
+    return {
+        "schema": CONTINUATION_TENSOR_SNAPSHOT_SCHEMA,
+        "label": CONTINUATION_TENSOR_SNAPSHOT_LABEL,
+        "disposable": True,
+        "official_training_updates_executed": 0,
+        "sections": sections,
+    }
+
+
+def continuation_tensor_snapshot_summary(snapshot):
+    """Return a compact JSON-safe identity for a raw CPU tensor snapshot."""
+    sections = snapshot.get("sections", {}) if isinstance(snapshot, dict) else {}
+    result = {}
+    for section_name in CONTINUATION_TENSOR_SECTION_SPECS:
+        rows = []
+        section = sections.get(section_name, {}) if isinstance(sections, dict) else {}
+        if isinstance(section, dict):
+            for key, row in sorted(section.items()):
+                tensor = row.get("tensor") if isinstance(row, dict) else None
+                if torch.is_tensor(tensor):
+                    rows.append({
+                        "key": key,
+                        "shape": list(tensor.shape),
+                        "dtype": str(tensor.dtype),
+                        "sha256": tensor_sha256(tensor),
+                    })
+        result[section_name] = {
+            "tensor_count": len(rows),
+            "key_sha256": canonical_sha([row["key"] for row in rows]),
+            "aggregate_sha256": canonical_sha(rows),
+            "tensors": rows,
+        }
+    return {
+        "schema": CONTINUATION_TENSOR_SNAPSHOT_SCHEMA,
+        "label": snapshot.get("label") if isinstance(snapshot, dict) else None,
+        "disposable": snapshot.get("disposable") if isinstance(snapshot, dict) else None,
+        "official_training_updates_executed": snapshot.get(
+            "official_training_updates_executed"
+        ) if isinstance(snapshot, dict) else None,
+        "sections": result,
+    }
+
+
+def _tensor_delta_metrics(left, right, chunk_elements=16_777_216):
+    left = left.detach().cpu().contiguous().reshape(-1)
+    right = right.detach().cpu().contiguous().reshape(-1)
+    comparison_device = torch.device(
+        "cuda" if torch.cuda.is_available() else "cpu"
+    )
+    maximum = 0.0
+    squared = 0.0
+    finite = True
+    for start in range(0, left.numel(), chunk_elements):
+        stop = min(start + chunk_elements, left.numel())
+        delta = (
+            left[start:stop].to(comparison_device, dtype=torch.float64)
+            - right[start:stop].to(comparison_device, dtype=torch.float64)
+        )
+        if not bool(torch.isfinite(delta).all()):
+            finite = False
+            break
+        if delta.numel():
+            maximum = max(maximum, float(delta.abs().max().item()))
+            squared += float(delta.square().sum().item())
+    return {
+        "finite": finite,
+        "max_abs": maximum if finite else math.inf,
+        "l2_norm": math.sqrt(squared) if finite else math.inf,
+    }
+
+
+def continuation_tensor_pairwise_metrics(left, right):
+    """Measure every common tensor; report any structural mismatch."""
+    left_sections = left.get("sections", {}) if isinstance(left, dict) else {}
+    right_sections = right.get("sections", {}) if isinstance(right, dict) else {}
+    checks = {
+        "left_schema": isinstance(left, dict)
+        and left.get("schema") == CONTINUATION_TENSOR_SNAPSHOT_SCHEMA,
+        "right_schema": isinstance(right, dict)
+        and right.get("schema") == CONTINUATION_TENSOR_SNAPSHOT_SCHEMA,
+        "left_disposable": isinstance(left, dict)
+        and left.get("label") == CONTINUATION_TENSOR_SNAPSHOT_LABEL
+        and left.get("disposable") is True
+        and left.get("official_training_updates_executed") == 0,
+        "right_disposable": isinstance(right, dict)
+        and right.get("label") == CONTINUATION_TENSOR_SNAPSHOT_LABEL
+        and right.get("disposable") is True
+        and right.get("official_training_updates_executed") == 0,
+        "left_sections_exact": isinstance(left_sections, dict)
+        and set(left_sections) == set(CONTINUATION_TENSOR_SECTION_SPECS),
+        "right_sections_exact": isinstance(right_sections, dict)
+        and set(right_sections) == set(CONTINUATION_TENSOR_SECTION_SPECS),
+    }
+    output_sections = {}
+    for section_name in CONTINUATION_TENSOR_SECTION_SPECS:
+        left_section = left_sections.get(section_name, {}) if isinstance(left_sections, dict) else {}
+        right_section = right_sections.get(section_name, {}) if isinstance(right_sections, dict) else {}
+        left_keys = set(left_section) if isinstance(left_section, dict) else set()
+        right_keys = set(right_section) if isinstance(right_section, dict) else set()
+        keys_exact = left_keys == right_keys
+        rows = []
+        metadata_exact = True
+        tensors_valid = True
+        for key in sorted(left_keys & right_keys):
+            left_row = left_section[key]
+            right_row = right_section[key]
+            left_tensor = left_row.get("tensor") if isinstance(left_row, dict) else None
+            right_tensor = right_row.get("tensor") if isinstance(right_row, dict) else None
+            valid = (
+                isinstance(left_row, dict)
+                and set(left_row) == {"shape", "dtype", "tensor"}
+                and isinstance(right_row, dict)
+                and set(right_row) == {"shape", "dtype", "tensor"}
+                and torch.is_tensor(left_tensor)
+                and torch.is_tensor(right_tensor)
+            )
+            tensors_valid = tensors_valid and valid
+            if not valid:
+                continue
+            metadata = (
+                left_row["shape"] == list(left_tensor.shape)
+                and right_row["shape"] == list(right_tensor.shape)
+                and left_row["dtype"] == str(left_tensor.dtype)
+                and right_row["dtype"] == str(right_tensor.dtype)
+                and left_row["shape"] == right_row["shape"]
+                and left_row["dtype"] == right_row["dtype"]
+            )
+            metadata_exact = metadata_exact and metadata
+            if not metadata:
+                continue
+            drift = _tensor_delta_metrics(left_tensor, right_tensor)
+            rows.append({
+                "key": key,
+                "shape": list(left_tensor.shape),
+                "dtype": str(left_tensor.dtype),
+                **drift,
+            })
+        prefix = f"{section_name}."
+        expected_count = CONTINUATION_TENSOR_SECTION_SPECS[section_name]["tensor_count"]
+        count_exact = (
+            len(left_keys) == len(right_keys) == len(rows) == expected_count
+        )
+        checks.update({
+            prefix + "keys_exact": keys_exact,
+            prefix + "count_exact": count_exact,
+            prefix + "metadata_exact": metadata_exact,
+            prefix + "tensors_valid": tensors_valid,
+            prefix + "finite": len(rows) == expected_count
+            and all(row["finite"] for row in rows),
+        })
+        output_sections[section_name] = {
+            "left_tensor_count": len(left_keys),
+            "right_tensor_count": len(right_keys),
+            "key_sha256": canonical_sha(sorted(left_keys & right_keys)),
+            "tensors": rows,
+        }
+    return {
+        "sections": output_sections,
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
+def compare_continuation_tensor_snapshots(left, right, envelope):
+    """Apply the pinned per-tensor envelope to two full-state snapshots."""
+    validated = validate_continuation_tensor_envelope(envelope)
+    observed = continuation_tensor_pairwise_metrics(left, right)
+    sections = {}
+    all_rows_passed = True
+    coverage_exact = validated["passed"] and observed["passed"]
+    for section_name in CONTINUATION_TENSOR_SECTION_SPECS:
+        observed_rows = {
+            row["key"]: row
+            for row in observed["sections"][section_name]["tensors"]
+        }
+        envelope_rows = {
+            row["key"]: row
+            for row in validated["envelope"]["sections"][section_name]["tensors"]
+        }
+        keys_exact = set(observed_rows) == set(envelope_rows)
+        rows = []
+        for key in sorted(set(observed_rows) & set(envelope_rows)):
+            actual = observed_rows[key]
+            limit = envelope_rows[key]
+            metadata_exact = (
+                actual["shape"] == limit["shape"]
+                and actual["dtype"] == limit["dtype"]
+            )
+            passed = (
+                metadata_exact
+                and actual["finite"]
+                and actual["max_abs"] <= limit["max_abs_tolerance"]
+                and actual["l2_norm"] <= limit["l2_norm_tolerance"]
+            )
+            all_rows_passed = all_rows_passed and passed
+            rows.append({
+                **actual,
+                "max_abs_tolerance": limit["max_abs_tolerance"],
+                "l2_norm_tolerance": limit["l2_norm_tolerance"],
+                "metadata_exact": metadata_exact,
+                "passed": passed,
+            })
+        section_count = CONTINUATION_TENSOR_SECTION_SPECS[section_name]["tensor_count"]
+        section_passed = keys_exact and len(rows) == section_count and all(
+            row["passed"] for row in rows
+        )
+        coverage_exact = coverage_exact and keys_exact and len(rows) == section_count
+        sections[section_name] = {
+            "keys_exact": keys_exact,
+            "missing_from_observed": sorted(set(envelope_rows) - set(observed_rows)),
+            "unexpected_in_observed": sorted(set(observed_rows) - set(envelope_rows)),
+            "tensor_count": len(rows),
+            "tensors": rows,
+            "passed": section_passed,
+        }
+    return {
+        "envelope_validation": {
+            "checks": validated["checks"],
+            "passed": validated["passed"],
+        },
+        "structural_comparison": {
+            "checks": observed["checks"],
+            "passed": observed["passed"],
+            "coverage_exact": coverage_exact,
+        },
+        "sections": sections,
+        "passed": coverage_exact and all_rows_passed
+        and all(section["passed"] for section in sections.values()),
+    }
+
+
+def scalar_drift(left, right, absolute_tolerance, relative_tolerance,
+                 require_same_sign=False):
+    left = float(left)
+    right = float(right)
+    absolute_delta = abs(left - right)
+    scale = max(abs(left), abs(right))
+    limit = float(absolute_tolerance) + float(relative_tolerance) * scale
+    same_sign = (
+        left == right == 0.0
+        or (left != 0.0 and right != 0.0 and math.copysign(1.0, left) == math.copysign(1.0, right))
+    )
+    return {
+        "left": left,
+        "right": right,
+        "absolute_delta": absolute_delta,
+        "relative_delta": 0.0 if scale == 0.0 else absolute_delta / scale,
+        "limit": limit,
+        "same_sign": same_sign,
+        "passed": math.isfinite(left) and math.isfinite(right)
+        and absolute_delta <= limit
+        and (same_sign or not require_same_sign),
+    }
+
+
+def scalar_map_drift(left, right, absolute_tolerance, relative_tolerance,
+                     require_same_sign=False):
+    if set(left) != set(right):
+        return {"keys_exact": False, "rows": {}, "passed": False}
+    rows = {
+        key: scalar_drift(
+            left[key], right[key], absolute_tolerance, relative_tolerance,
+            require_same_sign=require_same_sign,
+        )
+        for key in sorted(left)
+    }
+    return {
+        "keys_exact": True,
+        "rows": rows,
+        "passed": all(row["passed"] for row in rows.values()),
+    }
+
+
+def gate_state_drift(left, right):
+    left_flat = {
+        f"{gate}.{kind}": value
+        for gate, row in left.items() for kind, value in row.items()
+    }
+    right_flat = {
+        f"{gate}.{kind}": value
+        for gate, row in right.items() for kind, value in row.items()
+    }
+    return scalar_map_drift(
+        left_flat, right_flat, CONTINUATION_GATE_AFTER_ABS_TOL, 0.0
+    )
+
+
+def sentinel_drift(left, right):
+    left_values = np.asarray(left.get("selected_logits", []), dtype=np.float64)
+    right_values = np.asarray(right.get("selected_logits", []), dtype=np.float64)
+    shape_exact = left_values.shape == right_values.shape and left_values.size > 0
+    maximum = (
+        float(np.max(np.abs(left_values - right_values)))
+        if shape_exact else math.inf
+    )
+    mean = (
+        float(np.mean(np.abs(left_values - right_values)))
+        if shape_exact else math.inf
+    )
+    return {
+        "shape_exact": shape_exact,
+        "left_sha256": left.get("selected_logits_sha256"),
+        "right_sha256": right.get("selected_logits_sha256"),
+        "bitwise_exact": left.get("selected_logits_sha256")
+        == right.get("selected_logits_sha256"),
+        "max_abs": maximum,
+        "mean_abs": mean,
+        "max_abs_tolerance": CONTINUATION_SENTINEL_ABS_TOL,
+        "mean_abs_tolerance": CONTINUATION_SENTINEL_MEAN_ABS_TOL,
+        "passed": bool(
+            shape_exact
+            and maximum <= CONTINUATION_SENTINEL_ABS_TOL
+            and mean <= CONTINUATION_SENTINEL_MEAN_ABS_TOL
+        ),
+    }
+
+
+def require_disposable_smoke_calibration(calibration):
+    """Fail closed unless calibration came from the SHA-pinned validator."""
+    if not _frozen_sha256(CONTINUATION_CALIBRATION_SHA256):
+        raise SystemExit(
+            "2D5C full-state continuation calibration SHA-256 is not frozen"
+        )
+    if not isinstance(calibration, dict) or calibration.get("passed") is not True:
+        raise SystemExit("disposable smoke requires a passed continuation calibration")
+    checks = calibration.get("checks")
+    if not isinstance(checks, dict) or not checks or not all(
+        value is True for value in checks.values()
+    ):
+        raise SystemExit("disposable smoke calibration checks are incomplete")
+    if calibration.get("sha256") != CONTINUATION_CALIBRATION_SHA256:
+        raise SystemExit("disposable smoke calibration SHA-256 is not pinned")
+    calibration_path = Path(calibration.get("path", ""))
+    if not calibration_path.is_file() or sha256(calibration_path) != CONTINUATION_CALIBRATION_SHA256:
+        raise SystemExit("disposable smoke calibration artifact changed after validation")
+    envelope = validate_continuation_tensor_envelope(
+        calibration.get("tensor_envelope")
+    )
+    if not envelope["passed"]:
+        raise SystemExit("disposable smoke full-state tensor envelope is invalid")
+    return envelope["envelope"]
+
+
+def disposable_smoke(source_checkpoint, val_path, pretrain_dir, device, output,
+                     calibration=None):
+    tensor_envelope = require_disposable_smoke_calibration(calibration)
+    point_of_use_runtime = continuation_runtime_identity()
+    if calibration.get("live_runtime") != point_of_use_runtime:
+        raise SystemExit(
+            "disposable smoke runtime changed after calibration validation"
+        )
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
     source_before = sha256(source_checkpoint)
     model, optimizer, loader, source, _ = make_c_model(
         source_checkpoint, device, restore=True
@@ -2808,29 +3594,225 @@ def disposable_smoke(source_checkpoint, val_path, pretrain_dir, device, output):
         if base.next_batch_hash(loader, accumulation) != expected["logical_global_batch_sha256"]:
             raise SystemExit("disposable smoke replay mismatch")
         rows.append(smoke_update(model, optimizer, loader, accumulation, local_update, device))
-    temporary = Path(f"/tmp/DISPOSABLE_exp2d5c_update0002_{os.getpid()}.pt")
+    # Keep a failed disposable checkpoint beside the diagnostic report so it is
+    # visible, durable, and clearly excluded from official training.  It is
+    # removed only after the complete smoke sequence passes.
+    temporary = output / (
+        f"FAILED_DISPOSABLE_TEMP_exp2d5c_update0002_{os.getpid()}.pt"
+    )
+    if temporary.exists():
+        raise SystemExit(f"refusing to overwrite disposable evidence: {temporary}")
+    saved_boundary = {
+        "model_state_sha256": parameter_manifest(model)["aggregate_sha256"],
+        "optimizer_state_sha256": optimizer_manifest(model, optimizer)["state_aggregate_sha256"],
+        "optimizer_groups_sha256": canonical_sha(optimizer_group_manifest(model, optimizer)),
+        "loader_state": copy.deepcopy(loader.state_dict()),
+        "rng_digests": rng_digests(base.capture_rng()),
+        "next_global_batch_sha256": base.next_batch_hash(loader, accumulation),
+        "next_global_batch_stream_sha256": base.next_stream_hash(loader, accumulation),
+        "weight_tie_exact": model.base.transformer.wte.weight is model.base.lm_head.weight,
+    }
     verification = save_checkpoint(
         temporary, model, optimizer, loader, source, 2, accumulation, metadata,
         replay_audit["ledger_sha256"], source_checkpoint, device, sidecars=False,
     )
+    checkpoint_boundary_checks = {
+        "model": verification["model_state_sha256"] == saved_boundary["model_state_sha256"],
+        "optimizer": verification["optimizer_state_sha256"] == saved_boundary["optimizer_state_sha256"],
+        "rng": verification["rng_digests"] == saved_boundary["rng_digests"],
+        "next_batch": verification["next_global_batch_sha256"]
+        == saved_boundary["next_global_batch_sha256"],
+        "next_stream": verification["next_global_batch_stream_sha256"]
+        == saved_boundary["next_global_batch_stream_sha256"],
+        "strict_reopen": verification["strict_reopen"]["passed"],
+    }
     in_memory_row = smoke_update(model, optimizer, loader, accumulation, 3, device)
     in_memory_model = parameter_manifest(model)["aggregate_sha256"]
     in_memory_optimizer = optimizer_manifest(model, optimizer)["state_aggregate_sha256"]
-    in_memory_loader = loader.state_dict()
-    reloaded, reloaded_optimizer, reloaded_loader, _, _ = load_c_checkpoint(
+    in_memory_loader = copy.deepcopy(loader.state_dict())
+    in_memory_rng = rng_digests(base.capture_rng())
+    in_memory_gradients = gradient_manifest(model)
+    in_memory_sentinel = restart_sentinel(model)
+    in_memory_tensor_snapshot = continuation_tensor_snapshot(model, optimizer)
+    del model, optimizer, loader
+    gc.collect()
+    torch.cuda.empty_cache()
+    reloaded, reloaded_optimizer, reloaded_loader, reloaded_payload, _ = load_c_checkpoint(
         temporary, source_checkpoint, device, restore=True
     )
+    reloaded_boundary = {
+        "model_state_sha256": parameter_manifest(reloaded)["aggregate_sha256"],
+        "optimizer_state_sha256": optimizer_manifest(
+            reloaded, reloaded_optimizer
+        )["state_aggregate_sha256"],
+        "optimizer_groups_sha256": canonical_sha(
+            optimizer_group_manifest(reloaded, reloaded_optimizer)
+        ),
+        "loader_state": copy.deepcopy(reloaded_loader.state_dict()),
+        "rng_digests": rng_digests(base.capture_rng()),
+        "next_global_batch_sha256": base.next_batch_hash(
+            reloaded_loader, accumulation
+        ),
+        "next_global_batch_stream_sha256": base.next_stream_hash(
+            reloaded_loader, accumulation
+        ),
+        "weight_tie_exact": reloaded.base.transformer.wte.weight
+        is reloaded.base.lm_head.weight,
+    }
+    boundary_checks = {
+        "checkpoint_verification_exact": all(checkpoint_boundary_checks.values()),
+        "model_exact": reloaded_boundary["model_state_sha256"]
+        == saved_boundary["model_state_sha256"],
+        "optimizer_exact": reloaded_boundary["optimizer_state_sha256"]
+        == saved_boundary["optimizer_state_sha256"],
+        "optimizer_groups_exact": reloaded_boundary["optimizer_groups_sha256"]
+        == saved_boundary["optimizer_groups_sha256"],
+        "loader_exact": reloaded_boundary["loader_state"]
+        == saved_boundary["loader_state"],
+        "rng_exact": reloaded_boundary["rng_digests"]
+        == saved_boundary["rng_digests"],
+        "batch_exact": reloaded_boundary["next_global_batch_sha256"]
+        == saved_boundary["next_global_batch_sha256"],
+        "stream_exact": reloaded_boundary["next_global_batch_stream_sha256"]
+        == saved_boundary["next_global_batch_stream_sha256"],
+        "weight_tie_exact": saved_boundary["weight_tie_exact"]
+        and reloaded_boundary["weight_tie_exact"],
+        "payload_rng_exact": rng_digests(reloaded_payload["rng_state"])
+        == saved_boundary["rng_digests"],
+    }
     reloaded_row = smoke_update(
         reloaded, reloaded_optimizer, reloaded_loader, accumulation, 3, device
     )
-    continuation_checks = {
-        "model_exact": parameter_manifest(reloaded)["aggregate_sha256"] == in_memory_model,
-        "optimizer_exact": optimizer_manifest(reloaded, reloaded_optimizer)["state_aggregate_sha256"] == in_memory_optimizer,
+    reloaded_model = parameter_manifest(reloaded)["aggregate_sha256"]
+    reloaded_optimizer_sha = optimizer_manifest(
+        reloaded, reloaded_optimizer
+    )["state_aggregate_sha256"]
+    reloaded_rng = rng_digests(base.capture_rng())
+    reloaded_gradients = gradient_manifest(reloaded)
+    reloaded_sentinel = restart_sentinel(reloaded)
+    reloaded_tensor_snapshot = continuation_tensor_snapshot(
+        reloaded, reloaded_optimizer
+    )
+    full_tensor_comparison = compare_continuation_tensor_snapshots(
+        in_memory_tensor_snapshot, reloaded_tensor_snapshot, tensor_envelope
+    )
+    del in_memory_tensor_snapshot, reloaded_tensor_snapshot
+    gradient_group_structure_exact = (
+        set(in_memory_row["gradient_groups"])
+        == set(reloaded_row["gradient_groups"])
+        and all(
+            {
+                key: in_memory_row["gradient_groups"][group][key]
+                for key in ("tensors", "finite", "nonzero")
+            }
+            == {
+                key: reloaded_row["gradient_groups"][group][key]
+                for key in ("tensors", "finite", "nonzero")
+            }
+            for group in in_memory_row["gradient_groups"]
+        )
+    )
+    exact_continuation_checks = {
+        "saved_boundary_exact": all(boundary_checks.values()),
         "loader_exact": reloaded_loader.state_dict() == in_memory_loader,
         "batch_exact": reloaded_row["consumed_batch_sha256"] == in_memory_row["consumed_batch_sha256"],
         "stream_exact": reloaded_row["consumed_stream_sha256"] == in_memory_row["consumed_stream_sha256"],
         "pass_count_exact": reloaded_row["pass_count"] == in_memory_row["pass_count"],
+        "forward_losses_exact": reloaded_row["pass_losses"]
+        == in_memory_row["pass_losses"],
+        "optimizer_step_increment_exact": reloaded_row["optimizer_step_increment_exact"]
+        and in_memory_row["optimizer_step_increment_exact"],
+        "optimizer_step_summaries_exact": (
+            reloaded_row["optimizer_steps_before_summary"]
+            == in_memory_row["optimizer_steps_before_summary"]
+            and reloaded_row["optimizer_steps_after_summary"]
+            == in_memory_row["optimizer_steps_after_summary"]
+        ),
+        "gradient_group_structure_exact": gradient_group_structure_exact,
+        "post_rng_exact": reloaded_rng == in_memory_rng,
     }
+    gate_gradient_drift = scalar_map_drift(
+        in_memory_row["gate_gradients"], reloaded_row["gate_gradients"],
+        CONTINUATION_GATE_GRADIENT_ABS_TOL,
+        CONTINUATION_GATE_GRADIENT_REL_TOL,
+        require_same_sign=True,
+    )
+    gradient_group_drift = scalar_map_drift(
+        {
+            group: row["norm"]
+            for group, row in in_memory_row["gradient_groups"].items()
+        },
+        {
+            group: row["norm"]
+            for group, row in reloaded_row["gradient_groups"].items()
+        },
+        CONTINUATION_GRADIENT_NORM_ABS_TOL,
+        CONTINUATION_GRADIENT_NORM_REL_TOL,
+    )
+    gradient_norm_drift = scalar_drift(
+        in_memory_row["gradient_norm_before_clip"],
+        reloaded_row["gradient_norm_before_clip"],
+        CONTINUATION_GRADIENT_NORM_ABS_TOL,
+        CONTINUATION_GRADIENT_NORM_REL_TOL,
+    )
+    gate_after_drift = gate_state_drift(
+        in_memory_row["gate_after"], reloaded_row["gate_after"]
+    )
+    continuation_sentinel_drift = sentinel_drift(
+        in_memory_sentinel, reloaded_sentinel
+    )
+    numerical_comparison = {
+        "policy": "frozen natural A100/CUDA repeatability envelope; exact serialized boundary and forward required",
+        "thresholds": {
+            "gate_gradient_absolute": CONTINUATION_GATE_GRADIENT_ABS_TOL,
+            "gate_gradient_relative": CONTINUATION_GATE_GRADIENT_REL_TOL,
+            "gradient_norm_absolute": CONTINUATION_GRADIENT_NORM_ABS_TOL,
+            "gradient_norm_relative": CONTINUATION_GRADIENT_NORM_REL_TOL,
+            "gate_after_absolute": CONTINUATION_GATE_AFTER_ABS_TOL,
+            "sentinel_max_absolute": CONTINUATION_SENTINEL_ABS_TOL,
+            "sentinel_mean_absolute": CONTINUATION_SENTINEL_MEAN_ABS_TOL,
+        },
+        "gate_gradients": gate_gradient_drift,
+        "gradient_groups": gradient_group_drift,
+        "gradient_norm": gradient_norm_drift,
+        "gate_after": gate_after_drift,
+        "post_update_sentinel": continuation_sentinel_drift,
+        "full_tensor_state": full_tensor_comparison,
+    }
+    numerical_comparison["passed"] = all(
+        row["passed"] for key, row in numerical_comparison.items()
+        if key not in {"policy", "thresholds", "passed"}
+    )
+    continuation_comparison = {
+        "fresh_process_calibration": calibration,
+        "saved_boundary": saved_boundary,
+        "reloaded_boundary": reloaded_boundary,
+        "checkpoint_boundary_checks": checkpoint_boundary_checks,
+        "boundary_checks": boundary_checks,
+        "exact_checks": exact_continuation_checks,
+        "post_step_bitwise": {
+            "model_exact": reloaded_model == in_memory_model,
+            "optimizer_exact": reloaded_optimizer_sha == in_memory_optimizer,
+            "gradient_exact": reloaded_gradients["aggregate_sha256"]
+            == in_memory_gradients["aggregate_sha256"],
+            "in_memory_model_sha256": in_memory_model,
+            "reloaded_model_sha256": reloaded_model,
+            "in_memory_optimizer_sha256": in_memory_optimizer,
+            "reloaded_optimizer_sha256": reloaded_optimizer_sha,
+            "in_memory_gradient_manifest": in_memory_gradients,
+            "reloaded_gradient_manifest": reloaded_gradients,
+            "informational_only": True,
+            "reason": "inherited CUDA backward is demonstrably non-bitwise across exact fresh-process repeats",
+        },
+        "numerical_comparison": numerical_comparison,
+        "original_branch_released_before_reload": True,
+    }
+    continuation_comparison["passed"] = (
+        calibration.get("passed") is True
+        and all(boundary_checks.values())
+        and all(exact_continuation_checks.values())
+        and numerical_comparison["passed"]
+    )
     rows.append(reloaded_row)
     # Continue only the disposable reloaded branch to the first scheduled
     # three-pass global update (global 1920 / local 12).
@@ -2842,26 +3824,43 @@ def disposable_smoke(source_checkpoint, val_path, pretrain_dir, device, output):
             reloaded, reloaded_optimizer, reloaded_loader,
             accumulation, local_update, device,
         ))
-    temporary.unlink(missing_ok=True)
+    source_unchanged = (
+        sha256(source_checkpoint) == source_before == SOURCE_SHA256
+    )
+    pre_cleanup_passed = (
+        continuation_comparison["passed"]
+        and rows[-1]["pass_count"] == 3
+        and source_unchanged
+    )
     report = {
         "label": "DISPOSABLE",
-        "official_source_unchanged": sha256(source_checkpoint) == source_before == SOURCE_SHA256,
+        "official_source_unchanged": source_unchanged,
         "updates_executed_on_disposable_copies": 12,
         "rows": rows,
         "three_pass_exercised": rows[-1]["pass_count"] == 3,
         "maximum_expected_configuration_exercised": rows[-1]["pass_count"] == 3,
         "checkpoint": verification,
-        "continuation_comparison": continuation_checks,
-        "temporary_checkpoint_removed": not temporary.exists(),
+        "continuation_comparison": continuation_comparison,
+        "point_of_use_runtime": point_of_use_runtime,
+        "temporary_checkpoint": file_identity(temporary),
+        "temporary_checkpoint_removed": False,
+        "temporary_checkpoint_retained_on_failure": not pre_cleanup_passed,
         "peak_allocated_vram_mb": max(row["peak_allocated_vram_mb"] for row in rows),
         "peak_reserved_vram_mb": max(row["peak_reserved_vram_mb"] for row in rows),
-        "passed": all(continuation_checks.values())
-        and rows[-1]["pass_count"] == 3
-        and sha256(source_checkpoint) == SOURCE_SHA256
-        and not temporary.exists(),
+        "passed": False,
     }
-    durable_json(Path(output) / "DISPOSABLE_SMOKE_REPORT.json", report)
-    del model, optimizer, loader, reloaded, reloaded_optimizer, reloaded_loader
+    # Persist the complete diagnostic before cleanup.  Any scientific failure
+    # intentionally retains the clearly labeled disposable checkpoint.
+    durable_json(output / "DISPOSABLE_SMOKE_REPORT.json", report)
+    if pre_cleanup_passed:
+        temporary.unlink()
+        report["temporary_checkpoint_removed"] = not temporary.exists()
+        report["temporary_checkpoint_retained_on_failure"] = False
+        report["passed"] = report["temporary_checkpoint_removed"]
+        durable_json(output / "DISPOSABLE_SMOKE_REPORT.json", report)
+    del (
+        reloaded, reloaded_optimizer, reloaded_loader, reloaded_payload,
+    )
     gc.collect()
     torch.cuda.empty_cache()
     return report
@@ -2936,6 +3935,13 @@ def run_preflight(args):
     prepared_environment = read_json(pretrain / "ENVIRONMENT_MANIFEST.json")
     current_head = git("rev-parse", "HEAD")
     source_path = require_exact_file(args.source_checkpoint, SOURCE_SHA256, "source")
+    continuation_calibration = validate_continuation_calibration(
+        args.continuation_calibration
+    )
+    if not continuation_calibration["passed"]:
+        raise SystemExit(
+            f"disposable continuation calibration failed: {continuation_calibration}"
+        )
     model, optimizer, _, _, construction = make_c_model(source_path, device, restore=False)
     val_path = base.validation_path(Path(args.data_root))
     core_manifest = read_json(pretrain / "PANEL_MANIFEST_CORE.json")
@@ -2974,7 +3980,10 @@ def run_preflight(args):
     torch.cuda.empty_cache()
     if not tests["passed"]:
         raise SystemExit("mandatory architecture/causality/cache preflight failed")
-    smoke = disposable_smoke(source_path, val_path, pretrain, device, output)
+    smoke = disposable_smoke(
+        source_path, val_path, pretrain, device, output,
+        calibration=continuation_calibration,
+    )
     if not smoke["passed"]:
         raise SystemExit("disposable smoke failed")
     initial = initial_geometry_shock(
@@ -2986,6 +3995,7 @@ def run_preflight(args):
         "pretrain_freeze": frozen["passed"],
         "mandatory_tests": tests["passed"],
         "disposable_smoke": smoke["passed"],
+        "continuation_calibration": continuation_calibration["passed"],
         "initial_geometry_shock_complete": initial["passed"],
         "large_panel_frozen": large_manifest["all_required_disjointness_passed"],
         "one_a100_80gb": torch.cuda.device_count() == 1 and "A100" in torch.cuda.get_device_name(device),
@@ -3020,6 +4030,7 @@ def run_preflight(args):
         "pod_name": args.pod_name,
         "volume_id": args.volume_id,
         "frozen_artifact_sha256": frozen["artifact_sha256"],
+        "continuation_calibration": continuation_calibration,
         "implementation_file_sha256": implementation_file_sha256(),
         "authorized": all(checks.values()),
     }
@@ -5924,7 +6935,10 @@ def build_parser():
 
     preflight = subparsers.add_parser("preflight")
     preflight.set_defaults(handler=run_preflight)
-    for name in ("output_dir", "pretrain_dir", "source_checkpoint", "data_root"):
+    for name in (
+        "output_dir", "pretrain_dir", "source_checkpoint", "data_root",
+        "continuation_calibration",
+    ):
         preflight.add_argument(f"--{name.replace('_', '-')}", required=True)
     preflight.add_argument("--stop-capability-verified", action="store_true")
     preflight.add_argument("--storage-inventory-verified", action="store_true")

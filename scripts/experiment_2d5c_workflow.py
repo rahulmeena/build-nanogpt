@@ -2,9 +2,11 @@
 """Supervised host-side workflow for the official Experiment 2D5C run.
 
 This module is intentionally stdlib-only.  It is designed to be the child of
-``experiment_2d5c_runpod_guard.py watchdog`` so every terminal child outcome
-causes the guard to preserve the retained volume and stop exactly the frozen
-pod identity.  It never calls RunPod itself and cannot start another arm.
+``experiment_2d5c_runpod_guard.py watchdog``.  Successful scientific
+completion stops exactly the frozen pod identity.  A recoverable non-zero
+child outcome preserves evidence and leaves the scarce GPU allocation running
+for diagnosis unless an explicit reviewed stop is requested.  This workflow
+never calls RunPod itself and cannot start another arm.
 
 Preparation/freeze is deliberately outside this workflow: the caller must
 first commit and push the implementation, run ``prepare`` on the A100, commit
@@ -44,6 +46,10 @@ PRETRAIN = RUN_ROOT / "pretrain"
 PREFLIGHT = RUN_ROOT / "preflight"
 RESULTS = RUN_ROOT / "results"
 CHECKPOINTS = RUN_ROOT / "checkpoints"
+CONTINUATION_CALIBRATION = (
+    RUN_ROOT / "diagnostics" / "continuation_freshpod_3e293838" /
+    "CALIBRATION_PROVENANCE.json"
+)
 
 SOURCE = Path(
     "/workspace/exp2d3a_run/checkpoints/"
@@ -356,6 +362,7 @@ def verify_entry(workflow: Workflow, authorization: Path) -> tuple[str, int]:
         raise WorkflowError(f"remote freeze commit mismatch: {remote_head}")
     required = [
         SOURCE, CONTROL, PRETRAIN / "PRETRAIN_FREEZE_AUDIT.json",
+        CONTINUATION_CALIBRATION,
         PRETRAIN / "DATA_REPLAY_LEDGER.jsonl",
         PRETRAIN / "DATA_REPLAY_AUDIT.json",
         PRETRAIN / "PANEL_MANIFEST_CORE.json",
@@ -494,6 +501,7 @@ def run_scientific_workflow(workflow: Workflow, authorization: Path) -> dict:
         "--pretrain-dir", str(PRETRAIN),
         "--source-checkpoint", str(SOURCE),
         "--data-root", str(DATA_ROOT),
+        "--continuation-calibration", str(CONTINUATION_CALIBRATION),
         "--stop-capability-verified",
         "--storage-inventory-verified",
         "--network-volume-free-bytes", str(free_bytes),
@@ -691,7 +699,7 @@ def run_scientific_workflow(workflow: Workflow, authorization: Path) -> dict:
 
 
 def preserve_failure_best_effort(workflow: Workflow, error: Exception) -> dict:
-    """Preserve the latest strict evidence before the supervising guard stops."""
+    """Preserve the latest strict evidence while the supervising guard retains the pod."""
     stamp = int(time.time())
     attempt = LOCAL_ARCHIVE / f"failure_{stamp}"
     attempt.mkdir(parents=True, exist_ok=False)
@@ -703,7 +711,8 @@ def preserve_failure_best_effort(workflow: Workflow, error: Exception) -> dict:
         "error_type": type(error).__name__,
         "error": str(error),
         "failed_at_unix": time.time(),
-        "pod_stop_delegated_to_independent_guard": True,
+        "pod_stop_delegated_to_independent_guard": False,
+        "pod_retention_requested_for_recoverable_diagnosis": True,
         "network_volume_retention_required": True,
         "no_substitute_arm_authorized": True,
         "preservation": {},

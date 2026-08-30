@@ -145,6 +145,7 @@ def run_guarded_workflow(args: argparse.Namespace) -> None:
         stop.get("passed") is True
         and stop.get("terminal_outcome") == "success"
         and stop.get("pod", {}).get("desiredStatus") == "EXITED"
+        and stop.get("pod", {}).get("runtimeStatus") == "stopped"
         and stop.get("network_volume", {}).get("id") == "yhzyb27fb5"
     ):
         raise CompletionError("guard did not prove successful exact-pod stop")

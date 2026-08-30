@@ -31,8 +31,8 @@ CONTROL_SHA256 = "e108e47b68a13b368bbd6a27bd1472b9740613a9d03896e900e158bb3ed708
 PROTOCOL_SHA256 = "eae21daf3859eb70d3342261d2891fbb4b2114235b1a87450eb2b4d201183b70"
 FINGERPRINT_C = "019d822dd89986c269e985fba8d1277a15d476dd73a0dac0d8c35e07e7315c12"
 FINGERPRINT_FIXED = "be345a9fe3b486f601c3af1564ce90f51de51c84daf6e89885126b094adfaac2"
-POD_ID = "h6of430yxncf6h"
-POD_NAME = "opposite_azure_ladybug"
+POD_ID = "rvgztsr0azrwyo"
+POD_NAME = "happy_apricot_stork"
 VOLUME_ID = "yhzyb27fb5"
 FINAL_PHRASE = "STOPPED AFTER C AT EXACTLY 191 UPDATES / 100,139,008 TARGETS"
 
@@ -912,7 +912,21 @@ class Experiment2D5CStaticTests(unittest.TestCase):
         self.assertIn("stop_response.get(\"id\") not in (None, POD_ID)", stop_source)
         self.assertIn("validate_exact_volume(final_volume)", stop_source)
         self.assertIn('final_pod.get("networkVolumeId") != NETWORK_VOLUME_ID', stop_source)
-        self.assertIn('"status": "stopped_and_volume_retained_verified"', stop_source)
+        self.assertIn('"stopped_and_volume_retained_verified"', stop_source)
+        self.assertIn('candidate.get("runtimeStatus") == "stopped"', stop_source)
+
+        supervise_source = source_of(
+            GUARD_TEXT,
+            function_node_in_class(guard_class, "supervise_and_stop"),
+        )
+        self.assertIn('if outcome == "failure":', supervise_source)
+        self.assertIn('"pod_stop_attempted": False', supervise_source)
+        self.assertIn('"trigger_artifact_created": False', supervise_source)
+        self.assertIn('"retained_for_recoverable_diagnosis": True', supervise_source)
+        self.assertLess(
+            supervise_source.index('if outcome == "failure":'),
+            supervise_source.index("self.create_trigger("),
+        )
 
         for node in ast.walk(GUARD_TREE):
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
@@ -922,6 +936,26 @@ class Experiment2D5CStaticTests(unittest.TestCase):
                         not shell_keywords
                         or all(safe_eval(keyword.value, GUARD_CONSTANTS) is False for keyword in shell_keywords)
                     )
+
+    def test_disposable_continuation_requires_exact_boundary_not_bitwise_cuda_backward(self):
+        smoke_source = source_of(
+            DRIVER_TEXT, function_node(DRIVER_TREE, "disposable_smoke")
+        )
+        for required in (
+            '"saved_boundary_exact": all(boundary_checks.values())',
+            '"forward_losses_exact"',
+            '"post_step_bitwise"',
+            '"informational_only": True',
+            'numerical_comparison["passed"]',
+            'all(boundary_checks.values())',
+            'all(exact_continuation_checks.values())',
+        ):
+            self.assertIn(required, smoke_source)
+        self.assertNotIn("all(continuation_checks.values())", smoke_source)
+        self.assertIn(
+            "inherited CUDA backward is demonstrably non-bitwise",
+            smoke_source,
+        )
 
 
 def function_node_in_class(parent: ast.ClassDef, name: str) -> ast.FunctionDef:

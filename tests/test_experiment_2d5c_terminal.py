@@ -250,6 +250,8 @@ class Experiment2D5CTerminalTests(unittest.TestCase):
         train = ast.get_source_segment(source, function_node(tree, "run_train"))
         seal = ast.get_source_segment(source, function_node(tree, "run_seal_final"))
         for required in (
+            "scripts/experiment_2d5c_build_continuation_calibration.py",
+            "scripts/experiment_2d5c_continuation_probe.py",
             "scripts/experiment_2d5c_finalizer.py",
             "scripts/experiment_2d5c_runpod_guard.py",
             "scripts/experiment_2d5c_workflow.py",

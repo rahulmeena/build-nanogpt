@@ -133,9 +133,7 @@ def test_preflight_is_read_only_private_and_allowlisted(tmp_path):
 
     payload = json.loads(authorization.read_text())
     assert set(payload) == set(runpod_guard.AUTHORIZATION_KEYS)
-    assert payload["exact_stop_command"] == (
-        "runpodctl pod stop h6of430yxncf6h -o json"
-    )
+    assert payload["exact_stop_command"] == runpod_guard.EXACT_STOP_COMMAND
     assert payload["pod_running_last_status_change"] == RUNNING_POD["lastStatusChange"]
 
 
@@ -155,12 +153,48 @@ def test_stop_requires_bound_trigger_uses_only_exact_stop_and_verifies_volume(tm
     assert report["stop_invoked"] is True
     assert report["status"] == "stopped_and_volume_retained_verified"
     assert report["pod"]["desiredStatus"] == "EXITED"
+    assert report["pod"]["runtimeStatus"] == "stopped"
     assert report["network_volume"] == VOLUME
     assert report["exact_stop_command"] == runpod_guard.EXACT_STOP_COMMAND
     assert client.stop_arguments == [
-        ("pod", "stop", "h6of430yxncf6h", "-o", "json")
+        ("pod", "stop", runpod_guard.POD_ID, "-o", "json")
     ]
     assert "secret-value" not in json.dumps(report)
+
+
+def test_stop_waits_through_exited_transition_until_runtime_is_stopped(tmp_path):
+    class TransitionalClient(FakeClient):
+        def __init__(self):
+            super().__init__()
+            self.post_stop_polls = 0
+
+        def pod_get(self):
+            if not self.stopped:
+                return super().pod_get()
+            self.calls.append("pod_get")
+            self.post_stop_polls += 1
+            if self.post_stop_polls == 1:
+                return {
+                    **STOPPED_POD,
+                    "runtimeStatus": "stopping",
+                }
+            return dict(STOPPED_POD)
+
+    client = TransitionalClient()
+    guard = make_guard(client)
+    authorization, trigger = authorize_and_trigger(tmp_path, guard)
+
+    report = guard.stop(
+        authorization,
+        trigger,
+        timeout_seconds=5,
+        poll_interval_seconds=0.01,
+    )
+
+    assert client.post_stop_polls == 2
+    assert report["pod"]["desiredStatus"] == "EXITED"
+    assert report["pod"]["runtimeStatus"] == "stopped"
+    assert report["stop_invoked"] is True
 
 
 def test_stop_without_trigger_or_with_identity_change_fails_before_mutation(tmp_path):
@@ -199,7 +233,7 @@ def test_trigger_is_bound_to_exact_authorization_digest(tmp_path):
 
 
 @pytest.mark.parametrize("child_exit", [0, 9])
-def test_supervised_success_and_failure_both_create_trigger_and_stop(
+def test_supervised_success_stops_but_recoverable_failure_retains_pod(
     tmp_path, child_exit
 ):
     client = FakeClient()
@@ -228,12 +262,21 @@ def test_supervised_success_and_failure_both_create_trigger_and_stop(
     assert report["terminal_outcome"] == (
         "success" if child_exit == 0 else "failure"
     )
-    assert client.stop_arguments == [
-        ("pod", "stop", "h6of430yxncf6h", "-o", "json")
-    ]
-    trigger_payload = json.loads(trigger.read_text())
-    assert trigger_payload["source"] == "supervised_child"
-    assert trigger_payload["exit_code"] == child_exit
+    if child_exit == 0:
+        assert client.stop_arguments == [
+            ("pod", "stop", runpod_guard.POD_ID, "-o", "json")
+        ]
+        trigger_payload = json.loads(trigger.read_text())
+        assert trigger_payload["source"] == "supervised_child"
+        assert trigger_payload["exit_code"] == child_exit
+    else:
+        assert client.stop_arguments == []
+        assert not trigger.exists()
+        assert report["mode"] == "watchdog_supervise_failure_retained"
+        assert report["pod_stop_attempted"] is False
+        assert report["trigger_artifact_created"] is False
+        assert report["retained_for_recoverable_diagnosis"] is True
+        assert report["pod"]["runtimeStatus"] == "running"
 
 
 def test_supervised_mode_rejects_nonexact_trigger_path_before_child_runs(tmp_path):
@@ -300,7 +343,7 @@ def test_runpod_client_passes_secret_only_in_child_env_and_exact_stop_argv(monke
         "/opt/homebrew/bin/runpodctl",
         "pod",
         "stop",
-        "h6of430yxncf6h",
+        runpod_guard.POD_ID,
         "-o",
         "json",
     ]

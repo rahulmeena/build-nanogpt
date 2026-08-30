@@ -13,9 +13,12 @@ Production stop authorization is two-part:
 
 ``watchdog`` can either wait for that exact trigger path or supervise a whole
 experiment command.  A supervised command creates the terminal trigger and
-attempts the same guarded stop for both zero and non-zero child exit status.
-It must wrap the *entire* experiment/finalization workflow, not one training
-segment or an ordinary SSH connectivity probe.
+attempts the guarded stop only after successful scientific completion.  A
+non-zero child exit is preserved for diagnosis while the allocated pod remains
+running; an explicit terminal trigger can still request a stop after the user
+has reviewed a recoverable failure.  The watchdog must wrap the *entire*
+experiment/finalization workflow, not one training segment or an ordinary SSH
+connectivity probe.
 """
 
 from __future__ import annotations
@@ -37,8 +40,8 @@ from typing import Any, Callable, Mapping, Sequence
 
 
 EXPERIMENT = "2D5C"
-POD_ID = "h6of430yxncf6h"
-POD_NAME = "opposite_azure_ladybug"
+POD_ID = "rvgztsr0azrwyo"
+POD_NAME = "happy_apricot_stork"
 GPU_COUNT = 1
 NETWORK_VOLUME_ID = "yhzyb27fb5"
 NETWORK_VOLUME_NAME = "unlikely_lime_flamingo"
@@ -661,28 +664,18 @@ class Experiment2D5CRunPodGuard:
         validate_exact_pod(pod)
         validate_exact_volume(volume_before)
 
-        if pod.get("desiredStatus") == "EXITED":
-            final_volume = self.client.network_volume_get()
-            validate_exact_volume(final_volume)
-            return {
-                "schema": REPORT_SCHEMA,
-                "mode": "stop",
-                "passed": True,
-                "stop_invoked": False,
-                "status": "already_stopped_verified",
-                "pod": safe_pod_projection(pod),
-                "network_volume": safe_volume_projection(final_volume),
-                "authorization_sha256": sha256_bytes(authorization_raw),
-                "trigger_sha256": sha256_bytes(trigger_raw),
-                "terminal_outcome": trigger["terminal_outcome"],
-                "secret_recorded": False,
-            }
-
-        if not (
+        already_stopped = (
+            pod.get("desiredStatus") == "EXITED"
+            and pod.get("runtimeStatus") == "stopped"
+        )
+        stop_in_progress = (
+            pod.get("desiredStatus") == "EXITED" and not already_stopped
+        )
+        if not already_stopped and not stop_in_progress and not (
             pod.get("desiredStatus") == "RUNNING" and pod.get("runtimeStatus") == "running"
         ):
             raise GuardError("unsafe_pod_state", "exact pod is neither verified running nor exited")
-        if (
+        if not already_stopped and not stop_in_progress and (
             pod.get("createdAt") != authorization.get("pod_created_at")
             or pod.get("lastStatusChange")
             != authorization.get("pod_running_last_status_change")
@@ -693,21 +686,32 @@ class Experiment2D5CRunPodGuard:
                 "live pod instance no longer matches authorization",
             )
 
-        stop_response = self.client.stop_exact_pod()
-        if stop_response.get("id") not in (None, POD_ID):
-            raise GuardError("stop_response_mismatch", "stop response identified another pod")
+        stop_invoked = False
+        if not already_stopped and not stop_in_progress:
+            stop_response = self.client.stop_exact_pod()
+            stop_invoked = True
+            if stop_response.get("id") not in (None, POD_ID):
+                raise GuardError("stop_response_mismatch", "stop response identified another pod")
 
         deadline = self.monotonic() + timeout_seconds
-        final_pod = None
+        final_pod = pod if already_stopped else None
         while self.monotonic() < deadline:
+            if final_pod is not None:
+                break
             candidate = self.client.pod_get()
             validate_exact_pod(candidate)
-            if candidate.get("desiredStatus") == "EXITED":
+            if (
+                candidate.get("desiredStatus") == "EXITED"
+                and candidate.get("runtimeStatus") == "stopped"
+            ):
                 final_pod = candidate
                 break
             self.sleeper(poll_interval_seconds)
         if final_pod is None:
-            raise GuardError("stop_timeout", "exact pod did not reach EXITED before timeout")
+            raise GuardError(
+                "stop_timeout",
+                "exact pod did not reach EXITED/stopped before timeout",
+            )
 
         final_volume = self.client.network_volume_get()
         validate_exact_volume(final_volume)
@@ -720,8 +724,11 @@ class Experiment2D5CRunPodGuard:
             "schema": REPORT_SCHEMA,
             "mode": "stop",
             "passed": True,
-            "stop_invoked": True,
-            "status": "stopped_and_volume_retained_verified",
+            "stop_invoked": stop_invoked,
+            "status": (
+                "stopped_and_volume_retained_verified"
+                if stop_invoked else "already_stopped_verified"
+            ),
             "pod": safe_pod_projection(final_pod),
             "network_volume": safe_volume_projection(final_volume),
             "authorization_sha256": sha256_bytes(authorization_raw),
@@ -766,7 +773,9 @@ class Experiment2D5CRunPodGuard:
         poll_interval_seconds: float,
         child_runner: Callable[..., Any] | None = None,
     ) -> tuple[int, dict]:
-        self.validate_authorization(authorization_path)
+        authorization, authorization_raw = self.validate_authorization(
+            authorization_path
+        )
         _require_absolute_artifact_path(trigger_path, "trigger path")
         if not child_command:
             raise GuardError("missing_child", "supervised child command is empty")
@@ -806,6 +815,38 @@ class Experiment2D5CRunPodGuard:
         else:
             exit_code = min(exit_code, 255)
         outcome = "success" if exit_code == 0 else "failure"
+        if outcome == "failure":
+            # A failed scientific gate blocks the workflow but is normally
+            # recoverable.  Preserve the scarce allocation for diagnosis; no
+            # stop-capable trigger is created without an explicit reviewed
+            # terminal action.
+            pod = self.client.pod_get()
+            volume = self.client.network_volume_get()
+            validate_exact_pod(pod)
+            validate_exact_volume(volume)
+            if identity_sha256(pod, volume) != authorization["identity_sha256"]:
+                raise GuardError(
+                    "pod_instance_changed",
+                    "live pod instance no longer matches authorization",
+                )
+            report = {
+                "schema": REPORT_SCHEMA,
+                "mode": "watchdog_supervise_failure_retained",
+                "passed": True,
+                "terminal_outcome": "failure",
+                "child_exit_code": exit_code,
+                "pod_stop_attempted": False,
+                "trigger_artifact_created": False,
+                "retained_for_recoverable_diagnosis": True,
+                "pod": safe_pod_projection(pod),
+                "network_volume": safe_volume_projection(volume),
+                "authorization_sha256": sha256_bytes(authorization_raw),
+                "exact_stop_command": EXACT_STOP_COMMAND,
+                "secret_recorded": False,
+            }
+            if interrupted_signal is not None:
+                report["supervision_signal"] = interrupted_signal
+            return exit_code, report
         self.create_trigger(
             authorization_path,
             trigger_path,
