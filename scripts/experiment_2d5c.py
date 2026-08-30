@@ -2151,27 +2151,50 @@ def control_specificity_test(model, device, shuffle_manifest):
     was_training = model.training
     model.eval()
     outputs = {}
-    with torch.no_grad(), torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-        baseline = model.incremental_logits(tokens, return_diagnostics=True)
-        first = baseline["logits"]
-        for control in CONTROLS[1:]:
-            current = model.incremental_logits(
-                tokens, control=control,
-                recurrent_permutation=permutation if control.endswith("shuffled") else None,
-                return_diagnostics=True,
-            )
-            logits = current["logits"]
-            outputs[control] = {
-                "logits_sha256": tensor_sha256(logits),
-                "max_abs_delta_vs_all_real": float(
-                    (logits.float() - first.float()).abs().max()
-                ),
-                "logits_changed_vs_all_real": not torch.equal(logits, first),
-                "probe": current["diagnostics"][2],
-            }
-        final = model.incremental_logits(tokens)["logits"]
-    if was_training:
-        model.train()
+    executed_module_rows = {
+        ("", type(model).__name__.lower()): {
+            "name": "", "type": type(model).__name__.lower()
+        }
+    }
+
+    def record_execution(name):
+        def hook(module, _inputs, _output):
+            row = {"name": name.lower(), "type": type(module).__name__.lower()}
+            executed_module_rows[(row["name"], row["type"])] = row
+        return hook
+
+    execution_hooks = []
+    try:
+        for name, module in model.named_modules():
+            if name:
+                execution_hooks.append(
+                    module.register_forward_hook(record_execution(name))
+                )
+        with torch.no_grad(), torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+            baseline = model.incremental_logits(tokens, return_diagnostics=True)
+            first = baseline["logits"]
+            for control in CONTROLS[1:]:
+                current = model.incremental_logits(
+                    tokens, control=control,
+                    recurrent_permutation=(
+                        permutation if control.endswith("shuffled") else None
+                    ),
+                    return_diagnostics=True,
+                )
+                logits = current["logits"]
+                outputs[control] = {
+                    "logits_sha256": tensor_sha256(logits),
+                    "max_abs_delta_vs_all_real": float(
+                        (logits.float() - first.float()).abs().max()
+                    ),
+                    "logits_changed_vs_all_real": not torch.equal(logits, first),
+                    "probe": current["diagnostics"][2],
+                }
+            final = model.incremental_logits(tokens)["logits"]
+    finally:
+        for hook in execution_hooks:
+            hook.remove()
+        model.train(was_training)
     sets = {control: model.control_sets(control) for control in CONTROLS}
     expected = {
         "all_real": (set(), set()),
@@ -2261,6 +2284,10 @@ def control_specificity_test(model, device, shuffle_manifest):
         "first_eligible_query_probe": 2,
         "frozen_shuffle_manifest_checks": manifest_checks,
         "all_real_logits_sha256": tensor_sha256(first),
+        "executed_modules": sorted(
+            executed_module_rows.values(),
+            key=lambda row: (row["name"], row["type"]),
+        ),
         "control_sets": {
             name: {"off": sorted(value[0]), "shuffled": sorted(value[1])}
             for name, value in sets.items()
@@ -2284,11 +2311,12 @@ def control_specificity_test(model, device, shuffle_manifest):
     }
 
 
-def forbidden_component_audit(model):
+def forbidden_component_audit(model, executed_module_rows):
     config_path = REPO_ROOT / "configs" / "exp2d5c_fixed_writer_b3_b5_w2_matched_100m.json"
     config_architecture = read_json(config_path)["architecture_c"]
     parameter_names = [name.lower() for name, _ in model.named_parameters()]
     buffer_names = [name.lower() for name, _ in model.named_buffers()]
+    state_dict_names = [name.lower() for name in model.state_dict()]
     module_rows = [
         {"name": name.lower(), "type": type(module).__name__.lower()}
         for name, module in model.named_modules()
@@ -2297,12 +2325,73 @@ def forbidden_component_audit(model):
         "router", "routing", "route_logits", "route_beta", "attnres",
         "teacher", "distill", "auxiliary", "aux_head",
     )
-    registered_name_hits = sorted({
+    forbidden_parameter_hits = sorted({
         value
-        for value in parameter_names + buffer_names
-        + [f'{row["name"]}:{row["type"]}' for row in module_rows]
+        for value in parameter_names
         if any(term in value for term in forbidden_terms)
     })
+    forbidden_buffer_hits = sorted({
+        value
+        for value in buffer_names
+        if any(term in value for term in forbidden_terms)
+    })
+    forbidden_state_dict_hits = sorted({
+        value
+        for value in state_dict_names
+        if any(term in value for term in forbidden_terms)
+    })
+    forbidden_module_hits = sorted({
+        f'{row["name"]}:{row["type"]}'
+        for row in module_rows
+        if any(
+            term in f'{row["name"]}:{row["type"]}'
+            for term in forbidden_terms
+        )
+    })
+    executed_module_rows = [
+        {"name": name, "type": module_type}
+        for name, module_type in sorted({
+            (str(row["name"]).lower(), str(row["type"]).lower())
+            for row in executed_module_rows
+        })
+    ]
+    executed_module_names = {
+        row["name"] for row in executed_module_rows if row["name"]
+    }
+    expected_executed_module_names = {
+        "base.transformer.wte",
+        "base.transformer.wpe",
+        "base.transformer.ln_f",
+        "base.lm_head",
+    }
+    for block_index in range(core.TOTAL_LAYERS):
+        prefix = f"base.transformer.h.{block_index}"
+        expected_executed_module_names.update({
+            f"{prefix}.ln_1",
+            f"{prefix}.attn.c_attn",
+            f"{prefix}.attn.c_proj",
+            f"{prefix}.ln_2",
+            f"{prefix}.mlp",
+            f"{prefix}.mlp.c_fc",
+            f"{prefix}.mlp.gelu",
+            f"{prefix}.mlp.c_proj",
+        })
+    missing_expected_executed_modules = sorted(
+        expected_executed_module_names - executed_module_names
+    )
+    forbidden_executed_module_hits = sorted({
+        f'{row["name"]}:{row["type"]}'
+        for row in executed_module_rows
+        if any(
+            term in f'{row["name"]}:{row["type"]}'
+            for term in forbidden_terms
+        )
+    })
+    registered_name_hits = sorted(set(
+        forbidden_parameter_hits
+        + forbidden_buffer_hits
+        + forbidden_module_hits
+    ))
     allowed_projection_suffixes = (
         "attn.c_attn", "attn.c_proj", "mlp.c_fc", "mlp.c_proj", "lm_head"
     )
@@ -2342,17 +2431,32 @@ def forbidden_component_audit(model):
     )
     runtime_config_checks = {
         "residual_mode_standard": runtime_config.get("residual_mode") == "standard",
-        "topdown_feedback_disabled": not bool(
-            runtime_config.get("enable_topdown_feedback", False)
+        "topdown_feedback_disabled_exact": (
+            runtime_config.get("enable_topdown_feedback") is False
         ),
-        "topdown_feedback_destinations_empty": not bool(
-            runtime_config.get("topdown_feedback_destinations", ())
+        "topdown_feedback_destinations_empty_exact": (
+            isinstance(runtime_config.get("topdown_feedback_destinations"), tuple)
+            and runtime_config["topdown_feedback_destinations"] == ()
         ),
-        "memory_writers_disabled": not bool(
-            runtime_config.get("enable_memory_writers", False)
+        "memory_writers_disabled_exact": (
+            runtime_config.get("enable_memory_writers") is False
         ),
         "attnres_rms_eps_compatibility_field_inert": (
             runtime_config.get("residual_mode") == "standard"
+            and not any(
+                "attnres" in value
+                for value in (
+                    forbidden_parameter_hits
+                    + forbidden_buffer_hits
+                    + forbidden_state_dict_hits
+                    + forbidden_module_hits
+                    + forbidden_executed_module_hits
+                )
+            )
+        ),
+        "attnres_rms_eps_expected_value_exact": (
+            type(runtime_config.get("attnres_rms_eps")) is float
+            and runtime_config["attnres_rms_eps"] == 1e-5
         ),
     }
     config_architecture_text = json.dumps(
@@ -2378,6 +2482,14 @@ def forbidden_component_audit(model):
     module_checks = {
         "parameter_count_exact": parameter_count == PARAMETERS,
         "forbidden_registered_names_absent": not registered_name_hits,
+        "forbidden_parameter_names_absent": not forbidden_parameter_hits,
+        "forbidden_buffer_names_absent": not forbidden_buffer_hits,
+        "forbidden_state_dict_names_absent": not forbidden_state_dict_hits,
+        "executed_nonroot_module_trace_present": bool(executed_module_names),
+        "expected_executed_module_coverage_exact": (
+            not missing_expected_executed_modules
+        ),
+        "forbidden_executed_modules_absent": not forbidden_executed_module_hits,
         "forbidden_runtime_config_absent": not runtime_config_hits,
         "unexpected_projection_modules_absent": not unexpected_projection_modules,
         **runtime_config_checks,
@@ -2388,13 +2500,70 @@ def forbidden_component_audit(model):
         "configuration_checks": config_checks,
         "module_checks": module_checks,
         "forbidden_registered_name_hits": registered_name_hits,
+        "forbidden_parameter_name_hits": forbidden_parameter_hits,
+        "forbidden_buffer_name_hits": forbidden_buffer_hits,
+        "forbidden_state_dict_name_hits": forbidden_state_dict_hits,
+        "forbidden_registered_module_hits": forbidden_module_hits,
+        "forbidden_executed_module_hits": forbidden_executed_module_hits,
+        "executed_modules": executed_module_rows,
+        "executed_module_count": len(executed_module_rows),
+        "expected_executed_module_names": sorted(expected_executed_module_names),
+        "missing_expected_executed_modules": missing_expected_executed_modules,
+        "executed_module_trace_sha256": canonical_sha(executed_module_rows),
         "forbidden_runtime_config_hits": runtime_config_hits,
         "runtime_config_checks": runtime_config_checks,
+        "runtime_config_evidence": {
+            "residual_mode_actual": runtime_config.get("residual_mode"),
+            "residual_mode_required": "standard",
+            "enable_topdown_feedback_actual": runtime_config.get(
+                "enable_topdown_feedback"
+            ),
+            "topdown_feedback_destinations_actual": list(
+                runtime_config.get("topdown_feedback_destinations", ())
+            ) if isinstance(
+                runtime_config.get("topdown_feedback_destinations"), (tuple, list)
+            ) else runtime_config.get("topdown_feedback_destinations"),
+            "enable_memory_writers_actual": runtime_config.get(
+                "enable_memory_writers"
+            ),
+            "unknown_forbidden_config_hits": runtime_config_hits,
+        },
+        "attnres_presence": {
+            "named_module_hits": [
+                value for value in forbidden_module_hits if "attnres" in value
+            ],
+            "named_parameter_hits": [
+                value for value in forbidden_parameter_hits if "attnres" in value
+            ],
+            "named_buffer_hits": [
+                value for value in forbidden_buffer_hits if "attnres" in value
+            ],
+            "state_dict_key_hits": [
+                value for value in forbidden_state_dict_hits if "attnres" in value
+            ],
+            "executed_module_hits": [
+                value
+                for value in forbidden_executed_module_hits
+                if "attnres" in value
+            ],
+        },
         "attnres_rms_eps_compatibility_field": {
             "present": "attnres_rms_eps" in runtime_config,
             "value": runtime_config.get("attnres_rms_eps"),
+            "expected_inherited_value": 1e-5,
+            "expected_value_exact": runtime_config_checks[
+                "attnres_rms_eps_expected_value_exact"
+            ],
             "execution_guard": "residual_mode == full_attnres",
-            "inactive": runtime_config.get("residual_mode") == "standard",
+            "activation_guard_satisfied": (
+                runtime_config.get("residual_mode") == "full_attnres"
+            ),
+            "inactive": runtime_config_checks[
+                "attnres_rms_eps_compatibility_field_inert"
+            ],
+            "classified_active": not runtime_config_checks[
+                "attnres_rms_eps_compatibility_field_inert"
+            ],
         },
         "registered_projection_modules": projection_modules,
         "unexpected_projection_modules": unexpected_projection_modules,
@@ -2784,14 +2953,17 @@ def run_preflight(args):
             model, optimizer
         ),
         "attached_gradients": attached_gradient_test(model, optimizer, val_path, device),
-        "control_specificity": control_specificity_test(model, device, shuffle_manifest),
-        "forbidden_components": forbidden_component_audit(model),
-        "representation_diagnostic_production_shape_feasibility": (
-            representation_diagnostic_feasibility_smoke(
-                model, optimizer, val_path, device
-            )
-        ),
     }
+    control_specificity = control_specificity_test(model, device, shuffle_manifest)
+    tests["control_specificity"] = control_specificity
+    tests["forbidden_components"] = forbidden_component_audit(
+        model, control_specificity["executed_modules"]
+    )
+    tests["representation_diagnostic_production_shape_feasibility"] = (
+        representation_diagnostic_feasibility_smoke(
+            model, optimizer, val_path, device
+        )
+    )
     tests["all_real_repeat_stable"] = {
         "passed": tests["control_specificity"]["all_real_repeat_exact"]
     }

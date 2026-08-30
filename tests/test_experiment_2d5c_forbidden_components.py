@@ -22,6 +22,9 @@ class AuditModel(nn.Module):
             "residual_mode": "standard",
             # GPTConfig owns this field in standard mode, where it is inert.
             "attnres_rms_eps": 1e-5,
+            "enable_topdown_feedback": False,
+            "topdown_feedback_destinations": (),
+            "enable_memory_writers": False,
         }
         config.update(config_overrides)
         self.config = SimpleNamespace(**config)
@@ -46,7 +49,7 @@ class ModelWithExecutedAttnRes(AuditModel):
         return self.attnres_probe(value) * self.weight
 
 
-def audit(monkeypatch, model):
+def audit(monkeypatch, model, executed_module_rows=None):
     parameter_count = sum(parameter.numel() for parameter in model.parameters())
     production_read_json = driver.read_json
 
@@ -60,8 +63,22 @@ def audit(monkeypatch, model):
         "PARAMETERS",
         parameter_count,
     )
+    monkeypatch.setattr(driver.core, "TOTAL_LAYERS", 0)
     monkeypatch.setattr(driver, "read_json", compact_test_manifest)
-    return driver.forbidden_component_audit(model)
+    if executed_module_rows is None:
+        executed_module_rows = [
+            {"name": "", "type": type(model).__name__.lower()},
+            {"name": "base.transformer.wte", "type": "embedding"},
+            {"name": "base.transformer.wpe", "type": "embedding"},
+            {"name": "base.transformer.ln_f", "type": "layernorm"},
+            {"name": "base.lm_head", "type": "linear"},
+        ]
+        executed_module_rows.extend(
+            {"name": name, "type": type(module).__name__.lower()}
+            for name, module in model.named_modules()
+            if name and getattr(module, "calls", 0) > 0
+        )
+    return driver.forbidden_component_audit(model, executed_module_rows)
 
 
 def test_standard_mode_ignores_inert_attnres_rms_epsilon(monkeypatch):
@@ -69,6 +86,9 @@ def test_standard_mode_ignores_inert_attnres_rms_epsilon(monkeypatch):
 
     assert report["forbidden_runtime_config_hits"] == []
     assert report["module_checks"]["forbidden_runtime_config_absent"]
+    assert report["module_checks"]["forbidden_executed_modules_absent"]
+    assert report["module_checks"]["expected_executed_module_coverage_exact"]
+    assert report["executed_module_count"] == 5
     assert report["passed"]
 
 
@@ -88,6 +108,42 @@ def test_other_truthy_forbidden_runtime_config_is_rejected(monkeypatch):
     assert not report["passed"]
 
 
+def test_missing_activation_flag_is_rejected(monkeypatch):
+    model = AuditModel()
+    del model.config.enable_topdown_feedback
+    report = audit(monkeypatch, model)
+
+    assert not report["runtime_config_checks"][
+        "topdown_feedback_disabled_exact"
+    ]
+    assert not report["passed"]
+
+
+def test_malformed_empty_destination_type_is_rejected(monkeypatch):
+    report = audit(
+        monkeypatch,
+        AuditModel(topdown_feedback_destinations=[]),
+    )
+
+    assert not report["runtime_config_checks"][
+        "topdown_feedback_destinations_empty_exact"
+    ]
+    assert not report["passed"]
+
+
+def test_root_only_execution_trace_is_rejected(monkeypatch):
+    model = AuditModel()
+    report = audit(
+        monkeypatch,
+        model,
+        [{"name": "", "type": type(model).__name__.lower()}],
+    )
+
+    assert not report["module_checks"]["executed_nonroot_module_trace_present"]
+    assert report["missing_expected_executed_modules"]
+    assert not report["passed"]
+
+
 def test_executed_named_attnres_module_is_rejected(monkeypatch):
     model = ModelWithExecutedAttnRes()
     output = model(torch.tensor(2.0))
@@ -99,6 +155,10 @@ def test_executed_named_attnres_module_is_rejected(monkeypatch):
     assert (
         "attnres_probe:executedattnresprobe"
         in report["forbidden_registered_name_hits"]
+    )
+    assert (
+        "attnres_probe:executedattnresprobe"
+        in report["forbidden_executed_module_hits"]
     )
     assert not report["module_checks"]["forbidden_registered_names_absent"]
     assert not report["passed"]
