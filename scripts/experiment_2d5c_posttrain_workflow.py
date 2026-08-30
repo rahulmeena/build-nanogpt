@@ -75,10 +75,10 @@ LEGACY_FAILED_FINAL_SEAL = (
 FINAL_SEAL = RESULTS / "FINAL_CHECKPOINT_PROVENANCE.json"
 POSTTRAIN_PROVENANCE = RESULTS / "POSTTRAIN_RESUME_PROVENANCE.json"
 
-LOCAL_ADJUDICATOR = (
-    LOCAL_REPO / "scripts" / "experiment_2d5c_posttrain_adjudicator.py"
-)
 LOCAL_WORKFLOW = Path(__file__).resolve()
+LOCAL_ADJUDICATOR = LOCAL_WORKFLOW.with_name(
+    "experiment_2d5c_posttrain_adjudicator.py"
+)
 
 
 class PostTrainingWorkflowError(RuntimeError):
