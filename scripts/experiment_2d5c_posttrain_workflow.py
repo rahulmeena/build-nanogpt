@@ -85,6 +85,17 @@ class PostTrainingWorkflowError(RuntimeError):
     """A fail-closed post-training workflow error."""
 
 
+class PostTrainingWorkflow(frozen.Workflow):
+    """Post-training transport that tolerates ownership-restricted volumes."""
+
+    def rsync_to(self, local_path: Path, remote_path: Path, stage: str) -> None:
+        self.run([
+            "rsync", "-a", "--no-owner", "--no-group", "--partial",
+            "-e", self.rsync_shell(),
+            str(local_path), f"{self.remote}:{remote_path}",
+        ], stage)
+
+
 def safe_ssh_host(value: str) -> str:
     if (
         not value
@@ -1076,7 +1087,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    workflow = frozen.Workflow(
+    workflow = PostTrainingWorkflow(
         args.runtime_log.resolve(), args.ssh_host, args.ssh_port
     )
     try:

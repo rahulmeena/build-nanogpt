@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import ast
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +18,85 @@ import experiment_2d5c_posttrain_workflow as posttrain  # noqa: E402
 
 
 class Experiment2D5CPosttrainWorkflowTests(unittest.TestCase):
+    def test_outbound_rsync_disables_only_owner_and_group_preservation(self):
+        self.assertIs(
+            posttrain.PostTrainingWorkflow.rsync_from,
+            posttrain.frozen.Workflow.rsync_from,
+        )
+        self.assertIsNot(
+            posttrain.PostTrainingWorkflow.rsync_to,
+            posttrain.frozen.Workflow.rsync_to,
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            local_json = root / "LOCAL_BACKUP_AUDIT.json"
+            local_json.write_text("{}\n", encoding="utf-8")
+            workflow = posttrain.PostTrainingWorkflow(
+                root / "runtime.jsonl", "example.invalid", 15280
+            )
+            remote_json = (
+                Path("/workspace/exp2d5c_w2w2_100m/results")
+                / "LOCAL_BACKUP_AUDIT.json"
+            )
+            with mock.patch.object(workflow, "run") as run:
+                workflow.rsync_to(local_json, remote_json, "outbound audit")
+            command = run.call_args.args[0]
+            self.assertEqual(command[0:2], ["rsync", "-a"])
+            self.assertGreater(command.index("--no-owner"), command.index("-a"))
+            self.assertGreater(command.index("--no-group"), command.index("-a"))
+            self.assertIn("--partial", command)
+            self.assertNotIn("--no-perms", command)
+            self.assertNotIn("--no-times", command)
+            self.assertEqual(command[-2], str(local_json))
+            self.assertEqual(
+                command[-1], f"{workflow.remote}:{remote_json}"
+            )
+
+            local_checkpoint = root / "checkpoint.pt"
+            with mock.patch.object(workflow, "run") as run:
+                workflow.rsync_from(
+                    posttrain.frozen.checkpoint(191),
+                    local_checkpoint,
+                    "checkpoint backup",
+                )
+            self.assertEqual(
+                run.call_args.args[0],
+                [
+                    "rsync", "-a", "--partial", "--human-readable",
+                    "--progress", "-e", workflow.rsync_shell(),
+                    f"{workflow.remote}:{posttrain.frozen.checkpoint(191)}",
+                    str(local_checkpoint),
+                ],
+            )
+
+    def test_main_constructs_posttraining_transport(self):
+        observed = {}
+
+        def fake_workflow(workflow, authorization, training_freeze_commit):
+            observed["workflow"] = workflow
+            observed["authorization"] = authorization
+            observed["training_freeze_commit"] = training_freeze_commit
+            return {"scientific_commit": "a" * 40}
+
+        argv = [
+            "--authorization-artifact", "/tmp/auth.json",
+            "--ssh-host", "example.invalid",
+            "--ssh-port", "15280",
+            "--runtime-log", "/tmp/runtime.jsonl",
+            "--training-freeze-commit", posttrain.TRAINING_FREEZE_COMMIT,
+        ]
+        with mock.patch.object(
+            posttrain, "run_posttraining_workflow", side_effect=fake_workflow
+        ), mock.patch.object(posttrain.frozen, "append_runtime"):
+            self.assertEqual(posttrain.main(argv), 0)
+        self.assertIsInstance(
+            observed["workflow"], posttrain.PostTrainingWorkflow
+        )
+        self.assertEqual(
+            observed["training_freeze_commit"],
+            posttrain.TRAINING_FREEZE_COMMIT,
+        )
+
     def test_parser_requires_exact_training_freeze_commit(self):
         parser = posttrain.build_parser()
         common = [
