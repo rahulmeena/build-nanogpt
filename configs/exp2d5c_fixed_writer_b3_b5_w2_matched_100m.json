@@ -1,0 +1,92 @@
+{
+  "experiment": "2D5C",
+  "protocol": "fixed_writer_b3_b5_w2_representation_pressure_matched_100m_v1",
+  "protocol_sha256": "eae21daf3859eb70d3342261d2891fbb4b2114235b1a87450eb2b4d201183b70",
+  "branch": "experiment-2d5c-fixed-writer-b3-b5-w2-matched-100m",
+  "final_tag": "experiment-2d5c-fixed-writer-b3-b5-w2-matched-100m-final",
+  "scope": {
+    "newly_trained_arms": ["C"],
+    "prohibited_arms": ["A", "B", "Fixed"],
+    "continuation_beyond_local_update_191": false,
+    "continuation_to_250m": false,
+    "fixed_control_optimizer_steps": 0
+  },
+  "source": {
+    "checkpoint": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_001000341504.pt",
+    "checkpoint_sha256": "de80d0886a42e4142fa8b30d27eae4302a298bb207961b593f9401e908faaf7b",
+    "next_global_batch_sha256": "61dd83544d83c0cf7b4d61005f5a9cf64e2cafa930af1819cba2aae4538e7e61",
+    "next_global_stream_sha256": "39f6599f552803150fad33d32aa9c4df5843b058410ff1ba38b5afa469046e97",
+    "global_update": 1908,
+    "cumulative_targets": 1000341504,
+    "tag": "experiment-2d3a-alternating-integration-pyramid-1b-final",
+    "commit": "bf977013f5ca359e64d86eb896d445160c49c6bf"
+  },
+  "fixed_control": {
+    "checkpoint_sha256": "e108e47b68a13b368bbd6a27bd1472b9740613a9d03896e900e158bb3ed708a8",
+    "local_updates": 191,
+    "global_update": 2099,
+    "new_targets": 100139008,
+    "cumulative_targets": 1100480512,
+    "optimizer_steps_in_2d5c": 0
+  },
+  "architecture_c": {
+    "parameters": 124475908,
+    "new_parameters": 0,
+    "blocks": {
+      "B1": {"local_window": 2, "writer": "B12", "recurrent_lags": [2, 1023]},
+      "B2": {"local_window": 1024, "writer": null, "recurrent_lags": null},
+      "B3": {"local_window": 2, "writer": "B10", "recurrent_lags": [2, 1023]},
+      "B4": {"local_window": 1024, "writer": null, "recurrent_lags": null},
+      "B5": {"local_window": 2, "writer": "B8", "recurrent_lags": [2, 1023]},
+      "B6": {"local_window": 512, "writer": "B7", "recurrent_lags": [512, 1023]},
+      "B7-B12": {"local_window": 1024, "writer": null, "recurrent_lags": null}
+    }
+  },
+  "training": {
+    "local_updates": 191,
+    "targets_per_update": 524288,
+    "new_targets": 100139008,
+    "final_global_update": 2099,
+    "final_cumulative_targets": 1100480512,
+    "milestones": [48, 96, 144, 191],
+    "mandatory_fresh_process_restart": 96,
+    "micro_batch_sequences": 32,
+    "sequence_length": 1024,
+    "gradient_accumulation": 16,
+    "three_pass_global_update_modulus": 32,
+    "two_pass_weights": [0.25, 0.75],
+    "three_pass_weights": [0.2, 0.4, 0.4],
+    "gpu_count": 1,
+    "gpu": "NVIDIA A100-SXM4-80GB"
+  },
+  "evaluation": {
+    "core_subset_sha256": "8befbf790b3e522747cd39da306ec124464bf8dde1604caf64f299efa7e36216",
+    "core_sequences": 256,
+    "core_targets_per_condition": 262144,
+    "diagnostic_sequences": 32,
+    "large_sequences": 2048,
+    "large_targets_per_condition": 2097152,
+    "large_selection_seed": 2026083001,
+    "shuffle_seed": 2026083002,
+    "bootstrap_seed": 2026083003,
+    "bootstrap_resamples": 50000,
+    "noninferiority_margin_ce": 0.001,
+    "meaningful_recovery_rule_frozen_before_results": {
+      "recovery_fraction_point_estimate_at_least": 0.5,
+      "paired_95_percent_ci_lower_above": 0.0,
+      "reason": "Conservative operationalization of the protocol's otherwise non-numeric meaningful-recovery condition; used only for classification branch B."
+    }
+  },
+  "paths": {
+    "pod_run_root": "/workspace/exp2d5c_w2w2_100m",
+    "local_result_directory": "/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d3a_1b/results/experiment_2d5c_fixed_writer_b3_b5_w2_matched_100m",
+    "local_checkpoint_archive": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d5c_fixed_writer_b3_b5_w2_matched_100m"
+  },
+  "infrastructure": {
+    "pod_id": "h6of430yxncf6h",
+    "pod_name": "opposite_azure_ladybug",
+    "volume_id": "yhzyb27fb5",
+    "delete_pod": false,
+    "delete_volume": false
+  }
+}
