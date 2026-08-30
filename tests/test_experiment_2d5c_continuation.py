@@ -198,8 +198,12 @@ def test_disposable_smoke_requires_calibration_before_any_gpu_work():
 def test_full_state_calibration_schema_and_frozen_hash_are_explicit():
     assert driver.CONTINUATION_CALIBRATION_SCHEMA.endswith("_v2")
     assert driver.CONTINUATION_TENSOR_ENVELOPE_SCHEMA.endswith("_v1")
-    assert driver.CONTINUATION_CALIBRATION_SHA256 is None
-    assert driver.CONTINUATION_CALIBRATION_IMPLEMENTATION_COMMIT is None
+    assert driver.CONTINUATION_CALIBRATION_SHA256 == (
+        "4d6c15d927780dbf6597d38c054581761f31456a4b7256f47fca5c71eaa4740f"
+    )
+    assert driver.CONTINUATION_CALIBRATION_IMPLEMENTATION_COMMIT == (
+        "f826e54c81243aab95fc9262b6e79167d985e5da"
+    )
     assert driver.CONTINUATION_TENSOR_SECTION_SPECS["gradients"]["tensor_count"] == 152
     assert driver.CONTINUATION_TENSOR_SECTION_SPECS["model_parameters"]["tensor_count"] == 152
     assert driver.CONTINUATION_TENSOR_SECTION_SPECS["optimizer_state"]["tensor_count"] == 456
