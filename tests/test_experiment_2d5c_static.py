@@ -416,6 +416,33 @@ class Experiment2D5CStaticTests(unittest.TestCase):
         main_source = source_of(DRIVER_TEXT, function_node(DRIVER_TREE, "main"))
         self.assertIn("C large evaluation requires --final-checkpoint-seal", main_source)
 
+    def test_terminal_all_real_sentinel_repeats_one_complete_frozen_batch(self):
+        finalize_source = source_of(
+            DRIVER_TEXT, function_node(DRIVER_TREE, "finalize_eval_state")
+        )
+        self.assertIn(
+            "cpu_x, cpu_y = batch_at_index(val_path, first_batch)",
+            finalize_source,
+        )
+        self.assertIn(
+            "sentinel_sequences = int(cpu_x.size(0))", finalize_source
+        )
+        self.assertIn(
+            "sentinel_sequences != base.VALIDATION_B", finalize_source
+        )
+        self.assertIn(
+            "x, y = cpu_x.to(device), cpu_y.to(device)", finalize_source
+        )
+        self.assertIn(
+            "shuffle_manifest, base.VALIDATION_B, device", finalize_source
+        )
+        self.assertIn(
+            '"repeated_sequences": sentinel_sequences', finalize_source
+        )
+        self.assertNotIn("cpu_x[:4]", finalize_source)
+        self.assertNotIn("cpu_y[:4]", finalize_source)
+        self.assertNotIn(")[:4]", finalize_source)
+
     def test_analysis_raw_artifact_identity_helpers_fail_closed(self):
         names = (
             "implementation_file_sha256", "nested_value", "valid_sha256",

@@ -2080,16 +2080,26 @@ def finalize_eval_state(state, started, device, model, val_path, shuffle_manifes
         ).tolist()
     first_batch = state["batch_indices_in_evaluation_order"][0]
     cpu_x, cpu_y = batch_at_index(val_path, first_batch)
-    x, y = cpu_x[:4].to(device), cpu_y[:4].to(device)
-    permutation = permutation_for_batch(shuffle_manifest, 64, device)[:4]
-    # ALL_REAL does not consume the permutation; using a four-row sentinel is
-    # therefore path-identical and independent across rows.
+    sentinel_sequences = int(cpu_x.size(0))
+    if (
+        sentinel_sequences != base.VALIDATION_B
+        or tuple(cpu_y.shape) != tuple(cpu_x.shape)
+    ):
+        raise SystemExit("terminal ALL_REAL sentinel is not one complete frozen batch")
+    x, y = cpu_x.to(device), cpu_y.to(device)
+    permutation = permutation_for_batch(
+        shuffle_manifest, base.VALIDATION_B, device
+    )
+    # Repeat the complete first frozen validation batch at its original batch
+    # shape so the terminal state-leakage sentinel follows the production path.
     with torch.no_grad(), torch.autocast(device_type="cuda", dtype=torch.bfloat16):
         sentinel = incremental_condition(model, x, y, "all_real", permutation)
-    expected = state["conditions"]["all_real"]["per_sequence_ce"][:4]
+    expected = state["conditions"]["all_real"]["per_sequence_ce"][
+        :sentinel_sequences
+    ]
     delta = np.max(np.abs(np.asarray(expected) - np.asarray(sentinel["per_sequence_ce"])))
     state["all_real_terminal_sentinel"] = {
-        "repeated_sequences": 4,
+        "repeated_sequences": sentinel_sequences,
         "max_abs_ce": float(delta),
         "passed": bool(delta <= 1e-12),
     }
