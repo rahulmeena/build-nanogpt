@@ -41,8 +41,8 @@ from experiment_2d5c_complete import (
 EXPERIMENT = "2D5C"
 TRAINING_FREEZE_COMMIT = "4df3cfaaa486a7162485862ea521e69c47d5147d"
 GUARD_REPORT_SCHEMA = "experiment_2d5c_runpod_guard_report_v1"
-POD_ID = "rvgztsr0azrwyo"
-POD_NAME = "happy_apricot_stork"
+POD_ID = "7kk5yyti00rnrp"
+POD_NAME = "grand_amber_catshark"
 NETWORK_VOLUME_ID = "yhzyb27fb5"
 NETWORK_VOLUME_NAME = "unlikely_lime_flamingo"
 
@@ -182,7 +182,10 @@ def run_guarded_posttrain_workflow(args: argparse.Namespace) -> dict:
     validate_git_lineage(args.training_freeze_commit)
     command = [
         sys.executable,
-        str(LOCAL_REPO / "scripts" / "experiment_2d5c_runpod_guard.py"),
+        str(
+            LOCAL_REPO / "scripts"
+            / "experiment_2d5c_posttrain_runpod_guard.py"
+        ),
         "watchdog",
         "--authorization-artifact", str(args.authorization_artifact),
         "--trigger-file", str(args.trigger_file),

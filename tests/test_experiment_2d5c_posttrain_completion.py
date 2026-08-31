@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 import experiment_2d5c_posttrain_complete as posttrain  # noqa: E402
+import experiment_2d5c_posttrain_runpod_guard as rebound_guard  # noqa: E402
 
 
 class Experiment2D5CPosttrainCompletionTests(unittest.TestCase):
@@ -37,9 +38,43 @@ class Experiment2D5CPosttrainCompletionTests(unittest.TestCase):
         self.assertIn("from experiment_2d5c_complete import (", source)
         self.assertIn("finalize_and_commit", source)
         self.assertIn("experiment_2d5c_posttrain_workflow.py", source)
+        self.assertIn("experiment_2d5c_posttrain_runpod_guard.py", source)
         self.assertNotIn("runpodctl", source.lower())
         self.assertNotIn("pod delete", source.lower())
         self.assertNotIn("volume delete", source.lower())
+
+    def test_append_only_guard_rebinds_only_exact_pod_identity(self):
+        base = rebound_guard.guard
+        original = {
+            "POD_ID": base.POD_ID,
+            "POD_NAME": base.POD_NAME,
+            "EXACT_STOP_ARGV": base.EXACT_STOP_ARGV,
+            "EXACT_STOP_COMMAND": base.EXACT_STOP_COMMAND,
+        }
+        try:
+            rebound_guard.bind_guard_identity()
+            self.assertEqual(base.POD_ID, "7kk5yyti00rnrp")
+            self.assertEqual(base.POD_NAME, "grand_amber_catshark")
+            self.assertEqual(
+                base.EXACT_STOP_ARGV,
+                (
+                    "runpodctl", "pod", "stop", "7kk5yyti00rnrp",
+                    "-o", "json",
+                ),
+            )
+            self.assertEqual(
+                base.EXACT_STOP_COMMAND,
+                "runpodctl pod stop 7kk5yyti00rnrp -o json",
+            )
+            self.assertEqual(
+                base.NETWORK_VOLUME_ID, posttrain.NETWORK_VOLUME_ID
+            )
+            self.assertEqual(
+                base.NETWORK_VOLUME_NAME, posttrain.NETWORK_VOLUME_NAME
+            )
+        finally:
+            for name, value in original.items():
+                setattr(base, name, value)
 
     def test_parser_requires_exact_training_freeze_and_fresh_path_arguments(self):
         parser = posttrain.build_parser()
@@ -136,7 +171,10 @@ class Experiment2D5CPosttrainCompletionTests(unittest.TestCase):
 
             self.assertTrue(result["passed"])
             command = observed["command"]
-            self.assertIn("experiment_2d5c_runpod_guard.py", " ".join(command))
+            self.assertIn(
+                "experiment_2d5c_posttrain_runpod_guard.py",
+                " ".join(command),
+            )
             self.assertIn("experiment_2d5c_posttrain_workflow.py", " ".join(command))
             freeze_index = command.index("--training-freeze-commit")
             self.assertEqual(command[freeze_index + 1], posttrain.TRAINING_FREEZE_COMMIT)
