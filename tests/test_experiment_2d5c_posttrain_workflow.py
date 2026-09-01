@@ -198,6 +198,54 @@ class Experiment2D5CPosttrainWorkflowTests(unittest.TestCase):
             str(posttrain.ORIGINAL_TRAINING_COMPLETE),
             arguments[training_index + 1],
         )
+        self.assertTrue(posttrain.LOCAL_ANALYSIS_ADJUDICATOR.is_file())
+        self.assertNotEqual(
+            posttrain.LEGACY_FAILED_ANALYSIS_AUDIT,
+            posttrain.RESULTS / "ANALYSIS_INPUT_IDENTITY_AUDIT.json",
+        )
+        self.assertNotEqual(
+            posttrain.ANALYSIS_ADJUDICATION,
+            posttrain.LEGACY_FAILED_ANALYSIS_AUDIT,
+        )
+
+    def test_analysis_adjudicator_is_exactly_bound_and_analysis_only(self):
+        workflow = mock.Mock()
+        workflow.ssh_prefix.return_value = ["ssh", "example.invalid"]
+        state = {
+            "exists": [True, True, True],
+            "corrected_passed": True,
+            "legacy_passed": False,
+            "adjudication_schema": (
+                "experiment_2d5c_analysis_order_adjudication_v1"
+            ),
+            "adjudication_passed": True,
+            "tool_sha256": posttrain.sha256(
+                posttrain.LOCAL_ANALYSIS_ADJUDICATOR
+            ),
+            "legacy_sha256": "a" * 64,
+            "embedded_legacy_sha256": "a" * 64,
+            "corrected_sha256": "b" * 64,
+            "embedded_corrected_sha256": "b" * 64,
+            "correction_count": 11,
+            "checkpoint_or_measurement_mutation": False,
+            "training_invoked": False,
+        }
+        remote_tool = Path("/tmp/tools/analysis_adjudicator.py")
+        with mock.patch.object(
+            posttrain,
+            "remote_analysis_adjudication_state",
+            return_value=state,
+        ):
+            result = posttrain.run_remote_analysis_adjudicator(
+                workflow, remote_tool
+            )
+        self.assertTrue(result["passed"])
+        command = workflow.run.call_args.args[0]
+        self.assertEqual(command[:2], ["ssh", "example.invalid"])
+        remote_command = command[-1]
+        self.assertIn(str(remote_tool), remote_command)
+        self.assertIn(" -- analyze --output-dir ", remote_command)
+        self.assertNotIn(" train ", remote_command)
 
     def test_adjudication_state_is_fail_closed(self):
         valid_training = {

@@ -79,6 +79,13 @@ LOCAL_WORKFLOW = Path(__file__).resolve()
 LOCAL_ADJUDICATOR = LOCAL_WORKFLOW.with_name(
     "experiment_2d5c_posttrain_adjudicator.py"
 )
+LOCAL_ANALYSIS_ADJUDICATOR = LOCAL_WORKFLOW.with_name(
+    "experiment_2d5c_analysis_adjudicator.py"
+)
+LEGACY_FAILED_ANALYSIS_AUDIT = (
+    RESULTS / "ANALYSIS_INPUT_IDENTITY_AUDIT_LEGACY_FAILED.json"
+)
+ANALYSIS_ADJUDICATION = RESULTS / "ANALYSIS_ORDER_ADJUDICATION.json"
 
 
 class PostTrainingWorkflowError(RuntimeError):
@@ -178,7 +185,16 @@ def verify_local_and_frozen_checkout(
         raise PostTrainingWorkflowError(
             f"missing separately committed adjudicator {LOCAL_ADJUDICATOR}"
         )
-    if LOCAL_WORKFLOW.parent != LOCAL_ADJUDICATOR.parent:
+    if not LOCAL_ANALYSIS_ADJUDICATOR.is_file():
+        raise PostTrainingWorkflowError(
+            "missing separately committed analysis adjudicator "
+            f"{LOCAL_ANALYSIS_ADJUDICATOR}"
+        )
+    if not (
+        LOCAL_WORKFLOW.parent
+        == LOCAL_ADJUDICATOR.parent
+        == LOCAL_ANALYSIS_ADJUDICATOR.parent
+    ):
         raise PostTrainingWorkflowError("post-training tooling is outside scripts/")
 
     if git_output(workflow, "branch", "--show-current") != BRANCH:
@@ -204,6 +220,7 @@ def verify_local_and_frozen_checkout(
             "post-training tooling commit does not descend from training freeze"
         )
     for relative in (
+        "scripts/experiment_2d5c_analysis_adjudicator.py",
         "scripts/experiment_2d5c_posttrain_adjudicator.py",
         "scripts/experiment_2d5c_posttrain_workflow.py",
     ):
@@ -441,6 +458,43 @@ def install_and_bind_adjudicator(
     )
     if remote_digest != local_digest:
         raise PostTrainingWorkflowError("remote adjudicator SHA-256 mismatch")
+    return remote_path
+
+
+def install_and_bind_analysis_adjudicator(
+    workflow: frozen.Workflow, adjudication_commit: str
+) -> Path:
+    """Copy the committed analysis adjudicator outside the frozen checkout."""
+    local_digest = sha256(LOCAL_ANALYSIS_ADJUDICATOR)
+    remote_dir = Path("/tmp/exp2d5c-posttrain-tools") / adjudication_commit
+    remote_path = remote_dir / LOCAL_ANALYSIS_ADJUDICATOR.name
+    workflow.remote_capture(
+        "set -eu; mkdir -p " + shlex.quote(str(remote_dir)),
+        "create isolated analysis adjudicator directory",
+    )
+    if remote_path_exists(
+        workflow, remote_path, "probe existing remote analysis adjudicator"
+    ):
+        remote_digest = workflow.remote_capture(
+            f"sha256sum {shlex.quote(str(remote_path))} | awk '{{print $1}}'",
+            "verify existing remote analysis adjudicator",
+        )
+        if remote_digest != local_digest:
+            raise PostTrainingWorkflowError(
+                "remote analysis adjudicator exists with a different byte identity"
+            )
+    else:
+        workflow.rsync_to(
+            LOCAL_ANALYSIS_ADJUDICATOR,
+            remote_path,
+            "copy committed analysis adjudicator outside frozen checkout",
+        )
+    remote_digest = workflow.remote_capture(
+        f"sha256sum {shlex.quote(str(remote_path))} | awk '{{print $1}}'",
+        "bind remote analysis adjudicator byte identity",
+    )
+    if remote_digest != local_digest:
+        raise PostTrainingWorkflowError("remote analysis adjudicator SHA-256 mismatch")
     return remote_path
 
 
@@ -854,10 +908,87 @@ def analysis_arguments() -> list[str]:
     ]
 
 
+def remote_analysis_adjudication_state(workflow: frozen.Workflow) -> dict:
+    source = r"""
+import hashlib,json,sys
+from pathlib import Path
+corrected,legacy,adjudication=[Path(value) for value in sys.argv[1:]]
+h=lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+payload={'exists':[p.is_file() for p in (corrected,legacy,adjudication)]}
+if corrected.is_file():
+ row=json.loads(corrected.read_text()); payload['corrected_sha256']=h(corrected); payload['corrected_passed']=row.get('passed')
+if legacy.is_file():
+ row=json.loads(legacy.read_text()); payload['legacy_sha256']=h(legacy); payload['legacy_passed']=row.get('passed')
+if adjudication.is_file():
+ row=json.loads(adjudication.read_text()); payload['adjudication_sha256']=h(adjudication); payload['adjudication_schema']=row.get('schema'); payload['adjudication_passed']=row.get('passed'); payload['tool_sha256']=row.get('adjudicator',{}).get('sha256'); payload['embedded_legacy_sha256']=row.get('legacy_failed_audit',{}).get('sha256'); payload['embedded_corrected_sha256']=row.get('corrected_analysis_input_audit',{}).get('sha256'); payload['correction_count']=len(row.get('corrections',[])); payload['checkpoint_or_measurement_mutation']=row.get('checkpoint_or_measurement_mutation'); payload['training_invoked']=row.get('training_invoked')
+print(json.dumps(payload,sort_keys=True,separators=(',',':')))
+"""
+    return json.loads(
+        remote_python(
+            workflow,
+            source,
+            (
+                RESULTS / "ANALYSIS_INPUT_IDENTITY_AUDIT.json",
+                LEGACY_FAILED_ANALYSIS_AUDIT,
+                ANALYSIS_ADJUDICATION,
+            ),
+            "inspect append-only analysis-order adjudication",
+        )
+    )
+
+
+def run_remote_analysis_adjudicator(
+    workflow: frozen.Workflow, remote_adjudicator: Path
+) -> dict:
+    """Run only frozen analysis with the exact append-only order correction."""
+    remote_command = (
+        f"cd {shlex.quote(str(REMOTE_REPO))} && "
+        + shlex.join([
+            "exec", "python3", "-u", str(remote_adjudicator),
+            "--frozen-driver", str(REMOTE_REPO / "scripts/experiment_2d5c.py"),
+            "--failed-audit", str(RESULTS / "ANALYSIS_INPUT_IDENTITY_AUDIT.json"),
+            "--preserved-failed-audit", str(LEGACY_FAILED_ANALYSIS_AUDIT),
+            "--adjudication-output", str(ANALYSIS_ADJUDICATION),
+            "--", *analysis_arguments(),
+        ])
+    )
+    workflow.run(
+        [*workflow.ssh_prefix(), remote_command],
+        "post-training paired statistics, audit, and classification adjudication",
+    )
+    state = remote_analysis_adjudication_state(workflow)
+    checks = {
+        "all_files_exist": state.get("exists") == [True, True, True],
+        "corrected_passed": state.get("corrected_passed") is True,
+        "legacy_failed": state.get("legacy_passed") is False,
+        "adjudication_schema": state.get("adjudication_schema")
+        == "experiment_2d5c_analysis_order_adjudication_v1",
+        "adjudication_passed": state.get("adjudication_passed") is True,
+        "tool_bound": state.get("tool_sha256")
+        == sha256(LOCAL_ANALYSIS_ADJUDICATOR),
+        "legacy_bound": state.get("embedded_legacy_sha256")
+        == state.get("legacy_sha256"),
+        "corrected_bound": state.get("embedded_corrected_sha256")
+        == state.get("corrected_sha256"),
+        "correction_count_exact": state.get("correction_count") == 11,
+        "no_scientific_mutation": state.get("checkpoint_or_measurement_mutation")
+        is False,
+        "no_training": state.get("training_invoked") is False,
+    }
+    if not all(checks.values()):
+        raise PostTrainingWorkflowError(
+            f"analysis-order adjudication failed exact verification: {checks}"
+        )
+    state["checks"] = checks
+    state["passed"] = True
+    return state
+
+
 def write_and_copy_posttrain_provenance(
     workflow: frozen.Workflow,
     adjudication_commit: str,
     training_snapshot: dict,
+    analysis_adjudication: dict,
 ) -> dict:
     local_path = LOCAL_ARCHIVE / "POSTTRAIN_RESUME_PROVENANCE.json"
     payload = {
@@ -867,12 +998,14 @@ def write_and_copy_posttrain_provenance(
         "frozen_driver_sha256": FROZEN_DRIVER_SHA256,
         "adjudication_tooling_commit": adjudication_commit,
         "adjudicator_sha256": sha256(LOCAL_ADJUDICATOR),
+        "analysis_adjudicator_sha256": sha256(LOCAL_ANALYSIS_ADJUDICATOR),
         "posttrain_workflow_sha256": sha256(LOCAL_WORKFLOW),
         "original_failed_training_complete_sha256": (
             ORIGINAL_FAILED_TRAINING_COMPLETE_SHA256
         ),
         "final_checkpoint_sha256": FINAL_CHECKPOINT_SHA256,
         "training_entry_audit": training_snapshot,
+        "analysis_order_adjudication": analysis_adjudication,
         "original_failed_training_artifact_retained": True,
         "legacy_failed_seal_retained": True,
         "no_training_command_available_or_invoked": True,
@@ -986,6 +1119,7 @@ def commit_scientific_results(
         "training_implementation_commit": TRAINING_FREEZE_COMMIT,
         "adjudication_tooling_commit": adjudication_commit,
         "adjudicator_sha256": sha256(LOCAL_ADJUDICATOR),
+        "analysis_adjudicator_sha256": sha256(LOCAL_ANALYSIS_ADJUDICATOR),
         "posttrain_workflow_sha256": sha256(LOCAL_WORKFLOW),
         "scientific_results_commit": scientific_commit,
         "origin_branch_commit": branch_sha,
@@ -1024,6 +1158,9 @@ def run_posttraining_workflow(
     remote_adjudicator = install_and_bind_adjudicator(
         workflow, adjudication_commit
     )
+    remote_analysis_adjudicator = install_and_bind_analysis_adjudicator(
+        workflow, adjudication_commit
+    )
     complete_adjudication(workflow, remote_adjudicator)
 
     backup = frozen.backup_checkpoints(workflow)
@@ -1048,12 +1185,11 @@ def run_posttraining_workflow(
             f"post-training representation-pressure diagnostics: {stage}",
             *arguments,
         )
-    workflow.driver(
-        "post-training paired statistics, audit, and classification",
-        *analysis_arguments(),
+    analysis_adjudication = run_remote_analysis_adjudicator(
+        workflow, remote_analysis_adjudicator
     )
     provenance = write_and_copy_posttrain_provenance(
-        workflow, adjudication_commit, training_snapshot
+        workflow, adjudication_commit, training_snapshot, analysis_adjudication
     )
     scientific_commit, git_verification = commit_scientific_results(
         workflow, adjudication_commit
