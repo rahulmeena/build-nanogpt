@@ -1,0 +1,724 @@
+{
+  "allocated_unique_storage": {
+    "c_bytes": 33005568,
+    "fixed_bytes": 33288192,
+    "physical_savings_claimed_only_from_measured_storage": true,
+    "reduction_bytes": 282624,
+    "reduction_kib": 276.0
+  },
+  "allocator_reserved_unused_excluded": true,
+  "batch_scaling": "all reported per-sequence tensor payloads scale linearly with active batch size",
+  "canonical_batch_size": 1,
+  "checks": {
+    "batch_size_one": true,
+    "bf16_every_persistent_tensor": true,
+    "c_b3_b5_history_exact": true,
+    "c_cache_audit_passed": true,
+    "component_allocated_totals_match_unique_storage_audit": true,
+    "component_logical_totals_match_audit": true,
+    "fixed_b3_b5_history_exact": true,
+    "fixed_cache_audit_passed": true,
+    "logical_reduction_matches_282624_bytes": true,
+    "only_b3_b5_local_kv_changed": true,
+    "physical_storage_audits_exact": true,
+    "recurrent_ring_shapes_unchanged": true,
+    "recurrent_rings_allocated_unchanged": true,
+    "recurrent_rings_logical_unchanged": true,
+    "unique_storage_accounting": true
+  },
+  "component_table": [
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 3142656,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3142656,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B10_local_kv",
+      "fixed_allocated_bytes": 3142656,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 3142656,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 3142656,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3142656,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B11_local_kv",
+      "fixed_allocated_bytes": 3142656,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 3142656,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 3142656,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3142656,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B12_local_kv",
+      "fixed_allocated_bytes": 3142656,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 3142656,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 3072,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3072,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1,
+          64
+        ],
+        [
+          1,
+          12,
+          1,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B1_local_kv",
+      "fixed_allocated_bytes": 3072,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 3072,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          1,
+          64
+        ],
+        [
+          1,
+          12,
+          1,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 3142656,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3142656,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B2_local_kv",
+      "fixed_allocated_bytes": 3142656,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 3142656,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 92160,
+      "c_allocated_bytes": 3072,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3072,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1,
+          64
+        ],
+        [
+          1,
+          12,
+          1,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B3_local_kv",
+      "fixed_allocated_bytes": 95232,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 95232,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          31,
+          64
+        ],
+        [
+          1,
+          12,
+          31,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 92160,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 3142656,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3142656,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B4_local_kv",
+      "fixed_allocated_bytes": 3142656,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 3142656,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 190464,
+      "c_allocated_bytes": 3072,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3072,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1,
+          64
+        ],
+        [
+          1,
+          12,
+          1,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B5_local_kv",
+      "fixed_allocated_bytes": 193536,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 193536,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          63,
+          64
+        ],
+        [
+          1,
+          12,
+          63,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 190464,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 1569792,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 1569792,
+      "c_shapes": [
+        [
+          1,
+          12,
+          511,
+          64
+        ],
+        [
+          1,
+          12,
+          511,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B6_local_kv",
+      "fixed_allocated_bytes": 1569792,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 1569792,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          511,
+          64
+        ],
+        [
+          1,
+          12,
+          511,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 3142656,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3142656,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B7_local_kv",
+      "fixed_allocated_bytes": 3142656,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 3142656,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 3142656,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3142656,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B8_local_kv",
+      "fixed_allocated_bytes": 3142656,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 3142656,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 3142656,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 3142656,
+      "c_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "category": "same_layer_local_kv",
+      "component": "B9_local_kv",
+      "fixed_allocated_bytes": 3142656,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 3142656,
+      "fixed_shapes": [
+        [
+          1,
+          12,
+          1023,
+          64
+        ],
+        [
+          1,
+          12,
+          1023,
+          64
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 1571328,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 1571328,
+      "c_shapes": [
+        [
+          1,
+          1023,
+          768
+        ]
+      ],
+      "category": "recurrent_source_ring",
+      "component": "h10_recurrent_source_ring",
+      "fixed_allocated_bytes": 1571328,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 1571328,
+      "fixed_shapes": [
+        [
+          1,
+          1023,
+          768
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 1571328,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 1571328,
+      "c_shapes": [
+        [
+          1,
+          1023,
+          768
+        ]
+      ],
+      "category": "recurrent_source_ring",
+      "component": "h12_recurrent_source_ring",
+      "fixed_allocated_bytes": 1571328,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 1571328,
+      "fixed_shapes": [
+        [
+          1,
+          1023,
+          768
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 1571328,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 1571328,
+      "c_shapes": [
+        [
+          1,
+          1023,
+          768
+        ]
+      ],
+      "category": "recurrent_source_ring",
+      "component": "h7_recurrent_source_ring",
+      "fixed_allocated_bytes": 1571328,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 1571328,
+      "fixed_shapes": [
+        [
+          1,
+          1023,
+          768
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    },
+    {
+      "allocated_reduction_bytes": 0,
+      "c_allocated_bytes": 1571328,
+      "c_dtypes": [
+        "torch.bfloat16"
+      ],
+      "c_logical_bytes": 1571328,
+      "c_shapes": [
+        [
+          1,
+          1023,
+          768
+        ]
+      ],
+      "category": "recurrent_source_ring",
+      "component": "h8_recurrent_source_ring",
+      "fixed_allocated_bytes": 1571328,
+      "fixed_dtypes": [
+        "torch.bfloat16"
+      ],
+      "fixed_logical_bytes": 1571328,
+      "fixed_shapes": [
+        [
+          1,
+          1023,
+          768
+        ]
+      ],
+      "logical_reduction_bytes": 0,
+      "storage_exact": true
+    }
+  ],
+  "expected_local_kv_reduction": {
+    "batch_size": 1,
+    "c_historical_positions": {
+      "B3": 1,
+      "B5": 1
+    },
+    "element_size_bytes": 2,
+    "fixed_historical_positions": {
+      "B3": 31,
+      "B5": 63
+    },
+    "formula": "saved positions * (K+V) * width * BF16 bytes * batch",
+    "logical_reduction_bytes": 282624,
+    "logical_reduction_kib": 276.0,
+    "saved_historical_positions": {
+      "B3": 30,
+      "B5": 62
+    },
+    "saved_positions_total": 92,
+    "width": 768
+  },
+  "logical": {
+    "c_bytes": 33005568,
+    "fixed_bytes": 33288192,
+    "reduction_bytes": 282624,
+    "reduction_kib": 276.0
+  },
+  "passed": true,
+  "schema": "exp2d5c_bf16_persistent_state_audit_v1"
+}

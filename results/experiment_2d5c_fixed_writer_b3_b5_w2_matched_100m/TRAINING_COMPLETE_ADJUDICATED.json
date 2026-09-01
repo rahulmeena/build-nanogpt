@@ -1,0 +1,851 @@
+{
+  "artifact_identity": {
+    "final_checkpoint": {
+      "bytes": 1493950155,
+      "path": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001100480512.pt",
+      "sha256": "f3ffbcfb687892a4bac0496f37bf93d1a2ad3b9934481b252f1f58e3671562fe"
+    },
+    "midpoint_restart_audit": {
+      "bytes": 27920,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/MIDPOINT_RESTART_AUDIT.json",
+      "sha256": "e63eb9d7795cef17197ff71569cf25a5cd2ed31a0568fbe6cc22746e9b4affaf"
+    },
+    "midpoint_restart_preexit": {
+      "bytes": 25259,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/MIDPOINT_RESTART_PREEXIT.json",
+      "sha256": "37ff7f8eaa3cb1ad0426fbe02e4791f1b00c3b7b18c4c0dd4f50c07164c6a8a4"
+    },
+    "milestone_manifest": {
+      "bytes": 38592,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/MILESTONE_CHECKPOINTS.json",
+      "sha256": "836a360b6713fa552158442718f35e9bcd15e0a6af0291d1d0b176b61cf7c6c0"
+    },
+    "replay_audit": {
+      "bytes": 16902,
+      "path": "/workspace/exp2d5c_w2w2_100m/pretrain/DATA_REPLAY_AUDIT.json",
+      "sha256": "35df41816120a565415b2cb4a5cba9e6bb26101e5340ef7855e6d91b163fc4ff"
+    },
+    "replay_ledger": {
+      "bytes": 48328535,
+      "path": "/workspace/exp2d5c_w2w2_100m/pretrain/DATA_REPLAY_LEDGER.jsonl",
+      "sha256": "429f1d11b2af285fafab8aaf48341f6098a983b7f89598b1465974f4e969b6c0"
+    },
+    "training_log": {
+      "bytes": 571886,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/TRAINING_LOG.jsonl",
+      "sha256": "47510ab50da4c0bcd4af2d859a881aac996b08620cec09a6bcaa0dd03012626c"
+    },
+    "training_replay_actual": {
+      "bytes": 2802007,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/TRAINING_REPLAY_ACTUAL.jsonl",
+      "sha256": "6b3754868ee6fd1b2e64cca8bb4e487b2b0475a2232c141163ca80db40d61f35"
+    }
+  },
+  "checks": {
+    "actual_replay_rows_exact": true,
+    "all_milestones_exact": true,
+    "batch_replay_exact": true,
+    "final_cumulative_targets": true,
+    "final_global_update": true,
+    "final_milestone_checkpoint_sha_exact": true,
+    "fixed_control_optimizer_steps": true,
+    "midpoint_restart": true,
+    "model_terminal_digest_exact": true,
+    "no_skipped_updates": true,
+    "no_training_beyond": true,
+    "optimizer_step_lineage_exact": true,
+    "optimizer_terminal_digest_exact": true,
+    "optimizer_updates_exact": true,
+    "pass_cadence_exact": true,
+    "preexit_process_exact": true,
+    "replay_chain_exact": true,
+    "resume_process_exact": true,
+    "scheduler_exact_source": true,
+    "stream_replay_exact": true,
+    "targets_exact": true,
+    "two_exact_training_processes": true,
+    "updates_exact": true
+  },
+  "experiment": "2D5C",
+  "legacy_checks": {
+    "actual_replay_rows_exact": true,
+    "all_milestones_exact": true,
+    "batch_replay_exact": true,
+    "final_cumulative_targets": true,
+    "final_global_update": true,
+    "final_milestone_checkpoint_sha_exact": true,
+    "fixed_control_optimizer_steps": true,
+    "midpoint_restart": true,
+    "model_terminal_digest_exact": true,
+    "no_skipped_updates": true,
+    "no_training_beyond": true,
+    "optimizer_terminal_digest_exact": true,
+    "optimizer_terminal_step_exact": false,
+    "optimizer_updates_exact": true,
+    "pass_cadence_exact": true,
+    "preexit_process_exact": true,
+    "replay_chain_exact": true,
+    "resume_process_exact": true,
+    "scheduler_exact_source": true,
+    "stream_replay_exact": true,
+    "targets_exact": true,
+    "two_exact_training_processes": true,
+    "updates_exact": true
+  },
+  "mean_targets_per_second": 57454.90929646043,
+  "optimizer_evidence": {
+    "model_state_sha256": "0275f4a3a8fbdf3b0ab572ef7ad5f1300015526086e62e785a24dc76b5f8b40d",
+    "state_sha256": "a928a86247b85b4083ccb9ed165c52b25698bdf9c97c3bff78325d850b7d09d2",
+    "step_summary": [
+      2099,
+      2577
+    ]
+  },
+  "passed": true,
+  "posttrain_adjudication": {
+    "adjudicated_at_unix": 1788124667.1402225,
+    "adjudication_process_id": 16661,
+    "experiment": "2D5C",
+    "finding": "the singleton [2099] terminal expectation is false for the inherited two-population Adam lineage; every one of 152 states advanced exactly +191",
+    "groups": {
+      "checkpoint_payloads": {
+        "checks": {
+          "architecture": true,
+          "control_sha": true,
+          "cumulative_targets": true,
+          "final_arm": true,
+          "final_experiment": true,
+          "final_schema": true,
+          "global_update": true,
+          "local_updates": true,
+          "metadata_training_commit": true,
+          "model_state_key_set_preserved": true,
+          "new_targets": true,
+          "next_batch": true,
+          "next_stream": true,
+          "parameters": true,
+          "parent_sha": true,
+          "source_experiment": true,
+          "source_next_batch": true,
+          "source_next_stream": true,
+          "source_schema": true,
+          "source_targets": true,
+          "source_updates": true,
+          "training_commit": true
+        },
+        "passed": true
+      },
+      "frozen_implementation": {
+        "adjudicator": {
+          "bytes": 40990,
+          "path": "/tmp/exp2d5c-posttrain-tools/691e9533421b7fc167aca6d7499a3db6c8a5e7da/experiment_2d5c_posttrain_adjudicator.py",
+          "sha256": "77880a304479ac8b05d6b9df65a9d07ae183745a7e5a4453aca1f4d787a2b992"
+        },
+        "branch": "experiment-2d5c-fixed-writer-b3-b5-w2-matched-100m",
+        "checks": {
+          "branch_exact": true,
+          "filesystem_map_exact": true,
+          "head_is_training_commit": true,
+          "training_commit_is_ancestor": true,
+          "training_commit_map_exact": true,
+          "worktree_clean": true
+        },
+        "frozen_implementation_sha256": {
+          "configs/exp2d5c_continuation_calibration_pin.json": "40b120169d493aad95afe66c8d8c6fcefaedee8eeeb4ca954cccb01ad2bcc712",
+          "configs/exp2d5c_fixed_writer_b3_b5_w2_matched_100m.json": "9498a65614c2b829d8a64813a0e50acf6dfa13cfc97e6d74d4f2a99b82582c30",
+          "scripts/experiment_2d5c.py": "204e589d4dfd68ed2136d70d2470c6bc06a85f5e89b706a7075706d039081b48",
+          "scripts/experiment_2d5c_analysis.py": "97a82558057db8ea61feb80e7bf4243301415fe0e002ee529e76dcdd0751ba76",
+          "scripts/experiment_2d5c_artifacts.py": "bed151e2dfb84d543baa0dfad4dad51f8193b20a8bf0627cb9e4fd082dc4f783",
+          "scripts/experiment_2d5c_build_continuation_calibration.py": "bac58269354a663e884e1d79c6d211fece1b83425d70c02970c94bdddf2e8af6",
+          "scripts/experiment_2d5c_complete.py": "a0b08e8aa903badbe031a96a86b2701600cbfeaf8dc891690786ba9bb1aa5a2c",
+          "scripts/experiment_2d5c_continuation_probe.py": "2c2a510bd51284570af56be26284b2e4f642f2d07218c82604b2153aa82a32ae",
+          "scripts/experiment_2d5c_core.py": "e559ae2fc0a6de880ccb32b1c11613d5ac49e19f8623448dc193f06f0ff9289d",
+          "scripts/experiment_2d5c_finalizer.py": "5d220f061ee038360b50ee9dfb07394c7a77e1f35415fad66ab5fb3b7f28341a",
+          "scripts/experiment_2d5c_runpod_guard.py": "1665eff37129e097a51b2d46927d1be9c65dadf4e3e43d778eb5e4266bfbadca",
+          "scripts/experiment_2d5c_workflow.py": "b973f8c911d8cd5210ded0ed42633f1f445ed6a6759f938d005ef168fcdae305"
+        },
+        "head": "4df3cfaaa486a7162485862ea521e69c47d5147d",
+        "passed": true,
+        "repo_root": "/tmp/exp2d5c-official",
+        "training_commit_implementation_sha256": {
+          "configs/exp2d5c_continuation_calibration_pin.json": "40b120169d493aad95afe66c8d8c6fcefaedee8eeeb4ca954cccb01ad2bcc712",
+          "configs/exp2d5c_fixed_writer_b3_b5_w2_matched_100m.json": "9498a65614c2b829d8a64813a0e50acf6dfa13cfc97e6d74d4f2a99b82582c30",
+          "scripts/experiment_2d5c.py": "204e589d4dfd68ed2136d70d2470c6bc06a85f5e89b706a7075706d039081b48",
+          "scripts/experiment_2d5c_analysis.py": "97a82558057db8ea61feb80e7bf4243301415fe0e002ee529e76dcdd0751ba76",
+          "scripts/experiment_2d5c_artifacts.py": "bed151e2dfb84d543baa0dfad4dad51f8193b20a8bf0627cb9e4fd082dc4f783",
+          "scripts/experiment_2d5c_build_continuation_calibration.py": "bac58269354a663e884e1d79c6d211fece1b83425d70c02970c94bdddf2e8af6",
+          "scripts/experiment_2d5c_complete.py": "a0b08e8aa903badbe031a96a86b2701600cbfeaf8dc891690786ba9bb1aa5a2c",
+          "scripts/experiment_2d5c_continuation_probe.py": "2c2a510bd51284570af56be26284b2e4f642f2d07218c82604b2153aa82a32ae",
+          "scripts/experiment_2d5c_core.py": "e559ae2fc0a6de880ccb32b1c11613d5ac49e19f8623448dc193f06f0ff9289d",
+          "scripts/experiment_2d5c_finalizer.py": "5d220f061ee038360b50ee9dfb07394c7a77e1f35415fad66ab5fb3b7f28341a",
+          "scripts/experiment_2d5c_runpod_guard.py": "1665eff37129e097a51b2d46927d1be9c65dadf4e3e43d778eb5e4266bfbadca",
+          "scripts/experiment_2d5c_workflow.py": "b973f8c911d8cd5210ded0ed42633f1f445ed6a6759f938d005ef168fcdae305"
+        },
+        "training_implementation_commit": "4df3cfaaa486a7162485862ea521e69c47d5147d",
+        "worktree_status": ""
+      },
+      "milestones": {
+        "checks": {
+          "checksum_exact": true,
+          "final_checkpoint_identity": true,
+          "final_counts": true,
+          "final_strict_reopen": true,
+          "milestone_keys_exact": true,
+          "milestone_step_summaries_exact": true,
+          "sidecar_exact": true
+        },
+        "passed": true
+      },
+      "official_artifact_hashes": {
+        "checks": {
+          "checkpoint_checksum_sidecar": true,
+          "checkpoint_verification_sidecar": true,
+          "final_checkpoint_sha256": true,
+          "midpoint_restart_audit": true,
+          "midpoint_restart_preexit": true,
+          "milestone_manifest": true,
+          "replay_audit": true,
+          "replay_ledger": true,
+          "source_checkpoint_sha256": true,
+          "training_complete_original": true,
+          "training_log": true,
+          "training_replay_actual": true
+        },
+        "passed": true
+      },
+      "optimizer_progression": {
+        "checks": {
+          "all_states_have_scalar_steps": true,
+          "every_state_advanced_exactly_191": true,
+          "final_group_state_coverage_exact": true,
+          "final_step_populations_exact": true,
+          "group_counts_exact": true,
+          "group_topology_exact": true,
+          "optimizer_dictionaries_present": true,
+          "source_group_state_coverage_exact": true,
+          "source_step_populations_exact": true,
+          "state_entry_count_exact": true,
+          "state_keys_exact": true,
+          "substate_keys_exact": true
+        },
+        "expected_final_step_counts": {
+          "2099": 3,
+          "2577": 149
+        },
+        "expected_source_step_counts": {
+          "1908": 3,
+          "2386": 149
+        },
+        "final_step_counts": {
+          "2099": 3,
+          "2577": 149
+        },
+        "missing_steps": [],
+        "passed": true,
+        "per_group": [
+          {
+            "delta_counts": {
+              "191": 50
+            },
+            "final_step_counts": {
+              "2577": 50
+            },
+            "name": "base_decay",
+            "parameter_state_entries": 50,
+            "source_step_counts": {
+              "2386": 50
+            }
+          },
+          {
+            "delta_counts": {
+              "191": 98
+            },
+            "final_step_counts": {
+              "2577": 98
+            },
+            "name": "base_nodecay",
+            "parameter_state_entries": 98,
+            "source_step_counts": {
+              "2386": 98
+            }
+          },
+          {
+            "delta_counts": {
+              "191": 1
+            },
+            "final_step_counts": {
+              "2577": 1
+            },
+            "name": "gate",
+            "parameter_state_entries": 1,
+            "source_step_counts": {
+              "2386": 1
+            }
+          },
+          {
+            "delta_counts": {
+              "191": 1
+            },
+            "final_step_counts": {
+              "2099": 1
+            },
+            "name": "b3_gate",
+            "parameter_state_entries": 1,
+            "source_step_counts": {
+              "1908": 1
+            }
+          },
+          {
+            "delta_counts": {
+              "191": 1
+            },
+            "final_step_counts": {
+              "2099": 1
+            },
+            "name": "b5_gate",
+            "parameter_state_entries": 1,
+            "source_step_counts": {
+              "1908": 1
+            }
+          },
+          {
+            "delta_counts": {
+              "191": 1
+            },
+            "final_step_counts": {
+              "2099": 1
+            },
+            "name": "b6_gate",
+            "parameter_state_entries": 1,
+            "source_step_counts": {
+              "1908": 1
+            }
+          }
+        ],
+        "progression_mismatches": [],
+        "source_step_counts": {
+          "1908": 3,
+          "2386": 149
+        },
+        "state_entry_count": 152,
+        "state_key_sha256": "041ec49511cacbe4d8237ea735e6a93cde283f468acc30169a7d07ca25bc4549"
+      },
+      "original_artifact_identity": {
+        "checks": {
+          "artifact_key_set_exact": true,
+          "final_checkpoint_identity_exact": true,
+          "midpoint_restart_audit_identity_exact": true,
+          "midpoint_restart_preexit_identity_exact": true,
+          "milestone_manifest_identity_exact": true,
+          "replay_audit_identity_exact": true,
+          "replay_ledger_identity_exact": true,
+          "training_log_identity_exact": true,
+          "training_replay_actual_identity_exact": true
+        },
+        "passed": true
+      },
+      "original_training_record": {
+        "checks": {
+          "experiment": true,
+          "only_false_check_is_invalid_terminal_step_check": true,
+          "original_failed": true,
+          "recorded_final_step_summary_is_heterogeneous": true,
+          "recorded_model_digest_matches_milestone": true,
+          "recorded_optimizer_digest_matches_milestone": true,
+          "schema": true
+        },
+        "passed": true
+      },
+      "replay_and_restart": {
+        "checks": {
+          "actual_replay_rows": true,
+          "midpoint_optimizer_digest_check": true,
+          "midpoint_optimizer_step_check": true,
+          "midpoint_preexit_summary": true,
+          "midpoint_restart_passed": true,
+          "process_evidence_exact": true,
+          "replay_audit_passed": true,
+          "replay_ledger_sha": true,
+          "replay_rows": true
+        },
+        "passed": true
+      },
+      "training_row_chain": {
+        "checks": {
+          "every_row_summary_exact": true,
+          "first_before_matches_source": true,
+          "full_state_increment_flag_each": true,
+          "global_update_sequence_exact": true,
+          "last_after_matches_final": true,
+          "local_update_sequence_exact": true,
+          "mandatory_process_boundary_exact": true,
+          "no_scheduler_steps": true,
+          "one_optimizer_update_each": true,
+          "optimizer_success_each": true,
+          "row_summary_chain_exact": true,
+          "rows_exact": true,
+          "target_arithmetic_exact": true,
+          "terminal_counts_exact": true
+        },
+        "final_step_summary": [
+          2099,
+          2577
+        ],
+        "first_row": {
+          "approximate_pass_forward_seconds": [
+            1.9092301216442138,
+            1.9092301216442138
+          ],
+          "backward_invocations": 16,
+          "ce_only": true,
+          "consumed_batch_sha256": "61dd83544d83c0cf7b4d61005f5a9cf64e2cafa930af1819cba2aae4538e7e61",
+          "consumed_stream_sha256": "39f6599f552803150fad33d32aa9c4df5843b058410ff1ba38b5afa469046e97",
+          "cumulative_targets": 1000865792,
+          "d3a_processed_targets": 1000865792,
+          "end_cursor_exact": true,
+          "expected_replay_chain_sha256": "02331ba5fd663cdcf0bad0f339ad35e50129f00eb063c0d940bdec1cfaa29cd3",
+          "forward_passes": 32,
+          "gate_after": {
+            "b1": {
+              "effective": 0.2812459468841553,
+              "raw": 0.28903451561927795
+            },
+            "b3": {
+              "effective": 0.011509429663419724,
+              "raw": 0.011509938165545464
+            },
+            "b5": {
+              "effective": 0.04462714120745659,
+              "raw": 0.04465680196881294
+            },
+            "b6": {
+              "effective": 0.038656704127788544,
+              "raw": 0.03867597505450249
+            }
+          },
+          "gate_before": {
+            "b1": {
+              "effective": 0.2811218202114105,
+              "raw": 0.2888997495174408
+            },
+            "b3": {
+              "effective": 0.011555109173059464,
+              "raw": 0.011555623263120651
+            },
+            "b5": {
+              "effective": 0.04475307837128639,
+              "raw": 0.04478299245238304
+            },
+            "b6": {
+              "effective": 0.03864416480064392,
+              "raw": 0.03866341710090637
+            }
+          },
+          "gate_gradients": {
+            "b1": 0.005016663111746311,
+            "b3": 0.00261248042806983,
+            "b5": 0.1273384392261505,
+            "b6": 0.00956558994948864
+          },
+          "global_update": 1909,
+          "gradient_groups": {
+            "b1_gate": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 0.005016663111746311,
+              "tensors": 1
+            },
+            "b3_gate": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 0.00261248042806983,
+              "tensors": 1
+            },
+            "b5_gate": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 0.1273384392261505,
+              "tensors": 1
+            },
+            "b6_gate": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 0.00956558994948864,
+              "tensors": 1
+            },
+            "base": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 15.656811714172363,
+              "tensors": 148
+            }
+          },
+          "gradient_norm_before_clip": 15.657331466674805,
+          "local_update": 1,
+          "new_targets": 524288,
+          "optimizer_lrs": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "optimizer_step_increment_exact": true,
+          "optimizer_step_success": true,
+          "optimizer_steps": 1,
+          "optimizer_steps_after_summary": [
+            1909,
+            2387
+          ],
+          "optimizer_steps_before_summary": [
+            1908,
+            2386
+          ],
+          "pass_count": 2,
+          "pass_losses": [
+            5.020093768835068,
+            4.98773381114006
+          ],
+          "pass_weights": [
+            0.25,
+            0.75
+          ],
+          "peak_allocated_vram_mb": 36271.951171875,
+          "peak_reserved_vram_mb": 36724.0,
+          "pre_forward_invariants": {
+            "batch_hash": true,
+            "global_update": true,
+            "local_update": true,
+            "pass_count": true,
+            "start_cursor": true,
+            "stream_hash": true,
+            "target_count": true
+          },
+          "process_id": 14730,
+          "recurrent_gate_summary": {
+            "b1": {
+              "effective": 0.2812459468841553,
+              "raw": 0.28903451561927795
+            },
+            "b3": {
+              "effective": 0.011509429663419724,
+              "raw": 0.011509938165545464
+            },
+            "b5": {
+              "effective": 0.04462714120745659,
+              "raw": 0.04465680196881294
+            },
+            "b6": {
+              "effective": 0.038656704127788544,
+              "raw": 0.03867597505450249
+            }
+          },
+          "scheduler_steps": 0,
+          "targets_per_second": 57221.98027721081,
+          "train_ce_nll": 4.98773381114006,
+          "wall_seconds": 9.162353303050622
+        },
+        "last_row": {
+          "approximate_pass_forward_seconds": [
+            1.81387335609179,
+            1.81387335609179
+          ],
+          "backward_invocations": 16,
+          "ce_only": true,
+          "consumed_batch_sha256": "86d2f26ceef153745acc36aeacff87ff50a689784a2afa7a068a6c97930a8ed1",
+          "consumed_stream_sha256": "87de39938121f49358662345853e430f7cee56f15d1c6d138b16ce30a1705473",
+          "cumulative_targets": 1100480512,
+          "d3a_processed_targets": 1100480512,
+          "end_cursor_exact": true,
+          "expected_replay_chain_sha256": "6a5ab6dd6aee669d7e415b6ba456bf5e7e940940ab624cf1a957b103cee72d0e",
+          "forward_passes": 32,
+          "gate_after": {
+            "b1": {
+              "effective": 0.2982651889324188,
+              "raw": 0.3076142966747284
+            },
+            "b3": {
+              "effective": 0.038644470274448395,
+              "raw": 0.038663722574710846
+            },
+            "b5": {
+              "effective": 0.09622528403997421,
+              "raw": 0.09652393311262131
+            },
+            "b6": {
+              "effective": 0.0501389242708683,
+              "raw": 0.05018100142478943
+            }
+          },
+          "gate_before": {
+            "b1": {
+              "effective": 0.29824239015579224,
+              "raw": 0.3075892925262451
+            },
+            "b3": {
+              "effective": 0.038678668439388275,
+              "raw": 0.038697972893714905
+            },
+            "b5": {
+              "effective": 0.09593537449836731,
+              "raw": 0.09623132646083832
+            },
+            "b6": {
+              "effective": 0.05011627823114395,
+              "raw": 0.0501582995057106
+            }
+          },
+          "gate_gradients": {
+            "b1": 0.0012419478734955192,
+            "b3": 0.0007425151416100562,
+            "b5": -0.009962993673980236,
+            "b6": 0.0003106223011855036
+          },
+          "global_update": 2099,
+          "gradient_groups": {
+            "b1_gate": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 0.0012419478734955192,
+              "tensors": 1
+            },
+            "b3_gate": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 0.0007425151416100562,
+              "tensors": 1
+            },
+            "b5_gate": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 0.009962993673980236,
+              "tensors": 1
+            },
+            "b6_gate": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 0.0003106223011855036,
+              "tensors": 1
+            },
+            "base": {
+              "finite": true,
+              "nonzero": true,
+              "norm": 0.5179908275604248,
+              "tensors": 148
+            }
+          },
+          "gradient_norm_before_clip": 0.518088698387146,
+          "local_update": 191,
+          "new_targets": 100139008,
+          "optimizer_lrs": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "optimizer_step_increment_exact": true,
+          "optimizer_step_success": true,
+          "optimizer_steps": 1,
+          "optimizer_steps_after_summary": [
+            2099,
+            2577
+          ],
+          "optimizer_steps_before_summary": [
+            2098,
+            2576
+          ],
+          "pass_count": 2,
+          "pass_losses": [
+            3.1820957362651825,
+            3.1655720323324203
+          ],
+          "pass_weights": [
+            0.25,
+            0.75
+          ],
+          "peak_allocated_vram_mb": 36270.201171875,
+          "peak_reserved_vram_mb": 58744.0,
+          "pre_forward_invariants": {
+            "batch_hash": true,
+            "global_update": true,
+            "local_update": true,
+            "pass_count": true,
+            "start_cursor": true,
+            "stream_hash": true,
+            "target_count": true
+          },
+          "process_id": 15031,
+          "recurrent_gate_summary": {
+            "b1": {
+              "effective": 0.2982651889324188,
+              "raw": 0.3076142966747284
+            },
+            "b3": {
+              "effective": 0.038644470274448395,
+              "raw": 0.038663722574710846
+            },
+            "b5": {
+              "effective": 0.09622528403997421,
+              "raw": 0.09652393311262131
+            },
+            "b6": {
+              "effective": 0.0501389242708683,
+              "raw": 0.05018100142478943
+            }
+          },
+          "scheduler_steps": 0,
+          "targets_per_second": 58095.1111767386,
+          "train_ce_nll": 3.1655720323324203,
+          "wall_seconds": 9.024649224011227
+        },
+        "passed": true,
+        "rows": 191,
+        "source_step_summary": [
+          1908,
+          2386
+        ]
+      }
+    },
+    "input_artifact_identity": {
+      "checkpoint_checksum_sidecar": {
+        "bytes": 104,
+        "path": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001100480512.pt.sha256",
+        "sha256": "cb6a6d4ce9e4293ca83685ef6d2abc5b5f5abefa7a19c1d4b549cd6ab0ece33c"
+      },
+      "checkpoint_verification_sidecar": {
+        "bytes": 8827,
+        "path": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001100480512.pt.verification.json",
+        "sha256": "5cc231e0baff11be14f037e8658a03c14846ad71c42a8dcced8a9739224619f8"
+      },
+      "final_checkpoint": {
+        "bytes": 1493950155,
+        "path": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001100480512.pt",
+        "sha256": "f3ffbcfb687892a4bac0496f37bf93d1a2ad3b9934481b252f1f58e3671562fe"
+      },
+      "midpoint_restart_audit": {
+        "bytes": 27920,
+        "path": "/workspace/exp2d5c_w2w2_100m/results/MIDPOINT_RESTART_AUDIT.json",
+        "sha256": "e63eb9d7795cef17197ff71569cf25a5cd2ed31a0568fbe6cc22746e9b4affaf"
+      },
+      "midpoint_restart_preexit": {
+        "bytes": 25259,
+        "path": "/workspace/exp2d5c_w2w2_100m/results/MIDPOINT_RESTART_PREEXIT.json",
+        "sha256": "37ff7f8eaa3cb1ad0426fbe02e4791f1b00c3b7b18c4c0dd4f50c07164c6a8a4"
+      },
+      "milestone_manifest": {
+        "bytes": 38592,
+        "path": "/workspace/exp2d5c_w2w2_100m/results/MILESTONE_CHECKPOINTS.json",
+        "sha256": "836a360b6713fa552158442718f35e9bcd15e0a6af0291d1d0b176b61cf7c6c0"
+      },
+      "replay_audit": {
+        "bytes": 16902,
+        "path": "/workspace/exp2d5c_w2w2_100m/pretrain/DATA_REPLAY_AUDIT.json",
+        "sha256": "35df41816120a565415b2cb4a5cba9e6bb26101e5340ef7855e6d91b163fc4ff"
+      },
+      "replay_ledger": {
+        "bytes": 48328535,
+        "path": "/workspace/exp2d5c_w2w2_100m/pretrain/DATA_REPLAY_LEDGER.jsonl",
+        "sha256": "429f1d11b2af285fafab8aaf48341f6098a983b7f89598b1465974f4e969b6c0"
+      },
+      "source_checkpoint": {
+        "bytes": 1493960267,
+        "path": "/workspace/exp2d3a_run/checkpoints/scientific_cumulative_001000341504.pt",
+        "sha256": "de80d0886a42e4142fa8b30d27eae4302a298bb207961b593f9401e908faaf7b"
+      },
+      "training_complete_original": {
+        "bytes": 5007,
+        "path": "/workspace/exp2d5c_w2w2_100m/results/TRAINING_COMPLETE.json",
+        "sha256": "8fef8253f596d668462a8e4c313a762105c63a36bc23f7db3ee25fc9db04579c"
+      },
+      "training_log": {
+        "bytes": 571886,
+        "path": "/workspace/exp2d5c_w2w2_100m/results/TRAINING_LOG.jsonl",
+        "sha256": "47510ab50da4c0bcd4af2d859a881aac996b08620cec09a6bcaa0dd03012626c"
+      },
+      "training_replay_actual": {
+        "bytes": 2802007,
+        "path": "/workspace/exp2d5c_w2w2_100m/results/TRAINING_REPLAY_ACTUAL.jsonl",
+        "sha256": "6b3754868ee6fd1b2e64cca8bb4e487b2b0475a2232c141163ca80db40d61f35"
+      }
+    },
+    "original_training_complete": {
+      "bytes": 5007,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/TRAINING_COMPLETE.json",
+      "sha256": "8fef8253f596d668462a8e4c313a762105c63a36bc23f7db3ee25fc9db04579c"
+    },
+    "passed": true,
+    "protocol_sha256": "eae21daf3859eb70d3342261d2891fbb4b2114235b1a87450eb2b4d201183b70",
+    "schema": "experiment_2d5c_optimizer_terminal_adjudication_v1",
+    "scope": "post-training audit correction only; no training, checkpoint mutation, evaluation, or state restoration",
+    "training_implementation_commit": "4df3cfaaa486a7162485862ea521e69c47d5147d"
+  },
+  "process_evidence": {
+    "final_checkpoint_saved_process_id": 15031,
+    "fresh_process_boundary": true,
+    "post_restart_process_id": 15031,
+    "pre_restart_process_id": 14730
+  },
+  "replay_evidence": {
+    "frozen_ledger_sha256": "429f1d11b2af285fafab8aaf48341f6098a983b7f89598b1465974f4e969b6c0",
+    "rows": 191,
+    "terminal_chain_sha256": "6a5ab6dd6aee669d7e415b6ba456bf5e7e940940ab624cf1a957b103cee72d0e"
+  },
+  "scheduler_evidence": {
+    "sha256": "118baa642d8ad29b12fac647344c2fd2b171e096c8ca37b89d5e006e0cfa83cf",
+    "state": {
+      "current_lrs": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      },
+      "expected_lrs": {
+        "100M": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        },
+        "1B": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        },
+        "250M": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        },
+        "500M": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        }
+      },
+      "inherited_scheduler_present_in_source": false,
+      "policy": "constant optimizer-group learning rates; no scheduler object in 2D2G-A checkpoint",
+      "scheduler_state": null,
+      "scheduler_step": null,
+      "warmup_restarted": false,
+      "well_defined_through_100m": true
+    }
+  },
+  "schema": "experiment_2d5c_training_complete_v1",
+  "training_wall_seconds": 1753.1120921911206
+}

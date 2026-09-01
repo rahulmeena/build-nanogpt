@@ -1,0 +1,88 @@
+{
+  "controls_exact": true,
+  "evaluation_identity": {
+    "architecture_fingerprint": "019d822dd89986c269e985fba8d1277a15d476dd73a0dac0d8c35e07e7315c12",
+    "checkpoint_sha256": "8216c16e2af52b9b570f46fcc5a9512c4b62d916efb525691ded987e255d733d",
+    "family": "C",
+    "identity_sha256": "33fbe855c3621d80a1d8024d959732a1c1232d86416c4ab1b800c83cad558c26",
+    "local_update": 48,
+    "model_state_sha256": "515679f2fe7679cb2c3c60e110ed7715deace1698d35aac06aed77a9b01effdb",
+    "panel_manifest_path": "/workspace/exp2d5c_w2w2_100m/pretrain/PANEL_MANIFEST_CORE.json",
+    "panel_manifest_sha256": "1fb216cdefc444147ce5412e57fc98fb74182ac22d374cc717391841a00769ea",
+    "shuffle_manifest_path": "/workspace/exp2d5c_w2w2_100m/pretrain/SHUFFLE_MANIFEST.json",
+    "shuffle_manifest_sha256": "10b64b18f77f140f92935476fb616f0a44123e8f3163a5b3f04e19a759ea1adc"
+  },
+  "evaluation_passed": true,
+  "frozen_artifact_checks": {
+    "c_checkpoint_large_panel": true,
+    "core_intrinsic_sha": true,
+    "large_intrinsic_sha": true,
+    "panel_file_sha256": true,
+    "shuffle_file_sha256": true,
+    "shuffle_passed": true,
+    "shuffle_seed": true
+  },
+  "load": {
+    "architecture_fingerprint": "019d822dd89986c269e985fba8d1277a15d476dd73a0dac0d8c35e07e7315c12",
+    "architecture_fingerprint_exact": true,
+    "checkpoint_binding": {
+      "checkpoint": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001025507328.pt",
+      "checks": {
+        "canonical_filename": true,
+        "checkpoint_bytes": true,
+        "checksum_sidecar_exact": true,
+        "milestone_exact_sidecar": true,
+        "milestone_local_update": true,
+        "milestone_path_name": true,
+        "milestone_sha256": true,
+        "milestone_strict_reopen": true,
+        "sidecar_architecture": true,
+        "sidecar_cumulative_targets": true,
+        "sidecar_global_update": true,
+        "sidecar_local_update": true,
+        "sidecar_sha256": true,
+        "sidecar_strict_reopen": true
+      },
+      "checksum_sidecar": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001025507328.pt.sha256",
+      "checksum_sidecar_sha256": "c3549eabc97e524832cb435697f4fa373f2db70a7770a7af0ad82168e0753c4a",
+      "local_update": 48,
+      "milestone_manifest": "/workspace/exp2d5c_w2w2_100m/results/MILESTONE_CHECKPOINTS.json",
+      "milestone_manifest_sha256": "836a360b6713fa552158442718f35e9bcd15e0a6af0291d1d0b176b61cf7c6c0",
+      "passed": true,
+      "sha256": "8216c16e2af52b9b570f46fcc5a9512c4b62d916efb525691ded987e255d733d",
+      "sidecar": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001025507328.pt.verification.json",
+      "sidecar_sha256": "6f8cc8306a34ad6933d1143136088e3125af5357deea88f56b4cdbeb3347941f"
+    },
+    "checkpoint_sha256": "8216c16e2af52b9b570f46fcc5a9512c4b62d916efb525691ded987e255d733d",
+    "construction": true,
+    "local_update": 48,
+    "optimizer_rebinding": null,
+    "optimizer_steps_in_evaluator": 0,
+    "parameter_count": 124475908,
+    "parameter_count_exact": true,
+    "rng_not_restored": true
+  },
+  "paired_sequences": 256,
+  "panel_kind": "core",
+  "passed": true,
+  "protocol_requirements": {
+    "checks": {
+      "all_real_only_parent_only": true,
+      "c191_final_seal_present": true,
+      "c_milestone_manifest_present": true,
+      "family_panel_update_allowed": true,
+      "final_seal_applies_only_c191": true,
+      "full_controls_non_parent": true,
+      "non_c_has_no_milestone_manifest": true,
+      "parallel_core_only": true,
+      "parent_all_real_only": true,
+      "required_parallel_present": true
+    },
+    "expected_local_update": 48,
+    "family": "C",
+    "panel_kind": "core",
+    "passed": true,
+    "required_parallel": false
+  },
+  "targets_per_condition": 262144
+}

@@ -1,0 +1,57 @@
+{
+  "final_matched_core_penalty": {
+    "bootstrap_distribution_sha256": "c68b5fdf9ffa24009490363ad073a78d50f4698e78390a155b03e161c4ba901e",
+    "confidence": 0.95,
+    "lower_2_5": 0.05132116121968887,
+    "lower_95": 0.05132116121968887,
+    "mean": 0.052901769756205266,
+    "negative_per_sequence_differences": 0,
+    "paired_standard_error": 0.0008238349316798611,
+    "point_estimate": 0.052901769756205266,
+    "positive_per_sequence_differences": 256,
+    "sequence_count": 256,
+    "target_count": null,
+    "upper_95": 0.05453294511761736,
+    "upper_97_5": 0.05453294511761736,
+    "zero_per_sequence_differences": 0
+  },
+  "formulae": {
+    "final_matched_core_penalty": "C191_REAL - F191_REAL",
+    "initial_shock": "C0_REAL - PARENT0_REAL",
+    "recovery_fraction": "1 - final_matched_core_penalty / initial_shock"
+  },
+  "initial_shock": {
+    "bootstrap_distribution_sha256": "0cbaaf9986b6055e6d9539e3dc11cf7d7d6834042cbe01183add6a0daf0e95b0",
+    "confidence": 0.95,
+    "lower_2_5": 1.8516754819177106,
+    "lower_95": 1.8516754819177106,
+    "mean": 1.8795868526185213,
+    "negative_per_sequence_differences": 0,
+    "paired_standard_error": 0.014204546623772404,
+    "point_estimate": 1.8795868526185213,
+    "positive_per_sequence_differences": 256,
+    "sequence_count": 256,
+    "target_count": null,
+    "upper_95": 1.9070752699791509,
+    "upper_97_5": 1.9070752699791509,
+    "zero_per_sequence_differences": 0
+  },
+  "recovery_fraction": {
+    "bootstrap_distribution_sha256": "315ea322b5745441226356ce1a032b5a63dbdbd43d85cf05982d1fd135509627",
+    "defined": true,
+    "descriptive_positive_recovery": true,
+    "invalid_bootstrap_resamples": 0,
+    "lower_95": 0.970889234861145,
+    "meaningful_recovery_preregistered_threshold": null,
+    "minimum_positive_shock": 1e-12,
+    "point_estimate": 0.9718545755507356,
+    "reason": null,
+    "upper_95": 0.9727909410769187,
+    "valid_bootstrap_resamples": 50000
+  },
+  "resamples": 50000,
+  "same_resampled_sequence_indices": true,
+  "schema": "exp2d5c_adaptation_recovery_v1",
+  "seed": 2026083003,
+  "shared_resample_index_stream_sha256": "29ff3851f2098c35f71f8d3ba9b7ca6686923e7013e54f7ee4c6aa583574c394"
+}

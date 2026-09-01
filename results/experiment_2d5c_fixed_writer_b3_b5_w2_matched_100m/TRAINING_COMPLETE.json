@@ -1,0 +1,146 @@
+{
+  "artifact_identity": {
+    "final_checkpoint": {
+      "bytes": 1493950155,
+      "path": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001100480512.pt",
+      "sha256": "f3ffbcfb687892a4bac0496f37bf93d1a2ad3b9934481b252f1f58e3671562fe"
+    },
+    "midpoint_restart_audit": {
+      "bytes": 27920,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/MIDPOINT_RESTART_AUDIT.json",
+      "sha256": "e63eb9d7795cef17197ff71569cf25a5cd2ed31a0568fbe6cc22746e9b4affaf"
+    },
+    "midpoint_restart_preexit": {
+      "bytes": 25259,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/MIDPOINT_RESTART_PREEXIT.json",
+      "sha256": "37ff7f8eaa3cb1ad0426fbe02e4791f1b00c3b7b18c4c0dd4f50c07164c6a8a4"
+    },
+    "milestone_manifest": {
+      "bytes": 38592,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/MILESTONE_CHECKPOINTS.json",
+      "sha256": "836a360b6713fa552158442718f35e9bcd15e0a6af0291d1d0b176b61cf7c6c0"
+    },
+    "replay_audit": {
+      "bytes": 16902,
+      "path": "/workspace/exp2d5c_w2w2_100m/pretrain/DATA_REPLAY_AUDIT.json",
+      "sha256": "35df41816120a565415b2cb4a5cba9e6bb26101e5340ef7855e6d91b163fc4ff"
+    },
+    "replay_ledger": {
+      "bytes": 48328535,
+      "path": "/workspace/exp2d5c_w2w2_100m/pretrain/DATA_REPLAY_LEDGER.jsonl",
+      "sha256": "429f1d11b2af285fafab8aaf48341f6098a983b7f89598b1465974f4e969b6c0"
+    },
+    "training_log": {
+      "bytes": 571886,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/TRAINING_LOG.jsonl",
+      "sha256": "47510ab50da4c0bcd4af2d859a881aac996b08620cec09a6bcaa0dd03012626c"
+    },
+    "training_replay_actual": {
+      "bytes": 2802007,
+      "path": "/workspace/exp2d5c_w2w2_100m/results/TRAINING_REPLAY_ACTUAL.jsonl",
+      "sha256": "6b3754868ee6fd1b2e64cca8bb4e487b2b0475a2232c141163ca80db40d61f35"
+    }
+  },
+  "checks": {
+    "actual_replay_rows_exact": true,
+    "all_milestones_exact": true,
+    "batch_replay_exact": true,
+    "final_cumulative_targets": true,
+    "final_global_update": true,
+    "final_milestone_checkpoint_sha_exact": true,
+    "fixed_control_optimizer_steps": true,
+    "midpoint_restart": true,
+    "model_terminal_digest_exact": true,
+    "no_skipped_updates": true,
+    "no_training_beyond": true,
+    "optimizer_terminal_digest_exact": true,
+    "optimizer_terminal_step_exact": false,
+    "optimizer_updates_exact": true,
+    "pass_cadence_exact": true,
+    "preexit_process_exact": true,
+    "replay_chain_exact": true,
+    "resume_process_exact": true,
+    "scheduler_exact_source": true,
+    "stream_replay_exact": true,
+    "targets_exact": true,
+    "two_exact_training_processes": true,
+    "updates_exact": true
+  },
+  "experiment": "2D5C",
+  "mean_targets_per_second": 57454.90929646043,
+  "optimizer_evidence": {
+    "model_state_sha256": "0275f4a3a8fbdf3b0ab572ef7ad5f1300015526086e62e785a24dc76b5f8b40d",
+    "state_sha256": "a928a86247b85b4083ccb9ed165c52b25698bdf9c97c3bff78325d850b7d09d2",
+    "step_summary": [
+      2099,
+      2577
+    ]
+  },
+  "passed": false,
+  "process_evidence": {
+    "final_checkpoint_saved_process_id": 15031,
+    "fresh_process_boundary": true,
+    "post_restart_process_id": 15031,
+    "pre_restart_process_id": 14730
+  },
+  "replay_evidence": {
+    "frozen_ledger_sha256": "429f1d11b2af285fafab8aaf48341f6098a983b7f89598b1465974f4e969b6c0",
+    "rows": 191,
+    "terminal_chain_sha256": "6a5ab6dd6aee669d7e415b6ba456bf5e7e940940ab624cf1a957b103cee72d0e"
+  },
+  "scheduler_evidence": {
+    "sha256": "118baa642d8ad29b12fac647344c2fd2b171e096c8ca37b89d5e006e0cfa83cf",
+    "state": {
+      "current_lrs": {
+        "b3_gate": 0.0003,
+        "b5_gate": 0.0003,
+        "b6_gate": 0.0003,
+        "base_decay": 3e-05,
+        "base_nodecay": 3e-05,
+        "gate": 0.0003
+      },
+      "expected_lrs": {
+        "100M": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        },
+        "1B": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        },
+        "250M": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        },
+        "500M": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        }
+      },
+      "inherited_scheduler_present_in_source": false,
+      "policy": "constant optimizer-group learning rates; no scheduler object in 2D2G-A checkpoint",
+      "scheduler_state": null,
+      "scheduler_step": null,
+      "warmup_restarted": false,
+      "well_defined_through_100m": true
+    }
+  },
+  "schema": "experiment_2d5c_training_complete_v1",
+  "training_wall_seconds": 1753.1120921911206
+}

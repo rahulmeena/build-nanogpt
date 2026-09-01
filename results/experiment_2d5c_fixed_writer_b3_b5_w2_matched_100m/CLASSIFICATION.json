@@ -1,0 +1,60 @@
+{
+  "audit_passed": true,
+  "classification": "W2/W2 PARTIAL REPLACEMENT; RECENT NATIVE KV STILL HELPFUL",
+  "classification_allowed": true,
+  "decision_branch": "B_PARTIAL_REPLACEMENT",
+  "estimates_used": {
+    "architecture_c_minus_fixed_penalty": {
+      "lower_95": 0.05029098178554263,
+      "point_estimate": 0.05103196355170741,
+      "upper_95": 0.051787810043617946
+    },
+    "architecture_fixed_minus_c": {
+      "lower_95": -0.051787810043617946,
+      "point_estimate": -0.05103196355170741,
+      "upper_95": -0.05029098178554263
+    },
+    "c_combined_off_gain": {
+      "lower_95": 0.0017695254007479308,
+      "point_estimate": 0.0018660620637660824,
+      "upper_95": 0.0019631543361577687
+    },
+    "c_combined_sequence_gap": {
+      "lower_95": 0.0019674738163941966,
+      "point_estimate": 0.002060319627498971,
+      "upper_95": 0.0021537949326041472
+    },
+    "combined_off_gain_lift": {
+      "lower_95": 0.0017543361629118704,
+      "point_estimate": 0.0018598928935162399,
+      "upper_95": 0.001965946166534272
+    },
+    "combined_sequence_gap_lift": {
+      "lower_95": 0.0018573410559403825,
+      "point_estimate": 0.0019613134543385686,
+      "upper_95": 0.0020659128182127316
+    }
+  },
+  "flags": {
+    "absolute_ce_superiority_established": false,
+    "c_combined_off_gain_established": true,
+    "c_combined_sequence_gap_established": true,
+    "combined_off_gain_lift_established": true,
+    "combined_sequence_gap_lift_established": true,
+    "material_worsening_beyond_margin_established": true,
+    "meaningful_longitudinal_recovery": true,
+    "noninferiority_margin_ce": 0.001,
+    "practical_noninferiority_established": false,
+    "recurrent_dependence_increased_established": true,
+    "statistical_worsening_established": true
+  },
+  "meaningful_recovery_frozen_rule": {
+    "paired_95_ci_lower_above": 0.0,
+    "point_estimate_at_least": 0.5,
+    "result": true
+  },
+  "recommendation": {
+    "reason": "compare A/B decomposition with modest intermediate W4/W8 windows; execute nothing",
+    "recommendation": "DIFFERENT_NEXT_DIAGNOSTIC"
+  }
+}
