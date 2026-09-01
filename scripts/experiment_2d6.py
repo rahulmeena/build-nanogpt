@@ -362,6 +362,11 @@ def checkpoint_payload(
     local_update = int(local_update)
     rng = base.capture_rng()
     accumulation = int(source_payload["gradient_accumulation"])
+    current_steps = optimizer_steps_by_name(model, optimizer)
+    source_steps = {
+        name: step if name == "g_rec_b6" else step - local_update
+        for name, step in current_steps.items()
+    }
     return {
         "schema": SCHEMA,
         "experiment": EXPERIMENT,
@@ -401,6 +406,8 @@ def checkpoint_payload(
             {key: value for key, value in group.items() if key != "params"}
             for group in optimizer.param_groups
         ],
+        "source_optimizer_steps_by_name": source_steps,
+        "current_optimizer_steps_by_name": current_steps,
         "git_implementation_commit": git("rev-parse", "HEAD"),
         "tooling_base": TOOLING_BASE,
         "saved_process_id": os.getpid(),
@@ -434,6 +441,7 @@ def strict_reopen(path, source_checkpoint, device):
         accumulation = int(payload["gradient_accumulation"])
         steps = optimizer_steps_by_name(model, optimizer)
         active = set(steps) - {"g_rec_b6"}
+        source_steps = payload.get("source_optimizer_steps_by_name", {})
         checks = {
             "schema": payload.get("schema") == SCHEMA,
             "parent": payload.get("parent_checkpoint_sha256") == SOURCE_SHA256,
@@ -462,10 +470,18 @@ def strict_reopen(path, source_checkpoint, device):
             == d5c.rng_digests(payload.get("rng_state", {})),
             "scheduler_exact": payload.get("scheduler")
             == source.get("scheduler"),
-            "active_optimizer_steps": all(
-                steps[name] == SOURCE_UPDATES + local_update for name in active
+            "source_optimizer_step_names": set(source_steps) == set(steps),
+            "active_optimizer_progression": all(
+                steps[name] == source_steps.get(name, -1) + local_update
+                for name in active
             ),
-            "dormant_optimizer_step": steps.get("g_rec_b6") == SOURCE_UPDATES,
+            "dormant_optimizer_step": steps.get("g_rec_b6")
+            == source_steps.get("g_rec_b6")
+            == SOURCE_UPDATES,
+            "saved_current_steps_exact": payload.get(
+                "current_optimizer_steps_by_name"
+            )
+            == steps,
             "dormant_gradient_absent": model.g_rec_b6.grad is None,
             "b7_ring_absent": not hasattr(
                 model.init_incremental_state(1, device=device), "h7_ring"
@@ -477,6 +493,9 @@ def strict_reopen(path, source_checkpoint, device):
             "optimizer_steps": {
                 "active_unique": sorted({steps[name] for name in active}),
                 "dormant_b6": steps.get("g_rec_b6"),
+                "source_active_unique": sorted(
+                    {source_steps[name] for name in active}
+                ),
             },
             "checks": checks,
             "passed": all(checks.values()),
@@ -1198,6 +1217,7 @@ def run_train(args):
             args.resume_checkpoint, source_path, device, restore=True
         )
         start = int(loaded["local_updates"])
+        source_step_baseline = loaded["source_optimizer_steps_by_name"]
         if (start, end) != (RESTART_LOCAL_UPDATE, LOCAL_UPDATES):
             raise SystemExit(f"unauthorized resume segment {start}->{end}")
         audit = midpoint_restart(
@@ -1222,6 +1242,7 @@ def run_train(args):
         if not all(checks.values()):
             raise SystemExit("source validation failed at official start")
         start = 0
+        source_step_baseline = optimizer_steps_by_name(model, optimizer)
     accumulation = int(source["gradient_accumulation"])
     if accumulation != 16 or int(source["loader_state"]["batch_size"]) != 32:
         raise SystemExit("single-GPU recipe is not microbatch 32 / accumulation 16")
@@ -1350,10 +1371,13 @@ def run_train(args):
         and {row["process_id"] for row in metrics[96:]}
         == {restart["resumed_process_id"]}
         and preexit["saved_process_id"] != restart["resumed_process_id"],
-        "active_optimizer_steps": all(
-            steps[name] == FINAL_GLOBAL_UPDATE for name in active
+        "active_optimizer_progression": all(
+            steps[name] == source_step_baseline[name] + LOCAL_UPDATES
+            for name in active
         ),
-        "dormant_optimizer_step": steps["g_rec_b6"] == SOURCE_UPDATES,
+        "dormant_optimizer_step": steps["g_rec_b6"]
+        == source_step_baseline["g_rec_b6"]
+        == SOURCE_UPDATES,
         "dormant_gradient_none": model.g_rec_b6.grad is None,
         "milestones_exact": set(milestones) == {"96", "191"},
         "final_next_batch": milestones["191"]["next_global_batch_sha256"]
@@ -1371,6 +1395,9 @@ def run_train(args):
         "final_checkpoint": final,
         "optimizer_steps": {
             "active_unique": sorted({steps[name] for name in active}),
+            "source_active_unique": sorted(
+                {source_step_baseline[name] for name in active}
+            ),
             "dormant_b6": steps["g_rec_b6"],
         },
         "training_wall_seconds": sum(row["wall_seconds"] for row in metrics),
