@@ -1,0 +1,202 @@
+{
+  "before": {
+    "batch": "61dd83544d83c0cf7b4d61005f5a9cf64e2cafa930af1819cba2aae4538e7e61",
+    "stream": "39f6599f552803150fad33d32aa9c4df5843b058410ff1ba38b5afa469046e97"
+  },
+  "checkpoint": {
+    "architecture_fingerprint": "3b0111c0f0ed87644056626795ae33af1875599214043c2fcaab21a3804911d9",
+    "bytes": 1493945451,
+    "checkpoint": "/workspace/exp2d6_b6_native_100m/preflight/DISPOSABLE_UPDATE_0001.pt",
+    "cumulative_targets": 1000865792,
+    "dormant_b6_compatibility": {
+      "forward_use": false,
+      "gradient_required": null,
+      "observed": {
+        "optimizer_state_sha256": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+        "optimizer_step": 1908,
+        "parameter_sha256": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "optimizer_entry_preserved": true,
+      "optimizer_update": false,
+      "parameter": "g_rec_b6",
+      "state_dict_key_preserved": true,
+      "weight_decay": false
+    },
+    "global_update": 1909,
+    "local_update": 1,
+    "next_global_batch_sha256": "2de8c175398bd8ec16e76f47604189aa59ae5c713230e63f79a81055f5dbc0eb",
+    "next_global_batch_stream_sha256": "886247e96a6d1f55aacd81bf640355e602057290beb163ca2f6947f333c1be87",
+    "saved_process_id": 1065,
+    "sha256": "7cf61155d04f6d5286b4b9e1e4e7b2cf6a7d179dd434b78166b3d1444b7703bd",
+    "strict_reopen": {
+      "checkpoint": "/workspace/exp2d6_b6_native_100m/preflight/DISPOSABLE_UPDATE_0001.pt",
+      "checks": {
+        "active_optimizer_progression": true,
+        "architecture": true,
+        "b7_ring_absent": true,
+        "control_provenance": true,
+        "cumulative_targets": true,
+        "dormant_gradient_absent": true,
+        "dormant_optimizer_step": true,
+        "global_update": true,
+        "local_update_range": true,
+        "model_finite": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer_finite": true,
+        "parameter_count": true,
+        "parent": true,
+        "rng_complete": true,
+        "rng_digests": true,
+        "saved_current_steps_exact": true,
+        "scheduler_exact": true,
+        "schema": true,
+        "source_optimizer_step_names": true,
+        "targets": true
+      },
+      "local_update": 1,
+      "optimizer_steps": {
+        "active_unique": [
+          1909,
+          2387
+        ],
+        "dormant_b6": 1908,
+        "source_active_unique": [
+          1908,
+          2386
+        ]
+      },
+      "passed": true
+    }
+  },
+  "construction": {
+    "architecture_fingerprint": true,
+    "b6_gate_identity_preserved": true,
+    "loader_next_batch": true,
+    "loader_next_stream": true,
+    "next_batch": true,
+    "next_stream": true,
+    "optimizer_parameter_identity": true,
+    "parameter_count_exact": true,
+    "parameter_identity_exact": true,
+    "parameter_names_exact": true,
+    "parameter_shapes_exact": true,
+    "parameters": true,
+    "rng_complete": true,
+    "scheduler_present": true,
+    "schema": true,
+    "source_sha256": true,
+    "state_dict_keys_exact": true,
+    "targets": true,
+    "updates": true
+  },
+  "discarded": true,
+  "label": "DISPOSABLE",
+  "next_batch_matches_replay_update_2": true,
+  "official_training_updates": 0,
+  "passed": true,
+  "reopen": {
+    "checkpoint": "/workspace/exp2d6_b6_native_100m/preflight/DISPOSABLE_UPDATE_0001.pt",
+    "checks": {
+      "active_optimizer_progression": true,
+      "architecture": true,
+      "b7_ring_absent": true,
+      "control_provenance": true,
+      "cumulative_targets": true,
+      "dormant_gradient_absent": true,
+      "dormant_optimizer_step": true,
+      "global_update": true,
+      "local_update_range": true,
+      "model_finite": true,
+      "next_batch": true,
+      "next_stream": true,
+      "optimizer_finite": true,
+      "parameter_count": true,
+      "parent": true,
+      "rng_complete": true,
+      "rng_digests": true,
+      "saved_current_steps_exact": true,
+      "scheduler_exact": true,
+      "schema": true,
+      "source_optimizer_step_names": true,
+      "targets": true
+    },
+    "local_update": 1,
+    "optimizer_steps": {
+      "active_unique": [
+        1909,
+        2387
+      ],
+      "dormant_b6": 1908,
+      "source_active_unique": [
+        1908,
+        2386
+      ]
+    },
+    "passed": true
+  },
+  "row": {
+    "active_gradient_groups": {
+      "b1_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 1.6467820387333632e-06
+      },
+      "b3_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.0036928493063896894
+      },
+      "b5_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.001021956792101264
+      },
+      "base": {
+        "finite": true,
+        "gradient_tensors": 148,
+        "nonzero": true,
+        "norm": 0.4447426497936249
+      }
+    },
+    "ce": 3.1483996212482452,
+    "cumulative_targets": 1000865792,
+    "dormant_b6_compatibility": {
+      "after": {
+        "optimizer_state_sha256": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+        "optimizer_step": 1908,
+        "parameter_sha256": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "before": {
+        "optimizer_state_sha256": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+        "optimizer_step": 1908,
+        "parameter_sha256": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "checks": {
+        "active_incremented_once": true,
+        "dormant_optimizer_state_unchanged": true,
+        "dormant_parameter_unchanged": true,
+        "dormant_step_unchanged": true
+      },
+      "gradient_is_none": true
+    },
+    "global_update": 1909,
+    "gradient_norm_before_clip": 0.44475919008255005,
+    "local_update": 1,
+    "new_targets": 524288,
+    "optimizer_step_success": true,
+    "pass_count": 2,
+    "pass_losses": [
+      3.159793645143509,
+      3.1483996212482452
+    ],
+    "peak_allocated_vram_mb": 36269.76318359375,
+    "peak_reserved_vram_mb": 36754.0,
+    "target_count": 524288,
+    "targets_per_second": 61103.79085925676,
+    "wall_seconds": 8.580285979434848
+  }
+}

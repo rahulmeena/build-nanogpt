@@ -1,0 +1,93 @@
+{
+  "global_update": 2099,
+  "latest": {
+    "active_gradient_groups": {
+      "b1_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.001003654906526208
+      },
+      "b3_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.00040292745688930154
+      },
+      "b5_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.0011515970109030604
+      },
+      "base": {
+        "finite": true,
+        "gradient_tensors": 148,
+        "nonzero": true,
+        "norm": 0.3997762203216553
+      }
+    },
+    "batch_sha256": "86d2f26ceef153745acc36aeacff87ff50a689784a2afa7a068a6c97930a8ed1",
+    "ce": 3.1096641272306442,
+    "ce_only": true,
+    "cumulative_targets": 1100480512,
+    "dormant_b6_compatibility": {
+      "after": {
+        "optimizer_state_sha256": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+        "optimizer_step": 1908,
+        "parameter_sha256": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "before": {
+        "optimizer_state_sha256": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+        "optimizer_step": 1908,
+        "parameter_sha256": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "checks": {
+        "active_incremented_once": true,
+        "dormant_optimizer_state_unchanged": true,
+        "dormant_parameter_unchanged": true,
+        "dormant_step_unchanged": true
+      },
+      "gradient_is_none": true
+    },
+    "end_cursor_exact": true,
+    "expected_replay_chain_sha256": "6a5ab6dd6aee669d7e415b6ba456bf5e7e940940ab624cf1a957b103cee72d0e",
+    "global_update": 2099,
+    "gradient_norm_before_clip": 0.3997793197631836,
+    "local_update": 191,
+    "lr": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "gate": 0.0003
+    },
+    "new_targets": 100139008,
+    "optimizer_step_success": true,
+    "pass_count": 2,
+    "pass_losses": [
+      3.1204295456409454,
+      3.1096641272306442
+    ],
+    "peak_allocated_vram_mb": 36271.63818359375,
+    "peak_reserved_vram_mb": 55386.0,
+    "pre_forward_invariants": {
+      "batch": true,
+      "cursor": true,
+      "global_update": true,
+      "local_update": true,
+      "pass": true,
+      "stream": true,
+      "targets": true
+    },
+    "process_id": 1474,
+    "stream_sha256": "87de39938121f49358662345853e430f7cee56f15d1c6d138b16ce30a1705473",
+    "target_count": 524288,
+    "targets_per_second": 61118.71702175922,
+    "wall_seconds": 8.578190537169576
+  },
+  "local_update": 191,
+  "status": "training",
+  "updated_at_unix": 1788304657.8483443
+}

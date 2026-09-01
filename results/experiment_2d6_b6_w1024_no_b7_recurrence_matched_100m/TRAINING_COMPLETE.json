@@ -1,0 +1,102 @@
+{
+  "checks": {
+    "active_optimizer_progression": true,
+    "cadence": true,
+    "cumulative_targets": true,
+    "dormant_gradient_none": true,
+    "dormant_optimizer_step": true,
+    "final_next_batch": true,
+    "final_next_stream": true,
+    "global_update": true,
+    "milestones_exact": true,
+    "no_update_192": true,
+    "replay_batches": true,
+    "replay_streams": true,
+    "restart": true,
+    "targets_exact": true,
+    "two_processes": true,
+    "updates_exact": true
+  },
+  "experiment": "2D6",
+  "final_checkpoint": {
+    "architecture_fingerprint": "3b0111c0f0ed87644056626795ae33af1875599214043c2fcaab21a3804911d9",
+    "bytes": 1493952843,
+    "checkpoint": "/workspace/exp2d6_b6_native_100m/checkpoints/scientific_cumulative_001100480512.pt",
+    "cumulative_targets": 1100480512,
+    "dormant_b6_compatibility": {
+      "forward_use": false,
+      "gradient_required": null,
+      "observed": {
+        "optimizer_state_sha256": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+        "optimizer_step": 1908,
+        "parameter_sha256": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "optimizer_entry_preserved": true,
+      "optimizer_update": false,
+      "parameter": "g_rec_b6",
+      "state_dict_key_preserved": true,
+      "weight_decay": false
+    },
+    "global_update": 2099,
+    "local_update": 191,
+    "next_global_batch_sha256": "62800455f294aaf110fbfc024abaa601c30f45d96175acb795a4d162d53da097",
+    "next_global_batch_stream_sha256": "cdfd4afb20c268d69e3e3fbc1c39076af21719ba6d2a6636180f12b1afd5a157",
+    "saved_process_id": 1474,
+    "sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7",
+    "strict_reopen": {
+      "checkpoint": "/workspace/exp2d6_b6_native_100m/checkpoints/scientific_cumulative_001100480512.pt",
+      "checks": {
+        "active_optimizer_progression": true,
+        "architecture": true,
+        "b7_ring_absent": true,
+        "control_provenance": true,
+        "cumulative_targets": true,
+        "dormant_gradient_absent": true,
+        "dormant_optimizer_step": true,
+        "global_update": true,
+        "local_update_range": true,
+        "model_finite": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer_finite": true,
+        "parameter_count": true,
+        "parent": true,
+        "rng_complete": true,
+        "rng_digests": true,
+        "saved_current_steps_exact": true,
+        "scheduler_exact": true,
+        "schema": true,
+        "source_optimizer_step_names": true,
+        "targets": true
+      },
+      "local_update": 191,
+      "optimizer_steps": {
+        "active_unique": [
+          2099,
+          2577
+        ],
+        "dormant_b6": 1908,
+        "source_active_unique": [
+          1908,
+          2386
+        ]
+      },
+      "passed": true
+    }
+  },
+  "mean_targets_per_second": 60387.071719250365,
+  "optimizer_steps": {
+    "active_unique": [
+      2099,
+      2577
+    ],
+    "dormant_b6": 1908,
+    "source_active_unique": [
+      1908,
+      2386
+    ]
+  },
+  "passed": true,
+  "schema": "experiment_2d6_training_complete_v1",
+  "training_wall_seconds": 1667.7258668392897
+}

@@ -1,0 +1,993 @@
+{
+  "audit_status": "PASS",
+  "bootstrap": {
+    "contrasts": {
+      "fixed_minus_new": {
+        "estimate": 6.02156931671545e-05,
+        "lower_95": -8.212804954449979e-06,
+        "upper_95": 0.0001294026156351699
+      },
+      "fixed_off_minus_fixed_real": {
+        "estimate": 8.137956135283219e-06,
+        "lower_95": -3.289920903857234e-05,
+        "upper_95": 4.957775373156443e-05
+      },
+      "fixed_off_minus_new": {
+        "estimate": 6.835364930243772e-05,
+        "lower_95": -8.360303138965106e-07,
+        "upper_95": 0.00013802600001800854
+      },
+      "new_minus_fixed_penalty": {
+        "estimate": -6.02156931671545e-05,
+        "lower_95": -0.00012940261563516988,
+        "upper_95": 8.212804954449982e-06
+      }
+    },
+    "identical_resample_indices_all_contrasts": true,
+    "method": "paired per-sequence percentile bootstrap",
+    "paired_sequences": 2048,
+    "resamples": 50000,
+    "seed": 20260902
+  },
+  "classification": {
+    "borderline_reused_panel_rule_applied": true,
+    "classification": "B6 REPRESENTATION COMPARISON UNRESOLVED",
+    "delta_ce": 0.0001,
+    "fresh_panel_confirmation_needed": true,
+    "reason": "reused-panel CI overlaps zero or a binding practical boundary"
+  },
+  "experiment": "2D6",
+  "final_checkpoint": {
+    "path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d6_b6_w1024_no_b7_recurrence_matched_100m/scientific_cumulative_001100480512.pt",
+    "sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7"
+  },
+  "fixed_b6_off_ce": 3.0443311608918275,
+  "fixed_real_ce": 3.0443230229356923,
+  "fixed_sentinel_max_abs_ce": 0.0,
+  "git_branch": "experiment-2d6-b6-w1024-no-b7-recurrence-matched-100m",
+  "git_tag": "experiment-2d6-b6-w1024-no-b7-recurrence-matched-100m-final",
+  "memory_speed": {
+    "checks": {
+      "fixed_b7_ring_present": true,
+      "fixed_physical_exact": true,
+      "new_b7_ring_absent": true,
+      "new_physical_exact": true,
+      "three_repeats_each": true
+    },
+    "deployment_equivalent": {
+      "batch_size": 1,
+      "persistent_dtype": "torch.bfloat16",
+      "sequence_length": 1024
+    },
+    "fixed": {
+      "memory": {
+        "b7_ring_present": true,
+        "cache_audit": {
+          "b6_full_native": false,
+          "cache_lengths": [
+            1,
+            1023,
+            31,
+            1023,
+            63,
+            511,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023
+          ],
+          "cache_limits": [
+            1,
+            1023,
+            31,
+            1023,
+            63,
+            511,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023
+          ],
+          "cache_storage": [
+            {
+              "block": 1,
+              "key": {
+                "actual_bytes": 1536,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1536,
+                "shape": [
+                  1,
+                  12,
+                  1,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 1536,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1536,
+                "shape": [
+                  1,
+                  12,
+                  1,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 2,
+              "key": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 3,
+              "key": {
+                "actual_bytes": 47616,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 47616,
+                "shape": [
+                  1,
+                  12,
+                  31,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 47616,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 47616,
+                "shape": [
+                  1,
+                  12,
+                  31,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 4,
+              "key": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 5,
+              "key": {
+                "actual_bytes": 96768,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 96768,
+                "shape": [
+                  1,
+                  12,
+                  63,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 96768,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 96768,
+                "shape": [
+                  1,
+                  12,
+                  63,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 6,
+              "key": {
+                "actual_bytes": 784896,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 784896,
+                "shape": [
+                  1,
+                  12,
+                  511,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 784896,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 784896,
+                "shape": [
+                  1,
+                  12,
+                  511,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 7,
+              "key": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 8,
+              "key": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 9,
+              "key": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 10,
+              "key": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 11,
+              "key": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 12,
+              "key": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "actual_bytes": 1571328,
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "expected_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            }
+          ],
+          "no_h9_or_h11_ring": true,
+          "passed": true,
+          "physical_storage_exact": true,
+          "position": 1024,
+          "ring_lengths": {
+            "h10": 1023,
+            "h12": 1023,
+            "h7": 1023,
+            "h8": 1023
+          },
+          "ring_limit": 1023,
+          "ring_storage": {
+            "h10": {
+              "actual_bytes": 1571328,
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "expected_bytes": 1571328,
+              "shape": [
+                1,
+                1023,
+                768
+              ]
+            },
+            "h12": {
+              "actual_bytes": 1571328,
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "expected_bytes": 1571328,
+              "shape": [
+                1,
+                1023,
+                768
+              ]
+            },
+            "h7": {
+              "actual_bytes": 1571328,
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "expected_bytes": 1571328,
+              "shape": [
+                1,
+                1023,
+                768
+              ]
+            },
+            "h8": {
+              "actual_bytes": 1571328,
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "expected_bytes": 1571328,
+              "shape": [
+                1,
+                1023,
+                768
+              ]
+            }
+          }
+        },
+        "components": {
+          "B10_local_kv": 3142656,
+          "B11_local_kv": 3142656,
+          "B12_local_kv": 3142656,
+          "B1_local_kv": 3072,
+          "B2_local_kv": 3142656,
+          "B3_local_kv": 95232,
+          "B4_local_kv": 3142656,
+          "B5_local_kv": 193536,
+          "B6_local_kv": 1569792,
+          "B7_local_kv": 3142656,
+          "B8_local_kv": 3142656,
+          "B9_local_kv": 3142656,
+          "h10_ring": 1571328,
+          "h12_ring": 1571328,
+          "h7_ring": 1571328,
+          "h8_ring": 1571328
+        },
+        "logical_bytes": 33288192,
+        "physical_unique_bytes": 33288192
+      },
+      "speed": {
+        "batch_size": 1,
+        "durations_seconds": [
+          11.775002352893353,
+          11.677557621151209,
+          11.703805277124047
+        ],
+        "median_latency_seconds": 11.703805277124047,
+        "median_tokens_per_second": 87.49291155770369,
+        "sequence_length": 1024,
+        "timed_repeats": 3,
+        "warmup_runs": 1
+      }
+    },
+    "new": {
+      "memory": {
+        "b7_ring_present": false,
+        "cache_audit": {
+          "actual_unique_storage_bytes": 33289728,
+          "b6_historical_local_kv": 1023,
+          "b7_ring_present": false,
+          "cache_lengths": [
+            1,
+            1023,
+            31,
+            1023,
+            63,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023
+          ],
+          "cache_limits": [
+            1,
+            1023,
+            31,
+            1023,
+            63,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023,
+            1023
+          ],
+          "cache_storage": [
+            {
+              "block": 1,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1536,
+                "physical_bytes": 1536,
+                "shape": [
+                  1,
+                  12,
+                  1,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1536,
+                "physical_bytes": 1536,
+                "shape": [
+                  1,
+                  12,
+                  1,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 2,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 3,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 47616,
+                "physical_bytes": 47616,
+                "shape": [
+                  1,
+                  12,
+                  31,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 47616,
+                "physical_bytes": 47616,
+                "shape": [
+                  1,
+                  12,
+                  31,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 4,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 5,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 96768,
+                "physical_bytes": 96768,
+                "shape": [
+                  1,
+                  12,
+                  63,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 96768,
+                "physical_bytes": 96768,
+                "shape": [
+                  1,
+                  12,
+                  63,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 6,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 7,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 8,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 9,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 10,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 11,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            },
+            {
+              "block": 12,
+              "key": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              },
+              "value": {
+                "dtype": "torch.bfloat16",
+                "exact": true,
+                "logical_bytes": 1571328,
+                "physical_bytes": 1571328,
+                "shape": [
+                  1,
+                  12,
+                  1023,
+                  64
+                ]
+              }
+            }
+          ],
+          "historical_local_kv_positions": {
+            "B1": 1,
+            "B10": 1023,
+            "B11": 1023,
+            "B12": 1023,
+            "B2": 1023,
+            "B3": 31,
+            "B4": 1023,
+            "B5": 63,
+            "B6": 1023,
+            "B7": 1023,
+            "B8": 1023,
+            "B9": 1023
+          },
+          "logical_payload_bytes": 33289728,
+          "passed": true,
+          "physical_storage_exact": true,
+          "position": 1024,
+          "ring_lengths": {
+            "h10": 1023,
+            "h12": 1023,
+            "h8": 1023
+          },
+          "ring_storage": {
+            "h10": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 1571328,
+              "physical_bytes": 1571328,
+              "shape": [
+                1,
+                1023,
+                768
+              ]
+            },
+            "h12": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 1571328,
+              "physical_bytes": 1571328,
+              "shape": [
+                1,
+                1023,
+                768
+              ]
+            },
+            "h8": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 1571328,
+              "physical_bytes": 1571328,
+              "shape": [
+                1,
+                1023,
+                768
+              ]
+            }
+          }
+        },
+        "components": {
+          "B10_local_kv": 3142656,
+          "B11_local_kv": 3142656,
+          "B12_local_kv": 3142656,
+          "B1_local_kv": 3072,
+          "B2_local_kv": 3142656,
+          "B3_local_kv": 95232,
+          "B4_local_kv": 3142656,
+          "B5_local_kv": 193536,
+          "B6_local_kv": 3142656,
+          "B7_local_kv": 3142656,
+          "B8_local_kv": 3142656,
+          "B9_local_kv": 3142656,
+          "h10_ring": 1571328,
+          "h12_ring": 1571328,
+          "h8_ring": 1571328
+        },
+        "logical_bytes": 33289728,
+        "physical_unique_bytes": 33289728
+      },
+      "speed": {
+        "batch_size": 1,
+        "durations_seconds": [
+          11.149708511307836,
+          11.155738247558475,
+          11.175331108272076
+        ],
+        "median_latency_seconds": 11.155738247558475,
+        "median_tokens_per_second": 91.79132543954326,
+        "sequence_length": 1024,
+        "timed_repeats": 3,
+        "warmup_runs": 1
+      }
+    },
+    "new_minus_fixed": {
+      "latency_percent": -4.682810561081451,
+      "latency_seconds": -0.5480670295655727,
+      "logical_persistent_bytes": 1536,
+      "physical_unique_bytes": 1536,
+      "throughput_percent": 4.91287100327511,
+      "tokens_per_second": 4.298413881839565
+    },
+    "passed": true,
+    "schema": "experiment_2d6_memory_speed_audit_v1"
+  },
+  "new_real_ce": 3.044262807242525,
+  "pod_status": "STOPPED",
+  "zero_training_shock": {
+    "paired_standard_error": 0.0001675720086271956,
+    "parent_new_geometry_ce": 3.01951989446437,
+    "parent_new_minus_original_ce": 0.00030933029342650187,
+    "parent_original_real_ce": 3.0192105641709435,
+    "passed": true,
+    "schema": "experiment_2d6_zero_training_shock_v1",
+    "sequences": 64,
+    "subset": "first 64 sequences in existing immutable true-incremental core order",
+    "subset_sha256": "d568fd86f39280d12a642ea2c82ec120801dfed82d981df3ab621c1f004e5bd8",
+    "targets": 65536
+  }
+}
