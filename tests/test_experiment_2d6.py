@@ -20,7 +20,8 @@ SYMBOLS = support.load_training_symbols()
 GPT = SYMBOLS["GPT"]
 GPTConfig = SYMBOLS["GPTConfig"]
 torch.set_num_threads(1)
-TEST_LENGTH = 12
+# Exercise every retained recurrent link; B8->B5 first becomes eligible at 64.
+TEST_LENGTH = 70
 
 
 def base_model(seed=206):
