@@ -208,12 +208,16 @@ def batch_for_panel(val_path, panel, ordinal, device=None):
 def sentinel(family, checkpoint, reused_panel, reused_losses, val_path, device):
     model, model_identity = load_model(family, checkpoint, device)
     _, x, y, observed = batch_for_panel(val_path, reused_panel, 0, device)
-    x, y = x[:SENTINEL_SEQUENCES], y[:SENTINEL_SEQUENCES]
+    # Preserve the accepted evaluator's batch-of-64 BF16 kernel geometry, then
+    # compare only the preregistered first 32 rows.  Slicing the input batch
+    # changes kernel numerics and is not a reproduction of the stored panel.
     with torch.inference_mode(), torch.autocast(device_type="cuda", dtype=torch.bfloat16):
         result = d6.incremental_condition(model, x, y, control="all_real", audit=False)
     expected_key = "fixed_real" if family == "fixed" else "new_real"
     expected = np.asarray(reused_losses[expected_key][:SENTINEL_SEQUENCES], dtype=np.float64)
-    observed_losses = np.asarray(result["per_sequence_ce"], dtype=np.float64)
+    observed_losses = np.asarray(
+        result["per_sequence_ce"][:SENTINEL_SEQUENCES], dtype=np.float64
+    )
     delta = np.abs(observed_losses - expected)
     row = {
         "family": family,
