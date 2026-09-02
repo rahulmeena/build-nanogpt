@@ -1,0 +1,65 @@
+{
+  "experiment": "2D7",
+  "description": "trained boundary-alignment geometry N/O/G",
+  "branch": "experiment-2d7-trained-boundary-alignment-nog",
+  "parent": {
+    "checkpoint": "scientific_cumulative_001100480512.pt",
+    "sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7",
+    "global_update": 2099,
+    "cumulative_targets": 1100480512
+  },
+  "geometry": {
+    "N": {"B1": 2, "B3": 32, "B5": 64},
+    "O": {"B1": 1, "B3": 31, "B5": 63},
+    "G": {"B1": 3, "B3": 33, "B5": 65}
+  },
+  "common_architecture": {
+    "local_windows": {
+      "B1": 2,
+      "B2": 1024,
+      "B3": 32,
+      "B4": 1024,
+      "B5": 64,
+      "B6": 1024,
+      "B7": 1024,
+      "B8": 1024,
+      "B9": 1024,
+      "B10": 1024,
+      "B11": 1024,
+      "B12": 1024
+    },
+    "recurrent_sources": {"B1": "B12", "B3": "B10", "B5": "B8"},
+    "b7_to_b6_recurrence": false,
+    "separate_local_recurrent_softmax": true,
+    "existing_gates_trainable": ["g_rec", "g_rec_b3", "g_rec_b5"],
+    "new_parameters": 0,
+    "parameter_count": 124475908
+  },
+  "training": {
+    "independent_arms": ["N", "O", "G"],
+    "optimizer_updates_per_arm": 191,
+    "first_global_update": 2100,
+    "final_global_update": 2290,
+    "targets_per_update": 524288,
+    "new_targets_per_arm": 100139008,
+    "final_cumulative_targets": 1200619520,
+    "gradient_accumulation": 16,
+    "microbatch": 32,
+    "objective": "CE only",
+    "extra_training_forbidden": true
+  },
+  "evaluation": {
+    "conditions": ["BASELINE_REAL", "OVERLAP1_REAL", "GAP1_REAL"],
+    "sequences": 2048,
+    "targets_per_sequence": 1024,
+    "targets_per_condition": 2097152,
+    "true_incremental": true,
+    "one_panel": true
+  },
+  "statistics": {
+    "paired_bootstrap_resamples": 50000,
+    "bootstrap_seed": 20260902,
+    "delta_ce": 0.0001,
+    "contrasts": ["Baseline - Overlap", "Baseline - Gap", "Overlap - Gap"]
+  }
+}
