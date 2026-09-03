@@ -1,0 +1,212 @@
+{
+  "audit_status": "PASS",
+  "checks": {
+    "b6_w1024_b7_recurrence_absent": true,
+    "ce_only_no_freezing": true,
+    "continuation_hashes_exact": true,
+    "exactly_three_allowed_evaluations": true,
+    "existing_gates_preserved_trainable": true,
+    "final_counters_exact": true,
+    "first_batch_exact": true,
+    "fresh_panel_disjoint_frozen": true,
+    "fresh_panel_exact_size": true,
+    "fresh_shared_bootstrap_50000": true,
+    "gpu_stopped_volume_retained": true,
+    "heterogeneity_reported": true,
+    "inherited_state_no_reset": true,
+    "n_o1_not_retrained": true,
+    "n_sha_exact_strict": true,
+    "no_new_gates_or_parameters": true,
+    "no_source_shift_or_future_access": true,
+    "o1_sha_exact_strict": true,
+    "o2_checkpoint_sealed_exported": true,
+    "o2_independent_from_sealed_2d6": true,
+    "o2_minima_exact": true,
+    "o2_runtime_boundaries_exact": true,
+    "old_arrays_reproduce_2d7": true,
+    "parent_counters_exact": true,
+    "parent_sha_exact": true,
+    "persistent_state_accounted": true,
+    "preflight_pass": true,
+    "same_ordered_fresh_panel": true,
+    "separate_softmax_preserved": true,
+    "stratified_bootstrap_50000": true,
+    "terminal_stream_exact": true,
+    "three_4096_loss_arrays": true,
+    "training_continuation_exact": true,
+    "training_exact_191_updates": true,
+    "training_targets_exact": true
+  },
+  "classification": {
+    "N_vs_O1": {
+      "flags": {
+        "left_statistically_superior": false,
+        "left_superior_beyond_margin": false,
+        "practical_equivalence_established": false,
+        "right_statistically_superior": true,
+        "right_superior_beyond_margin": true
+      },
+      "label": "O1 superior to N beyond delta_CE"
+    },
+    "N_vs_O2": {
+      "flags": {
+        "left_statistically_superior": false,
+        "left_superior_beyond_margin": false,
+        "practical_equivalence_established": false,
+        "right_statistically_superior": true,
+        "right_superior_beyond_margin": false
+      },
+      "label": "O2 statistically superior to N; beyond-margin superiority not established"
+    },
+    "O1_vs_O2": {
+      "flags": {
+        "left_statistically_superior": false,
+        "left_superior_beyond_margin": false,
+        "practical_equivalence_established": true,
+        "right_statistically_superior": false,
+        "right_superior_beyond_margin": false
+      },
+      "label": "practical equivalence established"
+    }
+  },
+  "delta_ce": 0.0001,
+  "experiment": "2D8",
+  "fresh_bootstrap": {
+    "contrasts": {
+      "D_N_O1": {
+        "estimate": 0.00015452548576587617,
+        "lower_95": 0.00010357625296622311,
+        "upper_95": 0.00020523751785944496
+      },
+      "D_N_O2": {
+        "estimate": 0.0001498731349982433,
+        "lower_95": 9.939019694085774e-05,
+        "upper_95": 0.00020011396599781112
+      },
+      "D_O1_O2": {
+        "estimate": -4.652350767632885e-06,
+        "lower_95": -5.11360852893866e-05,
+        "upper_95": 4.108522864386719e-05
+      }
+    },
+    "method": "paired per-sequence percentile bootstrap",
+    "paired_sequences": 4096,
+    "resamples": 50000,
+    "sampling_unit": "sequence",
+    "seed": 20260902,
+    "shared_resample_indices_all_contrasts": true
+  },
+  "gpu_status": "STOPPED",
+  "heterogeneity_established": false,
+  "mean_ce": {
+    "N": 3.0303182330105844,
+    "O1": 3.0301637075248182,
+    "O2": 3.030168359875586
+  },
+  "o2_checkpoint": {
+    "bytes": 1493951755,
+    "path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d8_trained_overlap_width_n_o1_o2/O2/scientific_cumulative_001200619520.pt",
+    "sha256": "792b85f99164e8d1a096e2913e9d116f7f544e84d63c5a48c9a20e136cd9b69f"
+  },
+  "old_reproduction": {
+    "estimate": 0.00014959104405374863,
+    "lower_95": 7.799118908919839e-05,
+    "upper_95": 0.00022171778063866842
+  },
+  "per_sequence_wins": {
+    "N_vs_O1": {
+      "left_wins": 1891,
+      "right_wins": 2205,
+      "ties": 0
+    },
+    "N_vs_O2": {
+      "left_wins": 1886,
+      "right_wins": 2210,
+      "ties": 0
+    },
+    "O1_vs_O2": {
+      "left_wins": 2070,
+      "right_wins": 2026,
+      "ties": 0
+    }
+  },
+  "perplexity": {
+    "N": 20.70382018016602,
+    "O1": 20.70062115946694,
+    "O2": 20.700717466241713
+  },
+  "perplexity_ratios": {
+    "D_N_O1": 1.0001545374254437,
+    "D_N_O2": 1.0001498843665377,
+    "D_O1_O2": 0.9999953476600545
+  },
+  "persistent_state": {
+    "N": 33289728,
+    "O1": 33289728,
+    "O1_minus_N": 0,
+    "O2": 33289728,
+    "O2_minus_N": 0,
+    "O2_minus_O1": 0
+  },
+  "point_estimate_ranking": [
+    "O1",
+    "O2",
+    "N"
+  ],
+  "pooled_classification": {
+    "flags": {
+      "left_statistically_superior": false,
+      "left_superior_beyond_margin": false,
+      "practical_equivalence_established": false,
+      "right_statistically_superior": true,
+      "right_superior_beyond_margin": true
+    },
+    "label": "O1 superior to N beyond delta_CE"
+  },
+  "scientific_interpretation": {
+    "q1_fresh_replication": "Yes. Fresh data replicate O1's statistical superiority over N beyond the 0.0001 CE margin.",
+    "q2_o2_vs_o1": "No established improvement; O1 and O2 are practically equivalent at the \u00b10.0001 CE scale.",
+    "q3_dose_response": "No established monotonic overlap-width dose response; the fresh point-estimate ordering is O1 < O2 < N.",
+    "q4_preferred_geometry": "O1",
+    "q4_reason": "O1 remains favored over N and wider overlap does not establish an improvement over O1.",
+    "q5_further_overlap": "No. Wider overlap is equivalent to or worse than O1, so further width expansion is not currently warranted."
+  },
+  "stratified_n_o1": {
+    "fixed_sequence_count_weights": {
+      "fresh": 0.6666666666666666,
+      "old": 0.3333333333333333
+    },
+    "fresh": {
+      "estimate": 0.00015452548576587617,
+      "lower_95": 0.00010362412664169261,
+      "upper_95": 0.00020489306985270627
+    },
+    "fresh_sequences": 4096,
+    "heterogeneity_fresh_minus_old": {
+      "estimate": 4.934441712127545e-06,
+      "lower_95": -8.289787984857268e-05,
+      "upper_95": 9.252630921111269e-05
+    },
+    "independent_within_panel_resampling": true,
+    "method": "stratified paired per-sequence percentile bootstrap",
+    "old": {
+      "estimate": 0.00014959104405374863,
+      "lower_95": 7.764686786589565e-05,
+      "upper_95": 0.00022125715315657917
+    },
+    "old_sequences": 2048,
+    "pooled": {
+      "estimate": 0.00015288067186183365,
+      "lower_95": 0.0001109334807622486,
+      "upper_95": 0.0001939753951546494
+    },
+    "resamples": 50000,
+    "seed": 20260902
+  },
+  "terminal_stream": {
+    "final_loader_cursor_sha256": "682abcbcc8db8886274ccbb604927683af38d010ecae31b1494987513ae982d3",
+    "next_global_batch_sha256": "a021ce09f7a25b6617632e2a76da1acb0980ac1dda888df5f1c8eb65b3939fbe",
+    "next_stream_sha256": "7918ea7e6f979b8e49fca89c60dd68ace44b768854d34bc96dd751bee07b2567",
+    "status": "MATCH"
+  }
+}

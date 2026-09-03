@@ -1,0 +1,678 @@
+{
+  "authorized": true,
+  "checks": {
+    "continuation_191_exact": true,
+    "disposable_smoke": true,
+    "first_batch_exact": true,
+    "n_checkpoint_exact_strict": true,
+    "n_o1_not_retrained": true,
+    "o1_checkpoint_exact_strict": true,
+    "o2_independent_parent_load": true,
+    "only_allowed_geometry_delta": true,
+    "parent_counters_exact": true,
+    "parent_sha_exact": true,
+    "runtime_geometry": true,
+    "sealed_2d7_continuation_exact": true
+  },
+  "continuation": {
+    "ledger_path": "/workspace/exp2d7_boundary_alignment/run/preflight/CONTINUATION_LEDGER.jsonl",
+    "ledger_sha256": "555ac4b4425fcd711edf2e923412ecfac1db49802653570fe56b02ae4139c1aa",
+    "manifest_path": "/workspace/exp2d7_boundary_alignment/run/preflight/CONTINUATION_MANIFEST.json",
+    "manifest_sha256": "f15a5de4b5428031adfe8877f01e6487dcdfc6749e337f552feb7c6f92e9cc4d"
+  },
+  "existing_models": {
+    "N": {
+      "checks": {
+        "architecture": true,
+        "cumulative_targets": true,
+        "global_update": true,
+        "loader": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer": true,
+        "parent_sha": true,
+        "rng": true,
+        "scheduler": true,
+        "schema": true,
+        "sha256": true,
+        "stored_arm": true,
+        "strict_no_missing": true,
+        "strict_no_unexpected": true
+      },
+      "metadata": {
+        "cumulative_targets": 1200619520,
+        "global_update": 2290,
+        "next_global_batch_sha256": "a021ce09f7a25b6617632e2a76da1acb0980ac1dda888df5f1c8eb65b3939fbe",
+        "next_stream_sha256": "7918ea7e6f979b8e49fca89c60dd68ace44b768854d34bc96dd751bee07b2567",
+        "parent_checkpoint_sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7",
+        "stored_arm": "N"
+      },
+      "path": "/workspace/exp2d7_boundary_alignment/run/checkpoints/N/scientific_cumulative_001200619520.pt",
+      "sha256": "57e62a2094693205b520e2986047d46c28d042d4ec34d6e65b2135f474adec20"
+    },
+    "O1": {
+      "checks": {
+        "architecture": true,
+        "cumulative_targets": true,
+        "global_update": true,
+        "loader": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer": true,
+        "parent_sha": true,
+        "rng": true,
+        "scheduler": true,
+        "schema": true,
+        "sha256": true,
+        "stored_arm": true,
+        "strict_no_missing": true,
+        "strict_no_unexpected": true
+      },
+      "metadata": {
+        "cumulative_targets": 1200619520,
+        "global_update": 2290,
+        "next_global_batch_sha256": "a021ce09f7a25b6617632e2a76da1acb0980ac1dda888df5f1c8eb65b3939fbe",
+        "next_stream_sha256": "7918ea7e6f979b8e49fca89c60dd68ace44b768854d34bc96dd751bee07b2567",
+        "parent_checkpoint_sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7",
+        "stored_arm": "O"
+      },
+      "path": "/workspace/exp2d7_boundary_alignment/run/checkpoints/O/scientific_cumulative_001200619520.pt",
+      "sha256": "c1354459f03703b31d25b649cd7b64d2aad95a60d1764b3dee3af7c675f59cc6"
+    }
+  },
+  "experiment": "2D8",
+  "git_commit": "1fe6761d7bfacd71be32da16c467fb081b172ef7",
+  "implementation_sha256": {
+    "configs/exp2d8_trained_overlap_width_n_o1_o2.json": "85026207e2a8ca6f5a53f2135085c217ba100f8c672285d81bca79a7ec1db1c8",
+    "scripts/experiment_2d7.py": "62bb4c455e5a9b64adade8961f0e7020afa3509fc0b045e328f0c26f3b94ed5c",
+    "scripts/experiment_2d8.py": "27b0fef9c2bdba0e507865df9fbac4b1cd5726d592ee43d2c486554f1309698a",
+    "scripts/experiment_2d8_core.py": "eb0fea520c827ab5dea556ccb7d9e18655f0f7b063a4a203cd0d15c5cb520a27"
+  },
+  "o2": {
+    "architecture_fingerprint": "a9717bb0739c4f76920452074a9dd2d7dd2e6c1a799240bb8847430f6fd631c8",
+    "architecture_manifest": {
+      "active_recurrent_gates": [
+        "g_rec",
+        "g_rec_b3",
+        "g_rec_b5"
+      ],
+      "arm": "O2",
+      "b7_recurrent_ring": false,
+      "b7_to_b6_computational_link": false,
+      "blocks": [
+        {
+          "block": 1,
+          "local_lags": [
+            0,
+            1
+          ],
+          "recurrent_lags": [
+            1,
+            1023
+          ],
+          "recurrent_source_block": 12,
+          "separate_local_recurrent_softmax": true
+        },
+        {
+          "block": 2,
+          "local_lags": [
+            0,
+            1023
+          ],
+          "recurrent_lags": null,
+          "recurrent_source_block": null
+        },
+        {
+          "block": 3,
+          "local_lags": [
+            0,
+            31
+          ],
+          "recurrent_lags": [
+            30,
+            1023
+          ],
+          "recurrent_source_block": 10,
+          "separate_local_recurrent_softmax": true
+        },
+        {
+          "block": 4,
+          "local_lags": [
+            0,
+            1023
+          ],
+          "recurrent_lags": null,
+          "recurrent_source_block": null
+        },
+        {
+          "block": 5,
+          "local_lags": [
+            0,
+            63
+          ],
+          "recurrent_lags": [
+            62,
+            1023
+          ],
+          "recurrent_source_block": 8,
+          "separate_local_recurrent_softmax": true
+        },
+        {
+          "block": 6,
+          "local_lags": [
+            0,
+            1023
+          ],
+          "recurrent_lags": null,
+          "recurrent_source_block": null
+        },
+        {
+          "block": 7,
+          "local_lags": [
+            0,
+            1023
+          ],
+          "recurrent_lags": null,
+          "recurrent_source_block": null
+        },
+        {
+          "block": 8,
+          "local_lags": [
+            0,
+            1023
+          ],
+          "recurrent_lags": null,
+          "recurrent_source_block": null
+        },
+        {
+          "block": 9,
+          "local_lags": [
+            0,
+            1023
+          ],
+          "recurrent_lags": null,
+          "recurrent_source_block": null
+        },
+        {
+          "block": 10,
+          "local_lags": [
+            0,
+            1023
+          ],
+          "recurrent_lags": null,
+          "recurrent_source_block": null
+        },
+        {
+          "block": 11,
+          "local_lags": [
+            0,
+            1023
+          ],
+          "recurrent_lags": null,
+          "recurrent_source_block": null
+        },
+        {
+          "block": 12,
+          "local_lags": [
+            0,
+            1023
+          ],
+          "recurrent_lags": null,
+          "recurrent_source_block": null
+        }
+      ],
+      "condition": "O2_REAL",
+      "description": "trained-overlap-width-N-O1-O2",
+      "dormant_compatibility_parameter": "g_rec_b6",
+      "experiment": "2D8",
+      "local_windows": {
+        "B1": 2,
+        "B10": 1024,
+        "B11": 1024,
+        "B12": 1024,
+        "B2": 1024,
+        "B3": 32,
+        "B4": 1024,
+        "B5": 64,
+        "B6": 1024,
+        "B7": 1024,
+        "B8": 1024,
+        "B9": 1024
+      },
+      "new_parameters": 0,
+      "parameter_count": 124475908,
+      "recurrent_minimum_lags": {
+        "B1": 1,
+        "B3": 30,
+        "B5": 62
+      },
+      "source_identity": "j=t-lag"
+    },
+    "construction": {
+      "active_gates_trainable": true,
+      "gate_inventory": true,
+      "gate_values_inherited": true,
+      "loader_next_batch": true,
+      "loader_next_stream": true,
+      "loader_state_restored": true,
+      "model_finite": true,
+      "optimizer_finite": true,
+      "optimizer_state_restored": true,
+      "parameter_count": true,
+      "parent_architecture": true,
+      "parent_arm": true,
+      "parent_cumulative_targets": true,
+      "parent_experiment": true,
+      "parent_global_update": true,
+      "parent_gradient_accumulation": true,
+      "parent_loader": true,
+      "parent_local_updates": true,
+      "parent_microbatch": true,
+      "parent_optimizer": true,
+      "parent_rng": true,
+      "parent_scheduler": true,
+      "parent_schema": true,
+      "parent_targets_per_update": true,
+      "rng_state_restored": true,
+      "scheduler_state_restored": true,
+      "state_dict_keys_exact": true,
+      "strict_no_missing": true,
+      "strict_no_unexpected": true
+    },
+    "first_logical_batch": {
+      "batch": true,
+      "cursor": true,
+      "global_update": true,
+      "stream": true
+    },
+    "geometry": {
+      "arm": "O2",
+      "boundaries": {
+        "B1": {
+          "lag_1023_recurrent": true,
+          "local_exact": true,
+          "local_lags": [
+            0,
+            1
+          ],
+          "neighborhood": {
+            "0": {
+              "local": true,
+              "recurrent": false
+            },
+            "1": {
+              "local": true,
+              "recurrent": true
+            },
+            "2": {
+              "local": false,
+              "recurrent": true
+            }
+          },
+          "no_future_or_current_recurrent": true,
+          "recurrent_exact": true,
+          "recurrent_lags": [
+            1,
+            1023
+          ],
+          "source_identity": "j=t-lag"
+        },
+        "B3": {
+          "lag_1023_recurrent": true,
+          "local_exact": true,
+          "local_lags": [
+            0,
+            31
+          ],
+          "neighborhood": {
+            "29": {
+              "local": true,
+              "recurrent": false
+            },
+            "30": {
+              "local": true,
+              "recurrent": true
+            },
+            "31": {
+              "local": true,
+              "recurrent": true
+            },
+            "32": {
+              "local": false,
+              "recurrent": true
+            }
+          },
+          "no_future_or_current_recurrent": true,
+          "recurrent_exact": true,
+          "recurrent_lags": [
+            30,
+            1023
+          ],
+          "source_identity": "j=t-lag"
+        },
+        "B5": {
+          "lag_1023_recurrent": true,
+          "local_exact": true,
+          "local_lags": [
+            0,
+            63
+          ],
+          "neighborhood": {
+            "61": {
+              "local": true,
+              "recurrent": false
+            },
+            "62": {
+              "local": true,
+              "recurrent": true
+            },
+            "63": {
+              "local": true,
+              "recurrent": true
+            },
+            "64": {
+              "local": false,
+              "recurrent": true
+            }
+          },
+          "no_future_or_current_recurrent": true,
+          "recurrent_exact": true,
+          "recurrent_lags": [
+            62,
+            1023
+          ],
+          "source_identity": "j=t-lag"
+        }
+      },
+      "checks": {
+        "b6_runtime_w1024": true,
+        "b7_to_b6_absent": true,
+        "boundary_neighborhoods_exact": true,
+        "masks_exact": true,
+        "maximum_recurrent_lag_1023": true,
+        "no_future_or_source_shift": true
+      },
+      "passed": true,
+      "runtime_positions": {
+        "B1": {
+          "expected_positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64
+          ],
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64
+          ],
+          "query_position": 65,
+          "source_identity_exact": true
+        },
+        "B3": {
+          "expected_positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35
+          ],
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35
+          ],
+          "query_position": 65,
+          "source_identity_exact": true
+        },
+        "B5": {
+          "expected_positions": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "positions": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "query_position": 65,
+          "source_identity_exact": true
+        }
+      }
+    },
+    "inherited_gate_sha256": {
+      "g_rec": "2dba1a435331ffa0a264ae4f77eb3a39354feb104359c6a49b036aea4d2873da",
+      "g_rec_b3": "e3de69b79160409cc2af78f4f14de8f5fa30990c9d7731badd9d313588eb7dd3",
+      "g_rec_b5": "09db87bbbacdfae22db55451212d34775ccdf2a44d419f2b2a2a085a355ab2e0",
+      "g_rec_b6": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+    },
+    "smoke": {
+      "active_gate_gradients": {
+        "g_rec": {
+          "finite": true,
+          "nonzero": true,
+          "present": true
+        },
+        "g_rec_b3": {
+          "finite": true,
+          "nonzero": true,
+          "present": true
+        },
+        "g_rec_b5": {
+          "finite": true,
+          "nonzero": true,
+          "present": true
+        }
+      },
+      "arm": "O2",
+      "dormant_b6_gate_gradient_none": true,
+      "finite_forward_loss": true,
+      "finite_gradients": true,
+      "forward_loss": 13.061607360839844,
+      "official_optimizer_updates": 0,
+      "passed": true,
+      "shape": [
+        1,
+        70,
+        50304
+      ]
+    }
+  },
+  "schema": "experiment_2d8_preflight_audit_v1",
+  "source": {
+    "cumulative_targets": 1100480512,
+    "global_update": 2099,
+    "path": "/workspace/exp2d6_b6_native_100m/checkpoints/scientific_cumulative_001100480512.pt",
+    "sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7"
+  }
+}

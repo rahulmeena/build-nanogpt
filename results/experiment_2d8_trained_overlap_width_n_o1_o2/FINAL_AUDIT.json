@@ -1,0 +1,150 @@
+{
+  "audit_status": "PASS",
+  "checks": {
+    "b6_w1024_b7_recurrence_absent": true,
+    "ce_only_no_freezing": true,
+    "continuation_hashes_exact": true,
+    "exactly_three_allowed_evaluations": true,
+    "existing_gates_preserved_trainable": true,
+    "final_counters_exact": true,
+    "first_batch_exact": true,
+    "fresh_panel_disjoint_frozen": true,
+    "fresh_panel_exact_size": true,
+    "fresh_shared_bootstrap_50000": true,
+    "gpu_stopped_volume_retained": true,
+    "heterogeneity_reported": true,
+    "inherited_state_no_reset": true,
+    "n_o1_not_retrained": true,
+    "n_sha_exact_strict": true,
+    "no_new_gates_or_parameters": true,
+    "no_source_shift_or_future_access": true,
+    "o1_sha_exact_strict": true,
+    "o2_checkpoint_sealed_exported": true,
+    "o2_independent_from_sealed_2d6": true,
+    "o2_minima_exact": true,
+    "o2_runtime_boundaries_exact": true,
+    "old_arrays_reproduce_2d7": true,
+    "parent_counters_exact": true,
+    "parent_sha_exact": true,
+    "persistent_state_accounted": true,
+    "preflight_pass": true,
+    "same_ordered_fresh_panel": true,
+    "separate_softmax_preserved": true,
+    "stratified_bootstrap_50000": true,
+    "terminal_stream_exact": true,
+    "three_4096_loss_arrays": true,
+    "training_continuation_exact": true,
+    "training_exact_191_updates": true,
+    "training_targets_exact": true
+  },
+  "evidence": {
+    "evaluation_conditions": {
+      "N": "N_REAL",
+      "O1": "O1_REAL",
+      "O2": "O2_REAL"
+    },
+    "existing_models": {
+      "N": {
+        "checks": {
+          "architecture": true,
+          "cumulative_targets": true,
+          "global_update": true,
+          "loader": true,
+          "next_batch": true,
+          "next_stream": true,
+          "optimizer": true,
+          "parent_sha": true,
+          "rng": true,
+          "scheduler": true,
+          "schema": true,
+          "sha256": true,
+          "stored_arm": true,
+          "strict_no_missing": true,
+          "strict_no_unexpected": true
+        },
+        "metadata": {
+          "cumulative_targets": 1200619520,
+          "global_update": 2290,
+          "next_global_batch_sha256": "a021ce09f7a25b6617632e2a76da1acb0980ac1dda888df5f1c8eb65b3939fbe",
+          "next_stream_sha256": "7918ea7e6f979b8e49fca89c60dd68ace44b768854d34bc96dd751bee07b2567",
+          "parent_checkpoint_sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7",
+          "stored_arm": "N"
+        },
+        "path": "/workspace/exp2d7_boundary_alignment/run/checkpoints/N/scientific_cumulative_001200619520.pt",
+        "sha256": "57e62a2094693205b520e2986047d46c28d042d4ec34d6e65b2135f474adec20"
+      },
+      "O1": {
+        "checks": {
+          "architecture": true,
+          "cumulative_targets": true,
+          "global_update": true,
+          "loader": true,
+          "next_batch": true,
+          "next_stream": true,
+          "optimizer": true,
+          "parent_sha": true,
+          "rng": true,
+          "scheduler": true,
+          "schema": true,
+          "sha256": true,
+          "stored_arm": true,
+          "strict_no_missing": true,
+          "strict_no_unexpected": true
+        },
+        "metadata": {
+          "cumulative_targets": 1200619520,
+          "global_update": 2290,
+          "next_global_batch_sha256": "a021ce09f7a25b6617632e2a76da1acb0980ac1dda888df5f1c8eb65b3939fbe",
+          "next_stream_sha256": "7918ea7e6f979b8e49fca89c60dd68ace44b768854d34bc96dd751bee07b2567",
+          "parent_checkpoint_sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7",
+          "stored_arm": "O"
+        },
+        "path": "/workspace/exp2d7_boundary_alignment/run/checkpoints/O/scientific_cumulative_001200619520.pt",
+        "sha256": "c1354459f03703b31d25b649cd7b64d2aad95a60d1764b3dee3af7c675f59cc6"
+      }
+    },
+    "gpu_stop": {
+      "confirmation_time_utc": "2026-09-03T14:34:44Z",
+      "evidence": {
+        "ssh_host": "154.54.102.25",
+        "ssh_port": 18138,
+        "ssh_probe_exit_code": 255,
+        "ssh_probe_result": "connection refused",
+        "user_reported_stopped": true
+      },
+      "experiment": "2D8",
+      "gpu_stopped_confirmed": true,
+      "network_volume": "yhzyb27fb5",
+      "network_volume_retained": true,
+      "pod_id": "e8nd7m6piw5km2",
+      "pod_name": "serious_indigo_swordfish",
+      "status": "STOPPED"
+    },
+    "o2_checkpoint": {
+      "bytes": 1493951755,
+      "path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d8_trained_overlap_width_n_o1_o2/O2/scientific_cumulative_001200619520.pt",
+      "sha256": "792b85f99164e8d1a096e2913e9d116f7f544e84d63c5a48c9a20e136cd9b69f"
+    },
+    "old_reproduction": {
+      "estimate": 0.00014959104405374863,
+      "lower_95": 7.799118908919839e-05,
+      "upper_95": 0.00022171778063866842
+    },
+    "panel_sha256": "7a32c6b84eb09f453af5e8b4e119e2edd4f401cdee8662744919f7307391702f",
+    "parent": {
+      "cumulative_targets": 1100480512,
+      "global_update": 2099,
+      "path": "/workspace/exp2d6_b6_native_100m/checkpoints/scientific_cumulative_001100480512.pt",
+      "sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7"
+    },
+    "terminal_stream": {
+      "final_loader_cursor_sha256": "682abcbcc8db8886274ccbb604927683af38d010ecae31b1494987513ae982d3",
+      "next_global_batch_sha256": "a021ce09f7a25b6617632e2a76da1acb0980ac1dda888df5f1c8eb65b3939fbe",
+      "next_stream_sha256": "7918ea7e6f979b8e49fca89c60dd68ace44b768854d34bc96dd751bee07b2567",
+      "status": "MATCH"
+    }
+  },
+  "experiment": "2D8",
+  "passed": true,
+  "schema": "experiment_2d8_final_audit_v1"
+}
