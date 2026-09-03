@@ -604,7 +604,7 @@ def main():
             "gpu_stop": stop,
         },
     })
-    write_text(output / "EXPERIMENT_2D8_FINAL_REPORT.md", report(summary))
+    write_text(output / "EXPERIMENT_2D8_CONCISE_REPORT.md", report(summary))
     print(json.dumps({
         "audit": summary["audit_status"],
         "mean_ce": mean_ce,
