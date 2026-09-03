@@ -1,0 +1,41 @@
+{
+  "experiment": "2D8",
+  "reason": "Create safe checkpointing margin on retained network volume yhzyb27fb5 before 2D8",
+  "authorization": "User explicitly authorized cleanup/backup or a 10 GB expansion",
+  "volume_size_bytes_before_cleanup": 150000000000,
+  "workspace_apparent_bytes_after_cleanup": 143222866432,
+  "deleted_remote_checkpoint_copies_with_exact_local_sha_match": [
+    {
+      "remote_path": "/workspace/exp2d7_boundary_alignment/run/checkpoints/G/scientific_cumulative_001200619520.pt",
+      "local_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d7_trained_boundary_alignment_nog/G/scientific_cumulative_001200619520.pt",
+      "sha256": "9fb22d0feda59ae2008bf07e6ef418c476d0c9819f1d743ba144ee16d5cd7f2c"
+    },
+    {
+      "remote_path": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001025507328.pt",
+      "local_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d5c_fixed_writer_b3_b5_w2_matched_100m/scientific_cumulative_001025507328.pt",
+      "sha256": "8216c16e2af52b9b570f46fcc5a9512c4b62d916efb525691ded987e255d733d"
+    },
+    {
+      "remote_path": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001050673152.pt",
+      "local_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d5c_fixed_writer_b3_b5_w2_matched_100m/scientific_cumulative_001050673152.pt",
+      "sha256": "cbf5a4d7aaebfdaa2fe6ee4e5f663e070444af943a20d0737b224891978a2219"
+    },
+    {
+      "remote_path": "/workspace/exp2d5c_w2w2_100m/checkpoints/scientific_cumulative_001075838976.pt",
+      "local_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d5c_fixed_writer_b3_b5_w2_matched_100m/scientific_cumulative_001075838976.pt",
+      "sha256": "4f36cbaa21fa2b00ae10fcd547d4d2e963e6b8900e63d5535116a9f652d412d2"
+    }
+  ],
+  "deleted_disposable_or_empty_files": [
+    "/workspace/exp2d6_b6_native_100m/diagnostics/preflight_failed_uniform_optimizer_step_assumption/DISPOSABLE_UPDATE_0001.pt",
+    "/workspace/exp2d1r_failure_artifacts/scale_diagnostics_update1200_eio.tmp"
+  ],
+  "retained": {
+    "volume": "yhzyb27fb5",
+    "sealed_2d6_parent": true,
+    "2d7_N_checkpoint": true,
+    "2d7_O1_checkpoint": true,
+    "all_compact_provenance_and_result_artifacts": true
+  },
+  "volume_expanded": false
+}

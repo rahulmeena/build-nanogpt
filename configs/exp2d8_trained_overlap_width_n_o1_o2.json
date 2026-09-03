@@ -1,0 +1,74 @@
+{
+  "experiment": "2D8",
+  "description": "trained-overlap-width-extension-N-O1-O2",
+  "branch": "experiment-2d8-trained-overlap-width-n-o1-o2",
+  "parent": {
+    "checkpoint": "scientific_cumulative_001100480512.pt",
+    "sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7",
+    "global_update": 2099,
+    "cumulative_targets": 1100480512
+  },
+  "existing_checkpoints": {
+    "N": "57e62a2094693205b520e2986047d46c28d042d4ec34d6e65b2135f474adec20",
+    "O1": "c1354459f03703b31d25b649cd7b64d2aad95a60d1764b3dee3af7c675f59cc6"
+  },
+  "common_architecture": {
+    "local_windows": {
+      "B1": 2,
+      "B2": 1024,
+      "B3": 32,
+      "B4": 1024,
+      "B5": 64,
+      "B6": 1024,
+      "B7": 1024,
+      "B8": 1024,
+      "B9": 1024,
+      "B10": 1024,
+      "B11": 1024,
+      "B12": 1024
+    },
+    "recurrent_sources": {"B1": "B12", "B3": "B10", "B5": "B8"},
+    "b7_to_b6_recurrence": false,
+    "separate_local_recurrent_softmax": true,
+    "existing_gates_trainable": ["g_rec", "g_rec_b3", "g_rec_b5"],
+    "new_parameters": 0,
+    "parameter_count": 124475908
+  },
+  "geometry": {
+    "N": {"B1": 2, "B3": 32, "B5": 64},
+    "O1": {"B1": 1, "B3": 31, "B5": 63},
+    "O2": {"B1": 1, "B3": 30, "B5": 62}
+  },
+  "training": {
+    "new_arms": ["O2"],
+    "existing_arms_not_retrained": ["N", "O1"],
+    "optimizer_updates": 191,
+    "first_global_update": 2100,
+    "final_global_update": 2290,
+    "targets_per_update": 524288,
+    "new_targets": 100139008,
+    "final_cumulative_targets": 1200619520,
+    "objective": "CE only",
+    "reuse_exact_2d7_continuation": true
+  },
+  "terminal_stream": {
+    "final_loader_cursor_sha256": "682abcbcc8db8886274ccbb604927683af38d010ecae31b1494987513ae982d3",
+    "next_global_batch_sha256": "a021ce09f7a25b6617632e2a76da1acb0980ac1dda888df5f1c8eb65b3939fbe",
+    "next_stream_sha256": "7918ea7e6f979b8e49fca89c60dd68ace44b768854d34bc96dd751bee07b2567"
+  },
+  "evaluation": {
+    "conditions": ["N_REAL", "O1_REAL", "O2_REAL"],
+    "sequences": 4096,
+    "targets_per_sequence": 1024,
+    "targets_per_condition": 4194304,
+    "true_incremental": true,
+    "fresh_panels": 1,
+    "panel_seed": 20260904
+  },
+  "statistics": {
+    "bootstrap_resamples": 50000,
+    "bootstrap_seed": 20260902,
+    "delta_ce": 0.0001,
+    "stratified_pooled_n_o1": true
+  }
+}
