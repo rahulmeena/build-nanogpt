@@ -1,0 +1,1994 @@
+{
+  "arms": {
+    "G": {
+      "architecture_fingerprint": "9c2b62fd90ebb01a270c35e3a8edee206bfd3396905d383ae13b2a00c05ccd9d",
+      "architecture_manifest": {
+        "active_recurrent_gates": [
+          "g_rec",
+          "g_rec_b3",
+          "g_rec_b5"
+        ],
+        "arm": "G",
+        "b7_recurrent_ring": false,
+        "b7_to_b6_computational_link": false,
+        "blocks": [
+          {
+            "block": 1,
+            "local_lags": [
+              0,
+              1
+            ],
+            "recurrent_lags": [
+              3,
+              1023
+            ],
+            "recurrent_source_block": 12,
+            "separate_local_recurrent_softmax": true
+          },
+          {
+            "block": 2,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 3,
+            "local_lags": [
+              0,
+              31
+            ],
+            "recurrent_lags": [
+              33,
+              1023
+            ],
+            "recurrent_source_block": 10,
+            "separate_local_recurrent_softmax": true
+          },
+          {
+            "block": 4,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 5,
+            "local_lags": [
+              0,
+              63
+            ],
+            "recurrent_lags": [
+              65,
+              1023
+            ],
+            "recurrent_source_block": 8,
+            "separate_local_recurrent_softmax": true
+          },
+          {
+            "block": 6,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 7,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 8,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 9,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 10,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 11,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 12,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          }
+        ],
+        "condition": "GAP1_REAL",
+        "description": "trained-boundary-alignment-N-O-G",
+        "dormant_compatibility_parameter": "g_rec_b6",
+        "experiment": "2D7",
+        "local_windows": {
+          "B1": 2,
+          "B10": 1024,
+          "B11": 1024,
+          "B12": 1024,
+          "B2": 1024,
+          "B3": 32,
+          "B4": 1024,
+          "B5": 64,
+          "B6": 1024,
+          "B7": 1024,
+          "B8": 1024,
+          "B9": 1024
+        },
+        "new_parameters": 0,
+        "parameter_count": 124475908,
+        "recurrent_minimum_lags": {
+          "B1": 3,
+          "B3": 33,
+          "B5": 65
+        },
+        "source_identity": "j=t-lag"
+      },
+      "construction": {
+        "active_gates_trainable": true,
+        "gate_inventory": true,
+        "gate_values_inherited": true,
+        "loader_next_batch": true,
+        "loader_next_stream": true,
+        "loader_state_restored": true,
+        "model_finite": true,
+        "optimizer_finite": true,
+        "optimizer_state_restored": true,
+        "parameter_count": true,
+        "parent_architecture": true,
+        "parent_arm": true,
+        "parent_cumulative_targets": true,
+        "parent_experiment": true,
+        "parent_global_update": true,
+        "parent_gradient_accumulation": true,
+        "parent_loader": true,
+        "parent_local_updates": true,
+        "parent_microbatch": true,
+        "parent_optimizer": true,
+        "parent_rng": true,
+        "parent_scheduler": true,
+        "parent_schema": true,
+        "parent_targets_per_update": true,
+        "rng_state_restored": true,
+        "scheduler_state_restored": true,
+        "state_dict_keys_exact": true,
+        "strict_no_missing": true,
+        "strict_no_unexpected": true
+      },
+      "disposable_smoke": {
+        "active_gate_gradients": {
+          "g_rec": {
+            "finite": true,
+            "nonzero": true,
+            "present": true
+          },
+          "g_rec_b3": {
+            "finite": true,
+            "nonzero": true,
+            "present": true
+          },
+          "g_rec_b5": {
+            "finite": true,
+            "nonzero": true,
+            "present": true
+          }
+        },
+        "arm": "G",
+        "dormant_b6_gate_gradient_none": true,
+        "finite_forward_loss": true,
+        "finite_gradients": true,
+        "forward_loss": 13.05223274230957,
+        "official_optimizer_updates": 0,
+        "passed": true,
+        "shape": [
+          1,
+          70,
+          50304
+        ]
+      },
+      "geometry": {
+        "arm": "G",
+        "boundaries": {
+          "B1": {
+            "local_exact": true,
+            "local_window": 2,
+            "neighborhood": {
+              "1": {
+                "local": true,
+                "recurrent": false
+              },
+              "2": {
+                "local": false,
+                "recurrent": false
+              },
+              "3": {
+                "local": false,
+                "recurrent": true
+              }
+            },
+            "no_future": true,
+            "recurrent_exact": true,
+            "recurrent_minimum_lag": 3,
+            "source_identity": "j=t-lag"
+          },
+          "B3": {
+            "local_exact": true,
+            "local_window": 32,
+            "neighborhood": {
+              "31": {
+                "local": true,
+                "recurrent": false
+              },
+              "32": {
+                "local": false,
+                "recurrent": false
+              },
+              "33": {
+                "local": false,
+                "recurrent": true
+              }
+            },
+            "no_future": true,
+            "recurrent_exact": true,
+            "recurrent_minimum_lag": 33,
+            "source_identity": "j=t-lag"
+          },
+          "B5": {
+            "local_exact": true,
+            "local_window": 64,
+            "neighborhood": {
+              "63": {
+                "local": true,
+                "recurrent": false
+              },
+              "64": {
+                "local": false,
+                "recurrent": false
+              },
+              "65": {
+                "local": false,
+                "recurrent": true
+              }
+            },
+            "no_future": true,
+            "recurrent_exact": true,
+            "recurrent_minimum_lag": 65,
+            "source_identity": "j=t-lag"
+          }
+        },
+        "checks": {
+          "b6_runtime_capacity_w1024": true,
+          "b7_ring_absent": true,
+          "b7_to_b6_runtime_absent": true,
+          "boundary_masks": true,
+          "maximum_recurrent_lag": true,
+          "runtime_source_identity": true
+        },
+        "passed": true,
+        "runtime_positions": {
+          "B1": {
+            "expected_positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62
+            ],
+            "positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62
+            ],
+            "query_position": 65,
+            "source_identity_exact": true
+          },
+          "B3": {
+            "expected_positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ],
+            "positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ],
+            "query_position": 65,
+            "source_identity_exact": true
+          },
+          "B5": {
+            "expected_positions": [
+              0
+            ],
+            "positions": [
+              0
+            ],
+            "query_position": 65,
+            "source_identity_exact": true
+          }
+        }
+      },
+      "passed": true
+    },
+    "N": {
+      "architecture_fingerprint": "ffcfdf6b88729ea2fff558d1775ee6864cbce4d8817951d09bd8244f0572c4d8",
+      "architecture_manifest": {
+        "active_recurrent_gates": [
+          "g_rec",
+          "g_rec_b3",
+          "g_rec_b5"
+        ],
+        "arm": "N",
+        "b7_recurrent_ring": false,
+        "b7_to_b6_computational_link": false,
+        "blocks": [
+          {
+            "block": 1,
+            "local_lags": [
+              0,
+              1
+            ],
+            "recurrent_lags": [
+              2,
+              1023
+            ],
+            "recurrent_source_block": 12,
+            "separate_local_recurrent_softmax": true
+          },
+          {
+            "block": 2,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 3,
+            "local_lags": [
+              0,
+              31
+            ],
+            "recurrent_lags": [
+              32,
+              1023
+            ],
+            "recurrent_source_block": 10,
+            "separate_local_recurrent_softmax": true
+          },
+          {
+            "block": 4,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 5,
+            "local_lags": [
+              0,
+              63
+            ],
+            "recurrent_lags": [
+              64,
+              1023
+            ],
+            "recurrent_source_block": 8,
+            "separate_local_recurrent_softmax": true
+          },
+          {
+            "block": 6,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 7,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 8,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 9,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 10,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 11,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 12,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          }
+        ],
+        "condition": "BASELINE_REAL",
+        "description": "trained-boundary-alignment-N-O-G",
+        "dormant_compatibility_parameter": "g_rec_b6",
+        "experiment": "2D7",
+        "local_windows": {
+          "B1": 2,
+          "B10": 1024,
+          "B11": 1024,
+          "B12": 1024,
+          "B2": 1024,
+          "B3": 32,
+          "B4": 1024,
+          "B5": 64,
+          "B6": 1024,
+          "B7": 1024,
+          "B8": 1024,
+          "B9": 1024
+        },
+        "new_parameters": 0,
+        "parameter_count": 124475908,
+        "recurrent_minimum_lags": {
+          "B1": 2,
+          "B3": 32,
+          "B5": 64
+        },
+        "source_identity": "j=t-lag"
+      },
+      "construction": {
+        "active_gates_trainable": true,
+        "gate_inventory": true,
+        "gate_values_inherited": true,
+        "loader_next_batch": true,
+        "loader_next_stream": true,
+        "loader_state_restored": true,
+        "model_finite": true,
+        "optimizer_finite": true,
+        "optimizer_state_restored": true,
+        "parameter_count": true,
+        "parent_architecture": true,
+        "parent_arm": true,
+        "parent_cumulative_targets": true,
+        "parent_experiment": true,
+        "parent_global_update": true,
+        "parent_gradient_accumulation": true,
+        "parent_loader": true,
+        "parent_local_updates": true,
+        "parent_microbatch": true,
+        "parent_optimizer": true,
+        "parent_rng": true,
+        "parent_scheduler": true,
+        "parent_schema": true,
+        "parent_targets_per_update": true,
+        "rng_state_restored": true,
+        "scheduler_state_restored": true,
+        "state_dict_keys_exact": true,
+        "strict_no_missing": true,
+        "strict_no_unexpected": true
+      },
+      "disposable_smoke": {
+        "active_gate_gradients": {
+          "g_rec": {
+            "finite": true,
+            "nonzero": true,
+            "present": true
+          },
+          "g_rec_b3": {
+            "finite": true,
+            "nonzero": true,
+            "present": true
+          },
+          "g_rec_b5": {
+            "finite": true,
+            "nonzero": true,
+            "present": true
+          }
+        },
+        "arm": "N",
+        "dormant_b6_gate_gradient_none": true,
+        "finite_forward_loss": true,
+        "finite_gradients": true,
+        "forward_loss": 13.053905487060547,
+        "official_optimizer_updates": 0,
+        "passed": true,
+        "shape": [
+          1,
+          70,
+          50304
+        ]
+      },
+      "geometry": {
+        "arm": "N",
+        "boundaries": {
+          "B1": {
+            "local_exact": true,
+            "local_window": 2,
+            "neighborhood": {
+              "1": {
+                "local": true,
+                "recurrent": false
+              },
+              "2": {
+                "local": false,
+                "recurrent": true
+              },
+              "3": {
+                "local": false,
+                "recurrent": true
+              }
+            },
+            "no_future": true,
+            "recurrent_exact": true,
+            "recurrent_minimum_lag": 2,
+            "source_identity": "j=t-lag"
+          },
+          "B3": {
+            "local_exact": true,
+            "local_window": 32,
+            "neighborhood": {
+              "31": {
+                "local": true,
+                "recurrent": false
+              },
+              "32": {
+                "local": false,
+                "recurrent": true
+              },
+              "33": {
+                "local": false,
+                "recurrent": true
+              }
+            },
+            "no_future": true,
+            "recurrent_exact": true,
+            "recurrent_minimum_lag": 32,
+            "source_identity": "j=t-lag"
+          },
+          "B5": {
+            "local_exact": true,
+            "local_window": 64,
+            "neighborhood": {
+              "63": {
+                "local": true,
+                "recurrent": false
+              },
+              "64": {
+                "local": false,
+                "recurrent": true
+              },
+              "65": {
+                "local": false,
+                "recurrent": true
+              }
+            },
+            "no_future": true,
+            "recurrent_exact": true,
+            "recurrent_minimum_lag": 64,
+            "source_identity": "j=t-lag"
+          }
+        },
+        "checks": {
+          "b6_runtime_capacity_w1024": true,
+          "b7_ring_absent": true,
+          "b7_to_b6_runtime_absent": true,
+          "boundary_masks": true,
+          "maximum_recurrent_lag": true,
+          "runtime_source_identity": true
+        },
+        "passed": true,
+        "runtime_positions": {
+          "B1": {
+            "expected_positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63
+            ],
+            "positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63
+            ],
+            "query_position": 65,
+            "source_identity_exact": true
+          },
+          "B3": {
+            "expected_positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33
+            ],
+            "positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33
+            ],
+            "query_position": 65,
+            "source_identity_exact": true
+          },
+          "B5": {
+            "expected_positions": [
+              0,
+              1
+            ],
+            "positions": [
+              0,
+              1
+            ],
+            "query_position": 65,
+            "source_identity_exact": true
+          }
+        }
+      },
+      "passed": true
+    },
+    "O": {
+      "architecture_fingerprint": "b598e0a8a312329e8540aad933f2868c54b66eb6b43f7555025a707fb6db4169",
+      "architecture_manifest": {
+        "active_recurrent_gates": [
+          "g_rec",
+          "g_rec_b3",
+          "g_rec_b5"
+        ],
+        "arm": "O",
+        "b7_recurrent_ring": false,
+        "b7_to_b6_computational_link": false,
+        "blocks": [
+          {
+            "block": 1,
+            "local_lags": [
+              0,
+              1
+            ],
+            "recurrent_lags": [
+              1,
+              1023
+            ],
+            "recurrent_source_block": 12,
+            "separate_local_recurrent_softmax": true
+          },
+          {
+            "block": 2,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 3,
+            "local_lags": [
+              0,
+              31
+            ],
+            "recurrent_lags": [
+              31,
+              1023
+            ],
+            "recurrent_source_block": 10,
+            "separate_local_recurrent_softmax": true
+          },
+          {
+            "block": 4,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 5,
+            "local_lags": [
+              0,
+              63
+            ],
+            "recurrent_lags": [
+              63,
+              1023
+            ],
+            "recurrent_source_block": 8,
+            "separate_local_recurrent_softmax": true
+          },
+          {
+            "block": 6,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 7,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 8,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 9,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 10,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 11,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          },
+          {
+            "block": 12,
+            "local_lags": [
+              0,
+              1023
+            ],
+            "recurrent_lags": null,
+            "recurrent_source_block": null
+          }
+        ],
+        "condition": "OVERLAP1_REAL",
+        "description": "trained-boundary-alignment-N-O-G",
+        "dormant_compatibility_parameter": "g_rec_b6",
+        "experiment": "2D7",
+        "local_windows": {
+          "B1": 2,
+          "B10": 1024,
+          "B11": 1024,
+          "B12": 1024,
+          "B2": 1024,
+          "B3": 32,
+          "B4": 1024,
+          "B5": 64,
+          "B6": 1024,
+          "B7": 1024,
+          "B8": 1024,
+          "B9": 1024
+        },
+        "new_parameters": 0,
+        "parameter_count": 124475908,
+        "recurrent_minimum_lags": {
+          "B1": 1,
+          "B3": 31,
+          "B5": 63
+        },
+        "source_identity": "j=t-lag"
+      },
+      "construction": {
+        "active_gates_trainable": true,
+        "gate_inventory": true,
+        "gate_values_inherited": true,
+        "loader_next_batch": true,
+        "loader_next_stream": true,
+        "loader_state_restored": true,
+        "model_finite": true,
+        "optimizer_finite": true,
+        "optimizer_state_restored": true,
+        "parameter_count": true,
+        "parent_architecture": true,
+        "parent_arm": true,
+        "parent_cumulative_targets": true,
+        "parent_experiment": true,
+        "parent_global_update": true,
+        "parent_gradient_accumulation": true,
+        "parent_loader": true,
+        "parent_local_updates": true,
+        "parent_microbatch": true,
+        "parent_optimizer": true,
+        "parent_rng": true,
+        "parent_scheduler": true,
+        "parent_schema": true,
+        "parent_targets_per_update": true,
+        "rng_state_restored": true,
+        "scheduler_state_restored": true,
+        "state_dict_keys_exact": true,
+        "strict_no_missing": true,
+        "strict_no_unexpected": true
+      },
+      "disposable_smoke": {
+        "active_gate_gradients": {
+          "g_rec": {
+            "finite": true,
+            "nonzero": true,
+            "present": true
+          },
+          "g_rec_b3": {
+            "finite": true,
+            "nonzero": true,
+            "present": true
+          },
+          "g_rec_b5": {
+            "finite": true,
+            "nonzero": true,
+            "present": true
+          }
+        },
+        "arm": "O",
+        "dormant_b6_gate_gradient_none": true,
+        "finite_forward_loss": true,
+        "finite_gradients": true,
+        "forward_loss": 13.062946319580078,
+        "official_optimizer_updates": 0,
+        "passed": true,
+        "shape": [
+          1,
+          70,
+          50304
+        ]
+      },
+      "geometry": {
+        "arm": "O",
+        "boundaries": {
+          "B1": {
+            "local_exact": true,
+            "local_window": 2,
+            "neighborhood": {
+              "1": {
+                "local": true,
+                "recurrent": true
+              },
+              "2": {
+                "local": false,
+                "recurrent": true
+              },
+              "3": {
+                "local": false,
+                "recurrent": true
+              }
+            },
+            "no_future": true,
+            "recurrent_exact": true,
+            "recurrent_minimum_lag": 1,
+            "source_identity": "j=t-lag"
+          },
+          "B3": {
+            "local_exact": true,
+            "local_window": 32,
+            "neighborhood": {
+              "31": {
+                "local": true,
+                "recurrent": true
+              },
+              "32": {
+                "local": false,
+                "recurrent": true
+              },
+              "33": {
+                "local": false,
+                "recurrent": true
+              }
+            },
+            "no_future": true,
+            "recurrent_exact": true,
+            "recurrent_minimum_lag": 31,
+            "source_identity": "j=t-lag"
+          },
+          "B5": {
+            "local_exact": true,
+            "local_window": 64,
+            "neighborhood": {
+              "63": {
+                "local": true,
+                "recurrent": true
+              },
+              "64": {
+                "local": false,
+                "recurrent": true
+              },
+              "65": {
+                "local": false,
+                "recurrent": true
+              }
+            },
+            "no_future": true,
+            "recurrent_exact": true,
+            "recurrent_minimum_lag": 63,
+            "source_identity": "j=t-lag"
+          }
+        },
+        "checks": {
+          "b6_runtime_capacity_w1024": true,
+          "b7_ring_absent": true,
+          "b7_to_b6_runtime_absent": true,
+          "boundary_masks": true,
+          "maximum_recurrent_lag": true,
+          "runtime_source_identity": true
+        },
+        "passed": true,
+        "runtime_positions": {
+          "B1": {
+            "expected_positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63,
+              64
+            ],
+            "positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63,
+              64
+            ],
+            "query_position": 65,
+            "source_identity_exact": true
+          },
+          "B3": {
+            "expected_positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34
+            ],
+            "positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34
+            ],
+            "query_position": 65,
+            "source_identity_exact": true
+          },
+          "B5": {
+            "expected_positions": [
+              0,
+              1,
+              2
+            ],
+            "positions": [
+              0,
+              1,
+              2
+            ],
+            "query_position": 65,
+            "source_identity_exact": true
+          }
+        }
+      },
+      "passed": true
+    }
+  },
+  "authorized": true,
+  "checks": {
+    "all_arms": true,
+    "config_diff": true,
+    "continuation": true,
+    "first_batch_matches_manifest": true,
+    "first_loader_state_identical": true,
+    "first_stream_matches_manifest": true,
+    "first_update": true,
+    "gate_values_identical": true,
+    "panel": true,
+    "panel_fresh": true,
+    "parameter_counts_identical": true,
+    "parent_sha": true,
+    "terminal_update": true
+  },
+  "config_diff_audit": {
+    "common_architecture_exact": true,
+    "only_allowed_geometry_minima": true
+  },
+  "experiment": "2D7",
+  "first_logical_batches": {
+    "G": {
+      "batch": "62800455f294aaf110fbfc024abaa601c30f45d96175acb795a4d162d53da097",
+      "cursor": {
+        "batch_size": 32,
+        "current_position": 51412992,
+        "current_shard": 13,
+        "sequence_length": 1024,
+        "shards": [
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+        ]
+      },
+      "stream": "cdfd4afb20c268d69e3e3fbc1c39076af21719ba6d2a6636180f12b1afd5a157"
+    },
+    "N": {
+      "batch": "62800455f294aaf110fbfc024abaa601c30f45d96175acb795a4d162d53da097",
+      "cursor": {
+        "batch_size": 32,
+        "current_position": 51412992,
+        "current_shard": 13,
+        "sequence_length": 1024,
+        "shards": [
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+        ]
+      },
+      "stream": "cdfd4afb20c268d69e3e3fbc1c39076af21719ba6d2a6636180f12b1afd5a157"
+    },
+    "O": {
+      "batch": "62800455f294aaf110fbfc024abaa601c30f45d96175acb795a4d162d53da097",
+      "cursor": {
+        "batch_size": 32,
+        "current_position": 51412992,
+        "current_shard": 13,
+        "sequence_length": 1024,
+        "shards": [
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+        ]
+      },
+      "stream": "cdfd4afb20c268d69e3e3fbc1c39076af21719ba6d2a6636180f12b1afd5a157"
+    }
+  },
+  "git_commit": "db9d49a811021553d079909a1acab3abd7d9989e",
+  "implementation_sha256": {
+    "configs/exp2d7_trained_boundary_alignment_nog.json": "2da0b778bcfe188acbc51f51d1b37c47d3aa2a281363e633a354191c341e16ea",
+    "scripts/experiment_2d7.py": "62bb4c455e5a9b64adade8961f0e7020afa3509fc0b045e328f0c26f3b94ed5c",
+    "scripts/experiment_2d7_core.py": "70c2cb49d6d80727a51512cc7bbd85ddbf9ab428df074a300e874ed7402b7fd2"
+  },
+  "inherited_gate_sha256": {
+    "G": {
+      "g_rec": "2dba1a435331ffa0a264ae4f77eb3a39354feb104359c6a49b036aea4d2873da",
+      "g_rec_b3": "e3de69b79160409cc2af78f4f14de8f5fa30990c9d7731badd9d313588eb7dd3",
+      "g_rec_b5": "09db87bbbacdfae22db55451212d34775ccdf2a44d419f2b2a2a085a355ab2e0",
+      "g_rec_b6": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+    },
+    "N": {
+      "g_rec": "2dba1a435331ffa0a264ae4f77eb3a39354feb104359c6a49b036aea4d2873da",
+      "g_rec_b3": "e3de69b79160409cc2af78f4f14de8f5fa30990c9d7731badd9d313588eb7dd3",
+      "g_rec_b5": "09db87bbbacdfae22db55451212d34775ccdf2a44d419f2b2a2a085a355ab2e0",
+      "g_rec_b6": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+    },
+    "O": {
+      "g_rec": "2dba1a435331ffa0a264ae4f77eb3a39354feb104359c6a49b036aea4d2873da",
+      "g_rec_b3": "e3de69b79160409cc2af78f4f14de8f5fa30990c9d7731badd9d313588eb7dd3",
+      "g_rec_b5": "09db87bbbacdfae22db55451212d34775ccdf2a44d419f2b2a2a085a355ab2e0",
+      "g_rec_b6": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+    }
+  },
+  "parameter_counts": {
+    "G": 124475908,
+    "N": 124475908,
+    "O": 124475908
+  },
+  "provenance": {
+    "continuation_ledger_sha256": "555ac4b4425fcd711edf2e923412ecfac1db49802653570fe56b02ae4139c1aa",
+    "continuation_manifest_path": "/workspace/exp2d7_boundary_alignment/run/preflight/CONTINUATION_MANIFEST.json",
+    "continuation_manifest_sha256": "f15a5de4b5428031adfe8877f01e6487dcdfc6749e337f552feb7c6f92e9cc4d",
+    "panel_manifest_path": "/workspace/exp2d7_boundary_alignment/repo/results/experiment_2d7_trained_boundary_alignment_nog/EVALUATION_PANEL_MANIFEST.json",
+    "panel_manifest_sha256": "830ac44b61cc5d7d000705980927415f857e7823ac91055737d708d33754a8fa",
+    "panel_sha256": "0b1dbf7bf7af7412bd879e63d0203586799b9713b8299adcc864f1832b64d393",
+    "parent_cumulative_targets": 1100480512,
+    "parent_global_update": 2099,
+    "parent_path": "/workspace/exp2d6_b6_native_100m/checkpoints/scientific_cumulative_001100480512.pt",
+    "parent_sha256": "6e5023b127032dbb4d32a23bf1be052702d51177437b2795b99c52bcd83314c7"
+  },
+  "schema": "experiment_2d7_preflight_audit_v1"
+}
