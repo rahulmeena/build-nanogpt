@@ -1,0 +1,47 @@
+{
+  "atol": 2e-06,
+  "batch_size": 2,
+  "checks": [
+    {
+      "attention_projection_inputs_match": true,
+      "bf16": false,
+      "ce_abs_difference": 0.0,
+      "max_logits_abs_difference": 0.0,
+      "mode": "parallel",
+      "passed": true
+    },
+    {
+      "attention_projection_inputs_match": true,
+      "bf16": false,
+      "ce_abs_difference": 0.0,
+      "max_logits_abs_difference": 0.0,
+      "mode": "incremental",
+      "passed": true
+    },
+    {
+      "attention_projection_inputs_match": true,
+      "bf16": true,
+      "ce_abs_difference": 0.0,
+      "max_logits_abs_difference": 0.0,
+      "mode": "parallel",
+      "passed": true
+    },
+    {
+      "attention_projection_inputs_match": true,
+      "bf16": true,
+      "ce_abs_difference": 0.0,
+      "max_logits_abs_difference": 0.0,
+      "mode": "incremental",
+      "passed": true
+    }
+  ],
+  "parent_gate_values": {
+    "B1": 0.305539071559906,
+    "B3": 0.011701961979269981,
+    "B5": 0.044410012662410736
+  },
+  "passed": true,
+  "rtol": 2e-05,
+  "sequence_length": 70,
+  "source_sha256": "c1354459f03703b31d25b649cd7b64d2aad95a60d1764b3dee3af7c675f59cc6"
+}

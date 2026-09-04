@@ -1,0 +1,1245 @@
+{
+  "classification": "TOKEN-CONDITIONED GATING ESTABLISHES UTILITY",
+  "preferred_architecture": "Retain static O1 provisionally",
+  "aggregate_ce": {
+    "STATIC_REAL": 3.0479444328291456,
+    "DYNAMIC_REAL": 3.047890174202972,
+    "DYNAMIC_STATICIZED": 3.0480295054003164
+  },
+  "perplexity": {
+    "STATIC_REAL": 21.071984993121603,
+    "DYNAMIC_REAL": 21.070841687182508,
+    "DYNAMIC_STATICIZED": 21.073777717319388
+  },
+  "paired": {
+    "seed": 20260906,
+    "resamples": 50000,
+    "unit": "paired sequence (4096)",
+    "shared_indices_across_contrasts": true,
+    "interval": "95% percentile; NumPy linear",
+    "numpy_version": "2.0.2",
+    "bit_generator": "PCG64",
+    "delta_ce": 0.0001,
+    "contrasts": {
+      "A": {
+        "contrast": "Static \u2212 Dynamic",
+        "mean": 5.425862617403716e-05,
+        "ci95": [
+          4.552162732402587e-06,
+          0.00010453115461414118
+        ],
+        "exp_contrast": 1.0000542600981999,
+        "exp_ci95": [
+          1.0000045521730936,
+          1.0001045366181855
+        ],
+        "second_condition_sequence_wins": 2121,
+        "first_condition_sequence_wins": 1975,
+        "ties": 0,
+        "flags": {
+          "positive_utility": true,
+          "benefit_beyond_margin": false,
+          "negative_utility": false,
+          "harm_beyond_margin": false,
+          "practical_equivalence": false,
+          "noninferiority_of_second_named_condition": true
+        }
+      },
+      "P": {
+        "contrast": "Staticized \u2212 Dynamic",
+        "mean": 0.00013933119734520292,
+        "ci95": [
+          9.047581164556376e-05,
+          0.00018835693761303892
+        ],
+        "exp_contrast": 1.0001393409043873,
+        "exp_ci95": [
+          1.0000904799047052,
+          1.0001883746778948
+        ],
+        "second_condition_sequence_wins": 2171,
+        "first_condition_sequence_wins": 1925,
+        "ties": 0,
+        "flags": {
+          "positive_utility": true,
+          "benefit_beyond_margin": false,
+          "negative_utility": false,
+          "harm_beyond_margin": false,
+          "practical_equivalence": false,
+          "noninferiority_of_second_named_condition": true
+        }
+      },
+      "R": {
+        "contrast": "Static \u2212 Staticized",
+        "mean": -8.507257117116576e-05,
+        "ci95": [
+          -0.00013492875495837767,
+          -3.5385255814272706e-05
+        ],
+        "exp_contrast": 0.9999149310473974,
+        "exp_ci95": [
+          0.9998650803475166,
+          0.9999646153702365
+        ],
+        "second_condition_sequence_wins": 1955,
+        "first_condition_sequence_wins": 2141,
+        "ties": 0,
+        "flags": {
+          "positive_utility": false,
+          "benefit_beyond_margin": false,
+          "negative_utility": true,
+          "harm_beyond_margin": false,
+          "practical_equivalence": false,
+          "noninferiority_of_second_named_condition": false
+        }
+      }
+    },
+    "decomposition_residual": 0.0,
+    "uncertainty_scope": "Evaluation-sequence uncertainty for two sealed training trajectories; no training-seed replication.",
+    "shared_dynamic_condition": "A and P share Dynamic and are not independent replications."
+  },
+  "gates": {
+    "array_sha256": "bc7f3723bf78cc54db9241fa907cdfff7d0afec879f3e390c7eda3e66737b017",
+    "array_shape": [
+      3,
+      3,
+      4096,
+      1024
+    ],
+    "array_layout": [
+      "destination B1/B3/B5",
+      "preactivation / FP32 g / BF16 coefficient represented as FP32",
+      "sequence",
+      "token position"
+    ],
+    "quantiles": "Exact full-panel linear percentiles; no sampling",
+    "token_count_per_destination": 4194304,
+    "standard_deviation_definitions": {
+      "across_tokens": "Population std over all 4,194,304 token coefficients (ddof=0)",
+      "sequence_means": "Population std of 4,096 per-sequence means (ddof=0)",
+      "within_sequence": "Mean of 4,096 per-sequence population std values"
+    },
+    "device_buffer_bound": "One B64 \u00d7 T1024 batch; one batched device-to-CPU transfer; no RNG consumed",
+    "destinations": {
+      "B1": {
+        "parent_raw_g0": 0.305539071559906,
+        "g0": 0.3086530268192291,
+        "tanh_g0": 0.29921117424964905,
+        "w_norm": 0.014254109002649784,
+        "preactivation_fp32": {
+          "mean": 0.3210477142428907,
+          "std": 0.019462241489366306,
+          "min": 0.1402290165424347,
+          "max": 0.43624037504196167
+        },
+        "gate_input": "token embedding + position embedding",
+        "first_position_with_recurrent_memory": 1,
+        "mathematical_fp32_gate": {
+          "mean": 0.3103489216395907,
+          "std": 0.017647441156265837,
+          "min": 0.13931703567504883,
+          "max": 0.41052326560020447,
+          "percentiles": {
+            "p1": 0.26614937543869016,
+            "p5": 0.28218612223863604,
+            "p25": 0.29912346601486206,
+            "median": 0.31177082657814026,
+            "p75": 0.3224989175796509,
+            "p95": 0.33648329973220825,
+            "p99": 0.3492259681224823
+          },
+          "negative_fraction": 0.0,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.01650169211827901,
+          "std_of_per_sequence_means": 0.0024061827952773077,
+          "mean_within_sequence_std": 0.017460111348871023,
+          "position_bins": {
+            "0": {
+              "mean": 0.38612448455387494,
+              "std": 0.00860927038166372,
+              "min": 0.3481374979019165,
+              "max": 0.41052326560020447,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.28726647198451366,
+              "std": 0.032705566909229385,
+              "min": 0.13931703567504883,
+              "max": 0.3606092035770416,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "32\u201363": {
+              "mean": 0.3082097845910994,
+              "std": 0.01661671230436205,
+              "min": 0.23930422961711884,
+              "max": 0.3654610216617584,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "64\u2013127": {
+              "mean": 0.30871477422903126,
+              "std": 0.016760934455104966,
+              "min": 0.23928508162498474,
+              "max": 0.3656672537326813,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.31027467918477214,
+              "std": 0.01681236781651213,
+              "min": 0.23994788527488708,
+              "max": 0.3677646815776825,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.3107460097765653,
+              "std": 0.016425565666511478,
+              "min": 0.2412957400083542,
+              "max": 0.3692263960838318,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.3105110837460501,
+              "std": 0.015860673334694552,
+              "min": 0.24222908914089203,
+              "max": 0.3664981722831726,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.3130018637025529,
+              "std": 0.01590797164040694,
+              "min": 0.24336260557174683,
+              "max": 0.36931082606315613,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        },
+        "effective_bf16_coefficient": {
+          "mean": 0.31034705974161625,
+          "std": 0.017655326868845536,
+          "min": 0.1396484375,
+          "max": 0.41015625,
+          "percentiles": {
+            "p1": 0.265625,
+            "p5": 0.28125,
+            "p25": 0.298828125,
+            "median": 0.3125,
+            "p75": 0.322265625,
+            "p95": 0.3359375,
+            "p99": 0.349609375
+          },
+          "negative_fraction": 0.0,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.016509187170086648,
+          "std_of_per_sequence_means": 0.0024060042421741477,
+          "mean_within_sequence_std": 0.017468131251490868,
+          "position_bins": {
+            "0": {
+              "mean": 0.38610315322875977,
+              "std": 0.008653877730421602,
+              "min": 0.34765625,
+              "max": 0.41015625,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.2872695153759372,
+              "std": 0.032716959434744106,
+              "min": 0.1396484375,
+              "max": 0.361328125,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "32\u201363": {
+              "mean": 0.3082066625356674,
+              "std": 0.016631825165165953,
+              "min": 0.2392578125,
+              "max": 0.365234375,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "64\u2013127": {
+              "mean": 0.3087237626314163,
+              "std": 0.01676520624466198,
+              "min": 0.2392578125,
+              "max": 0.365234375,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.3102667313069105,
+              "std": 0.01682767451281425,
+              "min": 0.240234375,
+              "max": 0.3671875,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.3107399847358465,
+              "std": 0.016434967683380763,
+              "min": 0.2412109375,
+              "max": 0.369140625,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.3105068411678076,
+              "std": 0.015864167723907398,
+              "min": 0.2421875,
+              "max": 0.3671875,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.3130065156146884,
+              "std": 0.01591615682397363,
+              "min": 0.2431640625,
+              "max": 0.369140625,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        }
+      },
+      "B3": {
+        "parent_raw_g0": 0.011701961979269981,
+        "g0": 0.012151182629168034,
+        "tanh_g0": 0.01215058472007513,
+        "w_norm": 0.0059964619576931,
+        "preactivation_fp32": {
+          "mean": 0.009694683210815458,
+          "std": 0.006635598690635853,
+          "min": -0.012054051272571087,
+          "max": 0.04037627577781677
+        },
+        "gate_input": "current pre-attention residual with preceding contextual processing",
+        "first_position_with_recurrent_memory": 31,
+        "mathematical_fp32_gate": {
+          "mean": 0.009693903650503426,
+          "std": 0.0066344727098419775,
+          "min": -0.012053467333316803,
+          "max": 0.040354348719120026,
+          "percentiles": {
+            "p1": -0.0025000033155083657,
+            "p5": 0.00013295793905854247,
+            "p25": 0.0046859122812747955,
+            "median": 0.00914017204195261,
+            "p75": 0.013673285488039255,
+            "p95": 0.022065512463450426,
+            "p99": 0.026843549180775875
+          },
+          "negative_fraction": 0.046692609786987305,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.005841982724001334,
+          "std_of_per_sequence_means": 0.0008948606046843119,
+          "mean_within_sequence_std": 0.006560231722993163,
+          "position_bins": {
+            "0": {
+              "mean": 0.0026501040181301505,
+              "std": 0.002165029275237121,
+              "min": -0.003241798607632518,
+              "max": 0.011497353203594685,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.005108000328548205,
+              "std": 0.005789289804883304,
+              "min": -0.012053467333316803,
+              "max": 0.033439744263887405,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.03225806451612903
+            },
+            "32\u201363": {
+              "mean": 0.009725119022364614,
+              "std": 0.005753595813942092,
+              "min": -0.005997443571686745,
+              "max": 0.03588169440627098,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "64\u2013127": {
+              "mean": 0.012830658872681755,
+              "std": 0.005687923770416403,
+              "min": -0.0034045279026031494,
+              "max": 0.037957217544317245,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.014776941011068245,
+              "std": 0.005603350302756757,
+              "min": -0.004968720488250256,
+              "max": 0.040354348719120026,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.012996691592553455,
+              "std": 0.00575794434324984,
+              "min": -0.006623507477343082,
+              "max": 0.03913316875696182,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.007561309741469041,
+              "std": 0.005668459500932504,
+              "min": -0.010094103403389454,
+              "max": 0.03475651517510414,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.005776939282885113,
+              "std": 0.005464412319927073,
+              "min": -0.011760854162275791,
+              "max": 0.031370870769023895,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        },
+        "effective_bf16_coefficient": {
+          "mean": 0.009693867679755996,
+          "std": 0.006634470063502558,
+          "min": -0.01202392578125,
+          "max": 0.040283203125,
+          "percentiles": {
+            "p1": -0.00250244140625,
+            "p5": 0.00013256072998046875,
+            "p25": 0.00469970703125,
+            "median": 0.0091552734375,
+            "p75": 0.013671875,
+            "p95": 0.0220947265625,
+            "p99": 0.02685546875
+          },
+          "negative_fraction": 0.046692609786987305,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.005841961318429512,
+          "std_of_per_sequence_means": 0.0008948622785585118,
+          "mean_within_sequence_std": 0.006560228166134907,
+          "position_bins": {
+            "0": {
+              "mean": 0.002650080277817324,
+              "std": 0.002164751571121681,
+              "min": -0.00323486328125,
+              "max": 0.011474609375,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.005107996990927272,
+              "std": 0.005789318102758901,
+              "min": -0.01202392578125,
+              "max": 0.033447265625,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.03225806451612903
+            },
+            "32\u201363": {
+              "mean": 0.009725170219617496,
+              "std": 0.005753650187998379,
+              "min": -0.006011962890625,
+              "max": 0.035888671875,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "64\u2013127": {
+              "mean": 0.012830617351141882,
+              "std": 0.005687960465107404,
+              "min": -0.0034027099609375,
+              "max": 0.037841796875,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.014776874888866587,
+              "std": 0.005603397370369847,
+              "min": -0.004974365234375,
+              "max": 0.040283203125,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.012996634441375221,
+              "std": 0.005757930134321192,
+              "min": -0.006622314453125,
+              "max": 0.0390625,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.007561298423009788,
+              "std": 0.005668487604998472,
+              "min": -0.01007080078125,
+              "max": 0.03466796875,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.005776901408262702,
+              "std": 0.005464380441885216,
+              "min": -0.01177978515625,
+              "max": 0.03125,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        }
+      },
+      "B5": {
+        "parent_raw_g0": 0.044410012662410736,
+        "g0": 0.04200124740600586,
+        "tanh_g0": 0.04197656735777855,
+        "w_norm": 0.010406610555946827,
+        "preactivation_fp32": {
+          "mean": 0.03969682392701346,
+          "std": 0.012188133542372394,
+          "min": -0.009126804769039154,
+          "max": 0.09357958287000656
+        },
+        "gate_input": "current pre-attention residual with preceding contextual processing",
+        "first_position_with_recurrent_memory": 63,
+        "mathematical_fp32_gate": {
+          "mean": 0.0396698582347987,
+          "std": 0.01216447422087608,
+          "min": -0.009126551449298859,
+          "max": 0.09330737590789795,
+          "percentiles": {
+            "p1": 0.013888264317065477,
+            "p5": 0.021076406259089707,
+            "p25": 0.031297036446630955,
+            "median": 0.03883680701255798,
+            "p75": 0.047287010587751865,
+            "p95": 0.060541044175624836,
+            "p99": 0.07276991575956343
+          },
+          "negative_fraction": 3.24249267578125e-05,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.009895533649059415,
+          "std_of_per_sequence_means": 0.0016697680707741776,
+          "mean_within_sequence_std": 0.01203288918698755,
+          "position_bins": {
+            "0": {
+              "mean": 0.029649534793861676,
+              "std": 0.00029353154471424515,
+              "min": 0.02882186323404312,
+              "max": 0.030711457133293152,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.023042731479343333,
+              "std": 0.009055803826692669,
+              "min": -0.009126551449298859,
+              "max": 0.061482708901166916,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "32\u201363": {
+              "mean": 0.02644294963657079,
+              "std": 0.009795476865096702,
+              "min": -0.004267293959856033,
+              "max": 0.06765010952949524,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.03125
+            },
+            "64\u2013127": {
+              "mean": 0.030520372543449525,
+              "std": 0.010198479782485613,
+              "min": -0.003515292424708605,
+              "max": 0.07363197952508926,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.03550815135944402,
+              "std": 0.010562922255298634,
+              "min": -0.00044300404260866344,
+              "max": 0.08062008023262024,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.04058402231758418,
+              "std": 0.010977577866140092,
+              "min": 0.004515237174928188,
+              "max": 0.08881454914808273,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.04293349314869088,
+              "std": 0.011258811708721065,
+              "min": 0.00686732679605484,
+              "max": 0.09330737590789795,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.04356623069239873,
+              "std": 0.011354257173767634,
+              "min": 0.005914947018027306,
+              "max": 0.09295116364955902,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        },
+        "effective_bf16_coefficient": {
+          "mean": 0.0396697165709341,
+          "std": 0.01216466495001539,
+          "min": -0.0091552734375,
+          "max": 0.09326171875,
+          "percentiles": {
+            "p1": 0.013916015625,
+            "p5": 0.0211181640625,
+            "p25": 0.03125,
+            "median": 0.038818359375,
+            "p75": 0.04736328125,
+            "p95": 0.060546875,
+            "p99": 0.07275390625
+          },
+          "negative_fraction": 3.24249267578125e-05,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.009895535144220702,
+          "std_of_per_sequence_means": 0.0016697749287477059,
+          "mean_within_sequence_std": 0.012033079416190414,
+          "position_bins": {
+            "0": {
+              "mean": 0.0296478271484375,
+              "std": 0.0002971426351907714,
+              "min": 0.02880859375,
+              "max": 0.03076171875,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.023042724717308904,
+              "std": 0.009055831997679483,
+              "min": -0.0091552734375,
+              "max": 0.0615234375,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "32\u201363": {
+              "mean": 0.026443005558121513,
+              "std": 0.00979571498381027,
+              "min": -0.0042724609375,
+              "max": 0.06787109375,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.03125
+            },
+            "64\u2013127": {
+              "mean": 0.030520062462528585,
+              "std": 0.010198449500062436,
+              "min": -0.003509521484375,
+              "max": 0.07373046875,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.03550805126724299,
+              "std": 0.010563092200743739,
+              "min": -0.0004425048828125,
+              "max": 0.08056640625,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.0405839329760056,
+              "std": 0.010977810779049456,
+              "min": 0.0045166015625,
+              "max": 0.0888671875,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.04293336902628653,
+              "std": 0.011259220339760744,
+              "min": 0.006866455078125,
+              "max": 0.09326171875,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.04356600556639023,
+              "std": 0.01135438349714644,
+              "min": 0.00592041015625,
+              "max": 0.0927734375,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        }
+      }
+    }
+  },
+  "memory_and_runtime": {
+    "persistent_state_by_condition": {
+      "STATIC_REAL": {
+        "logical_bytes_per_sequence": 33289728,
+        "physical_bytes_per_sequence": 33289728
+      },
+      "DYNAMIC_REAL": {
+        "logical_bytes_per_sequence": 33289728,
+        "physical_bytes_per_sequence": 33289728
+      },
+      "DYNAMIC_STATICIZED": {
+        "logical_bytes_per_sequence": 33289728,
+        "physical_bytes_per_sequence": 33289728
+      }
+    },
+    "persistent_state_delta_bytes": 0,
+    "parameter_counts": {
+      "S": 124475908,
+      "D": 124478212
+    },
+    "parameter_increase": 2304,
+    "additional_fp32_parameter_bytes": 9216,
+    "additional_bf16_parameter_bytes": 4608,
+    "training_wall_seconds": {
+      "S": 1706.4105246164836,
+      "D": 1739.2367248362862
+    },
+    "evaluation_wall_seconds": {
+      "STATIC_REAL": 1099.6634480790235,
+      "DYNAMIC_REAL": 1278.2810463518836,
+      "DYNAMIC_STATICIZED": 1112.627704641316
+    },
+    "timing_scope": "Observed workload wall times; no isolated timing benchmark. Dynamic Real includes gate diagnostics. Training includes gradient, optimizer, and finite-state audits.",
+    "training_only_state": "Adam moments and steps excluded from persistent inference state; diagnostic scalar arrays are analysis artifacts."
+  },
+  "checkpoints": {
+    "S": {
+      "local_checkpoint": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d9_token_conditioned_dynamic_recurrent_gating/S/scientific_cumulative_001300758528.pt",
+      "persistent_checkpoint": "/workspace/exp2d9_dynamic_gating/run/checkpoints/S/scientific_cumulative_001300758528.pt",
+      "sha256": "676762f2523703167df61f6acda483ae04f7db14a2f918dfd4171911fa5e911b",
+      "persistent_sha256": "676762f2523703167df61f6acda483ae04f7db14a2f918dfd4171911fa5e911b",
+      "bytes": 1493972875,
+      "verified_independently": true,
+      "verification": {
+        "arm": "S",
+        "bytes": 1493972875,
+        "checkpoint": "/workspace/exp2d9_dynamic_gating/run/checkpoints/S/scientific_cumulative_001300758528.pt",
+        "cumulative_targets": 1300758528,
+        "final_loader_cursor": {
+          "batch_size": 32,
+          "current_position": 51740672,
+          "current_shard": 15,
+          "sequence_length": 1024,
+          "shards": [
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+          ]
+        },
+        "global_update": 2481,
+        "next_global_batch_sha256": "400223a0240720bd6a202a6c9c74a8e2a9c8d80d4e3a5f6db2ea0f51721d4649",
+        "next_stream_sha256": "0fd6648d5fe2a6d03af41036cb26f7539c96dca41f7cfa343c8035811670e642",
+        "sha256": "676762f2523703167df61f6acda483ae04f7db14a2f918dfd4171911fa5e911b",
+        "strict_reopen": {
+          "arm": "S",
+          "checks": {
+            "architecture": true,
+            "cumulative_targets": true,
+            "dormant_unchanged": true,
+            "global_update": true,
+            "loader_cursor": true,
+            "local_updates": true,
+            "model_finite": true,
+            "model_snapshot_exact": true,
+            "next_batch": true,
+            "next_stream": true,
+            "optimizer_finite": true,
+            "optimizer_groups_exact": true,
+            "optimizer_inventory_complete": true,
+            "optimizer_names": true,
+            "optimizer_progression": true,
+            "optimizer_snapshot_exact": true,
+            "parameter_count": true,
+            "parameter_names": true,
+            "parent": true,
+            "rng": true,
+            "scheduler": true,
+            "schema": true
+          },
+          "passed": true
+        }
+      }
+    },
+    "D": {
+      "local_checkpoint": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d9_token_conditioned_dynamic_recurrent_gating/D/scientific_cumulative_001300758528.pt",
+      "persistent_checkpoint": "/workspace/exp2d9_dynamic_gating/run/checkpoints/D/scientific_cumulative_001300758528.pt",
+      "sha256": "c9d859813d1cc2b2df33527d9a07cba32f3901e64febe752cf95a30bb9a73b44",
+      "persistent_sha256": "c9d859813d1cc2b2df33527d9a07cba32f3901e64febe752cf95a30bb9a73b44",
+      "bytes": 1494004683,
+      "verified_independently": true,
+      "verification": {
+        "arm": "D",
+        "bytes": 1494004683,
+        "checkpoint": "/workspace/exp2d9_dynamic_gating/run/checkpoints/D/scientific_cumulative_001300758528.pt",
+        "cumulative_targets": 1300758528,
+        "final_loader_cursor": {
+          "batch_size": 32,
+          "current_position": 51740672,
+          "current_shard": 15,
+          "sequence_length": 1024,
+          "shards": [
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+          ]
+        },
+        "global_update": 2481,
+        "next_global_batch_sha256": "400223a0240720bd6a202a6c9c74a8e2a9c8d80d4e3a5f6db2ea0f51721d4649",
+        "next_stream_sha256": "0fd6648d5fe2a6d03af41036cb26f7539c96dca41f7cfa343c8035811670e642",
+        "sha256": "c9d859813d1cc2b2df33527d9a07cba32f3901e64febe752cf95a30bb9a73b44",
+        "strict_reopen": {
+          "arm": "D",
+          "checks": {
+            "architecture": true,
+            "cumulative_targets": true,
+            "dormant_unchanged": true,
+            "global_update": true,
+            "loader_cursor": true,
+            "local_updates": true,
+            "model_finite": true,
+            "model_snapshot_exact": true,
+            "next_batch": true,
+            "next_stream": true,
+            "optimizer_finite": true,
+            "optimizer_groups_exact": true,
+            "optimizer_inventory_complete": true,
+            "optimizer_names": true,
+            "optimizer_progression": true,
+            "optimizer_snapshot_exact": true,
+            "parameter_count": true,
+            "parameter_names": true,
+            "parent": true,
+            "rng": true,
+            "scheduler": true,
+            "schema": true
+          },
+          "passed": true
+        }
+      }
+    }
+  },
+  "terminal": {
+    "loader_cursor_sha256": "d5de64a96c5dd33e9a97ed48ba76cd1d1bc36b6d5bae49aa8673d5cbe6c5e07d",
+    "next_batch_sha256": "400223a0240720bd6a202a6c9c74a8e2a9c8d80d4e3a5f6db2ea0f51721d4649",
+    "next_stream_sha256": "0fd6648d5fe2a6d03af41036cb26f7539c96dca41f7cfa343c8035811670e642",
+    "equal": true
+  },
+  "audit": {
+    "passed": true,
+    "checks": {
+      "sealed_O1_source": true,
+      "exact_old_tensor_optimizer_restore": true,
+      "only_three_new_vectors": true,
+      "parameter_counts": true,
+      "zero_vectors_fresh_moments": true,
+      "tied_weights": true,
+      "zero_effect_FP32_BF16_parallel_incremental": true,
+      "causality_row_isolation_and_roundtrip_tests": true,
+      "first_backward_all_new_vectors_finite_nonzero": true,
+      "disposable_state_reloads": true,
+      "implementation_bound_before_training": true,
+      "new_continuation_from_2290": true,
+      "ledger_hash": true,
+      "exact_191_updates_each": true,
+      "exact_target_budget_each": true,
+      "same_logical_batches": true,
+      "same_logical_streams": true,
+      "exact_pass_schedule": true,
+      "all_gradients_finite": true,
+      "all_update_optimizer_checks": true,
+      "dormant_B6_unchanged": true,
+      "strict_final_reopen": true,
+      "old_and_new_optimizer_step_progression": true,
+      "terminal_cursor_equality": true,
+      "terminal_batch_equality": true,
+      "terminal_stream_equality": true,
+      "one_frozen_fresh_panel": true,
+      "historical_exclusion_evidence": true,
+      "exactly_three_final_conditions": true,
+      "three_4096_loss_arrays": true,
+      "ordered_sequence_identity_equality": true,
+      "staticized_uses_identical_D_checkpoint": true,
+      "evaluation_did_not_mutate_checkpoints_or_weights": true,
+      "paired_50k_sequence_bootstrap": true,
+      "zero_persistent_state_growth": true,
+      "full_panel_gate_statistics": true,
+      "scalar_export_hash_matches_persistent": true,
+      "exact_evaluation_file_inventory": true,
+      "constant_learning_rates": true,
+      "microbatch_and_accumulation": true,
+      "independently_verified_local_persistent_backups": true,
+      "verified_exact_GPU_stop": true,
+      "persistent_volume_retained": true,
+      "workflow_completed": true
+    },
+    "passed_count": 44,
+    "total_checks": 44,
+    "implementation_commit": "12d9ebbc0e86584b6f35088881865e3a8a05a798"
+  },
+  "stop": {
+    "passed": true,
+    "pod": {
+      "id": "rx11t3e4lvfuhf",
+      "name": "lazy_tan_louse",
+      "gpuCount": 1,
+      "desiredStatus": "EXITED",
+      "runtimeStatus": "stopped",
+      "createdAt": "2026-09-04 20:49:51.929 +0000 UTC",
+      "lastStatusChange": "Exited by user: Fri Sep 04 2026 23:02:09 GMT+0000 (Coordinated Universal Time)",
+      "networkVolumeId": "yhzyb27fb5",
+      "volumeMountPath": "/workspace",
+      "networkVolume": {
+        "dataCenterId": "US-MD-1",
+        "id": "yhzyb27fb5",
+        "name": "unlikely_lime_flamingo",
+        "size": 160
+      }
+    },
+    "persistent_volume_retained": true,
+    "verified_at_utc": "2026-09-04T23:02:11.362893+00:00"
+  }
+}

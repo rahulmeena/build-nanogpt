@@ -1,0 +1,3551 @@
+{
+  "D": {
+    "checks": {
+      "accumulation": true,
+      "all_old_tensors_exact": true,
+      "architecture": true,
+      "arm": true,
+      "cumulative_targets": true,
+      "cursor_sha": true,
+      "experiment": true,
+      "global_update": true,
+      "loader_exact": true,
+      "master_parameters_fp32": true,
+      "microbatch": true,
+      "new_zero_vectors_fresh_state": true,
+      "next_batch": true,
+      "next_batch_exact": true,
+      "next_stream": true,
+      "next_stream_exact": true,
+      "old_optimizer_groups": true,
+      "old_optimizer_groups_exact": true,
+      "old_optimizer_names_preserved": true,
+      "old_optimizer_states_exact": true,
+      "only_expected_new_parameters": true,
+      "parameter_count": true,
+      "parameters": true,
+      "rng": true,
+      "rng_exact": true,
+      "scheduler": true,
+      "schema": true,
+      "settings_b3_gate": true,
+      "settings_b5_gate": true,
+      "settings_b6_gate": true,
+      "settings_base_decay": true,
+      "settings_base_nodecay": true,
+      "settings_gate": true,
+      "targets_per_update": true,
+      "tied_weights": true
+    },
+    "optimizer_groups": [
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 3e-05,
+        "maximize": false,
+        "name": "base_decay",
+        "weight_decay": 0.1
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 3e-05,
+        "maximize": false,
+        "name": "base_nodecay",
+        "weight_decay": 0.0
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 0.0003,
+        "maximize": false,
+        "name": "gate",
+        "weight_decay": 0.0
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 0.0003,
+        "maximize": false,
+        "name": "b3_gate",
+        "weight_decay": 0.0
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 0.0003,
+        "maximize": false,
+        "name": "b5_gate",
+        "weight_decay": 0.0
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 0.0003,
+        "maximize": false,
+        "name": "b6_gate",
+        "weight_decay": 0.0
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 3e-05,
+        "maximize": false,
+        "name": "dynamic_nodecay",
+        "weight_decay": 0.0
+      }
+    ],
+    "optimizer_parameter_names": [
+      [
+        "base.transformer.wte.weight",
+        "base.transformer.wpe.weight",
+        "base.transformer.h.0.attn.c_attn.weight",
+        "base.transformer.h.0.attn.c_proj.weight",
+        "base.transformer.h.0.mlp.c_fc.weight",
+        "base.transformer.h.0.mlp.c_proj.weight",
+        "base.transformer.h.1.attn.c_attn.weight",
+        "base.transformer.h.1.attn.c_proj.weight",
+        "base.transformer.h.1.mlp.c_fc.weight",
+        "base.transformer.h.1.mlp.c_proj.weight",
+        "base.transformer.h.2.attn.c_attn.weight",
+        "base.transformer.h.2.attn.c_proj.weight",
+        "base.transformer.h.2.mlp.c_fc.weight",
+        "base.transformer.h.2.mlp.c_proj.weight",
+        "base.transformer.h.3.attn.c_attn.weight",
+        "base.transformer.h.3.attn.c_proj.weight",
+        "base.transformer.h.3.mlp.c_fc.weight",
+        "base.transformer.h.3.mlp.c_proj.weight",
+        "base.transformer.h.4.attn.c_attn.weight",
+        "base.transformer.h.4.attn.c_proj.weight",
+        "base.transformer.h.4.mlp.c_fc.weight",
+        "base.transformer.h.4.mlp.c_proj.weight",
+        "base.transformer.h.5.attn.c_attn.weight",
+        "base.transformer.h.5.attn.c_proj.weight",
+        "base.transformer.h.5.mlp.c_fc.weight",
+        "base.transformer.h.5.mlp.c_proj.weight",
+        "base.transformer.h.6.attn.c_attn.weight",
+        "base.transformer.h.6.attn.c_proj.weight",
+        "base.transformer.h.6.mlp.c_fc.weight",
+        "base.transformer.h.6.mlp.c_proj.weight",
+        "base.transformer.h.7.attn.c_attn.weight",
+        "base.transformer.h.7.attn.c_proj.weight",
+        "base.transformer.h.7.mlp.c_fc.weight",
+        "base.transformer.h.7.mlp.c_proj.weight",
+        "base.transformer.h.8.attn.c_attn.weight",
+        "base.transformer.h.8.attn.c_proj.weight",
+        "base.transformer.h.8.mlp.c_fc.weight",
+        "base.transformer.h.8.mlp.c_proj.weight",
+        "base.transformer.h.9.attn.c_attn.weight",
+        "base.transformer.h.9.attn.c_proj.weight",
+        "base.transformer.h.9.mlp.c_fc.weight",
+        "base.transformer.h.9.mlp.c_proj.weight",
+        "base.transformer.h.10.attn.c_attn.weight",
+        "base.transformer.h.10.attn.c_proj.weight",
+        "base.transformer.h.10.mlp.c_fc.weight",
+        "base.transformer.h.10.mlp.c_proj.weight",
+        "base.transformer.h.11.attn.c_attn.weight",
+        "base.transformer.h.11.attn.c_proj.weight",
+        "base.transformer.h.11.mlp.c_fc.weight",
+        "base.transformer.h.11.mlp.c_proj.weight"
+      ],
+      [
+        "base.transformer.h.0.ln_1.weight",
+        "base.transformer.h.0.ln_1.bias",
+        "base.transformer.h.0.attn.c_attn.bias",
+        "base.transformer.h.0.attn.c_proj.bias",
+        "base.transformer.h.0.ln_2.weight",
+        "base.transformer.h.0.ln_2.bias",
+        "base.transformer.h.0.mlp.c_fc.bias",
+        "base.transformer.h.0.mlp.c_proj.bias",
+        "base.transformer.h.1.ln_1.weight",
+        "base.transformer.h.1.ln_1.bias",
+        "base.transformer.h.1.attn.c_attn.bias",
+        "base.transformer.h.1.attn.c_proj.bias",
+        "base.transformer.h.1.ln_2.weight",
+        "base.transformer.h.1.ln_2.bias",
+        "base.transformer.h.1.mlp.c_fc.bias",
+        "base.transformer.h.1.mlp.c_proj.bias",
+        "base.transformer.h.2.ln_1.weight",
+        "base.transformer.h.2.ln_1.bias",
+        "base.transformer.h.2.attn.c_attn.bias",
+        "base.transformer.h.2.attn.c_proj.bias",
+        "base.transformer.h.2.ln_2.weight",
+        "base.transformer.h.2.ln_2.bias",
+        "base.transformer.h.2.mlp.c_fc.bias",
+        "base.transformer.h.2.mlp.c_proj.bias",
+        "base.transformer.h.3.ln_1.weight",
+        "base.transformer.h.3.ln_1.bias",
+        "base.transformer.h.3.attn.c_attn.bias",
+        "base.transformer.h.3.attn.c_proj.bias",
+        "base.transformer.h.3.ln_2.weight",
+        "base.transformer.h.3.ln_2.bias",
+        "base.transformer.h.3.mlp.c_fc.bias",
+        "base.transformer.h.3.mlp.c_proj.bias",
+        "base.transformer.h.4.ln_1.weight",
+        "base.transformer.h.4.ln_1.bias",
+        "base.transformer.h.4.attn.c_attn.bias",
+        "base.transformer.h.4.attn.c_proj.bias",
+        "base.transformer.h.4.ln_2.weight",
+        "base.transformer.h.4.ln_2.bias",
+        "base.transformer.h.4.mlp.c_fc.bias",
+        "base.transformer.h.4.mlp.c_proj.bias",
+        "base.transformer.h.5.ln_1.weight",
+        "base.transformer.h.5.ln_1.bias",
+        "base.transformer.h.5.attn.c_attn.bias",
+        "base.transformer.h.5.attn.c_proj.bias",
+        "base.transformer.h.5.ln_2.weight",
+        "base.transformer.h.5.ln_2.bias",
+        "base.transformer.h.5.mlp.c_fc.bias",
+        "base.transformer.h.5.mlp.c_proj.bias",
+        "base.transformer.h.6.ln_1.weight",
+        "base.transformer.h.6.ln_1.bias",
+        "base.transformer.h.6.attn.c_attn.bias",
+        "base.transformer.h.6.attn.c_proj.bias",
+        "base.transformer.h.6.ln_2.weight",
+        "base.transformer.h.6.ln_2.bias",
+        "base.transformer.h.6.mlp.c_fc.bias",
+        "base.transformer.h.6.mlp.c_proj.bias",
+        "base.transformer.h.7.ln_1.weight",
+        "base.transformer.h.7.ln_1.bias",
+        "base.transformer.h.7.attn.c_attn.bias",
+        "base.transformer.h.7.attn.c_proj.bias",
+        "base.transformer.h.7.ln_2.weight",
+        "base.transformer.h.7.ln_2.bias",
+        "base.transformer.h.7.mlp.c_fc.bias",
+        "base.transformer.h.7.mlp.c_proj.bias",
+        "base.transformer.h.8.ln_1.weight",
+        "base.transformer.h.8.ln_1.bias",
+        "base.transformer.h.8.attn.c_attn.bias",
+        "base.transformer.h.8.attn.c_proj.bias",
+        "base.transformer.h.8.ln_2.weight",
+        "base.transformer.h.8.ln_2.bias",
+        "base.transformer.h.8.mlp.c_fc.bias",
+        "base.transformer.h.8.mlp.c_proj.bias",
+        "base.transformer.h.9.ln_1.weight",
+        "base.transformer.h.9.ln_1.bias",
+        "base.transformer.h.9.attn.c_attn.bias",
+        "base.transformer.h.9.attn.c_proj.bias",
+        "base.transformer.h.9.ln_2.weight",
+        "base.transformer.h.9.ln_2.bias",
+        "base.transformer.h.9.mlp.c_fc.bias",
+        "base.transformer.h.9.mlp.c_proj.bias",
+        "base.transformer.h.10.ln_1.weight",
+        "base.transformer.h.10.ln_1.bias",
+        "base.transformer.h.10.attn.c_attn.bias",
+        "base.transformer.h.10.attn.c_proj.bias",
+        "base.transformer.h.10.ln_2.weight",
+        "base.transformer.h.10.ln_2.bias",
+        "base.transformer.h.10.mlp.c_fc.bias",
+        "base.transformer.h.10.mlp.c_proj.bias",
+        "base.transformer.h.11.ln_1.weight",
+        "base.transformer.h.11.ln_1.bias",
+        "base.transformer.h.11.attn.c_attn.bias",
+        "base.transformer.h.11.attn.c_proj.bias",
+        "base.transformer.h.11.ln_2.weight",
+        "base.transformer.h.11.ln_2.bias",
+        "base.transformer.h.11.mlp.c_fc.bias",
+        "base.transformer.h.11.mlp.c_proj.bias",
+        "base.transformer.ln_f.weight",
+        "base.transformer.ln_f.bias"
+      ],
+      [
+        "g_rec"
+      ],
+      [
+        "g_rec_b3"
+      ],
+      [
+        "g_rec_b5"
+      ],
+      [
+        "g_rec_b6"
+      ],
+      [
+        "w_B1",
+        "w_B3",
+        "w_B5"
+      ]
+    ],
+    "parameter_inventory": [
+      {
+        "dtype": "torch.float32",
+        "name": "g_rec",
+        "shape": []
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "g_rec_b3",
+        "shape": []
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "g_rec_b5",
+        "shape": []
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "g_rec_b6",
+        "shape": []
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "w_B1",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "w_B3",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "w_B5",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.wte.weight",
+        "shape": [
+          50304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.wpe.weight",
+        "shape": [
+          1024,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.ln_f.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.ln_f.bias",
+        "shape": [
+          768
+        ]
+      }
+    ],
+    "source_metadata": {
+      "cumulative_targets": 1200619520,
+      "gate_sha256": {
+        "g_rec": "ccba625b16f9ebfae707b138fd84df82052258e2607cc132785e746897df71e3",
+        "g_rec_b3": "f37eb8c479b27e9ac9dec268263f40e5b6f5451ba384ed6e63e90f41de324e9a",
+        "g_rec_b5": "861b8a2e5626c4c93ab1abfd52e66e5392a4911bd9da9979bab29bd73c9f955f",
+        "g_rec_b6": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "global_update": 2290,
+      "gradient_accumulation": 16,
+      "loader_state": {
+        "batch_size": 32,
+        "current_position": 51576832,
+        "current_shard": 14,
+        "sequence_length": 1024,
+        "shards": [
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+        ]
+      },
+      "next_global_batch_sha256": "a021ce09f7a25b6617632e2a76da1acb0980ac1dda888df5f1c8eb65b3939fbe",
+      "next_stream_sha256": "7918ea7e6f979b8e49fca89c60dd68ace44b768854d34bc96dd751bee07b2567",
+      "rng_digests": {
+        "numpy": "d5691ccd3e8da9af087c80089ceda638017b15852acbf452423e6b6ff162ac58",
+        "python": "32017e70273af58869868e81b2819b2d614cbacfd2b295c6b3603b4ade520999",
+        "torch_cpu": "4ebae1a19e6426d6695ec57efc323d4e94749fe62cd2e4a36983c607c9bda909",
+        "torch_cuda": "5d2d5cb681044c1a279931c2babe1763ceca27a34d36cacc6baa6e7b41f4a3c5"
+      },
+      "scheduler": {
+        "current_lrs": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        },
+        "expected_lrs": {
+          "100M": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "1B": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "250M": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "500M": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          }
+        },
+        "inherited_scheduler_present_in_source": false,
+        "policy": "constant optimizer-group learning rates; no scheduler object in 2D2G-A checkpoint",
+        "scheduler_state": null,
+        "scheduler_step": null,
+        "warmup_restarted": false,
+        "well_defined_through_100m": true
+      },
+      "schema": "experiment_2d7_checkpoint_v1",
+      "source_dormant_state": {
+        "optimizer_state_sha256": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+        "optimizer_step": 1908,
+        "parameter_sha256": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "source_optimizer_steps_by_name": {
+        "base.transformer.h.0.attn.c_attn.bias": 2768,
+        "base.transformer.h.0.attn.c_attn.weight": 2768,
+        "base.transformer.h.0.attn.c_proj.bias": 2768,
+        "base.transformer.h.0.attn.c_proj.weight": 2768,
+        "base.transformer.h.0.ln_1.bias": 2768,
+        "base.transformer.h.0.ln_1.weight": 2768,
+        "base.transformer.h.0.ln_2.bias": 2768,
+        "base.transformer.h.0.ln_2.weight": 2768,
+        "base.transformer.h.0.mlp.c_fc.bias": 2768,
+        "base.transformer.h.0.mlp.c_fc.weight": 2768,
+        "base.transformer.h.0.mlp.c_proj.bias": 2768,
+        "base.transformer.h.0.mlp.c_proj.weight": 2768,
+        "base.transformer.h.1.attn.c_attn.bias": 2768,
+        "base.transformer.h.1.attn.c_attn.weight": 2768,
+        "base.transformer.h.1.attn.c_proj.bias": 2768,
+        "base.transformer.h.1.attn.c_proj.weight": 2768,
+        "base.transformer.h.1.ln_1.bias": 2768,
+        "base.transformer.h.1.ln_1.weight": 2768,
+        "base.transformer.h.1.ln_2.bias": 2768,
+        "base.transformer.h.1.ln_2.weight": 2768,
+        "base.transformer.h.1.mlp.c_fc.bias": 2768,
+        "base.transformer.h.1.mlp.c_fc.weight": 2768,
+        "base.transformer.h.1.mlp.c_proj.bias": 2768,
+        "base.transformer.h.1.mlp.c_proj.weight": 2768,
+        "base.transformer.h.10.attn.c_attn.bias": 2768,
+        "base.transformer.h.10.attn.c_attn.weight": 2768,
+        "base.transformer.h.10.attn.c_proj.bias": 2768,
+        "base.transformer.h.10.attn.c_proj.weight": 2768,
+        "base.transformer.h.10.ln_1.bias": 2768,
+        "base.transformer.h.10.ln_1.weight": 2768,
+        "base.transformer.h.10.ln_2.bias": 2768,
+        "base.transformer.h.10.ln_2.weight": 2768,
+        "base.transformer.h.10.mlp.c_fc.bias": 2768,
+        "base.transformer.h.10.mlp.c_fc.weight": 2768,
+        "base.transformer.h.10.mlp.c_proj.bias": 2768,
+        "base.transformer.h.10.mlp.c_proj.weight": 2768,
+        "base.transformer.h.11.attn.c_attn.bias": 2768,
+        "base.transformer.h.11.attn.c_attn.weight": 2768,
+        "base.transformer.h.11.attn.c_proj.bias": 2768,
+        "base.transformer.h.11.attn.c_proj.weight": 2768,
+        "base.transformer.h.11.ln_1.bias": 2768,
+        "base.transformer.h.11.ln_1.weight": 2768,
+        "base.transformer.h.11.ln_2.bias": 2768,
+        "base.transformer.h.11.ln_2.weight": 2768,
+        "base.transformer.h.11.mlp.c_fc.bias": 2768,
+        "base.transformer.h.11.mlp.c_fc.weight": 2768,
+        "base.transformer.h.11.mlp.c_proj.bias": 2768,
+        "base.transformer.h.11.mlp.c_proj.weight": 2768,
+        "base.transformer.h.2.attn.c_attn.bias": 2768,
+        "base.transformer.h.2.attn.c_attn.weight": 2768,
+        "base.transformer.h.2.attn.c_proj.bias": 2768,
+        "base.transformer.h.2.attn.c_proj.weight": 2768,
+        "base.transformer.h.2.ln_1.bias": 2768,
+        "base.transformer.h.2.ln_1.weight": 2768,
+        "base.transformer.h.2.ln_2.bias": 2768,
+        "base.transformer.h.2.ln_2.weight": 2768,
+        "base.transformer.h.2.mlp.c_fc.bias": 2768,
+        "base.transformer.h.2.mlp.c_fc.weight": 2768,
+        "base.transformer.h.2.mlp.c_proj.bias": 2768,
+        "base.transformer.h.2.mlp.c_proj.weight": 2768,
+        "base.transformer.h.3.attn.c_attn.bias": 2768,
+        "base.transformer.h.3.attn.c_attn.weight": 2768,
+        "base.transformer.h.3.attn.c_proj.bias": 2768,
+        "base.transformer.h.3.attn.c_proj.weight": 2768,
+        "base.transformer.h.3.ln_1.bias": 2768,
+        "base.transformer.h.3.ln_1.weight": 2768,
+        "base.transformer.h.3.ln_2.bias": 2768,
+        "base.transformer.h.3.ln_2.weight": 2768,
+        "base.transformer.h.3.mlp.c_fc.bias": 2768,
+        "base.transformer.h.3.mlp.c_fc.weight": 2768,
+        "base.transformer.h.3.mlp.c_proj.bias": 2768,
+        "base.transformer.h.3.mlp.c_proj.weight": 2768,
+        "base.transformer.h.4.attn.c_attn.bias": 2768,
+        "base.transformer.h.4.attn.c_attn.weight": 2768,
+        "base.transformer.h.4.attn.c_proj.bias": 2768,
+        "base.transformer.h.4.attn.c_proj.weight": 2768,
+        "base.transformer.h.4.ln_1.bias": 2768,
+        "base.transformer.h.4.ln_1.weight": 2768,
+        "base.transformer.h.4.ln_2.bias": 2768,
+        "base.transformer.h.4.ln_2.weight": 2768,
+        "base.transformer.h.4.mlp.c_fc.bias": 2768,
+        "base.transformer.h.4.mlp.c_fc.weight": 2768,
+        "base.transformer.h.4.mlp.c_proj.bias": 2768,
+        "base.transformer.h.4.mlp.c_proj.weight": 2768,
+        "base.transformer.h.5.attn.c_attn.bias": 2768,
+        "base.transformer.h.5.attn.c_attn.weight": 2768,
+        "base.transformer.h.5.attn.c_proj.bias": 2768,
+        "base.transformer.h.5.attn.c_proj.weight": 2768,
+        "base.transformer.h.5.ln_1.bias": 2768,
+        "base.transformer.h.5.ln_1.weight": 2768,
+        "base.transformer.h.5.ln_2.bias": 2768,
+        "base.transformer.h.5.ln_2.weight": 2768,
+        "base.transformer.h.5.mlp.c_fc.bias": 2768,
+        "base.transformer.h.5.mlp.c_fc.weight": 2768,
+        "base.transformer.h.5.mlp.c_proj.bias": 2768,
+        "base.transformer.h.5.mlp.c_proj.weight": 2768,
+        "base.transformer.h.6.attn.c_attn.bias": 2768,
+        "base.transformer.h.6.attn.c_attn.weight": 2768,
+        "base.transformer.h.6.attn.c_proj.bias": 2768,
+        "base.transformer.h.6.attn.c_proj.weight": 2768,
+        "base.transformer.h.6.ln_1.bias": 2768,
+        "base.transformer.h.6.ln_1.weight": 2768,
+        "base.transformer.h.6.ln_2.bias": 2768,
+        "base.transformer.h.6.ln_2.weight": 2768,
+        "base.transformer.h.6.mlp.c_fc.bias": 2768,
+        "base.transformer.h.6.mlp.c_fc.weight": 2768,
+        "base.transformer.h.6.mlp.c_proj.bias": 2768,
+        "base.transformer.h.6.mlp.c_proj.weight": 2768,
+        "base.transformer.h.7.attn.c_attn.bias": 2768,
+        "base.transformer.h.7.attn.c_attn.weight": 2768,
+        "base.transformer.h.7.attn.c_proj.bias": 2768,
+        "base.transformer.h.7.attn.c_proj.weight": 2768,
+        "base.transformer.h.7.ln_1.bias": 2768,
+        "base.transformer.h.7.ln_1.weight": 2768,
+        "base.transformer.h.7.ln_2.bias": 2768,
+        "base.transformer.h.7.ln_2.weight": 2768,
+        "base.transformer.h.7.mlp.c_fc.bias": 2768,
+        "base.transformer.h.7.mlp.c_fc.weight": 2768,
+        "base.transformer.h.7.mlp.c_proj.bias": 2768,
+        "base.transformer.h.7.mlp.c_proj.weight": 2768,
+        "base.transformer.h.8.attn.c_attn.bias": 2768,
+        "base.transformer.h.8.attn.c_attn.weight": 2768,
+        "base.transformer.h.8.attn.c_proj.bias": 2768,
+        "base.transformer.h.8.attn.c_proj.weight": 2768,
+        "base.transformer.h.8.ln_1.bias": 2768,
+        "base.transformer.h.8.ln_1.weight": 2768,
+        "base.transformer.h.8.ln_2.bias": 2768,
+        "base.transformer.h.8.ln_2.weight": 2768,
+        "base.transformer.h.8.mlp.c_fc.bias": 2768,
+        "base.transformer.h.8.mlp.c_fc.weight": 2768,
+        "base.transformer.h.8.mlp.c_proj.bias": 2768,
+        "base.transformer.h.8.mlp.c_proj.weight": 2768,
+        "base.transformer.h.9.attn.c_attn.bias": 2768,
+        "base.transformer.h.9.attn.c_attn.weight": 2768,
+        "base.transformer.h.9.attn.c_proj.bias": 2768,
+        "base.transformer.h.9.attn.c_proj.weight": 2768,
+        "base.transformer.h.9.ln_1.bias": 2768,
+        "base.transformer.h.9.ln_1.weight": 2768,
+        "base.transformer.h.9.ln_2.bias": 2768,
+        "base.transformer.h.9.ln_2.weight": 2768,
+        "base.transformer.h.9.mlp.c_fc.bias": 2768,
+        "base.transformer.h.9.mlp.c_fc.weight": 2768,
+        "base.transformer.h.9.mlp.c_proj.bias": 2768,
+        "base.transformer.h.9.mlp.c_proj.weight": 2768,
+        "base.transformer.ln_f.bias": 2768,
+        "base.transformer.ln_f.weight": 2768,
+        "base.transformer.wpe.weight": 2768,
+        "base.transformer.wte.weight": 2768,
+        "g_rec": 2768,
+        "g_rec_b3": 2290,
+        "g_rec_b5": 2290,
+        "g_rec_b6": 1908
+      }
+    }
+  },
+  "S": {
+    "checks": {
+      "accumulation": true,
+      "all_old_tensors_exact": true,
+      "architecture": true,
+      "arm": true,
+      "cumulative_targets": true,
+      "cursor_sha": true,
+      "experiment": true,
+      "global_update": true,
+      "loader_exact": true,
+      "master_parameters_fp32": true,
+      "microbatch": true,
+      "new_zero_vectors_fresh_state": true,
+      "next_batch": true,
+      "next_batch_exact": true,
+      "next_stream": true,
+      "next_stream_exact": true,
+      "old_optimizer_groups": true,
+      "old_optimizer_groups_exact": true,
+      "old_optimizer_names_preserved": true,
+      "old_optimizer_states_exact": true,
+      "only_expected_new_parameters": true,
+      "parameter_count": true,
+      "parameters": true,
+      "rng": true,
+      "rng_exact": true,
+      "scheduler": true,
+      "schema": true,
+      "settings_b3_gate": true,
+      "settings_b5_gate": true,
+      "settings_b6_gate": true,
+      "settings_base_decay": true,
+      "settings_base_nodecay": true,
+      "settings_gate": true,
+      "targets_per_update": true,
+      "tied_weights": true
+    },
+    "optimizer_groups": [
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 3e-05,
+        "maximize": false,
+        "name": "base_decay",
+        "weight_decay": 0.1
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 3e-05,
+        "maximize": false,
+        "name": "base_nodecay",
+        "weight_decay": 0.0
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 0.0003,
+        "maximize": false,
+        "name": "gate",
+        "weight_decay": 0.0
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 0.0003,
+        "maximize": false,
+        "name": "b3_gate",
+        "weight_decay": 0.0
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 0.0003,
+        "maximize": false,
+        "name": "b5_gate",
+        "weight_decay": 0.0
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": true,
+        "lr": 0.0003,
+        "maximize": false,
+        "name": "b6_gate",
+        "weight_decay": 0.0
+      }
+    ],
+    "optimizer_parameter_names": [
+      [
+        "base.transformer.wte.weight",
+        "base.transformer.wpe.weight",
+        "base.transformer.h.0.attn.c_attn.weight",
+        "base.transformer.h.0.attn.c_proj.weight",
+        "base.transformer.h.0.mlp.c_fc.weight",
+        "base.transformer.h.0.mlp.c_proj.weight",
+        "base.transformer.h.1.attn.c_attn.weight",
+        "base.transformer.h.1.attn.c_proj.weight",
+        "base.transformer.h.1.mlp.c_fc.weight",
+        "base.transformer.h.1.mlp.c_proj.weight",
+        "base.transformer.h.2.attn.c_attn.weight",
+        "base.transformer.h.2.attn.c_proj.weight",
+        "base.transformer.h.2.mlp.c_fc.weight",
+        "base.transformer.h.2.mlp.c_proj.weight",
+        "base.transformer.h.3.attn.c_attn.weight",
+        "base.transformer.h.3.attn.c_proj.weight",
+        "base.transformer.h.3.mlp.c_fc.weight",
+        "base.transformer.h.3.mlp.c_proj.weight",
+        "base.transformer.h.4.attn.c_attn.weight",
+        "base.transformer.h.4.attn.c_proj.weight",
+        "base.transformer.h.4.mlp.c_fc.weight",
+        "base.transformer.h.4.mlp.c_proj.weight",
+        "base.transformer.h.5.attn.c_attn.weight",
+        "base.transformer.h.5.attn.c_proj.weight",
+        "base.transformer.h.5.mlp.c_fc.weight",
+        "base.transformer.h.5.mlp.c_proj.weight",
+        "base.transformer.h.6.attn.c_attn.weight",
+        "base.transformer.h.6.attn.c_proj.weight",
+        "base.transformer.h.6.mlp.c_fc.weight",
+        "base.transformer.h.6.mlp.c_proj.weight",
+        "base.transformer.h.7.attn.c_attn.weight",
+        "base.transformer.h.7.attn.c_proj.weight",
+        "base.transformer.h.7.mlp.c_fc.weight",
+        "base.transformer.h.7.mlp.c_proj.weight",
+        "base.transformer.h.8.attn.c_attn.weight",
+        "base.transformer.h.8.attn.c_proj.weight",
+        "base.transformer.h.8.mlp.c_fc.weight",
+        "base.transformer.h.8.mlp.c_proj.weight",
+        "base.transformer.h.9.attn.c_attn.weight",
+        "base.transformer.h.9.attn.c_proj.weight",
+        "base.transformer.h.9.mlp.c_fc.weight",
+        "base.transformer.h.9.mlp.c_proj.weight",
+        "base.transformer.h.10.attn.c_attn.weight",
+        "base.transformer.h.10.attn.c_proj.weight",
+        "base.transformer.h.10.mlp.c_fc.weight",
+        "base.transformer.h.10.mlp.c_proj.weight",
+        "base.transformer.h.11.attn.c_attn.weight",
+        "base.transformer.h.11.attn.c_proj.weight",
+        "base.transformer.h.11.mlp.c_fc.weight",
+        "base.transformer.h.11.mlp.c_proj.weight"
+      ],
+      [
+        "base.transformer.h.0.ln_1.weight",
+        "base.transformer.h.0.ln_1.bias",
+        "base.transformer.h.0.attn.c_attn.bias",
+        "base.transformer.h.0.attn.c_proj.bias",
+        "base.transformer.h.0.ln_2.weight",
+        "base.transformer.h.0.ln_2.bias",
+        "base.transformer.h.0.mlp.c_fc.bias",
+        "base.transformer.h.0.mlp.c_proj.bias",
+        "base.transformer.h.1.ln_1.weight",
+        "base.transformer.h.1.ln_1.bias",
+        "base.transformer.h.1.attn.c_attn.bias",
+        "base.transformer.h.1.attn.c_proj.bias",
+        "base.transformer.h.1.ln_2.weight",
+        "base.transformer.h.1.ln_2.bias",
+        "base.transformer.h.1.mlp.c_fc.bias",
+        "base.transformer.h.1.mlp.c_proj.bias",
+        "base.transformer.h.2.ln_1.weight",
+        "base.transformer.h.2.ln_1.bias",
+        "base.transformer.h.2.attn.c_attn.bias",
+        "base.transformer.h.2.attn.c_proj.bias",
+        "base.transformer.h.2.ln_2.weight",
+        "base.transformer.h.2.ln_2.bias",
+        "base.transformer.h.2.mlp.c_fc.bias",
+        "base.transformer.h.2.mlp.c_proj.bias",
+        "base.transformer.h.3.ln_1.weight",
+        "base.transformer.h.3.ln_1.bias",
+        "base.transformer.h.3.attn.c_attn.bias",
+        "base.transformer.h.3.attn.c_proj.bias",
+        "base.transformer.h.3.ln_2.weight",
+        "base.transformer.h.3.ln_2.bias",
+        "base.transformer.h.3.mlp.c_fc.bias",
+        "base.transformer.h.3.mlp.c_proj.bias",
+        "base.transformer.h.4.ln_1.weight",
+        "base.transformer.h.4.ln_1.bias",
+        "base.transformer.h.4.attn.c_attn.bias",
+        "base.transformer.h.4.attn.c_proj.bias",
+        "base.transformer.h.4.ln_2.weight",
+        "base.transformer.h.4.ln_2.bias",
+        "base.transformer.h.4.mlp.c_fc.bias",
+        "base.transformer.h.4.mlp.c_proj.bias",
+        "base.transformer.h.5.ln_1.weight",
+        "base.transformer.h.5.ln_1.bias",
+        "base.transformer.h.5.attn.c_attn.bias",
+        "base.transformer.h.5.attn.c_proj.bias",
+        "base.transformer.h.5.ln_2.weight",
+        "base.transformer.h.5.ln_2.bias",
+        "base.transformer.h.5.mlp.c_fc.bias",
+        "base.transformer.h.5.mlp.c_proj.bias",
+        "base.transformer.h.6.ln_1.weight",
+        "base.transformer.h.6.ln_1.bias",
+        "base.transformer.h.6.attn.c_attn.bias",
+        "base.transformer.h.6.attn.c_proj.bias",
+        "base.transformer.h.6.ln_2.weight",
+        "base.transformer.h.6.ln_2.bias",
+        "base.transformer.h.6.mlp.c_fc.bias",
+        "base.transformer.h.6.mlp.c_proj.bias",
+        "base.transformer.h.7.ln_1.weight",
+        "base.transformer.h.7.ln_1.bias",
+        "base.transformer.h.7.attn.c_attn.bias",
+        "base.transformer.h.7.attn.c_proj.bias",
+        "base.transformer.h.7.ln_2.weight",
+        "base.transformer.h.7.ln_2.bias",
+        "base.transformer.h.7.mlp.c_fc.bias",
+        "base.transformer.h.7.mlp.c_proj.bias",
+        "base.transformer.h.8.ln_1.weight",
+        "base.transformer.h.8.ln_1.bias",
+        "base.transformer.h.8.attn.c_attn.bias",
+        "base.transformer.h.8.attn.c_proj.bias",
+        "base.transformer.h.8.ln_2.weight",
+        "base.transformer.h.8.ln_2.bias",
+        "base.transformer.h.8.mlp.c_fc.bias",
+        "base.transformer.h.8.mlp.c_proj.bias",
+        "base.transformer.h.9.ln_1.weight",
+        "base.transformer.h.9.ln_1.bias",
+        "base.transformer.h.9.attn.c_attn.bias",
+        "base.transformer.h.9.attn.c_proj.bias",
+        "base.transformer.h.9.ln_2.weight",
+        "base.transformer.h.9.ln_2.bias",
+        "base.transformer.h.9.mlp.c_fc.bias",
+        "base.transformer.h.9.mlp.c_proj.bias",
+        "base.transformer.h.10.ln_1.weight",
+        "base.transformer.h.10.ln_1.bias",
+        "base.transformer.h.10.attn.c_attn.bias",
+        "base.transformer.h.10.attn.c_proj.bias",
+        "base.transformer.h.10.ln_2.weight",
+        "base.transformer.h.10.ln_2.bias",
+        "base.transformer.h.10.mlp.c_fc.bias",
+        "base.transformer.h.10.mlp.c_proj.bias",
+        "base.transformer.h.11.ln_1.weight",
+        "base.transformer.h.11.ln_1.bias",
+        "base.transformer.h.11.attn.c_attn.bias",
+        "base.transformer.h.11.attn.c_proj.bias",
+        "base.transformer.h.11.ln_2.weight",
+        "base.transformer.h.11.ln_2.bias",
+        "base.transformer.h.11.mlp.c_fc.bias",
+        "base.transformer.h.11.mlp.c_proj.bias",
+        "base.transformer.ln_f.weight",
+        "base.transformer.ln_f.bias"
+      ],
+      [
+        "g_rec"
+      ],
+      [
+        "g_rec_b3"
+      ],
+      [
+        "g_rec_b5"
+      ],
+      [
+        "g_rec_b6"
+      ]
+    ],
+    "parameter_inventory": [
+      {
+        "dtype": "torch.float32",
+        "name": "g_rec",
+        "shape": []
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "g_rec_b3",
+        "shape": []
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "g_rec_b5",
+        "shape": []
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "g_rec_b6",
+        "shape": []
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.wte.weight",
+        "shape": [
+          50304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.wpe.weight",
+        "shape": [
+          1024,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.0.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.1.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.2.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.3.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.4.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.5.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.6.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.7.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.8.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.9.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.10.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.ln_1.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.ln_1.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.attn.c_attn.weight",
+        "shape": [
+          2304,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.attn.c_attn.bias",
+        "shape": [
+          2304
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.attn.c_proj.weight",
+        "shape": [
+          768,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.attn.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.ln_2.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.ln_2.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.mlp.c_fc.weight",
+        "shape": [
+          3072,
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.mlp.c_fc.bias",
+        "shape": [
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.mlp.c_proj.weight",
+        "shape": [
+          768,
+          3072
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.h.11.mlp.c_proj.bias",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.ln_f.weight",
+        "shape": [
+          768
+        ]
+      },
+      {
+        "dtype": "torch.float32",
+        "name": "base.transformer.ln_f.bias",
+        "shape": [
+          768
+        ]
+      }
+    ],
+    "source_metadata": {
+      "cumulative_targets": 1200619520,
+      "gate_sha256": {
+        "g_rec": "ccba625b16f9ebfae707b138fd84df82052258e2607cc132785e746897df71e3",
+        "g_rec_b3": "f37eb8c479b27e9ac9dec268263f40e5b6f5451ba384ed6e63e90f41de324e9a",
+        "g_rec_b5": "861b8a2e5626c4c93ab1abfd52e66e5392a4911bd9da9979bab29bd73c9f955f",
+        "g_rec_b6": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "global_update": 2290,
+      "gradient_accumulation": 16,
+      "loader_state": {
+        "batch_size": 32,
+        "current_position": 51576832,
+        "current_shard": 14,
+        "sequence_length": 1024,
+        "shards": [
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+        ]
+      },
+      "next_global_batch_sha256": "a021ce09f7a25b6617632e2a76da1acb0980ac1dda888df5f1c8eb65b3939fbe",
+      "next_stream_sha256": "7918ea7e6f979b8e49fca89c60dd68ace44b768854d34bc96dd751bee07b2567",
+      "rng_digests": {
+        "numpy": "d5691ccd3e8da9af087c80089ceda638017b15852acbf452423e6b6ff162ac58",
+        "python": "32017e70273af58869868e81b2819b2d614cbacfd2b295c6b3603b4ade520999",
+        "torch_cpu": "4ebae1a19e6426d6695ec57efc323d4e94749fe62cd2e4a36983c607c9bda909",
+        "torch_cuda": "5d2d5cb681044c1a279931c2babe1763ceca27a34d36cacc6baa6e7b41f4a3c5"
+      },
+      "scheduler": {
+        "current_lrs": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        },
+        "expected_lrs": {
+          "100M": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "1B": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "250M": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "500M": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          }
+        },
+        "inherited_scheduler_present_in_source": false,
+        "policy": "constant optimizer-group learning rates; no scheduler object in 2D2G-A checkpoint",
+        "scheduler_state": null,
+        "scheduler_step": null,
+        "warmup_restarted": false,
+        "well_defined_through_100m": true
+      },
+      "schema": "experiment_2d7_checkpoint_v1",
+      "source_dormant_state": {
+        "optimizer_state_sha256": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+        "optimizer_step": 1908,
+        "parameter_sha256": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "source_optimizer_steps_by_name": {
+        "base.transformer.h.0.attn.c_attn.bias": 2768,
+        "base.transformer.h.0.attn.c_attn.weight": 2768,
+        "base.transformer.h.0.attn.c_proj.bias": 2768,
+        "base.transformer.h.0.attn.c_proj.weight": 2768,
+        "base.transformer.h.0.ln_1.bias": 2768,
+        "base.transformer.h.0.ln_1.weight": 2768,
+        "base.transformer.h.0.ln_2.bias": 2768,
+        "base.transformer.h.0.ln_2.weight": 2768,
+        "base.transformer.h.0.mlp.c_fc.bias": 2768,
+        "base.transformer.h.0.mlp.c_fc.weight": 2768,
+        "base.transformer.h.0.mlp.c_proj.bias": 2768,
+        "base.transformer.h.0.mlp.c_proj.weight": 2768,
+        "base.transformer.h.1.attn.c_attn.bias": 2768,
+        "base.transformer.h.1.attn.c_attn.weight": 2768,
+        "base.transformer.h.1.attn.c_proj.bias": 2768,
+        "base.transformer.h.1.attn.c_proj.weight": 2768,
+        "base.transformer.h.1.ln_1.bias": 2768,
+        "base.transformer.h.1.ln_1.weight": 2768,
+        "base.transformer.h.1.ln_2.bias": 2768,
+        "base.transformer.h.1.ln_2.weight": 2768,
+        "base.transformer.h.1.mlp.c_fc.bias": 2768,
+        "base.transformer.h.1.mlp.c_fc.weight": 2768,
+        "base.transformer.h.1.mlp.c_proj.bias": 2768,
+        "base.transformer.h.1.mlp.c_proj.weight": 2768,
+        "base.transformer.h.10.attn.c_attn.bias": 2768,
+        "base.transformer.h.10.attn.c_attn.weight": 2768,
+        "base.transformer.h.10.attn.c_proj.bias": 2768,
+        "base.transformer.h.10.attn.c_proj.weight": 2768,
+        "base.transformer.h.10.ln_1.bias": 2768,
+        "base.transformer.h.10.ln_1.weight": 2768,
+        "base.transformer.h.10.ln_2.bias": 2768,
+        "base.transformer.h.10.ln_2.weight": 2768,
+        "base.transformer.h.10.mlp.c_fc.bias": 2768,
+        "base.transformer.h.10.mlp.c_fc.weight": 2768,
+        "base.transformer.h.10.mlp.c_proj.bias": 2768,
+        "base.transformer.h.10.mlp.c_proj.weight": 2768,
+        "base.transformer.h.11.attn.c_attn.bias": 2768,
+        "base.transformer.h.11.attn.c_attn.weight": 2768,
+        "base.transformer.h.11.attn.c_proj.bias": 2768,
+        "base.transformer.h.11.attn.c_proj.weight": 2768,
+        "base.transformer.h.11.ln_1.bias": 2768,
+        "base.transformer.h.11.ln_1.weight": 2768,
+        "base.transformer.h.11.ln_2.bias": 2768,
+        "base.transformer.h.11.ln_2.weight": 2768,
+        "base.transformer.h.11.mlp.c_fc.bias": 2768,
+        "base.transformer.h.11.mlp.c_fc.weight": 2768,
+        "base.transformer.h.11.mlp.c_proj.bias": 2768,
+        "base.transformer.h.11.mlp.c_proj.weight": 2768,
+        "base.transformer.h.2.attn.c_attn.bias": 2768,
+        "base.transformer.h.2.attn.c_attn.weight": 2768,
+        "base.transformer.h.2.attn.c_proj.bias": 2768,
+        "base.transformer.h.2.attn.c_proj.weight": 2768,
+        "base.transformer.h.2.ln_1.bias": 2768,
+        "base.transformer.h.2.ln_1.weight": 2768,
+        "base.transformer.h.2.ln_2.bias": 2768,
+        "base.transformer.h.2.ln_2.weight": 2768,
+        "base.transformer.h.2.mlp.c_fc.bias": 2768,
+        "base.transformer.h.2.mlp.c_fc.weight": 2768,
+        "base.transformer.h.2.mlp.c_proj.bias": 2768,
+        "base.transformer.h.2.mlp.c_proj.weight": 2768,
+        "base.transformer.h.3.attn.c_attn.bias": 2768,
+        "base.transformer.h.3.attn.c_attn.weight": 2768,
+        "base.transformer.h.3.attn.c_proj.bias": 2768,
+        "base.transformer.h.3.attn.c_proj.weight": 2768,
+        "base.transformer.h.3.ln_1.bias": 2768,
+        "base.transformer.h.3.ln_1.weight": 2768,
+        "base.transformer.h.3.ln_2.bias": 2768,
+        "base.transformer.h.3.ln_2.weight": 2768,
+        "base.transformer.h.3.mlp.c_fc.bias": 2768,
+        "base.transformer.h.3.mlp.c_fc.weight": 2768,
+        "base.transformer.h.3.mlp.c_proj.bias": 2768,
+        "base.transformer.h.3.mlp.c_proj.weight": 2768,
+        "base.transformer.h.4.attn.c_attn.bias": 2768,
+        "base.transformer.h.4.attn.c_attn.weight": 2768,
+        "base.transformer.h.4.attn.c_proj.bias": 2768,
+        "base.transformer.h.4.attn.c_proj.weight": 2768,
+        "base.transformer.h.4.ln_1.bias": 2768,
+        "base.transformer.h.4.ln_1.weight": 2768,
+        "base.transformer.h.4.ln_2.bias": 2768,
+        "base.transformer.h.4.ln_2.weight": 2768,
+        "base.transformer.h.4.mlp.c_fc.bias": 2768,
+        "base.transformer.h.4.mlp.c_fc.weight": 2768,
+        "base.transformer.h.4.mlp.c_proj.bias": 2768,
+        "base.transformer.h.4.mlp.c_proj.weight": 2768,
+        "base.transformer.h.5.attn.c_attn.bias": 2768,
+        "base.transformer.h.5.attn.c_attn.weight": 2768,
+        "base.transformer.h.5.attn.c_proj.bias": 2768,
+        "base.transformer.h.5.attn.c_proj.weight": 2768,
+        "base.transformer.h.5.ln_1.bias": 2768,
+        "base.transformer.h.5.ln_1.weight": 2768,
+        "base.transformer.h.5.ln_2.bias": 2768,
+        "base.transformer.h.5.ln_2.weight": 2768,
+        "base.transformer.h.5.mlp.c_fc.bias": 2768,
+        "base.transformer.h.5.mlp.c_fc.weight": 2768,
+        "base.transformer.h.5.mlp.c_proj.bias": 2768,
+        "base.transformer.h.5.mlp.c_proj.weight": 2768,
+        "base.transformer.h.6.attn.c_attn.bias": 2768,
+        "base.transformer.h.6.attn.c_attn.weight": 2768,
+        "base.transformer.h.6.attn.c_proj.bias": 2768,
+        "base.transformer.h.6.attn.c_proj.weight": 2768,
+        "base.transformer.h.6.ln_1.bias": 2768,
+        "base.transformer.h.6.ln_1.weight": 2768,
+        "base.transformer.h.6.ln_2.bias": 2768,
+        "base.transformer.h.6.ln_2.weight": 2768,
+        "base.transformer.h.6.mlp.c_fc.bias": 2768,
+        "base.transformer.h.6.mlp.c_fc.weight": 2768,
+        "base.transformer.h.6.mlp.c_proj.bias": 2768,
+        "base.transformer.h.6.mlp.c_proj.weight": 2768,
+        "base.transformer.h.7.attn.c_attn.bias": 2768,
+        "base.transformer.h.7.attn.c_attn.weight": 2768,
+        "base.transformer.h.7.attn.c_proj.bias": 2768,
+        "base.transformer.h.7.attn.c_proj.weight": 2768,
+        "base.transformer.h.7.ln_1.bias": 2768,
+        "base.transformer.h.7.ln_1.weight": 2768,
+        "base.transformer.h.7.ln_2.bias": 2768,
+        "base.transformer.h.7.ln_2.weight": 2768,
+        "base.transformer.h.7.mlp.c_fc.bias": 2768,
+        "base.transformer.h.7.mlp.c_fc.weight": 2768,
+        "base.transformer.h.7.mlp.c_proj.bias": 2768,
+        "base.transformer.h.7.mlp.c_proj.weight": 2768,
+        "base.transformer.h.8.attn.c_attn.bias": 2768,
+        "base.transformer.h.8.attn.c_attn.weight": 2768,
+        "base.transformer.h.8.attn.c_proj.bias": 2768,
+        "base.transformer.h.8.attn.c_proj.weight": 2768,
+        "base.transformer.h.8.ln_1.bias": 2768,
+        "base.transformer.h.8.ln_1.weight": 2768,
+        "base.transformer.h.8.ln_2.bias": 2768,
+        "base.transformer.h.8.ln_2.weight": 2768,
+        "base.transformer.h.8.mlp.c_fc.bias": 2768,
+        "base.transformer.h.8.mlp.c_fc.weight": 2768,
+        "base.transformer.h.8.mlp.c_proj.bias": 2768,
+        "base.transformer.h.8.mlp.c_proj.weight": 2768,
+        "base.transformer.h.9.attn.c_attn.bias": 2768,
+        "base.transformer.h.9.attn.c_attn.weight": 2768,
+        "base.transformer.h.9.attn.c_proj.bias": 2768,
+        "base.transformer.h.9.attn.c_proj.weight": 2768,
+        "base.transformer.h.9.ln_1.bias": 2768,
+        "base.transformer.h.9.ln_1.weight": 2768,
+        "base.transformer.h.9.ln_2.bias": 2768,
+        "base.transformer.h.9.ln_2.weight": 2768,
+        "base.transformer.h.9.mlp.c_fc.bias": 2768,
+        "base.transformer.h.9.mlp.c_fc.weight": 2768,
+        "base.transformer.h.9.mlp.c_proj.bias": 2768,
+        "base.transformer.h.9.mlp.c_proj.weight": 2768,
+        "base.transformer.ln_f.bias": 2768,
+        "base.transformer.ln_f.weight": 2768,
+        "base.transformer.wpe.weight": 2768,
+        "base.transformer.wte.weight": 2768,
+        "g_rec": 2768,
+        "g_rec_b3": 2290,
+        "g_rec_b5": 2290,
+        "g_rec_b6": 1908
+      }
+    }
+  }
+}

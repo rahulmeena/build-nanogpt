@@ -1,0 +1,98 @@
+{
+  "arm": "D",
+  "global_update": 2481,
+  "latest": {
+    "active_gradient_groups": {
+      "b1_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.0005304166115820408
+      },
+      "b3_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.00014355959137901664
+      },
+      "b5_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.000698884017765522
+      },
+      "base": {
+        "finite": true,
+        "gradient_tensors": 151,
+        "nonzero": true,
+        "norm": 0.37673094868659973
+      },
+      "w_B1": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.0817863866686821
+      },
+      "w_B3": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.01781597174704075
+      },
+      "w_B5": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.01786111667752266
+      }
+    },
+    "arm": "D",
+    "batch_sha256": "afbfb16f503e7b569f2682afd1743fbb4dd00540bd124bd71bddb233e7a9b90e",
+    "ce": 3.0739154517650604,
+    "ce_only": true,
+    "cumulative_targets": 1300758528,
+    "end_cursor_exact": true,
+    "global_update": 2481,
+    "gradient_norm_before_clip": 0.3767319321632385,
+    "local_update": 191,
+    "lr": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "dynamic_nodecay": 3e-05,
+      "gate": 0.0003
+    },
+    "new_targets": 100139008,
+    "optimizer_checks": {
+      "active_incremented_once": true,
+      "dormant_optimizer_unchanged": true,
+      "dormant_parameter_unchanged": true,
+      "dormant_step_unchanged": true
+    },
+    "pass_count": 2,
+    "pass_losses": [
+      3.0849829465150833,
+      3.0739154517650604
+    ],
+    "peak_allocated_vram_mb": 36272.30224609375,
+    "peak_reserved_vram_mb": 55362.0,
+    "pre_forward_invariants": {
+      "batch": true,
+      "cursor": true,
+      "global_update": true,
+      "local_update": true,
+      "pass": true,
+      "stream": true,
+      "targets": true
+    },
+    "stream_sha256": "20a3d144a27caadcf7c122c96fcaac62a365799734062174686c7d6b0e553921",
+    "target_count": 524288,
+    "targets_per_second": 58450.56510956512,
+    "wall_seconds": 8.96976785454899
+  },
+  "local_update": 191,
+  "status": "training",
+  "updated_at_unix": 1788559199.474185
+}

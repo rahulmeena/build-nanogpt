@@ -1,0 +1,35 @@
+{
+  "persistent_state_by_condition": {
+    "STATIC_REAL": {
+      "logical_bytes_per_sequence": 33289728,
+      "physical_bytes_per_sequence": 33289728
+    },
+    "DYNAMIC_REAL": {
+      "logical_bytes_per_sequence": 33289728,
+      "physical_bytes_per_sequence": 33289728
+    },
+    "DYNAMIC_STATICIZED": {
+      "logical_bytes_per_sequence": 33289728,
+      "physical_bytes_per_sequence": 33289728
+    }
+  },
+  "persistent_state_delta_bytes": 0,
+  "parameter_counts": {
+    "S": 124475908,
+    "D": 124478212
+  },
+  "parameter_increase": 2304,
+  "additional_fp32_parameter_bytes": 9216,
+  "additional_bf16_parameter_bytes": 4608,
+  "training_wall_seconds": {
+    "S": 1706.4105246164836,
+    "D": 1739.2367248362862
+  },
+  "evaluation_wall_seconds": {
+    "STATIC_REAL": 1099.6634480790235,
+    "DYNAMIC_REAL": 1278.2810463518836,
+    "DYNAMIC_STATICIZED": 1112.627704641316
+  },
+  "timing_scope": "Observed workload wall times; no isolated timing benchmark. Dynamic Real includes gate diagnostics. Training includes gradient, optimizer, and finite-state audits.",
+  "training_only_state": "Adam moments and steps excluded from persistent inference state; diagnostic scalar arrays are analysis artifacts."
+}

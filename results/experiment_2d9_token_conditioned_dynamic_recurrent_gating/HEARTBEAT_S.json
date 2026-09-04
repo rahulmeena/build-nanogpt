@@ -1,0 +1,79 @@
+{
+  "arm": "S",
+  "global_update": 2481,
+  "latest": {
+    "active_gradient_groups": {
+      "b1_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 2.1018284314777702e-05
+      },
+      "b3_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.00045812426833435893
+      },
+      "b5_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.00048421515384688973
+      },
+      "base": {
+        "finite": true,
+        "gradient_tensors": 148,
+        "nonzero": true,
+        "norm": 0.3725590705871582
+      }
+    },
+    "arm": "S",
+    "batch_sha256": "afbfb16f503e7b569f2682afd1743fbb4dd00540bd124bd71bddb233e7a9b90e",
+    "ce": 3.0741469115018845,
+    "ce_only": true,
+    "cumulative_targets": 1300758528,
+    "end_cursor_exact": true,
+    "global_update": 2481,
+    "gradient_norm_before_clip": 0.37255966663360596,
+    "local_update": 191,
+    "lr": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "gate": 0.0003
+    },
+    "new_targets": 100139008,
+    "optimizer_checks": {
+      "active_incremented_once": true,
+      "dormant_optimizer_unchanged": true,
+      "dormant_parameter_unchanged": true,
+      "dormant_step_unchanged": true
+    },
+    "pass_count": 2,
+    "pass_losses": [
+      3.0850483179092407,
+      3.0741469115018845
+    ],
+    "peak_allocated_vram_mb": 36271.890625,
+    "peak_reserved_vram_mb": 58730.0,
+    "pre_forward_invariants": {
+      "batch": true,
+      "cursor": true,
+      "global_update": true,
+      "local_update": true,
+      "pass": true,
+      "stream": true,
+      "targets": true
+    },
+    "stream_sha256": "20a3d144a27caadcf7c122c96fcaac62a365799734062174686c7d6b0e553921",
+    "target_count": 524288,
+    "targets_per_second": 59570.62012620603,
+    "wall_seconds": 8.801117042079568
+  },
+  "local_update": 191,
+  "status": "training",
+  "updated_at_unix": 1788557414.3147316
+}

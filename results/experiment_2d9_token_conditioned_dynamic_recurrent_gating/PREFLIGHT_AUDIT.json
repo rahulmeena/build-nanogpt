@@ -1,0 +1,179 @@
+{
+  "authorized": true,
+  "disposable_smoke": {
+    "D": {
+      "batch_size": 32,
+      "dormant_unchanged": true,
+      "gradients": {
+        "b1_gate": {
+          "finite": true,
+          "gradient_tensors": 1,
+          "nonzero": true,
+          "norm": 0.005224314983934164
+        },
+        "b3_gate": {
+          "finite": true,
+          "gradient_tensors": 1,
+          "nonzero": true,
+          "norm": 0.0012418129481375217
+        },
+        "b5_gate": {
+          "finite": true,
+          "gradient_tensors": 1,
+          "nonzero": true,
+          "norm": 0.0010343457106500864
+        },
+        "base": {
+          "finite": true,
+          "gradient_tensors": 151,
+          "nonzero": true,
+          "norm": 1.1604900360107422
+        },
+        "w_B1": {
+          "finite": true,
+          "gradient_tensors": 1,
+          "nonzero": true,
+          "norm": 0.11106406897306442
+        },
+        "w_B3": {
+          "finite": true,
+          "gradient_tensors": 1,
+          "nonzero": true,
+          "norm": 0.07989133894443512
+        },
+        "w_B5": {
+          "finite": true,
+          "gradient_tensors": 1,
+          "nonzero": true,
+          "norm": 0.060510069131851196
+        }
+      },
+      "passed": true,
+      "peak_allocated_vram_mb": 35792.6845703125,
+      "sequence_length": 1024,
+      "state_reload_exact": true
+    },
+    "S": {
+      "batch_size": 32,
+      "dormant_unchanged": true,
+      "gradients": {
+        "b1_gate": {
+          "finite": true,
+          "gradient_tensors": 1,
+          "nonzero": true,
+          "norm": 0.0052055190317332745
+        },
+        "b3_gate": {
+          "finite": true,
+          "gradient_tensors": 1,
+          "nonzero": true,
+          "norm": 0.0012510493397712708
+        },
+        "b5_gate": {
+          "finite": true,
+          "gradient_tensors": 1,
+          "nonzero": true,
+          "norm": 0.0010355539852753282
+        },
+        "base": {
+          "finite": true,
+          "gradient_tensors": 148,
+          "nonzero": true,
+          "norm": 1.1507017612457275
+        }
+      },
+      "passed": true,
+      "peak_allocated_vram_mb": 35760.67578125,
+      "sequence_length": 1024,
+      "state_reload_exact": true
+    }
+  },
+  "experiment": "2D9",
+  "git_commit": "12d9ebbc0e86584b6f35088881865e3a8a05a798",
+  "implementation_sha256": {
+    "configs/exp2d9_token_conditioned_dynamic_recurrent_gating.json": "5d8feefb5c26f20715acb4fd5d0864e149ae823ad9f03e20398ab4a82a5350bc",
+    "scripts/experiment_2d9.py": "2d8a93f2df8d011efd13213cc7f661415c9b6ac55805aa929dd83c303ba67672",
+    "scripts/experiment_2d9_core.py": "914150d34bf282f420c7126cc225cda1aa096e1f6cefd03781cc2853ed3a6e37",
+    "tests/test_experiment_2d9.py": "d406499da38b6918ee923356c59c454cb4ef8d5f3ce8d0bf6557eb7cfbfda9c3"
+  },
+  "numpy_version": "2.1.2",
+  "scientific_state_independently_reloaded": true,
+  "source_checks": {
+    "D": {
+      "accumulation": true,
+      "all_old_tensors_exact": true,
+      "architecture": true,
+      "arm": true,
+      "cumulative_targets": true,
+      "cursor_sha": true,
+      "experiment": true,
+      "global_update": true,
+      "loader_exact": true,
+      "master_parameters_fp32": true,
+      "microbatch": true,
+      "new_zero_vectors_fresh_state": true,
+      "next_batch": true,
+      "next_batch_exact": true,
+      "next_stream": true,
+      "next_stream_exact": true,
+      "old_optimizer_groups": true,
+      "old_optimizer_groups_exact": true,
+      "old_optimizer_names_preserved": true,
+      "old_optimizer_states_exact": true,
+      "only_expected_new_parameters": true,
+      "parameter_count": true,
+      "parameters": true,
+      "rng": true,
+      "rng_exact": true,
+      "scheduler": true,
+      "schema": true,
+      "settings_b3_gate": true,
+      "settings_b5_gate": true,
+      "settings_b6_gate": true,
+      "settings_base_decay": true,
+      "settings_base_nodecay": true,
+      "settings_gate": true,
+      "targets_per_update": true,
+      "tied_weights": true
+    },
+    "S": {
+      "accumulation": true,
+      "all_old_tensors_exact": true,
+      "architecture": true,
+      "arm": true,
+      "cumulative_targets": true,
+      "cursor_sha": true,
+      "experiment": true,
+      "global_update": true,
+      "loader_exact": true,
+      "master_parameters_fp32": true,
+      "microbatch": true,
+      "new_zero_vectors_fresh_state": true,
+      "next_batch": true,
+      "next_batch_exact": true,
+      "next_stream": true,
+      "next_stream_exact": true,
+      "old_optimizer_groups": true,
+      "old_optimizer_groups_exact": true,
+      "old_optimizer_names_preserved": true,
+      "old_optimizer_states_exact": true,
+      "only_expected_new_parameters": true,
+      "parameter_count": true,
+      "parameters": true,
+      "rng": true,
+      "rng_exact": true,
+      "scheduler": true,
+      "schema": true,
+      "settings_b3_gate": true,
+      "settings_b5_gate": true,
+      "settings_b6_gate": true,
+      "settings_base_decay": true,
+      "settings_base_nodecay": true,
+      "settings_gate": true,
+      "targets_per_update": true,
+      "tied_weights": true
+    }
+  },
+  "targeted_tests_passed": true,
+  "torch_version": "2.8.0+cu128"
+}
