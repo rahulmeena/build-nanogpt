@@ -186,7 +186,7 @@ def launch(args):
     assert sha256(args.bundle)==ready['bundle_sha256']
     assert read_json(FROZEN/'storage_plan.json')['required_total_decimal_GB']<=binding['authorized_volume_gb']
     assert provider.status()['networkVolume']['size']==binding['authorized_volume_gb']
-    binding['billing_start']=time.time()
+    binding['billing_start']=getattr(args,'observed_start_bound',None) or time.time()
     remaining=binding['cumulative_ceiling_seconds']-binding['prior_billed_seconds']
     binding['hard_deadline']=binding['billing_start']+remaining
     atomic_json(args.binding,binding);atomic_json(local/'BINDING.json',binding)
@@ -196,7 +196,10 @@ def launch(args):
                       '--archive',str(local)],stdout=log,stderr=log,start_new_session=True)
     remote=None;connected=False;startup_deadline=binding['billing_start']+600
     try:
-        provider.start()
+        if getattr(args,'adopt_running',False):
+            status=provider.status()
+            assert status['desiredStatus']=='RUNNING' and status['costPerHr']<=binding['max_total_pod_price_per_hour']
+        else:provider.start()
         while time.time()<startup_deadline:
             atomic_json(local/'LOCAL_CONTROLLER_HEARTBEAT.json',dict(time=time.time(),state='STARTUP'))
             try:
@@ -253,8 +256,29 @@ def launch(args):
     analyze(local)
 
 
+def await_start(args):
+    """No GPU rental here: observe the assigned pod and adopt an explicit manual start."""
+    binding=read_json(args.binding);provider=Provider(binding);previous=time.time()
+    waiting=Path(args.archive)/'WAITING_FOR_MANUAL_START.json'
+    while True:
+        try:
+            status=provider.status()
+            atomic_json(waiting,dict(time=time.time(),pod_id=binding['pod_id'],status=status['desiredStatus'],
+                                    local_only=True,automatic_resource_rental=False))
+            if status['desiredStatus']=='RUNNING':
+                args.adopt_running=True;args.observed_start_bound=previous
+                print('MANUAL_START_DETECTED',flush=True)
+                return launch(args)
+        except Exception as e:
+            append_json(Path(args.archive)/'wait_start_events.jsonl',dict(time=time.time(),error_type=type(e).__name__))
+        previous=time.time();time.sleep(30)
+
+
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('mode',choices=['launch','guard'])
+    p=argparse.ArgumentParser();p.add_argument('mode',choices=['launch','guard','await-start'])
     p.add_argument('--binding',type=Path,required=True);p.add_argument('--archive',type=Path,required=True)
     for name in ['ready','bundle','initial','baseline','hella']:p.add_argument('--'+name,type=Path)
-    a=p.parse_args();local_guard(a.binding,a.archive) if a.mode=='guard' else launch(a)
+    a=p.parse_args()
+    if a.mode=='guard':local_guard(a.binding,a.archive)
+    elif a.mode=='await-start':await_start(a)
+    else:launch(a)
