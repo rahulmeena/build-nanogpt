@@ -49,7 +49,7 @@ class StateMachine:
 
 def stage_command(args,module,extra=()):
     argv=[sys.executable,'-m','torch.distributed.run','--standalone','--nproc_per_node=4',
-          '-m','experiment_2d11.'+module,'--run',args.run,'--binding',args.binding,
+          '-m','--','experiment_2d11.'+module,'--run',args.run,'--binding',args.binding,
           '--data',args.data,'--initial',args.initial,'--hella',args.hella]
     argv+=['--baseline',args.baseline]
     return argv+list(extra)

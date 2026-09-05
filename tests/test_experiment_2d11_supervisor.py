@@ -124,3 +124,30 @@ def test_analysis_flags_after_json_and_paired_bootstrap():
     unresolved=bootstrap(np.zeros(20),20260918,500)
     assert [x['classification'] for x in [benefit,harm,unresolved]]==['benefit','harm','unresolved']
     assert benefit==bootstrap(np.ones(20)*.01,20260918,500)
+
+
+def test_real_torchrun_parser_keeps_experiment_run_argument():
+    from types import SimpleNamespace
+    from torch.distributed.run import parse_args
+    from experiment_2d11.supervisor import stage_command
+    args=SimpleNamespace(run='/run',binding='/binding.json',data='/data',initial='/initial.pt',hella='/hella.json',baseline='/G.pt')
+    for module in ['preflight','train']:
+        command=stage_command(args,module)
+        parsed=parse_args(command[3:])
+        assert parsed.module and parsed.training_script=='experiment_2d11.'+module
+        assert parsed.training_script_args[:2]==['--run','/run']
+        assert '--baseline' in parsed.training_script_args
+
+
+def test_projection_models_serial_export_queue_without_double_counting_overlap():
+    m=dict(two_pass_seconds=2.3,three_pass_seconds=3.5,monitor_ce_seconds=60.,h_hellaswag_seconds=120.,
+           h_fresh_ce_seconds=200.,g_fresh_ce_seconds=150.,g_hellaswag_seconds=90.,
+           checkpoint_write_seconds=10.,checkpoint_bytes=1650000000,download_bytes_per_second=3600000,
+           g_update_seconds=1.)
+    p=project_remaining(m,1100)
+    assert p['fits'] and p['checkpoint_export_worker_seconds']>p['checkpoint_export_seconds']
+    events=p['export_queue_events'];duration=m['checkpoint_bytes']/(m['download_bytes_per_second']*.5)
+    for previous,current in zip(events,events[1:]):
+        assert current['export_finished_seconds']>=previous['export_finished_seconds']+duration-1e-7
+    m['download_bytes_per_second']=100000
+    assert not project_remaining(m,1100)['fits']

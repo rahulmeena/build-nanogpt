@@ -206,7 +206,7 @@ def launch(args):
                 remote=connection(provider,binding);remote.run(['true'],timeout=20);connected=True;break
             except Exception:time.sleep(10)
         if not connected:raise TimeoutError('SSH startup exceeded ten-minute budget')
-        root=binding['remote_root'];run=root+'/run';code=root+'/code';inputs=root+'/inputs'
+        root=binding['remote_root'];run=root+'/run';code=root+'/code';inputs=binding.get('remote_inputs_root',root+'/inputs')
         remote.run(['mkdir','-p',run,code,inputs])
         remote.upload(args.bundle,root+'/bundle.tar.gz')
         remote.run(['tar','--no-same-owner','-xzf',root+'/bundle.tar.gz','-C',code])
@@ -220,8 +220,15 @@ def launch(args):
         source_files=[(args.initial,'initial.pt'),(args.baseline,'baseline.pt'),(args.hella,'hellaswag.json')]
         uploads=[]
         for path,name in source_files:
-            before=time.time();remote.upload(path,inputs+'/'+name,timeout=max(60,int(startup_deadline-time.time())))
-            uploads.append(dict(file=name,bytes=Path(path).stat().st_size,seconds=time.time()-before))
+            before=time.time()
+            digest=sha256(path);target=inputs+'/'+name
+            check='import sys,hashlib,json;from pathlib import Path;p=Path(sys.argv[1]);print(json.dumps(dict(exists=p.exists(),symlink=p.is_symlink(),sha256=hashlib.file_digest(p.open("rb"),"sha256").hexdigest() if p.exists() else None)))'
+            existing=json.loads(remote.run(['python3','-c',check,target],timeout=60))
+            reused=existing['sha256']==digest
+            if not reused:
+                assert not existing['symlink'], 'never overwrite a retained historical checkpoint through a symlink'
+                remote.upload(path,target,timeout=max(1,int(startup_deadline-time.time())))
+            uploads.append(dict(file=name,bytes=Path(path).stat().st_size,seconds=time.time()-before,reused_verified_input=reused))
             atomic_json(local/'LOCAL_CONTROLLER_HEARTBEAT.json',dict(time=time.time(),state='UPLOAD'))
         assert time.time()<startup_deadline, 'ordinary startup preparation exceeded ten minutes'
         # Independent shutdown is already armed before the full validation/preflight process.
