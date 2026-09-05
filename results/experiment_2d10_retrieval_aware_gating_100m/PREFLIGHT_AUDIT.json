@@ -1,0 +1,128 @@
+{
+  "authorized": true,
+  "controls": {
+    "D": {
+      "191_update_provenance_verified": true,
+      "checks": {
+        "accumulation": true,
+        "architecture": true,
+        "arm": true,
+        "completed_100m_targets": true,
+        "completed_100m_updates": true,
+        "cumulative_targets": true,
+        "cursor_sha": true,
+        "dynamic_steps_191": true,
+        "experiment": true,
+        "global_update": true,
+        "learned_dynamic_vectors_retained": true,
+        "microbatch": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer_groups": true,
+        "original_implementation": true,
+        "parameters": true,
+        "rng_digests": true,
+        "rng_inventory": true,
+        "scheduler": true,
+        "schema": true,
+        "sequence_length": true,
+        "settings_b3_gate": true,
+        "settings_b5_gate": true,
+        "settings_b6_gate": true,
+        "settings_base_decay": true,
+        "settings_base_nodecay": true,
+        "settings_dynamic_nodecay": true,
+        "settings_gate": true,
+        "targets_per_update": true
+      },
+      "sha256": "c9d859813d1cc2b2df33527d9a07cba32f3901e64febe752cf95a30bb9a73b44"
+    },
+    "S": {
+      "191_update_provenance_verified": true,
+      "checks": {
+        "accumulation": true,
+        "architecture": true,
+        "arm": true,
+        "completed_100m_targets": true,
+        "completed_100m_updates": true,
+        "cumulative_targets": true,
+        "cursor_sha": true,
+        "dynamic_steps_191": true,
+        "experiment": true,
+        "global_update": true,
+        "learned_dynamic_vectors_retained": true,
+        "microbatch": true,
+        "next_batch": true,
+        "next_stream": true,
+        "optimizer_groups": true,
+        "original_implementation": true,
+        "parameters": true,
+        "rng_digests": true,
+        "rng_inventory": true,
+        "scheduler": true,
+        "schema": true,
+        "sequence_length": true,
+        "settings_b3_gate": true,
+        "settings_b5_gate": true,
+        "settings_b6_gate": true,
+        "settings_base_decay": true,
+        "settings_base_nodecay": true,
+        "settings_gate": true,
+        "targets_per_update": true
+      },
+      "sha256": "676762f2523703167df61f6acda483ae04f7db14a2f918dfd4171911fa5e911b"
+    }
+  },
+  "disposable_smoke": {
+    "H": {
+      "batch_size": 32,
+      "compatibility_unchanged": true,
+      "complete_reload_exact": true,
+      "first_hidden_gradient_zero_expected": true,
+      "hidden_gradient_nonzero_after_output_update": true,
+      "initial_training_batch_diagnostic": {
+        "incremental_ce": 3.4155075550079346,
+        "incremental_max_logit_delta": 2.0625,
+        "parallel_ce": 3.4274895191192627,
+        "parallel_max_logit_delta": 2.09375,
+        "parent_incremental_ce": 3.4323370456695557,
+        "parent_parallel_ce": 3.440364122390747
+      },
+      "passed": true,
+      "peak_allocated_vram_mb": 35794.80517578125,
+      "sequence_length": 1024,
+      "two_disposable_microbatch_seconds": 1.2003940381109715
+    },
+    "T": {
+      "batch_size": 32,
+      "compatibility_unchanged": true,
+      "complete_reload_exact": true,
+      "first_hidden_gradient_zero_expected": true,
+      "hidden_gradient_nonzero_after_output_update": true,
+      "initial_training_batch_diagnostic": {
+        "incremental_ce": 3.4323370456695557,
+        "incremental_max_logit_delta": 0.0,
+        "parallel_ce": 3.440364122390747,
+        "parallel_max_logit_delta": 0.0,
+        "parent_incremental_ce": 3.4323370456695557,
+        "parent_parallel_ce": 3.440364122390747
+      },
+      "passed": true,
+      "peak_allocated_vram_mb": 35795.5771484375,
+      "sequence_length": 1024,
+      "two_disposable_microbatch_seconds": 1.3201804272830486
+    }
+  },
+  "experiment": "2D10",
+  "git_commit": "6ad955b2f6b30cb43d5697a8a118176cd2f8010a",
+  "implementation_sha256": {
+    "configs/exp2d10_retrieval_aware_gating_100m.json": "191be23bed71ba180d4efc2bb0e2246f1e1dd86f8e3fcb6d4ab232d4034e6a1d",
+    "scripts/experiment_2d10.py": "69b28b887eaf089b6ebd394e9e48e68e91f49d6240fab2664e786c5a978c4219",
+    "scripts/experiment_2d10_core.py": "6d581771139b637f3c3ea784f1bb37651bad2691e596e256f4a98013a7ce343e",
+    "tests/test_experiment_2d10.py": "0d625d9e8d9bb27d65a0ca193fb00e1ecaa8e2ed3e856184bd8581bbe5d7f19b"
+  },
+  "numpy_version": "2.1.2",
+  "scientific_smoke_discarded": true,
+  "targeted_tests_passed": true,
+  "torch_version": "2.8.0+cu128"
+}

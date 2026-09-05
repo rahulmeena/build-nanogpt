@@ -1,0 +1,79 @@
+{
+  "all_19_artifact_backups_verified": true,
+  "analysis_checks_passed": true,
+  "causality_row_isolation_gradients_empty_memory_recomputation_tests_passed": true,
+  "classification": "VALID / COMPLETE",
+  "complete_checkpoint_strict_reopens_passed": true,
+  "dormant_and_retired_states_unchanged": true,
+  "four_same_panel_evaluations": true,
+  "frozen_implementation_sha256": {
+    "configs/exp2d10_retrieval_aware_gating_100m.json": "191be23bed71ba180d4efc2bb0e2246f1e1dd86f8e3fcb6d4ab232d4034e6a1d",
+    "scripts/experiment_2d10.py": "69b28b887eaf089b6ebd394e9e48e68e91f49d6240fab2664e786c5a978c4219",
+    "scripts/experiment_2d10_core.py": "6d581771139b637f3c3ea784f1bb37651bad2691e596e256f4a98013a7ce343e",
+    "tests/test_experiment_2d10.py": "0d625d9e8d9bb27d65a0ca193fb00e1ecaa8e2ed3e856184bd8581bbe5d7f19b"
+  },
+  "initial_H_function_change_recorded": true,
+  "initial_T_parent_BF16_logits_and_CE_exact_both_modes": true,
+  "limitations": [
+    "complete architectures; extra query-dependent MLP capacity not isolated",
+    "signed-additive versus convex combinations and different initialization",
+    "no parameter-matched query-only MLP or inference ablation",
+    "evaluation-sequence bootstrap is not training-seed replication",
+    "correlated contrasts share checkpoints",
+    "100M screen does not replace mature 250M baseline"
+  ],
+  "local_and_persistent_final_checkpoint_hashes_verified": true,
+  "new_parameter_counts_verified": true,
+  "no_further_training_launched": true,
+  "one_panel_sha256": "722cbffc8ab96c42137c174672849ccf50a0f0527055a28265391e95aaea8b2b",
+  "optimizer_restored_by_explicit_reconstructed_source_parameter_names": true,
+  "parent_and_control_identities_verified": true,
+  "passed": true,
+  "persistent_state_delta_zero": true,
+  "persistent_volume_retained": true,
+  "pod_stopped_verified": true,
+  "primary_Bonferroni_adjusted_analysis": true,
+  "replay": {
+    "H": {
+      "all_191_batches_streams_cursors_passes_and_optimizer_checks_exact": true,
+      "global_updates": [
+        2291,
+        2481
+      ],
+      "targets": 100139008,
+      "three_pass_updates": [
+        2304,
+        2336,
+        2368,
+        2400,
+        2432,
+        2464
+      ],
+      "two_pass_updates": 185,
+      "updates": 191
+    },
+    "T": {
+      "all_191_batches_streams_cursors_passes_and_optimizer_checks_exact": true,
+      "global_updates": [
+        2291,
+        2481
+      ],
+      "targets": 100139008,
+      "three_pass_updates": [
+        2304,
+        2336,
+        2368,
+        2400,
+        2432,
+        2464
+      ],
+      "two_pass_updates": 185,
+      "updates": 191
+    }
+  },
+  "scientific_implementation_commit": "6ad955b2f6b30cb43d5697a8a118176cd2f8010a",
+  "sequence_loss_archive_sha256": "ff95732c7c6f2018edc3a1ac6e82bf64111025ea46ab30e300ba2e8021c464ac",
+  "statistics_after_verified_stop": true,
+  "statistics_started_unix": 1788604739.263764,
+  "terminal_equality_with_historical_100m_controls": true
+}
