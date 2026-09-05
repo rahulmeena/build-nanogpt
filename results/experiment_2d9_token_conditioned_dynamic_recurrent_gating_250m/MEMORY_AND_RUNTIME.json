@@ -1,0 +1,35 @@
+{
+  "persistent_state_by_condition": {
+    "STATIC_REAL": {
+      "logical_bytes_per_sequence": 33289728,
+      "physical_bytes_per_sequence": 33289728
+    },
+    "DYNAMIC_REAL": {
+      "logical_bytes_per_sequence": 33289728,
+      "physical_bytes_per_sequence": 33289728
+    },
+    "DYNAMIC_STATICIZED": {
+      "logical_bytes_per_sequence": 33289728,
+      "physical_bytes_per_sequence": 33289728
+    }
+  },
+  "persistent_state_delta_bytes": 0,
+  "parameter_counts": {
+    "S": 124475908,
+    "D": 124478212
+  },
+  "parameter_increase": 2304,
+  "additional_fp32_parameter_bytes": 9216,
+  "additional_bf16_parameter_bytes": 4608,
+  "training_wall_seconds": {
+    "S": 2498.3098653778434,
+    "D": 2546.2887564972043
+  },
+  "evaluation_wall_seconds": {
+    "STATIC_REAL": 1106.6159995235503,
+    "DYNAMIC_REAL": 1175.6426665969193,
+    "DYNAMIC_STATICIZED": 1105.2290818057954
+  },
+  "timing_scope": "Descriptive workload timings. Dynamic Real includes gate collection; training update times include audits and exclude recovery-checkpoint writing. No isolated timing benchmark.",
+  "training_only_state": "Adam state is training-only. Gate scalar arrays are analysis artifacts, not persistent model state."
+}

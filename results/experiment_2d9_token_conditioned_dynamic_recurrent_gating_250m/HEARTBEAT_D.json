@@ -1,0 +1,101 @@
+{
+  "arm": "D",
+  "global_update": 2767,
+  "latest": {
+    "active_gradient_groups": {
+      "b1_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.00010254976950818673
+      },
+      "b3_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.0009122123592533171
+      },
+      "b5_gate": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.0011387811973690987
+      },
+      "base": {
+        "finite": true,
+        "gradient_tensors": 151,
+        "nonzero": true,
+        "norm": 0.4217584729194641
+      },
+      "w_B1": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.023875517770648003
+      },
+      "w_B3": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.025438960641622543
+      },
+      "w_B5": {
+        "finite": true,
+        "gradient_tensors": 1,
+        "nonzero": true,
+        "norm": 0.019524410367012024
+      }
+    },
+    "arm": "D",
+    "batch_sha256": "a37072e0b70d3e5e5ae16a9aa82d4c837ebd2117637341c2d15736f24db56e10",
+    "ce": 3.002401188015938,
+    "ce_only": true,
+    "continuation_local_update": 286,
+    "cumulative_targets": 1450704896,
+    "end_cursor_exact": true,
+    "experiment_total_targets": 250085376,
+    "experiment_total_update": 477,
+    "global_update": 2767,
+    "gradient_norm_before_clip": 0.42176100611686707,
+    "local_update": 286,
+    "lr": {
+      "b3_gate": 0.0003,
+      "b5_gate": 0.0003,
+      "b6_gate": 0.0003,
+      "base_decay": 3e-05,
+      "base_nodecay": 3e-05,
+      "dynamic_nodecay": 3e-05,
+      "gate": 0.0003
+    },
+    "new_targets": 149946368,
+    "optimizer_checks": {
+      "active_incremented_once": true,
+      "dormant_optimizer_unchanged": true,
+      "dormant_parameter_unchanged": true,
+      "dormant_step_unchanged": true
+    },
+    "pass_count": 2,
+    "pass_losses": [
+      3.012274816632271,
+      3.002401188015938
+    ],
+    "peak_allocated_vram_mb": 36271.23974609375,
+    "peak_reserved_vram_mb": 55410.0,
+    "pre_forward_invariants": {
+      "batch": true,
+      "cursor": true,
+      "global_update": true,
+      "local_update": true,
+      "pass": true,
+      "stream": true,
+      "targets": true
+    },
+    "stream_sha256": "a63816ec5290a6908da2b3fc0aeac1b1b33428d67a1e1c8ecc3e0a814ad088f9",
+    "target_count": 524288,
+    "targets_per_second": 60105.58835382629,
+    "wall_seconds": 8.7227829284966
+  },
+  "local_update": 286,
+  "status": "training",
+  "updated_at_unix": 1788570807.6911902
+}

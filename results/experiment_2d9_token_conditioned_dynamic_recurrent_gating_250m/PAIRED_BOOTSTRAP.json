@@ -1,0 +1,87 @@
+{
+  "seed": 20260906,
+  "resamples": 50000,
+  "unit": "paired sequence (4096)",
+  "shared_indices_across_contrasts": true,
+  "interval": "95% percentile; NumPy linear",
+  "numpy_version": "2.0.2",
+  "bit_generator": "PCG64",
+  "delta_ce": 0.0001,
+  "contrasts": {
+    "A": {
+      "contrast": "Static \u2212 Dynamic",
+      "mean": 0.00015466534793768996,
+      "ci95": [
+        0.00010258959968977117,
+        0.00020653085771751953
+      ],
+      "exp_contrast": 1.0001546773092393,
+      "exp_ci95": [
+        1.0001025948621827,
+        1.0002065521866834
+      ],
+      "second_condition_sequence_wins": 2200,
+      "first_condition_sequence_wins": 1896,
+      "ties": 0,
+      "flags": {
+        "positive_utility": true,
+        "benefit_beyond_margin": true,
+        "negative_utility": false,
+        "harm_beyond_margin": false,
+        "practical_equivalence": false,
+        "noninferiority_of_second_named_condition": true
+      }
+    },
+    "P": {
+      "contrast": "Staticized \u2212 Dynamic",
+      "mean": 0.00023667899586838714,
+      "ci95": [
+        0.0001833914038858747,
+        0.0002901889423608432
+      ],
+      "exp_contrast": 1.0002367070065517,
+      "exp_ci95": [
+        1.0001834082211174,
+        1.0002902310512451
+      ],
+      "second_condition_sequence_wins": 2251,
+      "first_condition_sequence_wins": 1845,
+      "ties": 0,
+      "flags": {
+        "positive_utility": true,
+        "benefit_beyond_margin": true,
+        "negative_utility": false,
+        "harm_beyond_margin": false,
+        "practical_equivalence": false,
+        "noninferiority_of_second_named_condition": true
+      }
+    },
+    "R": {
+      "contrast": "Static \u2212 Staticized",
+      "mean": -8.201364793069719e-05,
+      "ci95": [
+        -0.0001338567884016911,
+        -2.9670076216731906e-05
+      ],
+      "exp_contrast": 0.9999179897150966,
+      "exp_ci95": [
+        0.9998661521700185,
+        0.9999703303639357
+      ],
+      "second_condition_sequence_wins": 1948,
+      "first_condition_sequence_wins": 2148,
+      "ties": 0,
+      "flags": {
+        "positive_utility": false,
+        "benefit_beyond_margin": false,
+        "negative_utility": true,
+        "harm_beyond_margin": false,
+        "practical_equivalence": false,
+        "noninferiority_of_second_named_condition": false
+      }
+    }
+  },
+  "decomposition_residual": 0.0,
+  "uncertainty_scope": "Evaluation-sequence uncertainty for two sealed training trajectories; no training-seed replication.",
+  "shared_dynamic_condition": "A and P share Dynamic and are not independent replications."
+}

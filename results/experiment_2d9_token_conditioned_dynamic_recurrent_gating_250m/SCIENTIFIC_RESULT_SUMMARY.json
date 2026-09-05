@@ -1,0 +1,1435 @@
+{
+  "classification": "TOKEN-CONDITIONED GATING ESTABLISHES UTILITY",
+  "preferred_architecture": "Dynamic",
+  "aggregate_ce": {
+    "STATIC_REAL": 3.049130365956177,
+    "DYNAMIC_REAL": 3.0489757006082394,
+    "DYNAMIC_STATICIZED": 3.0492123796041093
+  },
+  "perplexity": {
+    "STATIC_REAL": 21.096989782250493,
+    "DYNAMIC_REAL": 21.09372706130683,
+    "DYNAMIC_STATICIZED": 21.09872009429656
+  },
+  "paired": {
+    "seed": 20260906,
+    "resamples": 50000,
+    "unit": "paired sequence (4096)",
+    "shared_indices_across_contrasts": true,
+    "interval": "95% percentile; NumPy linear",
+    "numpy_version": "2.0.2",
+    "bit_generator": "PCG64",
+    "delta_ce": 0.0001,
+    "contrasts": {
+      "A": {
+        "contrast": "Static \u2212 Dynamic",
+        "mean": 0.00015466534793768996,
+        "ci95": [
+          0.00010258959968977117,
+          0.00020653085771751953
+        ],
+        "exp_contrast": 1.0001546773092393,
+        "exp_ci95": [
+          1.0001025948621827,
+          1.0002065521866834
+        ],
+        "second_condition_sequence_wins": 2200,
+        "first_condition_sequence_wins": 1896,
+        "ties": 0,
+        "flags": {
+          "positive_utility": true,
+          "benefit_beyond_margin": true,
+          "negative_utility": false,
+          "harm_beyond_margin": false,
+          "practical_equivalence": false,
+          "noninferiority_of_second_named_condition": true
+        }
+      },
+      "P": {
+        "contrast": "Staticized \u2212 Dynamic",
+        "mean": 0.00023667899586838714,
+        "ci95": [
+          0.0001833914038858747,
+          0.0002901889423608432
+        ],
+        "exp_contrast": 1.0002367070065517,
+        "exp_ci95": [
+          1.0001834082211174,
+          1.0002902310512451
+        ],
+        "second_condition_sequence_wins": 2251,
+        "first_condition_sequence_wins": 1845,
+        "ties": 0,
+        "flags": {
+          "positive_utility": true,
+          "benefit_beyond_margin": true,
+          "negative_utility": false,
+          "harm_beyond_margin": false,
+          "practical_equivalence": false,
+          "noninferiority_of_second_named_condition": true
+        }
+      },
+      "R": {
+        "contrast": "Static \u2212 Staticized",
+        "mean": -8.201364793069719e-05,
+        "ci95": [
+          -0.0001338567884016911,
+          -2.9670076216731906e-05
+        ],
+        "exp_contrast": 0.9999179897150966,
+        "exp_ci95": [
+          0.9998661521700185,
+          0.9999703303639357
+        ],
+        "second_condition_sequence_wins": 1948,
+        "first_condition_sequence_wins": 2148,
+        "ties": 0,
+        "flags": {
+          "positive_utility": false,
+          "benefit_beyond_margin": false,
+          "negative_utility": true,
+          "harm_beyond_margin": false,
+          "practical_equivalence": false,
+          "noninferiority_of_second_named_condition": false
+        }
+      }
+    },
+    "decomposition_residual": 0.0,
+    "uncertainty_scope": "Evaluation-sequence uncertainty for two sealed training trajectories; no training-seed replication.",
+    "shared_dynamic_condition": "A and P share Dynamic and are not independent replications."
+  },
+  "gates": {
+    "array_sha256": "a86308009c4e801f9e6e967e84ee2eccc35b64a978bbd8924e0337f5486307b8",
+    "array_shape": [
+      3,
+      3,
+      4096,
+      1024
+    ],
+    "array_layout": [
+      "destination B1/B3/B5",
+      "preactivation / FP32 g / BF16 coefficient represented as FP32",
+      "sequence",
+      "token position"
+    ],
+    "quantiles": "Exact full-panel linear percentiles; no sampling",
+    "token_count_per_destination": 4194304,
+    "standard_deviation_definitions": {
+      "across_tokens": "Population std over all 4,194,304 token coefficients (ddof=0)",
+      "sequence_means": "Population std of 4,096 per-sequence means (ddof=0)",
+      "within_sequence": "Mean of 4,096 per-sequence population std values"
+    },
+    "device_buffer_bound": "One B64 \u00d7 T1024 batch; one batched device-to-CPU transfer; no RNG consumed",
+    "destinations": {
+      "B1": {
+        "parent_raw_g0": 0.3086530268192291,
+        "g0": 0.31403544545173645,
+        "tanh_g0": 0.3041037917137146,
+        "w_norm": 0.019666971638798714,
+        "preactivation_fp32": {
+          "mean": 0.33657814998217006,
+          "std": 0.026447864707610708,
+          "min": 0.10169956088066101,
+          "max": 0.44445112347602844
+        },
+        "gate_input": "token embedding + position embedding",
+        "first_position_with_recurrent_memory": 1,
+        "mathematical_fp32_gate": {
+          "mean": 0.32422027463398173,
+          "std": 0.02384334402903486,
+          "min": 0.10135038942098618,
+          "max": 0.4173271954059601,
+          "percentiles": {
+            "p1": 0.2612617942690849,
+            "p5": 0.2801868364214897,
+            "p25": 0.3114524185657501,
+            "median": 0.32659754157066345,
+            "p75": 0.34179282933473587,
+            "p95": 0.35520321130752563,
+            "p99": 0.3672987222671509
+          },
+          "negative_fraction": 0.0,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.02658917899416302,
+          "std_of_per_sequence_means": 0.0037513783511170574,
+          "mean_within_sequence_std": 0.023493848630905107,
+          "position_bins": {
+            "0": {
+              "mean": 0.3906295796914492,
+              "std": 0.011351711578350833,
+              "min": 0.34767675399780273,
+              "max": 0.4173271954059601,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.29296494044161414,
+              "std": 0.04318379177950456,
+              "min": 0.10135038942098618,
+              "max": 0.3787737190723419,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "32\u201363": {
+              "mean": 0.32174822823174054,
+              "std": 0.022963017052847874,
+              "min": 0.2349058985710144,
+              "max": 0.38447296619415283,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "64\u2013127": {
+              "mean": 0.3232800259473265,
+              "std": 0.02303534009500652,
+              "min": 0.23790737986564636,
+              "max": 0.38553252816200256,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.3253042472522907,
+              "std": 0.023095369726716445,
+              "min": 0.23772145807743073,
+              "max": 0.38754311203956604,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.32519242094832634,
+              "std": 0.0224564754710545,
+              "min": 0.23772457242012024,
+              "max": 0.38834843039512634,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.3239540255596154,
+              "std": 0.021570097015759328,
+              "min": 0.2384030669927597,
+              "max": 0.38467761874198914,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.3270418733337692,
+              "std": 0.02160540777502454,
+              "min": 0.2392290234565735,
+              "max": 0.38898640871047974,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        },
+        "effective_bf16_coefficient": {
+          "mean": 0.32421987771522254,
+          "std": 0.02384932838063692,
+          "min": 0.1015625,
+          "max": 0.41796875,
+          "percentiles": {
+            "p1": 0.26171875,
+            "p5": 0.279296875,
+            "p25": 0.310546875,
+            "median": 0.326171875,
+            "p75": 0.341796875,
+            "p95": 0.35546875,
+            "p99": 0.3671875
+          },
+          "negative_fraction": 0.0,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.026593896773277947,
+          "std_of_per_sequence_means": 0.0037510022310750053,
+          "mean_within_sequence_std": 0.023499999613840167,
+          "position_bins": {
+            "0": {
+              "mean": 0.39055919647216797,
+              "std": 0.011280749610796363,
+              "min": 0.34765625,
+              "max": 0.41796875,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.29297101497650146,
+              "std": 0.04319297693961171,
+              "min": 0.1015625,
+              "max": 0.37890625,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "32\u201363": {
+              "mean": 0.32176053524017334,
+              "std": 0.0229722027711573,
+              "min": 0.2353515625,
+              "max": 0.384765625,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "64\u2013127": {
+              "mean": 0.3232797682285309,
+              "std": 0.023043178106366347,
+              "min": 0.23828125,
+              "max": 0.384765625,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.32531492598354816,
+              "std": 0.023111084812471296,
+              "min": 0.2373046875,
+              "max": 0.38671875,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.3251892663538456,
+              "std": 0.022463296736195855,
+              "min": 0.2373046875,
+              "max": 0.388671875,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.32395395543426275,
+              "std": 0.021578031824636315,
+              "min": 0.23828125,
+              "max": 0.384765625,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.3270362364128232,
+              "std": 0.021605711547411782,
+              "min": 0.2392578125,
+              "max": 0.388671875,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        },
+        "parent_stage": "sealed 100M Dynamic checkpoint",
+        "source_100m_w_norm": 0.014254109002649784,
+        "raw_g0_change_from_100m": 0.005382418632507324,
+        "w_norm_change_from_100m": 0.00541286263614893
+      },
+      "B3": {
+        "parent_raw_g0": 0.012151182629168034,
+        "g0": 0.012935474514961243,
+        "tanh_g0": 0.012934752739965916,
+        "w_norm": 0.007802824955433607,
+        "preactivation_fp32": {
+          "mean": 0.010845006572664184,
+          "std": 0.007283188685410266,
+          "min": -0.01559821143746376,
+          "max": 0.048324014991521835
+        },
+        "gate_input": "current pre-attention residual with preceding contextual processing",
+        "first_position_with_recurrent_memory": 31,
+        "mathematical_fp32_gate": {
+          "mean": 0.010843918718503653,
+          "std": 0.007281514951056016,
+          "min": -0.015596946701407433,
+          "max": 0.04828643426299095,
+          "percentiles": {
+            "p1": -0.002773437825962901,
+            "p5": 0.0009263004525564615,
+            "p25": 0.005617296323180199,
+            "median": 0.009728127624839544,
+            "p75": 0.014984026318416,
+            "p95": 0.024824464693665504,
+            "p99": 0.030669060349464407
+          },
+          "negative_fraction": 0.03450584411621094,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.006264725618644329,
+          "std_of_per_sequence_means": 0.0011746353882607988,
+          "mean_within_sequence_std": 0.007160191404449227,
+          "position_bins": {
+            "0": {
+              "mean": 0.0030644113489657343,
+              "std": 0.0026185131169734954,
+              "min": -0.005176024977117777,
+              "max": 0.013594303280115128,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.003406479267864698,
+              "std": 0.006830407513472727,
+              "min": -0.015596946701407433,
+              "max": 0.0367230586707592,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.03225806451612903
+            },
+            "32\u201363": {
+              "mean": 0.008494056442976072,
+              "std": 0.006881697519495299,
+              "min": -0.011667856015264988,
+              "max": 0.04149406775832176,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "64\u2013127": {
+              "mean": 0.01187086976576579,
+              "std": 0.006883419698644442,
+              "min": -0.008136910386383533,
+              "max": 0.04662550613284111,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.014567747768010675,
+              "std": 0.006786834493237047,
+              "min": -0.005280795972794294,
+              "max": 0.04711716249585152,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.01423416321597587,
+              "std": 0.006699094825398539,
+              "min": -0.0064935628324747086,
+              "max": 0.04828643426299095,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.009717300351213681,
+              "std": 0.006585543867043569,
+              "min": -0.011153592728078365,
+              "max": 0.04265191778540611,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.00768638922033138,
+              "std": 0.006309314859591879,
+              "min": -0.013710751198232174,
+              "max": 0.041565027087926865,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        },
+        "effective_bf16_coefficient": {
+          "mean": 0.010843901260300548,
+          "std": 0.0072815393728354865,
+          "min": -0.015625,
+          "max": 0.04833984375,
+          "percentiles": {
+            "p1": -0.002777099609375,
+            "p5": 0.000926971435546875,
+            "p25": 0.005615234375,
+            "median": 0.00970458984375,
+            "p75": 0.01495361328125,
+            "p95": 0.0247802734375,
+            "p99": 0.0306396484375
+          },
+          "negative_fraction": 0.03450584411621094,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.006264721060390777,
+          "std_of_per_sequence_means": 0.001174644537298664,
+          "mean_within_sequence_std": 0.0071602134217167955,
+          "position_bins": {
+            "0": {
+              "mean": 0.0030638756334155914,
+              "std": 0.0026181801845913152,
+              "min": -0.00518798828125,
+              "max": 0.01361083984375,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.0034064515221181807,
+              "std": 0.006830424657813348,
+              "min": -0.015625,
+              "max": 0.03662109375,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.03225806451612903
+            },
+            "32\u201363": {
+              "mean": 0.008494087908808012,
+              "std": 0.0068817413055890465,
+              "min": -0.01165771484375,
+              "max": 0.04150390625,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "64\u2013127": {
+              "mean": 0.011870840236937852,
+              "std": 0.006883358680371309,
+              "min": -0.00811767578125,
+              "max": 0.046630859375,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.014567764181251164,
+              "std": 0.006786853047286841,
+              "min": -0.005279541015625,
+              "max": 0.047119140625,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.01423412629942078,
+              "std": 0.006699146007817959,
+              "min": -0.006500244140625,
+              "max": 0.04833984375,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.009717308221071086,
+              "std": 0.006585600693874221,
+              "min": -0.01116943359375,
+              "max": 0.042724609375,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.007686349129049752,
+              "std": 0.006309305385407895,
+              "min": -0.01373291015625,
+              "max": 0.04150390625,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        },
+        "parent_stage": "sealed 100M Dynamic checkpoint",
+        "source_100m_w_norm": 0.0059964619576931,
+        "raw_g0_change_from_100m": 0.0007842918857932091,
+        "w_norm_change_from_100m": 0.0018063629977405071
+      },
+      "B5": {
+        "parent_raw_g0": 0.04200124740600586,
+        "g0": 0.041949447244405746,
+        "tanh_g0": 0.0419248566031456,
+        "w_norm": 0.016615809872746468,
+        "preactivation_fp32": {
+          "mean": 0.041619497478501355,
+          "std": 0.017604398521970304,
+          "min": -0.03401445224881172,
+          "max": 0.1253347396850586
+        },
+        "gate_input": "current pre-attention residual with preceding contextual processing",
+        "first_position_with_recurrent_memory": 63,
+        "mathematical_fp32_gate": {
+          "mean": 0.041582143603651006,
+          "std": 0.017563823913624262,
+          "min": -0.034001339226961136,
+          "max": 0.12468256056308746,
+          "percentiles": {
+            "p1": 0.0010985817946493619,
+            "p5": 0.013059271406382328,
+            "p25": 0.030375901609659195,
+            "median": 0.0410305131226778,
+            "p75": 0.05235543940216303,
+            "p95": 0.07073744051158427,
+            "p99": 0.08809476740658273
+          },
+          "negative_fraction": 0.008235692977905273,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.013632588699711262,
+          "std_of_per_sequence_means": 0.0029996863906779675,
+          "mean_within_sequence_std": 0.01727940175906246,
+          "position_bins": {
+            "0": {
+              "mean": 0.01253860801148221,
+              "std": 0.0003225248094439551,
+              "min": 0.011487624607980251,
+              "max": 0.013871709816157818,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.010087728395231099,
+              "std": 0.011265921705007606,
+              "min": -0.034001339226961136,
+              "max": 0.0672508031129837,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "32\u201363": {
+              "mean": 0.01787792871256344,
+              "std": 0.012523977195503761,
+              "min": -0.03002455085515976,
+              "max": 0.07633354514837265,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.03125
+            },
+            "64\u2013127": {
+              "mean": 0.025597143863207328,
+              "std": 0.013252678003045382,
+              "min": -0.025207562372088432,
+              "max": 0.0880909189581871,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.034586692929001406,
+              "std": 0.014004728668737672,
+              "min": -0.02396589145064354,
+              "max": 0.10466085374355316,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.0428635932226665,
+              "std": 0.014687469719740704,
+              "min": -0.013338940218091011,
+              "max": 0.1171279326081276,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.04663485675054366,
+              "std": 0.015119601973349729,
+              "min": -0.014213655143976212,
+              "max": 0.120997853577137,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.04963221112411603,
+              "std": 0.01545021620474713,
+              "min": -0.014103684574365616,
+              "max": 0.12468256056308746,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        },
+        "effective_bf16_coefficient": {
+          "mean": 0.041581976906273965,
+          "std": 0.0175638896617202,
+          "min": -0.033935546875,
+          "max": 0.12451171875,
+          "percentiles": {
+            "p1": 0.0010986328125,
+            "p5": 0.0130615234375,
+            "p25": 0.0303955078125,
+            "median": 0.041015625,
+            "p75": 0.05224609375,
+            "p95": 0.07080078125,
+            "p99": 0.087890625
+          },
+          "negative_fraction": 0.008235692977905273,
+          "mean_absolute_deviation_from_final_tanh_g0": 0.013632705633019881,
+          "std_of_per_sequence_means": 0.0029996097049263945,
+          "mean_within_sequence_std": 0.017279482914059736,
+          "position_bins": {
+            "0": {
+              "mean": 0.012536942958831787,
+              "std": 0.0003235181055308784,
+              "min": 0.011474609375,
+              "max": 0.01385498046875,
+              "positions": [
+                0,
+                0
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "1\u201331": {
+              "mean": 0.010087747991923196,
+              "std": 0.011265922948565574,
+              "min": -0.033935546875,
+              "max": 0.0673828125,
+              "positions": [
+                1,
+                31
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+            },
+            "32\u201363": {
+              "mean": 0.017877742074659864,
+              "std": 0.012523732567835066,
+              "min": -0.030029296875,
+              "max": 0.076171875,
+              "positions": [
+                32,
+                63
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 0.03125
+            },
+            "64\u2013127": {
+              "mean": 0.025596827225342622,
+              "std": 0.013252412403201772,
+              "min": -0.0252685546875,
+              "max": 0.087890625,
+              "positions": [
+                64,
+                127
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "128\u2013255": {
+              "mean": 0.034586493144445285,
+              "std": 0.01400462796599906,
+              "min": -0.02392578125,
+              "max": 0.1044921875,
+              "positions": [
+                128,
+                255
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "256\u2013511": {
+              "mean": 0.042863459838883955,
+              "std": 0.014687671456231271,
+              "min": -0.01336669921875,
+              "max": 0.1171875,
+              "positions": [
+                256,
+                511
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "512\u2013767": {
+              "mean": 0.046634760740971615,
+              "std": 0.015119709648273146,
+              "min": -0.01422119140625,
+              "max": 0.12109375,
+              "positions": [
+                512,
+                767
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            },
+            "768\u20131023": {
+              "mean": 0.049631980240519624,
+              "std": 0.015450337664121601,
+              "min": -0.01409912109375,
+              "max": 0.12451171875,
+              "positions": [
+                768,
+                1023
+              ],
+              "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+            }
+          }
+        },
+        "parent_stage": "sealed 100M Dynamic checkpoint",
+        "source_100m_w_norm": 0.010406610555946827,
+        "raw_g0_change_from_100m": -5.1800161600112915e-05,
+        "w_norm_change_from_100m": 0.006209199316799641
+      }
+    }
+  },
+  "memory_and_runtime": {
+    "persistent_state_by_condition": {
+      "STATIC_REAL": {
+        "logical_bytes_per_sequence": 33289728,
+        "physical_bytes_per_sequence": 33289728
+      },
+      "DYNAMIC_REAL": {
+        "logical_bytes_per_sequence": 33289728,
+        "physical_bytes_per_sequence": 33289728
+      },
+      "DYNAMIC_STATICIZED": {
+        "logical_bytes_per_sequence": 33289728,
+        "physical_bytes_per_sequence": 33289728
+      }
+    },
+    "persistent_state_delta_bytes": 0,
+    "parameter_counts": {
+      "S": 124475908,
+      "D": 124478212
+    },
+    "parameter_increase": 2304,
+    "additional_fp32_parameter_bytes": 9216,
+    "additional_bf16_parameter_bytes": 4608,
+    "training_wall_seconds": {
+      "S": 2498.3098653778434,
+      "D": 2546.2887564972043
+    },
+    "evaluation_wall_seconds": {
+      "STATIC_REAL": 1106.6159995235503,
+      "DYNAMIC_REAL": 1175.6426665969193,
+      "DYNAMIC_STATICIZED": 1105.2290818057954
+    },
+    "timing_scope": "Descriptive workload timings. Dynamic Real includes gate collection; training update times include audits and exclude recovery-checkpoint writing. No isolated timing benchmark.",
+    "training_only_state": "Adam state is training-only. Gate scalar arrays are analysis artifacts, not persistent model state."
+  },
+  "comparison_100m_250m": {
+    "scope": "Descriptive contrasts on different disjoint panels; no pooled losses or paired effect-growth test.",
+    "prior_panel_sha256": "aa27fff24ddd5776d357f81b3197a8e44bccbb3ac30ca6ee7e93bc9c3822531f",
+    "current_panel_sha256": "d1caaf166ebae8bef5729704fc8077af138558e91c10cc7b6fd0ef1e7b2bc3b5",
+    "contrasts": {
+      "A": {
+        "100m": {
+          "contrast": "Static \u2212 Dynamic",
+          "mean": 5.425862617403716e-05,
+          "ci95": [
+            4.552162732402587e-06,
+            0.00010453115461414118
+          ],
+          "exp_contrast": 1.0000542600981999,
+          "exp_ci95": [
+            1.0000045521730936,
+            1.0001045366181855
+          ],
+          "second_condition_sequence_wins": 2121,
+          "first_condition_sequence_wins": 1975,
+          "ties": 0,
+          "flags": {
+            "positive_utility": true,
+            "benefit_beyond_margin": false,
+            "negative_utility": false,
+            "harm_beyond_margin": false,
+            "practical_equivalence": false,
+            "noninferiority_of_second_named_condition": true
+          }
+        },
+        "250m": {
+          "contrast": "Static \u2212 Dynamic",
+          "mean": 0.00015466534793768996,
+          "ci95": [
+            0.00010258959968977117,
+            0.00020653085771751953
+          ],
+          "exp_contrast": 1.0001546773092393,
+          "exp_ci95": [
+            1.0001025948621827,
+            1.0002065521866834
+          ],
+          "second_condition_sequence_wins": 2200,
+          "first_condition_sequence_wins": 1896,
+          "ties": 0,
+          "flags": {
+            "positive_utility": true,
+            "benefit_beyond_margin": true,
+            "negative_utility": false,
+            "harm_beyond_margin": false,
+            "practical_equivalence": false,
+            "noninferiority_of_second_named_condition": true
+          }
+        },
+        "descriptive_mean_change": 0.00010040672176365279
+      },
+      "P": {
+        "100m": {
+          "contrast": "Staticized \u2212 Dynamic",
+          "mean": 0.00013933119734520292,
+          "ci95": [
+            9.047581164556376e-05,
+            0.00018835693761303892
+          ],
+          "exp_contrast": 1.0001393409043873,
+          "exp_ci95": [
+            1.0000904799047052,
+            1.0001883746778948
+          ],
+          "second_condition_sequence_wins": 2171,
+          "first_condition_sequence_wins": 1925,
+          "ties": 0,
+          "flags": {
+            "positive_utility": true,
+            "benefit_beyond_margin": false,
+            "negative_utility": false,
+            "harm_beyond_margin": false,
+            "practical_equivalence": false,
+            "noninferiority_of_second_named_condition": true
+          }
+        },
+        "250m": {
+          "contrast": "Staticized \u2212 Dynamic",
+          "mean": 0.00023667899586838714,
+          "ci95": [
+            0.0001833914038858747,
+            0.0002901889423608432
+          ],
+          "exp_contrast": 1.0002367070065517,
+          "exp_ci95": [
+            1.0001834082211174,
+            1.0002902310512451
+          ],
+          "second_condition_sequence_wins": 2251,
+          "first_condition_sequence_wins": 1845,
+          "ties": 0,
+          "flags": {
+            "positive_utility": true,
+            "benefit_beyond_margin": true,
+            "negative_utility": false,
+            "harm_beyond_margin": false,
+            "practical_equivalence": false,
+            "noninferiority_of_second_named_condition": true
+          }
+        },
+        "descriptive_mean_change": 9.734779852318422e-05
+      },
+      "R": {
+        "100m": {
+          "contrast": "Static \u2212 Staticized",
+          "mean": -8.507257117116576e-05,
+          "ci95": [
+            -0.00013492875495837767,
+            -3.5385255814272706e-05
+          ],
+          "exp_contrast": 0.9999149310473974,
+          "exp_ci95": [
+            0.9998650803475166,
+            0.9999646153702365
+          ],
+          "second_condition_sequence_wins": 1955,
+          "first_condition_sequence_wins": 2141,
+          "ties": 0,
+          "flags": {
+            "positive_utility": false,
+            "benefit_beyond_margin": false,
+            "negative_utility": true,
+            "harm_beyond_margin": false,
+            "practical_equivalence": false,
+            "noninferiority_of_second_named_condition": false
+          }
+        },
+        "250m": {
+          "contrast": "Static \u2212 Staticized",
+          "mean": -8.201364793069719e-05,
+          "ci95": [
+            -0.0001338567884016911,
+            -2.9670076216731906e-05
+          ],
+          "exp_contrast": 0.9999179897150966,
+          "exp_ci95": [
+            0.9998661521700185,
+            0.9999703303639357
+          ],
+          "second_condition_sequence_wins": 1948,
+          "first_condition_sequence_wins": 2148,
+          "ties": 0,
+          "flags": {
+            "positive_utility": false,
+            "benefit_beyond_margin": false,
+            "negative_utility": true,
+            "harm_beyond_margin": false,
+            "practical_equivalence": false,
+            "noninferiority_of_second_named_condition": false
+          }
+        },
+        "descriptive_mean_change": 3.0589232404685694e-06
+      }
+    }
+  },
+  "source_checkpoint_sha256": {
+    "S": "676762f2523703167df61f6acda483ae04f7db14a2f918dfd4171911fa5e911b",
+    "D": "c9d859813d1cc2b2df33527d9a07cba32f3901e64febe752cf95a30bb9a73b44"
+  },
+  "checkpoints": {
+    "S": {
+      "local_checkpoint": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d9_token_conditioned_dynamic_recurrent_gating_250m/S/scientific_cumulative_001450704896.pt",
+      "persistent_checkpoint": "/workspace/exp2d9_dynamic_gating_250m/run/checkpoints/S/scientific_cumulative_001450704896.pt",
+      "sha256": "265ad44e39b513d939c43ea6b71fdac1f6a6c65df04f7dba9fd724df8f7a0ddb",
+      "persistent_sha256": "265ad44e39b513d939c43ea6b71fdac1f6a6c65df04f7dba9fd724df8f7a0ddb",
+      "bytes": 1493973003,
+      "verified_independently": true,
+      "verification": {
+        "arm": "S",
+        "bytes": 1493973003,
+        "checkpoint": "/workspace/exp2d9_dynamic_gating_250m/run/checkpoints/S/scientific_cumulative_001450704896.pt",
+        "cumulative_targets": 1450704896,
+        "experiment_total_updates": 477,
+        "final_loader_cursor": {
+          "batch_size": 32,
+          "current_position": 1736704,
+          "current_shard": 17,
+          "sequence_length": 1024,
+          "shards": [
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+          ]
+        },
+        "global_update": 2767,
+        "local_updates": 286,
+        "next_global_batch_sha256": "c1d217a6af6379263b035c47a158bdeada49f9611cb2fa721ae6c939aa35fe27",
+        "next_stream_sha256": "c9025e28b5ef35a00c35fde4e89d38da8bfdae50235211d88516f14abebb4196",
+        "sha256": "265ad44e39b513d939c43ea6b71fdac1f6a6c65df04f7dba9fd724df8f7a0ddb",
+        "strict_reopen": {
+          "arm": "S",
+          "checks": {
+            "architecture": true,
+            "cumulative_targets": true,
+            "dormant_unchanged": true,
+            "dynamic_steps": true,
+            "experiment_total_targets": true,
+            "experiment_total_updates": true,
+            "global_update": true,
+            "loader_cursor": true,
+            "local_updates": true,
+            "model_finite": true,
+            "model_snapshot_exact": true,
+            "next_batch": true,
+            "next_stream": true,
+            "optimizer_finite": true,
+            "optimizer_groups_exact": true,
+            "optimizer_inventory_complete": true,
+            "optimizer_names": true,
+            "optimizer_progression": true,
+            "optimizer_snapshot_exact": true,
+            "parameter_count": true,
+            "parameter_names": true,
+            "parent": true,
+            "rng": true,
+            "scheduler": true,
+            "schema": true
+          },
+          "passed": true
+        }
+      }
+    },
+    "D": {
+      "local_checkpoint": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d9_token_conditioned_dynamic_recurrent_gating_250m/D/scientific_cumulative_001450704896.pt",
+      "persistent_checkpoint": "/workspace/exp2d9_dynamic_gating_250m/run/checkpoints/D/scientific_cumulative_001450704896.pt",
+      "sha256": "9714b2e3f53a8c15dfecfed3e9b56c358176c1f9f609bcce7e28c35b8a358a9b",
+      "persistent_sha256": "9714b2e3f53a8c15dfecfed3e9b56c358176c1f9f609bcce7e28c35b8a358a9b",
+      "bytes": 1494004811,
+      "verified_independently": true,
+      "verification": {
+        "arm": "D",
+        "bytes": 1494004811,
+        "checkpoint": "/workspace/exp2d9_dynamic_gating_250m/run/checkpoints/D/scientific_cumulative_001450704896.pt",
+        "cumulative_targets": 1450704896,
+        "experiment_total_updates": 477,
+        "final_loader_cursor": {
+          "batch_size": 32,
+          "current_position": 1736704,
+          "current_shard": 17,
+          "sequence_length": 1024,
+          "shards": [
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+            "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+          ]
+        },
+        "global_update": 2767,
+        "local_updates": 286,
+        "next_global_batch_sha256": "c1d217a6af6379263b035c47a158bdeada49f9611cb2fa721ae6c939aa35fe27",
+        "next_stream_sha256": "c9025e28b5ef35a00c35fde4e89d38da8bfdae50235211d88516f14abebb4196",
+        "sha256": "9714b2e3f53a8c15dfecfed3e9b56c358176c1f9f609bcce7e28c35b8a358a9b",
+        "strict_reopen": {
+          "arm": "D",
+          "checks": {
+            "architecture": true,
+            "cumulative_targets": true,
+            "dormant_unchanged": true,
+            "dynamic_steps": true,
+            "experiment_total_targets": true,
+            "experiment_total_updates": true,
+            "global_update": true,
+            "loader_cursor": true,
+            "local_updates": true,
+            "model_finite": true,
+            "model_snapshot_exact": true,
+            "next_batch": true,
+            "next_stream": true,
+            "optimizer_finite": true,
+            "optimizer_groups_exact": true,
+            "optimizer_inventory_complete": true,
+            "optimizer_names": true,
+            "optimizer_progression": true,
+            "optimizer_snapshot_exact": true,
+            "parameter_count": true,
+            "parameter_names": true,
+            "parent": true,
+            "rng": true,
+            "scheduler": true,
+            "schema": true
+          },
+          "passed": true
+        }
+      }
+    }
+  },
+  "terminal": {
+    "loader_cursor_sha256": "f549cf0a45863e65391147d4439c1ae0af2ba1c8bc1d943e1a33f532c7b3d1d0",
+    "next_batch_sha256": "c1d217a6af6379263b035c47a158bdeada49f9611cb2fa721ae6c939aa35fe27",
+    "next_stream_sha256": "c9025e28b5ef35a00c35fde4e89d38da8bfdae50235211d88516f14abebb4196",
+    "equal": true
+  },
+  "audit": {
+    "passed": true,
+    "checks": {
+      "correct_sealed_source_per_arm": true,
+      "exact_model_optimizer_moments_and_steps_restored": true,
+      "learned_D_vectors_and_moments_retained": true,
+      "unchanged_parameter_inventory_and_counts": true,
+      "tied_weights_and_fp32_masters": true,
+      "unchanged_attention_and_gate_kernels": true,
+      "inherited_zero_effect_and_causality_evidence": true,
+      "targeted_resume_tests": true,
+      "full_source_roundtrips_without_updates": true,
+      "committed_implementation_bound_before_training": true,
+      "correct_continuation_start": true,
+      "ledger_hash_and_chain": true,
+      "exact_286_additional_updates": true,
+      "exact_149946368_additional_targets": true,
+      "exact_477_updates_250085376_total_targets": true,
+      "unambiguous_per_update_counters": true,
+      "same_matched_logical_batches": true,
+      "same_matched_logical_streams": true,
+      "exact_pass_cadence": true,
+      "all_gradient_and_optimizer_checks": true,
+      "all_update_replay_invariants": true,
+      "dormant_B6_unchanged": true,
+      "complete_recovery_checkpoints": true,
+      "strict_final_reopen": true,
+      "every_active_counter_advanced_286": true,
+      "dynamic_w_counters_reach_477": true,
+      "exact_final_snapshots_and_scheduler": true,
+      "terminal_cursor_equality": true,
+      "terminal_next_batch_equality": true,
+      "terminal_next_stream_equality": true,
+      "one_fresh_panel_seed_20260907": true,
+      "all_historical_exclusions_and_100m_panel": true,
+      "exactly_three_final_conditions": true,
+      "three_finite_4096_loss_arrays": true,
+      "ordered_panel_identity_equality": true,
+      "same_D_checkpoint_for_staticized": true,
+      "S_evaluation_from_S_checkpoint": true,
+      "evaluation_weights_and_checkpoint_unchanged": true,
+      "paired_50k_bootstrap_original_seed": true,
+      "zero_persistent_state_growth": true,
+      "full_panel_gate_scalars_independently_verified": true,
+      "inherited_microbatch_accumulation_and_LRs": true,
+      "independently_verified_final_backups": true,
+      "verified_exact_GPU_stop": true,
+      "persistent_volume_retained": true,
+      "successful_workflow_and_stop": true,
+      "training_terminal_audits": true
+    },
+    "passed_count": 47,
+    "total_checks": 47,
+    "implementation_commit": "38e6edce5a0391ea0e14f373fe9714bd232ebd49",
+    "inherited_100m_commit": "482ad55637c2a0adb5c7c268b37c7be243ac15c8"
+  },
+  "stop": {
+    "passed": true,
+    "pod": {
+      "id": "7kk5yyti00rnrp",
+      "name": "grand_amber_catshark",
+      "gpuCount": 1,
+      "desiredStatus": "EXITED",
+      "runtimeStatus": "stopped",
+      "createdAt": "2026-08-26 09:24:51.314 +0000 UTC",
+      "lastStatusChange": "Exited by user: Sat Sep 05 2026 02:14:06 GMT+0000 (Coordinated Universal Time)",
+      "networkVolumeId": "yhzyb27fb5",
+      "volumeMountPath": "/workspace",
+      "networkVolume": {
+        "dataCenterId": "US-MD-1",
+        "id": "yhzyb27fb5",
+        "name": "unlikely_lime_flamingo",
+        "size": 160
+      }
+    },
+    "persistent_volume_retained": true,
+    "verified_at_utc": "2026-09-05T02:14:09.084564+00:00"
+  }
+}

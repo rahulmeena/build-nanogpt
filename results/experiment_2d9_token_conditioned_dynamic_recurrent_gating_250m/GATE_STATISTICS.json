@@ -1,0 +1,733 @@
+{
+  "array_sha256": "a86308009c4e801f9e6e967e84ee2eccc35b64a978bbd8924e0337f5486307b8",
+  "array_shape": [
+    3,
+    3,
+    4096,
+    1024
+  ],
+  "array_layout": [
+    "destination B1/B3/B5",
+    "preactivation / FP32 g / BF16 coefficient represented as FP32",
+    "sequence",
+    "token position"
+  ],
+  "quantiles": "Exact full-panel linear percentiles; no sampling",
+  "token_count_per_destination": 4194304,
+  "standard_deviation_definitions": {
+    "across_tokens": "Population std over all 4,194,304 token coefficients (ddof=0)",
+    "sequence_means": "Population std of 4,096 per-sequence means (ddof=0)",
+    "within_sequence": "Mean of 4,096 per-sequence population std values"
+  },
+  "device_buffer_bound": "One B64 \u00d7 T1024 batch; one batched device-to-CPU transfer; no RNG consumed",
+  "destinations": {
+    "B1": {
+      "parent_raw_g0": 0.3086530268192291,
+      "g0": 0.31403544545173645,
+      "tanh_g0": 0.3041037917137146,
+      "w_norm": 0.019666971638798714,
+      "preactivation_fp32": {
+        "mean": 0.33657814998217006,
+        "std": 0.026447864707610708,
+        "min": 0.10169956088066101,
+        "max": 0.44445112347602844
+      },
+      "gate_input": "token embedding + position embedding",
+      "first_position_with_recurrent_memory": 1,
+      "mathematical_fp32_gate": {
+        "mean": 0.32422027463398173,
+        "std": 0.02384334402903486,
+        "min": 0.10135038942098618,
+        "max": 0.4173271954059601,
+        "percentiles": {
+          "p1": 0.2612617942690849,
+          "p5": 0.2801868364214897,
+          "p25": 0.3114524185657501,
+          "median": 0.32659754157066345,
+          "p75": 0.34179282933473587,
+          "p95": 0.35520321130752563,
+          "p99": 0.3672987222671509
+        },
+        "negative_fraction": 0.0,
+        "mean_absolute_deviation_from_final_tanh_g0": 0.02658917899416302,
+        "std_of_per_sequence_means": 0.0037513783511170574,
+        "mean_within_sequence_std": 0.023493848630905107,
+        "position_bins": {
+          "0": {
+            "mean": 0.3906295796914492,
+            "std": 0.011351711578350833,
+            "min": 0.34767675399780273,
+            "max": 0.4173271954059601,
+            "positions": [
+              0,
+              0
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+          },
+          "1\u201331": {
+            "mean": 0.29296494044161414,
+            "std": 0.04318379177950456,
+            "min": 0.10135038942098618,
+            "max": 0.3787737190723419,
+            "positions": [
+              1,
+              31
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "32\u201363": {
+            "mean": 0.32174822823174054,
+            "std": 0.022963017052847874,
+            "min": 0.2349058985710144,
+            "max": 0.38447296619415283,
+            "positions": [
+              32,
+              63
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "64\u2013127": {
+            "mean": 0.3232800259473265,
+            "std": 0.02303534009500652,
+            "min": 0.23790737986564636,
+            "max": 0.38553252816200256,
+            "positions": [
+              64,
+              127
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "128\u2013255": {
+            "mean": 0.3253042472522907,
+            "std": 0.023095369726716445,
+            "min": 0.23772145807743073,
+            "max": 0.38754311203956604,
+            "positions": [
+              128,
+              255
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "256\u2013511": {
+            "mean": 0.32519242094832634,
+            "std": 0.0224564754710545,
+            "min": 0.23772457242012024,
+            "max": 0.38834843039512634,
+            "positions": [
+              256,
+              511
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "512\u2013767": {
+            "mean": 0.3239540255596154,
+            "std": 0.021570097015759328,
+            "min": 0.2384030669927597,
+            "max": 0.38467761874198914,
+            "positions": [
+              512,
+              767
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "768\u20131023": {
+            "mean": 0.3270418733337692,
+            "std": 0.02160540777502454,
+            "min": 0.2392290234565735,
+            "max": 0.38898640871047974,
+            "positions": [
+              768,
+              1023
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          }
+        }
+      },
+      "effective_bf16_coefficient": {
+        "mean": 0.32421987771522254,
+        "std": 0.02384932838063692,
+        "min": 0.1015625,
+        "max": 0.41796875,
+        "percentiles": {
+          "p1": 0.26171875,
+          "p5": 0.279296875,
+          "p25": 0.310546875,
+          "median": 0.326171875,
+          "p75": 0.341796875,
+          "p95": 0.35546875,
+          "p99": 0.3671875
+        },
+        "negative_fraction": 0.0,
+        "mean_absolute_deviation_from_final_tanh_g0": 0.026593896773277947,
+        "std_of_per_sequence_means": 0.0037510022310750053,
+        "mean_within_sequence_std": 0.023499999613840167,
+        "position_bins": {
+          "0": {
+            "mean": 0.39055919647216797,
+            "std": 0.011280749610796363,
+            "min": 0.34765625,
+            "max": 0.41796875,
+            "positions": [
+              0,
+              0
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+          },
+          "1\u201331": {
+            "mean": 0.29297101497650146,
+            "std": 0.04319297693961171,
+            "min": 0.1015625,
+            "max": 0.37890625,
+            "positions": [
+              1,
+              31
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "32\u201363": {
+            "mean": 0.32176053524017334,
+            "std": 0.0229722027711573,
+            "min": 0.2353515625,
+            "max": 0.384765625,
+            "positions": [
+              32,
+              63
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "64\u2013127": {
+            "mean": 0.3232797682285309,
+            "std": 0.023043178106366347,
+            "min": 0.23828125,
+            "max": 0.384765625,
+            "positions": [
+              64,
+              127
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "128\u2013255": {
+            "mean": 0.32531492598354816,
+            "std": 0.023111084812471296,
+            "min": 0.2373046875,
+            "max": 0.38671875,
+            "positions": [
+              128,
+              255
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "256\u2013511": {
+            "mean": 0.3251892663538456,
+            "std": 0.022463296736195855,
+            "min": 0.2373046875,
+            "max": 0.388671875,
+            "positions": [
+              256,
+              511
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "512\u2013767": {
+            "mean": 0.32395395543426275,
+            "std": 0.021578031824636315,
+            "min": 0.23828125,
+            "max": 0.384765625,
+            "positions": [
+              512,
+              767
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "768\u20131023": {
+            "mean": 0.3270362364128232,
+            "std": 0.021605711547411782,
+            "min": 0.2392578125,
+            "max": 0.388671875,
+            "positions": [
+              768,
+              1023
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          }
+        }
+      },
+      "parent_stage": "sealed 100M Dynamic checkpoint",
+      "source_100m_w_norm": 0.014254109002649784,
+      "raw_g0_change_from_100m": 0.005382418632507324,
+      "w_norm_change_from_100m": 0.00541286263614893
+    },
+    "B3": {
+      "parent_raw_g0": 0.012151182629168034,
+      "g0": 0.012935474514961243,
+      "tanh_g0": 0.012934752739965916,
+      "w_norm": 0.007802824955433607,
+      "preactivation_fp32": {
+        "mean": 0.010845006572664184,
+        "std": 0.007283188685410266,
+        "min": -0.01559821143746376,
+        "max": 0.048324014991521835
+      },
+      "gate_input": "current pre-attention residual with preceding contextual processing",
+      "first_position_with_recurrent_memory": 31,
+      "mathematical_fp32_gate": {
+        "mean": 0.010843918718503653,
+        "std": 0.007281514951056016,
+        "min": -0.015596946701407433,
+        "max": 0.04828643426299095,
+        "percentiles": {
+          "p1": -0.002773437825962901,
+          "p5": 0.0009263004525564615,
+          "p25": 0.005617296323180199,
+          "median": 0.009728127624839544,
+          "p75": 0.014984026318416,
+          "p95": 0.024824464693665504,
+          "p99": 0.030669060349464407
+        },
+        "negative_fraction": 0.03450584411621094,
+        "mean_absolute_deviation_from_final_tanh_g0": 0.006264725618644329,
+        "std_of_per_sequence_means": 0.0011746353882607988,
+        "mean_within_sequence_std": 0.007160191404449227,
+        "position_bins": {
+          "0": {
+            "mean": 0.0030644113489657343,
+            "std": 0.0026185131169734954,
+            "min": -0.005176024977117777,
+            "max": 0.013594303280115128,
+            "positions": [
+              0,
+              0
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+          },
+          "1\u201331": {
+            "mean": 0.003406479267864698,
+            "std": 0.006830407513472727,
+            "min": -0.015596946701407433,
+            "max": 0.0367230586707592,
+            "positions": [
+              1,
+              31
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.03225806451612903
+          },
+          "32\u201363": {
+            "mean": 0.008494056442976072,
+            "std": 0.006881697519495299,
+            "min": -0.011667856015264988,
+            "max": 0.04149406775832176,
+            "positions": [
+              32,
+              63
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "64\u2013127": {
+            "mean": 0.01187086976576579,
+            "std": 0.006883419698644442,
+            "min": -0.008136910386383533,
+            "max": 0.04662550613284111,
+            "positions": [
+              64,
+              127
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "128\u2013255": {
+            "mean": 0.014567747768010675,
+            "std": 0.006786834493237047,
+            "min": -0.005280795972794294,
+            "max": 0.04711716249585152,
+            "positions": [
+              128,
+              255
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "256\u2013511": {
+            "mean": 0.01423416321597587,
+            "std": 0.006699094825398539,
+            "min": -0.0064935628324747086,
+            "max": 0.04828643426299095,
+            "positions": [
+              256,
+              511
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "512\u2013767": {
+            "mean": 0.009717300351213681,
+            "std": 0.006585543867043569,
+            "min": -0.011153592728078365,
+            "max": 0.04265191778540611,
+            "positions": [
+              512,
+              767
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "768\u20131023": {
+            "mean": 0.00768638922033138,
+            "std": 0.006309314859591879,
+            "min": -0.013710751198232174,
+            "max": 0.041565027087926865,
+            "positions": [
+              768,
+              1023
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          }
+        }
+      },
+      "effective_bf16_coefficient": {
+        "mean": 0.010843901260300548,
+        "std": 0.0072815393728354865,
+        "min": -0.015625,
+        "max": 0.04833984375,
+        "percentiles": {
+          "p1": -0.002777099609375,
+          "p5": 0.000926971435546875,
+          "p25": 0.005615234375,
+          "median": 0.00970458984375,
+          "p75": 0.01495361328125,
+          "p95": 0.0247802734375,
+          "p99": 0.0306396484375
+        },
+        "negative_fraction": 0.03450584411621094,
+        "mean_absolute_deviation_from_final_tanh_g0": 0.006264721060390777,
+        "std_of_per_sequence_means": 0.001174644537298664,
+        "mean_within_sequence_std": 0.0071602134217167955,
+        "position_bins": {
+          "0": {
+            "mean": 0.0030638756334155914,
+            "std": 0.0026181801845913152,
+            "min": -0.00518798828125,
+            "max": 0.01361083984375,
+            "positions": [
+              0,
+              0
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+          },
+          "1\u201331": {
+            "mean": 0.0034064515221181807,
+            "std": 0.006830424657813348,
+            "min": -0.015625,
+            "max": 0.03662109375,
+            "positions": [
+              1,
+              31
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.03225806451612903
+          },
+          "32\u201363": {
+            "mean": 0.008494087908808012,
+            "std": 0.0068817413055890465,
+            "min": -0.01165771484375,
+            "max": 0.04150390625,
+            "positions": [
+              32,
+              63
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "64\u2013127": {
+            "mean": 0.011870840236937852,
+            "std": 0.006883358680371309,
+            "min": -0.00811767578125,
+            "max": 0.046630859375,
+            "positions": [
+              64,
+              127
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "128\u2013255": {
+            "mean": 0.014567764181251164,
+            "std": 0.006786853047286841,
+            "min": -0.005279541015625,
+            "max": 0.047119140625,
+            "positions": [
+              128,
+              255
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "256\u2013511": {
+            "mean": 0.01423412629942078,
+            "std": 0.006699146007817959,
+            "min": -0.006500244140625,
+            "max": 0.04833984375,
+            "positions": [
+              256,
+              511
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "512\u2013767": {
+            "mean": 0.009717308221071086,
+            "std": 0.006585600693874221,
+            "min": -0.01116943359375,
+            "max": 0.042724609375,
+            "positions": [
+              512,
+              767
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "768\u20131023": {
+            "mean": 0.007686349129049752,
+            "std": 0.006309305385407895,
+            "min": -0.01373291015625,
+            "max": 0.04150390625,
+            "positions": [
+              768,
+              1023
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          }
+        }
+      },
+      "parent_stage": "sealed 100M Dynamic checkpoint",
+      "source_100m_w_norm": 0.0059964619576931,
+      "raw_g0_change_from_100m": 0.0007842918857932091,
+      "w_norm_change_from_100m": 0.0018063629977405071
+    },
+    "B5": {
+      "parent_raw_g0": 0.04200124740600586,
+      "g0": 0.041949447244405746,
+      "tanh_g0": 0.0419248566031456,
+      "w_norm": 0.016615809872746468,
+      "preactivation_fp32": {
+        "mean": 0.041619497478501355,
+        "std": 0.017604398521970304,
+        "min": -0.03401445224881172,
+        "max": 0.1253347396850586
+      },
+      "gate_input": "current pre-attention residual with preceding contextual processing",
+      "first_position_with_recurrent_memory": 63,
+      "mathematical_fp32_gate": {
+        "mean": 0.041582143603651006,
+        "std": 0.017563823913624262,
+        "min": -0.034001339226961136,
+        "max": 0.12468256056308746,
+        "percentiles": {
+          "p1": 0.0010985817946493619,
+          "p5": 0.013059271406382328,
+          "p25": 0.030375901609659195,
+          "median": 0.0410305131226778,
+          "p75": 0.05235543940216303,
+          "p95": 0.07073744051158427,
+          "p99": 0.08809476740658273
+        },
+        "negative_fraction": 0.008235692977905273,
+        "mean_absolute_deviation_from_final_tanh_g0": 0.013632588699711262,
+        "std_of_per_sequence_means": 0.0029996863906779675,
+        "mean_within_sequence_std": 0.01727940175906246,
+        "position_bins": {
+          "0": {
+            "mean": 0.01253860801148221,
+            "std": 0.0003225248094439551,
+            "min": 0.011487624607980251,
+            "max": 0.013871709816157818,
+            "positions": [
+              0,
+              0
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+          },
+          "1\u201331": {
+            "mean": 0.010087728395231099,
+            "std": 0.011265921705007606,
+            "min": -0.034001339226961136,
+            "max": 0.0672508031129837,
+            "positions": [
+              1,
+              31
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+          },
+          "32\u201363": {
+            "mean": 0.01787792871256344,
+            "std": 0.012523977195503761,
+            "min": -0.03002455085515976,
+            "max": 0.07633354514837265,
+            "positions": [
+              32,
+              63
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.03125
+          },
+          "64\u2013127": {
+            "mean": 0.025597143863207328,
+            "std": 0.013252678003045382,
+            "min": -0.025207562372088432,
+            "max": 0.0880909189581871,
+            "positions": [
+              64,
+              127
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "128\u2013255": {
+            "mean": 0.034586692929001406,
+            "std": 0.014004728668737672,
+            "min": -0.02396589145064354,
+            "max": 0.10466085374355316,
+            "positions": [
+              128,
+              255
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "256\u2013511": {
+            "mean": 0.0428635932226665,
+            "std": 0.014687469719740704,
+            "min": -0.013338940218091011,
+            "max": 0.1171279326081276,
+            "positions": [
+              256,
+              511
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "512\u2013767": {
+            "mean": 0.04663485675054366,
+            "std": 0.015119601973349729,
+            "min": -0.014213655143976212,
+            "max": 0.120997853577137,
+            "positions": [
+              512,
+              767
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "768\u20131023": {
+            "mean": 0.04963221112411603,
+            "std": 0.01545021620474713,
+            "min": -0.014103684574365616,
+            "max": 0.12468256056308746,
+            "positions": [
+              768,
+              1023
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          }
+        }
+      },
+      "effective_bf16_coefficient": {
+        "mean": 0.041581976906273965,
+        "std": 0.0175638896617202,
+        "min": -0.033935546875,
+        "max": 0.12451171875,
+        "percentiles": {
+          "p1": 0.0010986328125,
+          "p5": 0.0130615234375,
+          "p25": 0.0303955078125,
+          "median": 0.041015625,
+          "p75": 0.05224609375,
+          "p95": 0.07080078125,
+          "p99": 0.087890625
+        },
+        "negative_fraction": 0.008235692977905273,
+        "mean_absolute_deviation_from_final_tanh_g0": 0.013632705633019881,
+        "std_of_per_sequence_means": 0.0029996097049263945,
+        "mean_within_sequence_std": 0.017279482914059736,
+        "position_bins": {
+          "0": {
+            "mean": 0.012536942958831787,
+            "std": 0.0003235181055308784,
+            "min": 0.011474609375,
+            "max": 0.01385498046875,
+            "positions": [
+              0,
+              0
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+          },
+          "1\u201331": {
+            "mean": 0.010087747991923196,
+            "std": 0.011265922948565574,
+            "min": -0.033935546875,
+            "max": 0.0673828125,
+            "positions": [
+              1,
+              31
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.0
+          },
+          "32\u201363": {
+            "mean": 0.017877742074659864,
+            "std": 0.012523732567835066,
+            "min": -0.030029296875,
+            "max": 0.076171875,
+            "positions": [
+              32,
+              63
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 0.03125
+          },
+          "64\u2013127": {
+            "mean": 0.025596827225342622,
+            "std": 0.013252412403201772,
+            "min": -0.0252685546875,
+            "max": 0.087890625,
+            "positions": [
+              64,
+              127
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "128\u2013255": {
+            "mean": 0.034586493144445285,
+            "std": 0.01400462796599906,
+            "min": -0.02392578125,
+            "max": 0.1044921875,
+            "positions": [
+              128,
+              255
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "256\u2013511": {
+            "mean": 0.042863459838883955,
+            "std": 0.014687671456231271,
+            "min": -0.01336669921875,
+            "max": 0.1171875,
+            "positions": [
+              256,
+              511
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "512\u2013767": {
+            "mean": 0.046634760740971615,
+            "std": 0.015119709648273146,
+            "min": -0.01422119140625,
+            "max": 0.12109375,
+            "positions": [
+              512,
+              767
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          },
+          "768\u20131023": {
+            "mean": 0.049631980240519624,
+            "std": 0.015450337664121601,
+            "min": -0.01409912109375,
+            "max": 0.12451171875,
+            "positions": [
+              768,
+              1023
+            ],
+            "fraction_of_positions_with_eligible_recurrent_memory": 1.0
+          }
+        }
+      },
+      "parent_stage": "sealed 100M Dynamic checkpoint",
+      "source_100m_w_norm": 0.010406610555946827,
+      "raw_g0_change_from_100m": -5.1800161600112915e-05,
+      "w_norm_change_from_100m": 0.006209199316799641
+    }
+  }
+}
