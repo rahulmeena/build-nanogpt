@@ -1,7 +1,7 @@
 {
-  "bundle_bytes": 2852726,
+  "bundle_bytes": 2853988,
   "bundle_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d11/frozen_run_bundle.tar.gz",
-  "bundle_sha256": "8353d9dd63167aac074e9ead307f914303d531e463e4dbd6806c2c9507d39325",
+  "bundle_sha256": "1cb6bb238844cf094c6e005f18de44184adb2c2c7833f739c8023d111e252027",
   "compatible_image": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404; torch2.8.0+cu128, numpy2.1.2 already verified; no installs",
   "controls": "Independent local guard and remote watchdog; 24h cumulative cap, 30m soft reserve, 2h projection contingency",
   "credentials": "Existing macOS Keychain; remote watchdog receives secret via encrypted SSH stdin into process environment",
@@ -10,10 +10,10 @@
     "experiment_2d11/REPORT_TEMPLATE.md": "23d431dca786361b6508d0e38da098a2ff2ce40faf74400c9c0947b00c8e8c54",
     "experiment_2d11/__init__.py": "298c25193f7d3a9bfac56f96af144b7b9c7871370e597d5a633cdaba33aafc0e",
     "experiment_2d11/analysis.py": "cee4b37eb602b5c2883a19b28fb807f2e6f11c3ec14c25bb6f218c0bd7d891a7",
-    "experiment_2d11/budget.py": "d76271ee23f9bc17396cc60d8c1a417e54892365cb3ff51019a213981dd2544f",
+    "experiment_2d11/budget.py": "1bec8b24b8356455b8c54097225a6ab639eb7c39236e6088b6b51def863f4353",
     "experiment_2d11/checkpoints.py": "97466aa374ef3df0517c0fccfe9fc15d517e36810a10416a8536e553134c3436",
     "experiment_2d11/common.py": "095fb02f1e55b4b37bcde85a6c7f3eae9fa068b773c27d31c461e98c801ca2c3",
-    "experiment_2d11/controller.py": "62472fcbe0fa7513c2dc33f0046e35453322aecf3defda356e7610971b4577c5",
+    "experiment_2d11/controller.py": "3d8b419c2579b17d5bc0f1e6a79130f18846b2d669a9b7827ae61576dcf2256c",
     "experiment_2d11/cpu_ddp_test.py": "1d8e60f6a2ce1de65c95d3aef91f9e40e611f68ae6c9169223ca00f586cb6fda",
     "experiment_2d11/data.py": "715d3dfa990ae81bc6a7dfa07f532503448d58c2ed935d7830358ed709907230",
     "experiment_2d11/evaluate.py": "c1dc9770aaf598f8379d7ff879ba841344dd1e55cf5dca20a9a53774072e9d0d",
@@ -44,9 +44,9 @@
     "experiment_2d11/provider.py": "088b96ef2651626aef898ce3a7d4b68845ceb0377b0f685024c5450d38ba9a48",
     "experiment_2d11/remote_inputs.py": "63984b6b372ee754069bf8e29bde00cdc333c4c2c755ade8badac67b4480dbcf",
     "experiment_2d11/startup_probe.py": "e1bb899f2a102e50ee4831fc0f4fffc86eb407066ca8ba981411705010267878",
-    "experiment_2d11/supervisor.py": "b45a66804c7cc50c3f561a517819f5bd25af08efba9a5c27f8df2882743615aa",
+    "experiment_2d11/supervisor.py": "6d624b85e401e7ddfa1b45149731122261ce357928e3e2e6ce6e6e4622fe36cd",
     "experiment_2d11/train.py": "ea6ad11112b5dcb819fa0b1a5a0f1a6a68c12809354dafc6e461f36ebe973316",
-    "results/experiment_2d11/LOCAL_TEST_RESULTS.json": "0553a15abffbeca641e63a09205b15b34520cd7cd9375e8c39068bac656cbde0",
+    "results/experiment_2d11/LOCAL_TEST_RESULTS.json": "3502f5a6a7c49ec9b675f316e6aa5cd8a622d638f0dc6661f9ceb3fcd9c7b2f4",
     "scripts/experiment_2d10_core.py": "6d581771139b637f3c3ea784f1bb37651bad2691e596e256f4a98013a7ce343e",
     "scripts/experiment_2d2a_core.py": "aa92c2325a14474dea1e07680c34fc3c308bbc6e63a267521524fad2912087c0",
     "scripts/experiment_2d2b_core.py": "277a6fa324a196f3a5ff2b4fd7daa367dcdec20980651c915903c197fb7a8af4",
@@ -55,11 +55,12 @@
     "scripts/experiment_2d6_core.py": "4aff08ff99ec91fdedb5fdaba5fd83f68e69c65858725219b8f75bb44403a052",
     "scripts/experiment_2d7_core.py": "70c2cb49d6d80727a51512cc7bbd85ddbf9ab428df074a300e874ed7402b7fd2",
     "tests/test_experiment_2d11.py": "927c2a61cbb185b2aa99483b02d592804a06065a4ae4d2e727f60034a9363498",
-    "tests/test_experiment_2d11_supervisor.py": "86f79ea09bab836d45b8b1fd6b586b1261bbb41ea25f4048d4476bea03dd626e"
+    "tests/test_experiment_2d11_supervisor.py": "7e5623b8a51848bfab7781e3617ded7677ea9bc00385ed95cecace23665bd844"
   },
-  "implementation_commit": "45a5aa5cfbf075adf46a148892ec90684f2969e9",
+  "implementation_commit": "54845a06bac1361e518c6729ed46f547553d21e3",
   "input_transfer_bytes": 1052243155,
   "local_tests": {
+    "actual_torchrun_argument_parser_test": true,
     "compileall": true,
     "cpu_ddp": {
       "backend": "gloo",
@@ -90,9 +91,10 @@
       "full-work projection"
     ],
     "passed": true,
-    "pytest_seconds": 2.68,
-    "pytest_tests": 29,
+    "pytest_seconds": 3.05,
+    "pytest_tests": 31,
     "report_rehearsal": "PASS: synthetic stopped run produced Markdown, audit JSON, CSV, PNG and PDF",
+    "serialized_export_queue_test": true,
     "subprocess_supervisor_rehearsal": [
       "success",
       "early futility",
@@ -102,20 +104,19 @@
       "shutdown retries"
     ]
   },
-  "prepared_at": 1788624641.992901,
+  "prepared_at": 1788625375.204716,
   "resource_binding": {
     "authorized_volume_gb": 190,
     "cumulative_ceiling_seconds": 86400,
     "data_root": "/workspace/build-nanogpt/edu_fineweb10B",
-    "implementation_commit": "45a5aa5cfbf075adf46a148892ec90684f2969e9",
+    "implementation_commit": "54845a06bac1361e518c6729ed46f547553d21e3",
     "max_total_pod_price_per_hour": 6.36,
     "pod_id": "j8lsb4rz1a0mf8",
     "pod_name": "preliminary_crimson_pig",
-    "prior_attempts_seconds": 359.0845146179199,
-    "prior_billed_seconds": 487.379638671875,
-    "remote_root": "/workspace/exp2d11/scientific_20260905",
-    "replacement_pod_created_epoch": 1788624553.527,
-    "replacement_pod_elapsed_before_controller": 128.29512405395508,
+    "previous_startup_failure": "torchrun ambiguous --run argument; corrected and tested",
+    "prior_billed_seconds": 1065.1258747577667,
+    "remote_inputs_root": "/workspace/exp2d11/scientific_20260905/inputs",
+    "remote_root": "/workspace/exp2d11/scientific_20260905_retry1",
     "ssh_key": "/Users/rahul/.ssh/id_ed25519",
     "volume_id": "yhzyb27fb5"
   },
@@ -143,36 +144,5 @@
     "verified_at": 1788623665.4607549,
     "verified_size_gb": 190,
     "volume_id": "yhzyb27fb5"
-  },
-  "user_reassigned_pod": {
-    "costPerHr": 6.36,
-    "createdAt": "2026-09-05 16:09:13.527 +0000 UTC",
-    "desiredStatus": "RUNNING",
-    "gpuCount": 4,
-    "id": "j8lsb4rz1a0mf8",
-    "imageName": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404",
-    "lastStatusChange": "Rented by User: Sat Sep 05 2026 16:09:13 GMT+0000 (Coordinated Universal Time)",
-    "name": "preliminary_crimson_pig",
-    "networkVolume": {
-      "dataCenterId": "US-MD-1",
-      "id": "yhzyb27fb5",
-      "name": "unlikely_lime_flamingo",
-      "size": 190
-    },
-    "networkVolumeId": "yhzyb27fb5",
-    "runtimeStatus": "running",
-    "ssh": {
-      "id": "j8lsb4rz1a0mf8",
-      "ip": "154.54.102.44",
-      "name": "preliminary_crimson_pig",
-      "port": 19228,
-      "setup": "runpodctl doctor",
-      "ssh_command": "ssh root@154.54.102.44 -p 19228",
-      "ssh_key": {
-        "exists": false,
-        "path": "/Users/rahul/.runpod/ssh/runpodctl-ssh-key",
-        "source": "runpodctl doctor"
-      }
-    }
   }
 }
