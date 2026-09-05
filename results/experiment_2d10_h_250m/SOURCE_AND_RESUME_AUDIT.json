@@ -1,0 +1,1340 @@
+{
+  "D_control": {
+    "checks": {
+      "correct_architecture": true,
+      "correct_endpoint": true,
+      "original_O1_ancestry_via_sealed_D100M": true,
+      "prior_strict_reopen": true,
+      "sha_matches_manifest": true,
+      "terminal_batch": true,
+      "terminal_cursor": true,
+      "terminal_stream": true,
+      "total_adaptation": true
+    },
+    "sha256": "9714b2e3f53a8c15dfecfed3e9b56c358176c1f9f609bcce7e28c35b8a358a9b"
+  },
+  "H": {
+    "checks": {
+      "all_model_tensors_exact": true,
+      "architecture": true,
+      "arm": true,
+      "batch_shape": true,
+      "compatibility_exact": true,
+      "individual_steps_exact": true,
+      "loader_exact": true,
+      "master_parameters_fp32": true,
+      "next_batch": true,
+      "next_batch_exact": true,
+      "next_stream": true,
+      "next_stream_exact": true,
+      "optimizer_groups_exact": true,
+      "optimizer_names_exact": true,
+      "optimizer_state_exact": true,
+      "original_O1_ancestry": true,
+      "parameter_names_exact": true,
+      "parameters": true,
+      "rng_exact": true,
+      "router_counters_191": true,
+      "schema": true,
+      "scientific_commit": true,
+      "settings_b3_gate": true,
+      "settings_b5_gate": true,
+      "settings_b6_gate": true,
+      "settings_base_decay": true,
+      "settings_base_nodecay": true,
+      "settings_gate": true,
+      "settings_router_decay": true,
+      "settings_router_nodecay": true,
+      "settings_router_output_bias": true,
+      "source_adaptation": true,
+      "source_cursor": true,
+      "source_global_update": true,
+      "source_targets": true,
+      "tied_weights": true
+    },
+    "optimizer_parameter_names": [
+      [
+        "base.transformer.wte.weight",
+        "base.transformer.wpe.weight",
+        "base.transformer.h.0.attn.c_attn.weight",
+        "base.transformer.h.0.attn.c_proj.weight",
+        "base.transformer.h.0.mlp.c_fc.weight",
+        "base.transformer.h.0.mlp.c_proj.weight",
+        "base.transformer.h.1.attn.c_attn.weight",
+        "base.transformer.h.1.attn.c_proj.weight",
+        "base.transformer.h.1.mlp.c_fc.weight",
+        "base.transformer.h.1.mlp.c_proj.weight",
+        "base.transformer.h.2.attn.c_attn.weight",
+        "base.transformer.h.2.attn.c_proj.weight",
+        "base.transformer.h.2.mlp.c_fc.weight",
+        "base.transformer.h.2.mlp.c_proj.weight",
+        "base.transformer.h.3.attn.c_attn.weight",
+        "base.transformer.h.3.attn.c_proj.weight",
+        "base.transformer.h.3.mlp.c_fc.weight",
+        "base.transformer.h.3.mlp.c_proj.weight",
+        "base.transformer.h.4.attn.c_attn.weight",
+        "base.transformer.h.4.attn.c_proj.weight",
+        "base.transformer.h.4.mlp.c_fc.weight",
+        "base.transformer.h.4.mlp.c_proj.weight",
+        "base.transformer.h.5.attn.c_attn.weight",
+        "base.transformer.h.5.attn.c_proj.weight",
+        "base.transformer.h.5.mlp.c_fc.weight",
+        "base.transformer.h.5.mlp.c_proj.weight",
+        "base.transformer.h.6.attn.c_attn.weight",
+        "base.transformer.h.6.attn.c_proj.weight",
+        "base.transformer.h.6.mlp.c_fc.weight",
+        "base.transformer.h.6.mlp.c_proj.weight",
+        "base.transformer.h.7.attn.c_attn.weight",
+        "base.transformer.h.7.attn.c_proj.weight",
+        "base.transformer.h.7.mlp.c_fc.weight",
+        "base.transformer.h.7.mlp.c_proj.weight",
+        "base.transformer.h.8.attn.c_attn.weight",
+        "base.transformer.h.8.attn.c_proj.weight",
+        "base.transformer.h.8.mlp.c_fc.weight",
+        "base.transformer.h.8.mlp.c_proj.weight",
+        "base.transformer.h.9.attn.c_attn.weight",
+        "base.transformer.h.9.attn.c_proj.weight",
+        "base.transformer.h.9.mlp.c_fc.weight",
+        "base.transformer.h.9.mlp.c_proj.weight",
+        "base.transformer.h.10.attn.c_attn.weight",
+        "base.transformer.h.10.attn.c_proj.weight",
+        "base.transformer.h.10.mlp.c_fc.weight",
+        "base.transformer.h.10.mlp.c_proj.weight",
+        "base.transformer.h.11.attn.c_attn.weight",
+        "base.transformer.h.11.attn.c_proj.weight",
+        "base.transformer.h.11.mlp.c_fc.weight",
+        "base.transformer.h.11.mlp.c_proj.weight"
+      ],
+      [
+        "base.transformer.h.0.ln_1.weight",
+        "base.transformer.h.0.ln_1.bias",
+        "base.transformer.h.0.attn.c_attn.bias",
+        "base.transformer.h.0.attn.c_proj.bias",
+        "base.transformer.h.0.ln_2.weight",
+        "base.transformer.h.0.ln_2.bias",
+        "base.transformer.h.0.mlp.c_fc.bias",
+        "base.transformer.h.0.mlp.c_proj.bias",
+        "base.transformer.h.1.ln_1.weight",
+        "base.transformer.h.1.ln_1.bias",
+        "base.transformer.h.1.attn.c_attn.bias",
+        "base.transformer.h.1.attn.c_proj.bias",
+        "base.transformer.h.1.ln_2.weight",
+        "base.transformer.h.1.ln_2.bias",
+        "base.transformer.h.1.mlp.c_fc.bias",
+        "base.transformer.h.1.mlp.c_proj.bias",
+        "base.transformer.h.2.ln_1.weight",
+        "base.transformer.h.2.ln_1.bias",
+        "base.transformer.h.2.attn.c_attn.bias",
+        "base.transformer.h.2.attn.c_proj.bias",
+        "base.transformer.h.2.ln_2.weight",
+        "base.transformer.h.2.ln_2.bias",
+        "base.transformer.h.2.mlp.c_fc.bias",
+        "base.transformer.h.2.mlp.c_proj.bias",
+        "base.transformer.h.3.ln_1.weight",
+        "base.transformer.h.3.ln_1.bias",
+        "base.transformer.h.3.attn.c_attn.bias",
+        "base.transformer.h.3.attn.c_proj.bias",
+        "base.transformer.h.3.ln_2.weight",
+        "base.transformer.h.3.ln_2.bias",
+        "base.transformer.h.3.mlp.c_fc.bias",
+        "base.transformer.h.3.mlp.c_proj.bias",
+        "base.transformer.h.4.ln_1.weight",
+        "base.transformer.h.4.ln_1.bias",
+        "base.transformer.h.4.attn.c_attn.bias",
+        "base.transformer.h.4.attn.c_proj.bias",
+        "base.transformer.h.4.ln_2.weight",
+        "base.transformer.h.4.ln_2.bias",
+        "base.transformer.h.4.mlp.c_fc.bias",
+        "base.transformer.h.4.mlp.c_proj.bias",
+        "base.transformer.h.5.ln_1.weight",
+        "base.transformer.h.5.ln_1.bias",
+        "base.transformer.h.5.attn.c_attn.bias",
+        "base.transformer.h.5.attn.c_proj.bias",
+        "base.transformer.h.5.ln_2.weight",
+        "base.transformer.h.5.ln_2.bias",
+        "base.transformer.h.5.mlp.c_fc.bias",
+        "base.transformer.h.5.mlp.c_proj.bias",
+        "base.transformer.h.6.ln_1.weight",
+        "base.transformer.h.6.ln_1.bias",
+        "base.transformer.h.6.attn.c_attn.bias",
+        "base.transformer.h.6.attn.c_proj.bias",
+        "base.transformer.h.6.ln_2.weight",
+        "base.transformer.h.6.ln_2.bias",
+        "base.transformer.h.6.mlp.c_fc.bias",
+        "base.transformer.h.6.mlp.c_proj.bias",
+        "base.transformer.h.7.ln_1.weight",
+        "base.transformer.h.7.ln_1.bias",
+        "base.transformer.h.7.attn.c_attn.bias",
+        "base.transformer.h.7.attn.c_proj.bias",
+        "base.transformer.h.7.ln_2.weight",
+        "base.transformer.h.7.ln_2.bias",
+        "base.transformer.h.7.mlp.c_fc.bias",
+        "base.transformer.h.7.mlp.c_proj.bias",
+        "base.transformer.h.8.ln_1.weight",
+        "base.transformer.h.8.ln_1.bias",
+        "base.transformer.h.8.attn.c_attn.bias",
+        "base.transformer.h.8.attn.c_proj.bias",
+        "base.transformer.h.8.ln_2.weight",
+        "base.transformer.h.8.ln_2.bias",
+        "base.transformer.h.8.mlp.c_fc.bias",
+        "base.transformer.h.8.mlp.c_proj.bias",
+        "base.transformer.h.9.ln_1.weight",
+        "base.transformer.h.9.ln_1.bias",
+        "base.transformer.h.9.attn.c_attn.bias",
+        "base.transformer.h.9.attn.c_proj.bias",
+        "base.transformer.h.9.ln_2.weight",
+        "base.transformer.h.9.ln_2.bias",
+        "base.transformer.h.9.mlp.c_fc.bias",
+        "base.transformer.h.9.mlp.c_proj.bias",
+        "base.transformer.h.10.ln_1.weight",
+        "base.transformer.h.10.ln_1.bias",
+        "base.transformer.h.10.attn.c_attn.bias",
+        "base.transformer.h.10.attn.c_proj.bias",
+        "base.transformer.h.10.ln_2.weight",
+        "base.transformer.h.10.ln_2.bias",
+        "base.transformer.h.10.mlp.c_fc.bias",
+        "base.transformer.h.10.mlp.c_proj.bias",
+        "base.transformer.h.11.ln_1.weight",
+        "base.transformer.h.11.ln_1.bias",
+        "base.transformer.h.11.attn.c_attn.bias",
+        "base.transformer.h.11.attn.c_proj.bias",
+        "base.transformer.h.11.ln_2.weight",
+        "base.transformer.h.11.ln_2.bias",
+        "base.transformer.h.11.mlp.c_fc.bias",
+        "base.transformer.h.11.mlp.c_proj.bias",
+        "base.transformer.ln_f.weight",
+        "base.transformer.ln_f.bias"
+      ],
+      [
+        "g_rec"
+      ],
+      [
+        "g_rec_b3"
+      ],
+      [
+        "g_rec_b5"
+      ],
+      [
+        "g_rec_b6"
+      ],
+      [
+        "routers.0.W1",
+        "routers.0.W2",
+        "routers.2.W1",
+        "routers.2.W2",
+        "routers.4.W1",
+        "routers.4.W2"
+      ],
+      [
+        "routers.0.b1",
+        "routers.2.b1",
+        "routers.4.b1"
+      ],
+      [
+        "routers.0.b2",
+        "routers.2.b2",
+        "routers.4.b2"
+      ]
+    ],
+    "parameter_count": 124697386,
+    "source_metadata": {
+      "cumulative_targets": 1300758528,
+      "gate_sha256": {
+        "g_rec": "ccba625b16f9ebfae707b138fd84df82052258e2607cc132785e746897df71e3",
+        "g_rec_b3": "f37eb8c479b27e9ac9dec268263f40e5b6f5451ba384ed6e63e90f41de324e9a",
+        "g_rec_b5": "861b8a2e5626c4c93ab1abfd52e66e5392a4911bd9da9979bab29bd73c9f955f",
+        "g_rec_b6": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "global_update": 2481,
+      "gradient_accumulation": 16,
+      "initial_hidden_hashes": {
+        "0": {
+          "W1": "6e0a3b291038d2f9dfb3e95d5270863aa13fdff509f7da6ff62361cb193250ae",
+          "b1": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca"
+        },
+        "2": {
+          "W1": "a3cdbace01891640e5c870d82e93af529a632204b4560e9964c19b276d70edc8",
+          "b1": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca"
+        },
+        "4": {
+          "W1": "f49a255efcdce1aee70082f8d5361f1881e575f33c9189813f69f32febfb5b77",
+          "b1": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca"
+        }
+      },
+      "loader_state": {
+        "batch_size": 32,
+        "current_position": 51740672,
+        "current_shard": 15,
+        "sequence_length": 1024,
+        "shards": [
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000001.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000002.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000003.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000004.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000005.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000006.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000007.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000008.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000009.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000010.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000011.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000012.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000013.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000014.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000015.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000016.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000017.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000018.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000019.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000020.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000021.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000022.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000023.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000024.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000025.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000026.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000027.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000028.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000029.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000030.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000031.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000032.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000033.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000034.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000035.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000036.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000037.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000038.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000039.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000040.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000041.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000042.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000043.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000044.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000045.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000046.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000047.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000048.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000049.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000050.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000051.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000052.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000053.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000054.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000055.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000056.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000057.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000058.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000059.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000060.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000061.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000062.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000063.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000064.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000065.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000066.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000067.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000068.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000069.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000070.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000071.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000072.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000073.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000074.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000075.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000076.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000077.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000078.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000079.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000080.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000081.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000082.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000083.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000084.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000085.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000086.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000087.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000088.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000089.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000090.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000091.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000092.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000093.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000094.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000095.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000096.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000097.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000098.npy",
+          "/workspace/build-nanogpt/edu_fineweb10B/edufineweb_train_000099.npy"
+        ]
+      },
+      "next_global_batch_sha256": "400223a0240720bd6a202a6c9c74a8e2a9c8d80d4e3a5f6db2ea0f51721d4649",
+      "next_stream_sha256": "0fd6648d5fe2a6d03af41036cb26f7539c96dca41f7cfa343c8035811670e642",
+      "rng_digests": {
+        "numpy": "d5691ccd3e8da9af087c80089ceda638017b15852acbf452423e6b6ff162ac58",
+        "python": "32017e70273af58869868e81b2819b2d614cbacfd2b295c6b3603b4ade520999",
+        "torch_cpu": "4ebae1a19e6426d6695ec57efc323d4e94749fe62cd2e4a36983c607c9bda909",
+        "torch_cuda": "5d2d5cb681044c1a279931c2babe1763ceca27a34d36cacc6baa6e7b41f4a3c5"
+      },
+      "scheduler": {
+        "current_lrs": {
+          "b3_gate": 0.0003,
+          "b5_gate": 0.0003,
+          "b6_gate": 0.0003,
+          "base_decay": 3e-05,
+          "base_nodecay": 3e-05,
+          "gate": 0.0003
+        },
+        "expected_lrs": {
+          "100M": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "1B": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "250M": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          },
+          "500M": {
+            "b3_gate": 0.0003,
+            "b5_gate": 0.0003,
+            "b6_gate": 0.0003,
+            "base_decay": 3e-05,
+            "base_nodecay": 3e-05,
+            "gate": 0.0003
+          }
+        },
+        "inherited_scheduler_present_in_source": false,
+        "policy": "constant optimizer-group learning rates; no scheduler object in 2D2G-A checkpoint",
+        "scheduler_state": null,
+        "scheduler_step": null,
+        "warmup_restarted": false,
+        "well_defined_through_100m": true
+      },
+      "schema": "experiment_2d10_checkpoint_v1",
+      "source_checkpoint_sha256": "d9c0eea937b4e4726a4963a4586a4c6eb3de8f6a40ac72c4d3959a3f21a2415c",
+      "source_compatibility_state": {
+        "g_rec": {
+          "optimizer": "c7b580f7fafb31f43e5f6132103b4e41774a86c29b944c9417c2a9201df09913",
+          "tensor": "ccba625b16f9ebfae707b138fd84df82052258e2607cc132785e746897df71e3"
+        },
+        "g_rec_b3": {
+          "optimizer": "fb90974683448663511419ecead1211c85b4fc317dd6cb2b0bb12dc76388152c",
+          "tensor": "f37eb8c479b27e9ac9dec268263f40e5b6f5451ba384ed6e63e90f41de324e9a"
+        },
+        "g_rec_b5": {
+          "optimizer": "4bcbb51d010d5ff4dda841415d4d68acda1153d66c46713b118f403f0549c0ac",
+          "tensor": "861b8a2e5626c4c93ab1abfd52e66e5392a4911bd9da9979bab29bd73c9f955f"
+        },
+        "g_rec_b6": {
+          "optimizer": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+          "tensor": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+        }
+      },
+      "source_dormant_state": {
+        "optimizer_state_sha256": "055cd6c3b81e34f658ff85e5538c4a43f49bbed0df462df72f713189c7b2f8e4",
+        "optimizer_step": 1908,
+        "parameter_sha256": "d4e22f1d9ac45b5f090e0e9a7b371e508b540880735bf2704caf53f23065b96e"
+      },
+      "source_optimizer_steps_by_name": {
+        "base.transformer.h.0.attn.c_attn.bias": 2959,
+        "base.transformer.h.0.attn.c_attn.weight": 2959,
+        "base.transformer.h.0.attn.c_proj.bias": 2959,
+        "base.transformer.h.0.attn.c_proj.weight": 2959,
+        "base.transformer.h.0.ln_1.bias": 2959,
+        "base.transformer.h.0.ln_1.weight": 2959,
+        "base.transformer.h.0.ln_2.bias": 2959,
+        "base.transformer.h.0.ln_2.weight": 2959,
+        "base.transformer.h.0.mlp.c_fc.bias": 2959,
+        "base.transformer.h.0.mlp.c_fc.weight": 2959,
+        "base.transformer.h.0.mlp.c_proj.bias": 2959,
+        "base.transformer.h.0.mlp.c_proj.weight": 2959,
+        "base.transformer.h.1.attn.c_attn.bias": 2959,
+        "base.transformer.h.1.attn.c_attn.weight": 2959,
+        "base.transformer.h.1.attn.c_proj.bias": 2959,
+        "base.transformer.h.1.attn.c_proj.weight": 2959,
+        "base.transformer.h.1.ln_1.bias": 2959,
+        "base.transformer.h.1.ln_1.weight": 2959,
+        "base.transformer.h.1.ln_2.bias": 2959,
+        "base.transformer.h.1.ln_2.weight": 2959,
+        "base.transformer.h.1.mlp.c_fc.bias": 2959,
+        "base.transformer.h.1.mlp.c_fc.weight": 2959,
+        "base.transformer.h.1.mlp.c_proj.bias": 2959,
+        "base.transformer.h.1.mlp.c_proj.weight": 2959,
+        "base.transformer.h.10.attn.c_attn.bias": 2959,
+        "base.transformer.h.10.attn.c_attn.weight": 2959,
+        "base.transformer.h.10.attn.c_proj.bias": 2959,
+        "base.transformer.h.10.attn.c_proj.weight": 2959,
+        "base.transformer.h.10.ln_1.bias": 2959,
+        "base.transformer.h.10.ln_1.weight": 2959,
+        "base.transformer.h.10.ln_2.bias": 2959,
+        "base.transformer.h.10.ln_2.weight": 2959,
+        "base.transformer.h.10.mlp.c_fc.bias": 2959,
+        "base.transformer.h.10.mlp.c_fc.weight": 2959,
+        "base.transformer.h.10.mlp.c_proj.bias": 2959,
+        "base.transformer.h.10.mlp.c_proj.weight": 2959,
+        "base.transformer.h.11.attn.c_attn.bias": 2959,
+        "base.transformer.h.11.attn.c_attn.weight": 2959,
+        "base.transformer.h.11.attn.c_proj.bias": 2959,
+        "base.transformer.h.11.attn.c_proj.weight": 2959,
+        "base.transformer.h.11.ln_1.bias": 2959,
+        "base.transformer.h.11.ln_1.weight": 2959,
+        "base.transformer.h.11.ln_2.bias": 2959,
+        "base.transformer.h.11.ln_2.weight": 2959,
+        "base.transformer.h.11.mlp.c_fc.bias": 2959,
+        "base.transformer.h.11.mlp.c_fc.weight": 2959,
+        "base.transformer.h.11.mlp.c_proj.bias": 2959,
+        "base.transformer.h.11.mlp.c_proj.weight": 2959,
+        "base.transformer.h.2.attn.c_attn.bias": 2959,
+        "base.transformer.h.2.attn.c_attn.weight": 2959,
+        "base.transformer.h.2.attn.c_proj.bias": 2959,
+        "base.transformer.h.2.attn.c_proj.weight": 2959,
+        "base.transformer.h.2.ln_1.bias": 2959,
+        "base.transformer.h.2.ln_1.weight": 2959,
+        "base.transformer.h.2.ln_2.bias": 2959,
+        "base.transformer.h.2.ln_2.weight": 2959,
+        "base.transformer.h.2.mlp.c_fc.bias": 2959,
+        "base.transformer.h.2.mlp.c_fc.weight": 2959,
+        "base.transformer.h.2.mlp.c_proj.bias": 2959,
+        "base.transformer.h.2.mlp.c_proj.weight": 2959,
+        "base.transformer.h.3.attn.c_attn.bias": 2959,
+        "base.transformer.h.3.attn.c_attn.weight": 2959,
+        "base.transformer.h.3.attn.c_proj.bias": 2959,
+        "base.transformer.h.3.attn.c_proj.weight": 2959,
+        "base.transformer.h.3.ln_1.bias": 2959,
+        "base.transformer.h.3.ln_1.weight": 2959,
+        "base.transformer.h.3.ln_2.bias": 2959,
+        "base.transformer.h.3.ln_2.weight": 2959,
+        "base.transformer.h.3.mlp.c_fc.bias": 2959,
+        "base.transformer.h.3.mlp.c_fc.weight": 2959,
+        "base.transformer.h.3.mlp.c_proj.bias": 2959,
+        "base.transformer.h.3.mlp.c_proj.weight": 2959,
+        "base.transformer.h.4.attn.c_attn.bias": 2959,
+        "base.transformer.h.4.attn.c_attn.weight": 2959,
+        "base.transformer.h.4.attn.c_proj.bias": 2959,
+        "base.transformer.h.4.attn.c_proj.weight": 2959,
+        "base.transformer.h.4.ln_1.bias": 2959,
+        "base.transformer.h.4.ln_1.weight": 2959,
+        "base.transformer.h.4.ln_2.bias": 2959,
+        "base.transformer.h.4.ln_2.weight": 2959,
+        "base.transformer.h.4.mlp.c_fc.bias": 2959,
+        "base.transformer.h.4.mlp.c_fc.weight": 2959,
+        "base.transformer.h.4.mlp.c_proj.bias": 2959,
+        "base.transformer.h.4.mlp.c_proj.weight": 2959,
+        "base.transformer.h.5.attn.c_attn.bias": 2959,
+        "base.transformer.h.5.attn.c_attn.weight": 2959,
+        "base.transformer.h.5.attn.c_proj.bias": 2959,
+        "base.transformer.h.5.attn.c_proj.weight": 2959,
+        "base.transformer.h.5.ln_1.bias": 2959,
+        "base.transformer.h.5.ln_1.weight": 2959,
+        "base.transformer.h.5.ln_2.bias": 2959,
+        "base.transformer.h.5.ln_2.weight": 2959,
+        "base.transformer.h.5.mlp.c_fc.bias": 2959,
+        "base.transformer.h.5.mlp.c_fc.weight": 2959,
+        "base.transformer.h.5.mlp.c_proj.bias": 2959,
+        "base.transformer.h.5.mlp.c_proj.weight": 2959,
+        "base.transformer.h.6.attn.c_attn.bias": 2959,
+        "base.transformer.h.6.attn.c_attn.weight": 2959,
+        "base.transformer.h.6.attn.c_proj.bias": 2959,
+        "base.transformer.h.6.attn.c_proj.weight": 2959,
+        "base.transformer.h.6.ln_1.bias": 2959,
+        "base.transformer.h.6.ln_1.weight": 2959,
+        "base.transformer.h.6.ln_2.bias": 2959,
+        "base.transformer.h.6.ln_2.weight": 2959,
+        "base.transformer.h.6.mlp.c_fc.bias": 2959,
+        "base.transformer.h.6.mlp.c_fc.weight": 2959,
+        "base.transformer.h.6.mlp.c_proj.bias": 2959,
+        "base.transformer.h.6.mlp.c_proj.weight": 2959,
+        "base.transformer.h.7.attn.c_attn.bias": 2959,
+        "base.transformer.h.7.attn.c_attn.weight": 2959,
+        "base.transformer.h.7.attn.c_proj.bias": 2959,
+        "base.transformer.h.7.attn.c_proj.weight": 2959,
+        "base.transformer.h.7.ln_1.bias": 2959,
+        "base.transformer.h.7.ln_1.weight": 2959,
+        "base.transformer.h.7.ln_2.bias": 2959,
+        "base.transformer.h.7.ln_2.weight": 2959,
+        "base.transformer.h.7.mlp.c_fc.bias": 2959,
+        "base.transformer.h.7.mlp.c_fc.weight": 2959,
+        "base.transformer.h.7.mlp.c_proj.bias": 2959,
+        "base.transformer.h.7.mlp.c_proj.weight": 2959,
+        "base.transformer.h.8.attn.c_attn.bias": 2959,
+        "base.transformer.h.8.attn.c_attn.weight": 2959,
+        "base.transformer.h.8.attn.c_proj.bias": 2959,
+        "base.transformer.h.8.attn.c_proj.weight": 2959,
+        "base.transformer.h.8.ln_1.bias": 2959,
+        "base.transformer.h.8.ln_1.weight": 2959,
+        "base.transformer.h.8.ln_2.bias": 2959,
+        "base.transformer.h.8.ln_2.weight": 2959,
+        "base.transformer.h.8.mlp.c_fc.bias": 2959,
+        "base.transformer.h.8.mlp.c_fc.weight": 2959,
+        "base.transformer.h.8.mlp.c_proj.bias": 2959,
+        "base.transformer.h.8.mlp.c_proj.weight": 2959,
+        "base.transformer.h.9.attn.c_attn.bias": 2959,
+        "base.transformer.h.9.attn.c_attn.weight": 2959,
+        "base.transformer.h.9.attn.c_proj.bias": 2959,
+        "base.transformer.h.9.attn.c_proj.weight": 2959,
+        "base.transformer.h.9.ln_1.bias": 2959,
+        "base.transformer.h.9.ln_1.weight": 2959,
+        "base.transformer.h.9.ln_2.bias": 2959,
+        "base.transformer.h.9.ln_2.weight": 2959,
+        "base.transformer.h.9.mlp.c_fc.bias": 2959,
+        "base.transformer.h.9.mlp.c_fc.weight": 2959,
+        "base.transformer.h.9.mlp.c_proj.bias": 2959,
+        "base.transformer.h.9.mlp.c_proj.weight": 2959,
+        "base.transformer.ln_f.bias": 2959,
+        "base.transformer.ln_f.weight": 2959,
+        "base.transformer.wpe.weight": 2959,
+        "base.transformer.wte.weight": 2959,
+        "g_rec": 2768,
+        "g_rec_b3": 2290,
+        "g_rec_b5": 2290,
+        "g_rec_b6": 1908,
+        "routers.0.W1": 191,
+        "routers.0.W2": 191,
+        "routers.0.b1": 191,
+        "routers.0.b2": 191,
+        "routers.2.W1": 191,
+        "routers.2.W2": 191,
+        "routers.2.b1": 191,
+        "routers.2.b2": 191,
+        "routers.4.W1": 191,
+        "routers.4.W2": 191,
+        "routers.4.b1": 191,
+        "routers.4.b2": 191
+      }
+    }
+  },
+  "H100M_self_equivalence": {
+    "incremental": {
+      "CE": 3.4435956478118896,
+      "CE_exact": true,
+      "logits_exact": true
+    },
+    "parallel": {
+      "CE": 3.4426164627075195,
+      "CE_exact": true,
+      "logits_exact": true
+    }
+  },
+  "actual_H_parent_sha256": "d9c0eea937b4e4726a4963a4586a4c6eb3de8f6a40ac72c4d3959a3f21a2415c",
+  "disposable_reload": {
+    "arm": "H",
+    "checks": {
+      "architecture": true,
+      "compatibility_unchanged": true,
+      "cumulative_targets": true,
+      "dormant_unchanged": true,
+      "experiment_total_targets": true,
+      "experiment_total_updates": true,
+      "global_update": true,
+      "loader_cursor": true,
+      "local_updates": true,
+      "model_finite": true,
+      "model_snapshot_exact": true,
+      "next_batch": true,
+      "next_stream": true,
+      "optimizer_finite": true,
+      "optimizer_groups_exact": true,
+      "optimizer_inventory_complete": true,
+      "optimizer_names": true,
+      "optimizer_progression": true,
+      "optimizer_snapshot_exact": true,
+      "parameter_count": true,
+      "parameter_names": true,
+      "parent": true,
+      "rng": true,
+      "router_steps": true,
+      "scheduler": true,
+      "schema": true
+    },
+    "passed": true
+  },
+  "disposable_update": {
+    "active_gradient_groups": {
+      "base.transformer.h.0.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.0.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.1.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.10.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.11.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.2.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.3.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.4.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.5.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.6.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.7.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.8.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.attn.c_attn.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.attn.c_attn.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.attn.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.attn.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.ln_1.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.ln_1.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.ln_2.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.ln_2.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.mlp.c_fc.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.mlp.c_fc.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.mlp.c_proj.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.h.9.mlp.c_proj.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.ln_f.bias": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.ln_f.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.wpe.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "base.transformer.wte.weight": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.0.W1": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.0.W2": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.0.b1": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.0.b2": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.2.W1": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.2.W2": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.2.b1": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.2.b2": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.4.W1": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.4.W2": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.4.b1": {
+        "finite": true,
+        "nonzero": true
+      },
+      "routers.4.b2": {
+        "finite": true,
+        "nonzero": true
+      }
+    },
+    "ce": 3.0534077137708664,
+    "cumulative_targets": 1301282816,
+    "experiment_total_targets": 100663296,
+    "experiment_total_update": 192,
+    "global_update": 2482,
+    "gradient_norm_before_clip": 0.3570770025253296,
+    "local_update": 1,
+    "new_targets": 524288,
+    "optimizer_checks": {
+      "active_incremented_once": true,
+      "compatibility_unchanged": true,
+      "dormant_optimizer_unchanged": true,
+      "dormant_parameter_unchanged": true,
+      "dormant_step_unchanged": true
+    },
+    "pass_count": 2,
+    "pass_losses": [
+      3.065738305449486,
+      3.0534077137708664
+    ],
+    "peak_allocated_vram_mb": 36775.7177734375,
+    "peak_reserved_vram_mb": 37238.0,
+    "target_count": 524288,
+    "targets_per_second": 56592.77481984741,
+    "wall_seconds": 9.264221478253603,
+    "weighted_multipass_ce": 3.0564903616905212
+  },
+  "historical_ledger_provenance_preserved": true,
+  "historical_ledger_sha256": "0875d5533a4a8ae753f2e0aec661d81f314609c16d4de053a6ffd48df8e751ec",
+  "no_fresh_router_initialization": true
+}
