@@ -109,15 +109,18 @@
     "data_root": "/workspace/build-nanogpt/edu_fineweb10B",
     "implementation_commit": "45a5aa5cfbf075adf46a148892ec90684f2969e9",
     "max_total_pod_price_per_hour": 6.36,
-    "pod_id": "nagj1hv18p3z2c",
-    "pod_name": "electrical_aqua_worm",
-    "prior_billed_seconds": 349.07722187042236,
+    "pod_id": "j8lsb4rz1a0mf8",
+    "pod_name": "preliminary_crimson_pig",
+    "prior_attempts_seconds": 359.0845146179199,
+    "prior_billed_seconds": 487.379638671875,
     "remote_root": "/workspace/exp2d11/scientific_20260905",
+    "replacement_pod_created_epoch": 1788624553.527,
+    "replacement_pod_elapsed_before_controller": 128.29512405395508,
     "ssh_key": "/Users/rahul/.ssh/id_ed25519",
     "volume_id": "yhzyb27fb5"
   },
   "scientific_updates": 0,
-  "shutdown_command": "runpodctl pod stop nagj1hv18p3z2c -o json",
+  "shutdown_command": "runpodctl pod stop j8lsb4rz1a0mf8 -o json",
   "shutdown_verification": "Provider EXITED and runtime stopped; persistent volume retained",
   "startup_command": "/tmp/exp2d11-venv/bin/python -m experiment_2d11.controller launch --binding '/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d11/binding.json' --archive '/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d11' --ready '/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d11_from_scratch/experiment_2d11/LOCAL_READY.json' --bundle '/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d11/frozen_run_bundle.tar.gz' --initial '/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d11/initial.pt' --baseline '/Users/rahul/Documents/GPT-2 Enhancement/baseline_artifacts/gpt2_124m_fineweb10b_20260810T141222Z/checkpoints/model_19072.pt' --hella '/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d11/hellaswag_tokenized.json'",
   "status": "READY",
@@ -140,5 +143,36 @@
     "verified_at": 1788623665.4607549,
     "verified_size_gb": 190,
     "volume_id": "yhzyb27fb5"
+  },
+  "user_reassigned_pod": {
+    "costPerHr": 6.36,
+    "createdAt": "2026-09-05 16:09:13.527 +0000 UTC",
+    "desiredStatus": "RUNNING",
+    "gpuCount": 4,
+    "id": "j8lsb4rz1a0mf8",
+    "imageName": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404",
+    "lastStatusChange": "Rented by User: Sat Sep 05 2026 16:09:13 GMT+0000 (Coordinated Universal Time)",
+    "name": "preliminary_crimson_pig",
+    "networkVolume": {
+      "dataCenterId": "US-MD-1",
+      "id": "yhzyb27fb5",
+      "name": "unlikely_lime_flamingo",
+      "size": 190
+    },
+    "networkVolumeId": "yhzyb27fb5",
+    "runtimeStatus": "running",
+    "ssh": {
+      "id": "j8lsb4rz1a0mf8",
+      "ip": "154.54.102.44",
+      "name": "preliminary_crimson_pig",
+      "port": 19228,
+      "setup": "runpodctl doctor",
+      "ssh_command": "ssh root@154.54.102.44 -p 19228",
+      "ssh_key": {
+        "exists": false,
+        "path": "/Users/rahul/.runpod/ssh/runpodctl-ssh-key",
+        "source": "runpodctl doctor"
+      }
+    }
   }
 }
