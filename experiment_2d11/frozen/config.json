@@ -1,0 +1,105 @@
+{
+  "accumulation": 4,
+  "betas": [
+    0.9,
+    0.95
+  ],
+  "ce_schedule": [
+    0,
+    250,
+    500,
+    750,
+    1000,
+    2000,
+    3000,
+    4000,
+    5000,
+    6000,
+    7000,
+    8000,
+    9000,
+    10000,
+    11000,
+    12000,
+    13000,
+    14000,
+    15000,
+    16000,
+    17000,
+    18000,
+    19000,
+    19072
+  ],
+  "checkpoint_interval": 500,
+  "clip_norm": 1.0,
+  "contingency_hours": 2,
+  "endpoint": 19072,
+  "epsilon": 1e-08,
+  "eval_batch_candidates": [
+    32,
+    64,
+    128
+  ],
+  "experiment": "2D11",
+  "hella_example_batch_candidates": [
+    8,
+    16,
+    32
+  ],
+  "hellaswag_schedule": [
+    0,
+    1000,
+    2000,
+    5000,
+    10000,
+    15000,
+    19072
+  ],
+  "interpretation": "A poor early H trajectory may reflect the complete H-from-scratch recipe, including the preregistered 50/50 initial branch mixture; this experiment does not prove that every possible H initialization would fail.",
+  "lr_floor": 6e-05,
+  "lr_max_steps": 19073,
+  "lr_peak": 0.0006,
+  "lr_warmup_steps": 715,
+  "matmul_precision": "high",
+  "max_aggregate_gpu_hours": 96,
+  "max_cumulative_pod_hours": 24,
+  "microbatch": 32,
+  "preserve_updates": [
+    0,
+    1000,
+    2000,
+    5000,
+    10000,
+    15000,
+    19072
+  ],
+  "quality_references": {
+    "1000": {
+      "ce": 4.13529109954834,
+      "hella": 0.2550288787094204
+    },
+    "2000": {
+      "ce": 3.6628191471099854,
+      "hella": 0.26070503883688506
+    }
+  },
+  "ranks": 4,
+  "sequence_length": 1024,
+  "soft_stop_reserve_seconds": 1800,
+  "targets_per_update": 524288,
+  "tolerances": {
+    "cpu_atol": 2e-06,
+    "cpu_rtol": 2e-05,
+    "ddp_gradient_max_abs": 0.002,
+    "ddp_gradient_relative_l2": 0.005,
+    "g_incremental_ce_abs": 0.002,
+    "g_incremental_logits_abs": 0.15,
+    "hella_batched_score_abs": 0.03125,
+    "hella_prediction_agreement": 1.0,
+    "resume_max_abs": 1e-06
+  },
+  "torch_compile": false,
+  "torch_cuda_version": "2.8.0+cu128",
+  "training_numpy_version": "2.1.2",
+  "weight_decay": 0.1
+}

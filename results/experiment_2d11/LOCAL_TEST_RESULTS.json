@@ -1,0 +1,43 @@
+{
+  "compileall": true,
+  "cpu_ddp": {
+    "backend": "gloo",
+    "cuda_established": false,
+    "passed": true,
+    "rows": [
+      {
+        "max_parameter_error": 1.862645149230957e-09,
+        "update": 31
+      },
+      {
+        "max_parameter_error": 3.725290298461914e-09,
+        "update": 32
+      },
+      {
+        "max_parameter_error": 1.862645149230957e-09,
+        "update": 33
+      }
+    ],
+    "world_size": 4
+  },
+  "cuda_pending": [
+    "full B32 2/3-pass DDP equivalence",
+    "frozen initial hashes across ranks",
+    "full checkpoint resume31->32",
+    "G/H batching scoring agreement",
+    "incremental correctness and state sizes",
+    "full-work projection"
+  ],
+  "passed": true,
+  "pytest_seconds": 2.68,
+  "pytest_tests": 29,
+  "report_rehearsal": "PASS: synthetic stopped run produced Markdown, audit JSON, CSV, PNG and PDF",
+  "subprocess_supervisor_rehearsal": [
+    "success",
+    "early futility",
+    "rank failure",
+    "export delay",
+    "deadline",
+    "shutdown retries"
+  ]
+}
