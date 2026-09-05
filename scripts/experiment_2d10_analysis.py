@@ -16,6 +16,11 @@ ARCHIVE=ROOT.parents[1]/'runpod-checkpoint-archive/experiment_2d10_retrieval_awa
 CONTRASTS=[('D-T','D','T'),('D-H','D','H'),('T-H','T','H'),('S-D','S','D'),('S-T','S','T'),('S-H','S','H')]
 PRIMARY_Q=[0.833333333333,99.166666666667]
 MARGIN=.0001
+FLAG_COLUMNS=("positive","beyond_margin","negative","material_harm","practical_equivalence","second_condition_noninferiority")
+
+def render_flag_values(values):
+    return " | ".join(str(values[key]) for key in FLAG_COLUMNS)
+
 
 def read(p):return json.loads(Path(p).read_text())
 def write(name,value):
@@ -213,7 +218,7 @@ def report(ev,stats,gates,decision,runtime,files,preflight,terminal,audit):
         lines.append(f"| {name} | {v['mean']:+.12f} | {ci(v['raw_95_ci'])} | {ci(v['adjusted_98_333333_ci']) if v['adjusted_98_333333_ci'] else 'Secondary / descriptive'} | {v['exp_contrast']:.12f} | {v['second_wins']} / {v['first_wins']} / {v['ties']} |")
     lines+=['','| Primary contrast | Positive L>0 | Margin L>δ | Negative U<0 | Harm U<−δ | Equivalence | Second noninferior |','|---|---|---|---|---|---|---|']
     for name,_,_ in CONTRASTS[:3]:
-        v=stats['contrasts'][name]['adjusted_flags'];lines.append('| '+name+' | '+' | '.join(str(x) for x in v.values())+' |')
+        v=stats['contrasts'][name]['adjusted_flags'];lines.append('| '+name+' | '+render_flag_values(v)+' |')
     lines+=['','50,000 paired sequence resamples; NumPy default_rng(20260910); identical indices across all contrasts; linear percentiles. Primary percentiles: [0.833333333333, 99.166666666667]. Strict boundaries apply: touching a boundary does not pass. Absence of significance is not equivalence. S-based contrasts cannot override the primary decision. Differing significance against D does not establish a T/H difference.','',
         'T and D establish practical equivalence within ±0.0001 using the adjusted interval. H clears the practical margin over both D and T.', '', '## Initialization, gates, and costs','',
         'T has an additive tanh gate with the inherited linear h path and retrieval-aware MLP. H uses two-branch softmax. For each projected q, completed local output, and completed recurrent output, heads are concatenated in c_proj order into a width768 vector. Those three vectors receive separate FP32 affine-free LayerNorm (epsilon 1e-5), then are concatenated into the width2304 router input. Coefficients are cast to BF16 immediately before combining original branch outputs. The shared c_proj and bias execute once.','',

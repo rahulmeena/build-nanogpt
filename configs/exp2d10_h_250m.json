@@ -1,0 +1,18 @@
+{
+  "experiment": "2D10_H_250M",
+  "training_arm": "H",
+  "control": "sealed 2D9 D250M",
+  "additional_updates": 286,
+  "additional_targets": 149946368,
+  "total_adaptation_updates": 477,
+  "total_adaptation_targets": 250085376,
+  "panel_seed": 20260912,
+  "bootstrap_seed": 20260913,
+  "quantile_seed": 20260914,
+  "bootstrap_resamples": 50000,
+  "margin": 0.0001,
+  "adoption_rule": "H preferred only if lower 95% paired CI of D-H > 0.0001 and all integrity checks pass",
+  "attention_router_kernel_changes": false,
+  "fresh_parameter_initialization": false,
+  "further_training_authorized": false
+}
