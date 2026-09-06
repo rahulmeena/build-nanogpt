@@ -9,6 +9,7 @@ class Controller:
     def __init__(self,archive):
         self.archive=archive;self.b=read_json(archive/'binding.json');check_binding(self.b)
         self.ssh_args=['ssh','-o','BatchMode=yes','-o','ConnectTimeout=20','-i',self.b['ssh_key'],'-p',str(self.b['ssh_port']),f"root@{self.b['ssh_host']}"]
+        self.analysis_process=None;self.analysis_key=None
         self.verified=read_json(archive/'VERIFIED_FILES.json') if (archive/'VERIFIED_FILES.json').exists() else {}
     def ssh(self,command):return subprocess.check_output(self.ssh_args+[command],timeout=180).decode()
     def put_json(self,path,value):
@@ -74,10 +75,20 @@ class Controller:
         evidence=dict(updates=5000,gpu_complete=True,evaluations=labels,exports_verified=True)
         self.put_json(Path(self.b['remote_root'])/'controller'/(arm+'_DURABLY_COMPLETE.json'),dict(passed=True,time=time.time(),evidence=evidence))
         return evidence
+    def schedule_analysis(self):
+        ages=tuple(u for u in MILESTONES if all((self.archive/('L_nf4' if c in ('L_LOCAL','H_ON','H_ALL_OFF') else 'R_nf4')/'evaluations'/f'{c}_u{u:05d}_COMPLETE.json').exists() for c in CONDITIONS))
+        if not ages or ages==self.analysis_key:return
+        if self.analysis_process is not None and self.analysis_process.poll() is None:return
+        # These are CPU summaries; they never hold a GPU transition or shutdown.
+        import sys
+        with (self.archive/'analysis.log').open('ab') as out:
+            self.analysis_process=subprocess.Popen([sys.executable,'-m','experiment_2d15.analysis','--archive',str(self.archive)],cwd=REPO,stdout=out,stderr=subprocess.STDOUT,start_new_session=True)
+        self.analysis_key=ages
+        append_json(self.archive/'ANALYSIS_LAUNCHES.jsonl',dict(time=time.time(),updates=ages,pid=self.analysis_process.pid))
     def run(self):
         while True:
             try:
-                self.synchronize();state={arm:self.arm_evidence(arm) for arm in ARMS}
+                self.synchronize();self.schedule_analysis();state={arm:self.arm_evidence(arm) for arm in ARMS}
                 all_ready=all(a.get('exports_verified') for a in state.values())
                 state.update(joint_identity_coverage_verified=False,remaining_gpu_work=1)
                 if all_ready and (self.archive/'controller/REMOTE_GPU_COMPLETE.json').exists():

@@ -41,6 +41,11 @@ def run(archive):
         values=[a['contrasts'][name] for a in result['primary']['ages']];means=np.array([v['mean'] for v in values]);bounds=np.array([v['adjusted_99_7222222222'] for v in values])
         ax.errorbar(targets,means,yerr=np.stack((means-bounds[:,0],bounds[:,1]-means)),fmt='o-',capsize=4,color='#225ea8');ax.axhline(0,color='gray',linewidth=.7);ax.axhspan(-.0001,.0001,color='gray',alpha=.12);ax.set_title(name);ax.set_xlabel('Logical targets (billions)');ax.set_ylabel('Paired CE difference')
     fig.suptitle('18-contrast family: Bonferroni-adjusted 99.7222% intervals');fig.savefig(archive/'paired_contrasts.png',dpi=180);plt.close(fig)
+    fig,axes=plt.subplots(2,3,figsize=(12,7),layout='constrained');hours=np.array(times['L_nf4'])+np.array(times['R_nf4'])
+    for ax,name in zip(axes.flat,NAMES):
+        values=[a['contrasts'][name] for a in result['primary']['ages']];means=np.array([v['mean'] for v in values]);bounds=np.array([v['adjusted_99_7222222222'] for v in values])
+        ax.errorbar(hours,means,yerr=np.stack((means-bounds[:,0],bounds[:,1]-means)),fmt='o-',capsize=4,color='#225ea8');ax.axhline(0,color='gray',linewidth=.7);ax.axhspan(-.0001,.0001,color='gray',alpha=.12);ax.set_title(name);ax.set_xlabel('L+R training GPU-hours at matched age');ax.set_ylabel('Paired CE difference')
+    fig.suptitle('Paired contrasts versus measured new-arm training compute');fig.savefig(archive/'paired_contrasts_gpu_hours.png',dpi=180);plt.close(fig)
     atomic_json(archive/'RESOURCE_LEDGER.json',ledger);atomic_json(archive/'FINAL_STREAM_AUDIT.json',metric_audits)
     text=['# Experiment 2D15 — final combined report','',
         'Fresh L_nf4 and CE1-free R_nf4 each completed 5,000 updates / 2,621,440,000 logical targets. Historical H checkpoints were reused only as comparators. All 18 monitors and 15 milestone condition evaluations passed identity/coverage verification; required checkpoints and raw outputs were independently exported before the assigned pod was stopped.','',
