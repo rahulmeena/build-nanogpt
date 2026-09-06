@@ -62,7 +62,10 @@ def launch(archive,bundle,user_start=False):
     atomic_json(archive/'PROVIDER_PREFLIGHT.json',dict(time=time.time(),provider=p,stop_capability_verified=read_json(PACKAGE/'results/INITIAL_STOP.json')['passed']))
     initial=read_json(PACKAGE/'results/INITIAL_STOP.json')
     first_start=datetime(2026,9,6,12,6,55,tzinfo=timezone.utc).timestamp()
-    prior=initial['verified_at']-first_start
+    initial_seconds=initial['verified_at']-first_start
+    histories=[read_json(p) for p in sorted((archive/'attempts').glob('*/RUNTIME_ACCOUNTING.json'))]
+    prior=initial_seconds+sum(h['evaluation_attempt_billed_seconds'] for h in histories)
+    prior_intervals=[h['intervals'][-1] for h in histories]
     binding_path=archive/'binding.json'
     assert not binding_path.exists(),'do not overwrite prior attempt budget'
     with (archive/'guard.log').open('ab') as log:
@@ -84,7 +87,7 @@ def launch(archive,bundle,user_start=False):
     rate=float(p['costPerHr']);seconds=min(3*3600-prior,(10-prior*rate/3600)/rate*3600)
     binding=dict(pod_id=provider.POD,volume_id=provider.VOLUME,gpu_count=1,quoted_hourly_rate=rate,
         billing_start=start,prior_billed_seconds=prior,hard_deadline=start+seconds,scientific_deadline=start+seconds-600,
-        max_gpu_hours=3,max_compute_dollars=10,initial_running_interval=[first_start,initial['verified_at']])
+        max_gpu_hours=3,max_compute_dollars=10,initial_running_interval=[first_start,initial['verified_at']],previous_attempt_intervals=prior_intervals)
     atomic_json(binding_path,binding)
     def hb(stage,last=None,timeout=600):
         atomic_json(archive/'CONTROLLER_HEARTBEAT.json',dict(time=time.time(),stage=stage,last_progress=last or time.time(),progress_timeout=timeout))
@@ -100,7 +103,8 @@ def launch(archive,bundle,user_start=False):
         else:raise RuntimeError('SSH startup deadline')
         hb('STAGING');remote.run(['mkdir','-p',root+'/code',raw])
         remote.upload(bundle,root+'/bundle.tar.gz',timeout=60)
-        remote.run(['tar','-xzf',root+'/bundle.tar.gz','-C',root+'/code'],timeout=60)
+        assert remote.run(['sha256sum',root+'/bundle.tar.gz']).decode().split()[0]==sha256(bundle)
+        remote.run(['tar','--no-same-owner','--no-same-permissions','-xzf',root+'/bundle.tar.gz','-C',root+'/code'],timeout=60)
         remote.put_json(root+'/binding.json',binding)
         # Resolve actual mounted files and content hashes before model execution.
         code='''import json,hashlib
@@ -155,11 +159,12 @@ print(p.pid)'''
     finally:
         stop=provider.stop_verified(archive/'STOP_VERIFICATION.json')
         current=stop['verified_at']-start;cumulative=prior+current
-        atomic_json(archive/'RUNTIME_ACCOUNTING.json',dict(initial_billed_seconds=prior,evaluation_attempt_billed_seconds=current,
+        atomic_json(archive/'RUNTIME_ACCOUNTING.json',dict(initial_billed_seconds=initial_seconds,prior_attempt_billed_seconds=prior-initial_seconds,evaluation_attempt_billed_seconds=current,
             cumulative_billed_seconds=cumulative,cumulative_billed_gpu_hours=cumulative/3600,
             quoted_hourly_rate=rate,compute_cost_at_quoted_rate=cumulative/3600*rate,
             max_gpu_hours=3,max_compute_dollars=10,within_ceiling=cumulative<=10800 and cumulative/3600*rate<=10,
-            provider_invoice_available=False,intervals=[binding['initial_running_interval'],[start,stop['verified_at']]],
+            provider_invoice_available=False,intervals=[binding['initial_running_interval'],*prior_intervals,[start,stop['verified_at']]],
+            startup_retry_attempts=len(histories),scientific_retries=0,
             note='Conservative request-to-verified-stop wall time including startup/transfer/stop latency; quoted-rate cost, not provider invoice. Storage excluded.'))
 
 if __name__=='__main__':
