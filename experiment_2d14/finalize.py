@@ -114,10 +114,15 @@ def finalize(archive,l_archive=None):
     for u in SCHEDULE:
         f=lraw/f'evaluations/L_monitor_u{u:05d}_COMPLETE.json';v=read_json(f)
         assert v['binding']['panel_identity']==read_json(FROZEN/'MONITOR.json')['identity']
+        assert v['passed'] and v['checkpoint_unchanged'] and v['tensors_unchanged']
+        lm=read_json(lraw/f'checkpoints/u{u:05d}.pt.manifest.json')
+        assert v['binding']['checkpoint_sha256']==lm['sha256'] and sha256(lraw/f'checkpoints/u{u:05d}.pt')==lm['sha256']
+        assert v['binding']['model_tensor_identity']==lm['audit']['model_tensor_identity']
+        assert v['count']==1310720 and len(v['rows'])==1280
         lmon.append(dict(update=u,ce=v['ce'],targets_million=u*524288/1e6,
             gpu_hours=sum(r['training_seconds'] for r in lmetrics if r['completed_updates']<=u)/3600))
     lgit=read_json(out/'L_GIT_PROVENANCE.json') if (out/'L_GIT_PROVENANCE.json').exists() else dict(status='Final source archival not yet published by 2D13.')
-    if 'checkpoint_sha256' in lgit:assert lgit['checkpoint_sha256']==provenance['sha256']
+    if 'checkpoint_sha256' in lgit:assert lgit['passed'] and lgit['remote_tag_verified'] and lgit['checkpoint_sha256']==provenance['sha256']
     panel=read_json(FROZEN/'PANEL.json');summaries={}
     for label in CONDITIONS:
         if label.startswith('H_'):digest,model_id=H_SHA,H_MODEL_SHA
@@ -167,6 +172,8 @@ def finalize(archive,l_archive=None):
 {outcome} R noninferiority to H: {a['R_noninferior_to_H']}; R quality improvement beyond the reference versus H: {a['flags']['beyond_reference']}; versus L: {primary['contrasts']['B']['flags']['beyond_reference']}. Noninferiority without superiority is not a better-predictor finding.
 
 Exactly one new scientific R arm trained here from the original untrained full H tensors, including fresh 50/50 routers. H524M and independently completed L524M were reused only as comparators. R completed all 1,000 optimizer updates / 524,288,000 logical targets with the original H stream and 10B LR prefix. R used one A100 80GB, B32, 16 accumulated means, one global clip and one fused AdamW update. H used four GPUs; reduction orders differ and bitwise trajectory equality is not claimed.
+
+The immutable historical H checkpoint records `fused=False` in both optimizer groups; R and valid L record `fused=True`, as prescribed for these new runs. This implementation difference accompanies the world-size difference and limits an exact numerical attribution solely to the CE1 weight. Historical H was reused unchanged. See `OPTIMIZER_IMPLEMENTATION_AUDIT.json`.
 
 | Endpoint condition | CE | Perplexity |
 |---|---:|---:|
