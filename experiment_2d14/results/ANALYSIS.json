@@ -1,0 +1,335 @@
+{
+  "changed_flags": {
+    "A": false,
+    "B": false,
+    "C": false,
+    "G_H": false,
+    "G_R": false,
+    "I": false
+  },
+  "changed_joint_goal": false,
+  "changed_noninferiority": false,
+  "endpoints": {
+    "H_ALL_OFF": {
+      "ce": 4.027699507832449,
+      "count": 4194304,
+      "nll": 16893396.156499673,
+      "ppl": 56.13163222117276
+    },
+    "H_ON": {
+      "ce": 4.0253283888714835,
+      "count": 4194304,
+      "nll": 16883450.96275722,
+      "ppl": 55.99869511083795
+    },
+    "L_LOCAL": {
+      "ce": 4.0198359362390885,
+      "count": 4194304,
+      "nll": 16860413.946711354,
+      "ppl": 55.691968043496786
+    },
+    "R_ALL_OFF": {
+      "ce": 4.049807019402484,
+      "count": 4194304,
+      "nll": 16986121.780707918,
+      "ppl": 57.386381518604956
+    },
+    "R_ON": {
+      "ce": 4.030041545202481,
+      "count": 4194304,
+      "nll": 16903219.373208947,
+      "ppl": 56.26324866663132
+    }
+  },
+  "group_sensitivity": {
+    "adjusted_percentile_bounds": [
+      0.4166666666666667,
+      99.58333333333333
+    ],
+    "contrasts": {
+      "A": {
+        "R_noninferior_to_H": false,
+        "adjusted_99_1666666667": [
+          -0.006182395069043596,
+          -0.003187720595472964
+        ],
+        "flags": {
+          "beyond_reference": false,
+          "equivalence": false,
+          "material_negative": true,
+          "negative": true,
+          "positive": false
+        },
+        "mean": -0.004713156330997316,
+        "negative_fraction": 0.859375,
+        "positive_fraction": 0.140625,
+        "raw_95": [
+          -0.005808609673527053,
+          -0.0035885258250408962
+        ],
+        "tie_fraction": 0.0
+      },
+      "B": {
+        "adjusted_99_1666666667": [
+          -0.011779605214946046,
+          -0.00862313609508901
+        ],
+        "flags": {
+          "beyond_reference": false,
+          "equivalence": false,
+          "material_negative": true,
+          "negative": true,
+          "positive": false
+        },
+        "mean": -0.01020560896339199,
+        "negative_fraction": 0.96875,
+        "positive_fraction": 0.03125,
+        "raw_95": [
+          -0.0113829680921641,
+          -0.009035923711485244
+        ],
+        "tie_fraction": 0.0
+      },
+      "C": {
+        "adjusted_99_1666666667": [
+          -0.006616123486535147,
+          -0.004354146880608729
+        ],
+        "flags": {
+          "beyond_reference": false,
+          "equivalence": false,
+          "material_negative": true,
+          "negative": true,
+          "positive": false
+        },
+        "mean": -0.005492452632394673,
+        "negative_fraction": 0.9375,
+        "positive_fraction": 0.0625,
+        "raw_95": [
+          -0.006332830532401656,
+          -0.004643488461961574
+        ],
+        "tie_fraction": 0.0
+      },
+      "G_H": {
+        "adjusted_99_1666666667": [
+          0.0022079228556311395,
+          0.002557634182709328
+        ],
+        "flags": {
+          "beyond_reference": true,
+          "equivalence": false,
+          "material_negative": false,
+          "negative": false,
+          "positive": true
+        },
+        "mean": 0.002371118960965174,
+        "negative_fraction": 0.0,
+        "positive_fraction": 1.0,
+        "raw_95": [
+          0.002247959280598978,
+          0.002504166547931476
+        ],
+        "tie_fraction": 0.0
+      },
+      "G_R": {
+        "adjusted_99_1666666667": [
+          0.018957454428941017,
+          0.02067834118658917
+        ],
+        "flags": {
+          "beyond_reference": true,
+          "equivalence": false,
+          "material_negative": false,
+          "negative": false,
+          "positive": true
+        },
+        "mean": 0.019765474200003207,
+        "negative_fraction": 0.0,
+        "positive_fraction": 1.0,
+        "raw_95": [
+          0.019157455006364676,
+          0.02043507340872327
+        ],
+        "tie_fraction": 0.0
+      },
+      "I": {
+        "adjusted_99_1666666667": [
+          0.01671484025543061,
+          0.01815619345280354
+        ],
+        "flags": {
+          "beyond_reference": true,
+          "equivalence": false,
+          "material_negative": false,
+          "negative": false,
+          "positive": true
+        },
+        "mean": 0.017394355239038033,
+        "negative_fraction": 0.0,
+        "positive_fraction": 1.0,
+        "raw_95": [
+          0.016880629018156675,
+          0.017954007503513277
+        ],
+        "tie_fraction": 0.0
+      }
+    },
+    "family_size": 6,
+    "joint_goal_met": false,
+    "paired": true,
+    "percentile_method": "linear",
+    "resamples": 50000,
+    "seed": 20260929
+  },
+  "primary": {
+    "adjusted_percentile_bounds": [
+      0.4166666666666667,
+      99.58333333333333
+    ],
+    "contrasts": {
+      "A": {
+        "R_noninferior_to_H": false,
+        "adjusted_99_1666666667": [
+          -0.005740442111814182,
+          -0.0036792595427659856
+        ],
+        "flags": {
+          "beyond_reference": false,
+          "equivalence": false,
+          "material_negative": true,
+          "negative": true,
+          "positive": false
+        },
+        "mean": -0.004713156330997425,
+        "negative_fraction": 0.58984375,
+        "positive_fraction": 0.41015625,
+        "raw_95": [
+          -0.005469993411482452,
+          -0.003950427651217069
+        ],
+        "tie_fraction": 0.0
+      },
+      "B": {
+        "adjusted_99_1666666667": [
+          -0.011356561721048845,
+          -0.009023634368767523
+        ],
+        "flags": {
+          "beyond_reference": false,
+          "equivalence": false,
+          "material_negative": true,
+          "negative": true,
+          "positive": false
+        },
+        "mean": -0.010205608963392076,
+        "negative_fraction": 0.67919921875,
+        "positive_fraction": 0.32080078125,
+        "raw_95": [
+          -0.011066595858431665,
+          -0.009334591651784721
+        ],
+        "tie_fraction": 0.0
+      },
+      "C": {
+        "adjusted_99_1666666667": [
+          -0.006449615599570059,
+          -0.004537160313930076
+        ],
+        "flags": {
+          "beyond_reference": false,
+          "equivalence": false,
+          "material_negative": true,
+          "negative": true,
+          "positive": false
+        },
+        "mean": -0.005492452632394651,
+        "negative_fraction": 0.59765625,
+        "positive_fraction": 0.40234375,
+        "raw_95": [
+          -0.006207912652448272,
+          -0.004770799703489405
+        ],
+        "tie_fraction": 0.0
+      },
+      "G_H": {
+        "adjusted_99_1666666667": [
+          0.0022464411134454684,
+          0.002497535693496082
+        ],
+        "flags": {
+          "beyond_reference": true,
+          "equivalence": false,
+          "material_negative": false,
+          "negative": false,
+          "positive": true
+        },
+        "mean": 0.002371118960965201,
+        "negative_fraction": 0.180908203125,
+        "positive_fraction": 0.819091796875,
+        "raw_95": [
+          0.0022786088804294703,
+          0.0024648354697339955
+        ],
+        "tie_fraction": 0.0
+      },
+      "G_R": {
+        "adjusted_99_1666666667": [
+          0.01921583744601554,
+          0.02034000802579071
+        ],
+        "flags": {
+          "beyond_reference": true,
+          "equivalence": false,
+          "material_negative": false,
+          "negative": false,
+          "positive": true
+        },
+        "mean": 0.019765474200003103,
+        "negative_fraction": 0.024658203125,
+        "positive_fraction": 0.975341796875,
+        "raw_95": [
+          0.019353359348072426,
+          0.020183893070858
+        ],
+        "tie_fraction": 0.0
+      },
+      "I": {
+        "adjusted_99_1666666667": [
+          0.016921337289686655,
+          0.017888571114939637
+        ],
+        "flags": {
+          "beyond_reference": true,
+          "equivalence": false,
+          "material_negative": false,
+          "negative": false,
+          "positive": true
+        },
+        "mean": 0.0173943552390379,
+        "negative_fraction": 0.02490234375,
+        "positive_fraction": 0.97509765625,
+        "raw_95": [
+          0.017040555793348622,
+          0.01775393617968612
+        ],
+        "tie_fraction": 0.0
+      }
+    },
+    "family_size": 6,
+    "joint_goal_met": false,
+    "paired": true,
+    "percentile_method": "linear",
+    "resamples": 50000,
+    "seed": 20260928
+  },
+  "relative_ppl": {
+    "H_to_R_definition": "100*(PPL_H_ON-PPL_R_ON)/PPL_H_ON",
+    "H_to_R_reduction_percent": -0.4724280722429697,
+    "L_to_R_definition": "100*(PPL_L_LOCAL-PPL_R_ON)/PPL_L_LOCAL",
+    "L_to_R_reduction_percent": -1.0257863803418088
+  },
+  "rows": 20480,
+  "targets": 20971520,
+  "training_seed_uncertainty_estimated": false
+}

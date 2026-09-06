@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "reason": "Derived math.exp result differs across Linux x86 CUDA host and macOS ARM local libm; NLL, counts and CE stay exact.",
+  "rows": [
+    {
+      "absolute_error": 0.0,
+      "condition": "H_ON",
+      "local_ppl": 55.99869511083795,
+      "source_ppl": 55.99869511083795,
+      "ulp_error": 0.0
+    },
+    {
+      "absolute_error": 0.0,
+      "condition": "L_LOCAL",
+      "local_ppl": 55.691968043496786,
+      "source_ppl": 55.691968043496786,
+      "ulp_error": 0.0
+    },
+    {
+      "absolute_error": 0.0,
+      "condition": "R_ON",
+      "local_ppl": 56.26324866663132,
+      "source_ppl": 56.26324866663132,
+      "ulp_error": 0.0
+    },
+    {
+      "absolute_error": 0.0,
+      "condition": "H_ALL_OFF",
+      "local_ppl": 56.13163222117276,
+      "source_ppl": 56.13163222117276,
+      "ulp_error": 0.0
+    },
+    {
+      "absolute_error": 7.105427357601002e-15,
+      "condition": "R_ALL_OFF",
+      "local_ppl": 57.386381518604956,
+      "source_ppl": 57.38638151860496,
+      "ulp_error": 1.0
+    }
+  ],
+  "time": 1788730284.8865302,
+  "tolerance_relative": 8.881784197001252e-16
+}

@@ -17,7 +17,10 @@ def verify_evaluation(raw,label,panel,checkpoint_sha,model_identity,condition):
     assert binding['configuration_identity']==identity(read_json(FROZEN/'EXECUTION.json'))
     assert binding['batch_size']==128 and binding['mode']=='true_incremental_bf16_fp32_ce_fp64_nll'
     rebuilt=collect(raw/'evaluations',label,panel,binding,128)
-    for key in ['rows','nll','count','ce','ppl']:assert rebuilt[key]==value[key],(label,key)
+    for key in ['rows','nll','count','ce']:assert rebuilt[key]==value[key],(label,key)
+    # The derived exp(CE) can differ by one libm rounding step on macOS ARM
+    # versus the Linux x86 scoring host. Scientific NLL/count/CE remain exact.
+    assert math.isclose(rebuilt['ppl'],value['ppl'],rel_tol=4*np.finfo(np.float64).eps,abs_tol=0),(label,'ppl')
     for r,ref in zip(value['rows'],panel['sequences']):assert r['canonical_group']==ref.get('canonical_group',ref['id']//64)
     return value
 
@@ -62,6 +65,10 @@ def finalize(archive,l_archive=None):
     assert stop['provider']['desiredStatus']=='EXITED' and stop['provider']['runtimeStatus']=='stopped'
     billing=read_json(archive/'RUNTIME_ACCOUNTING.json');assert billing['within_ceiling']
     raw=archive/'raw';out=PACKAGE/'results';torch.set_num_threads(4)
+    source_closeout=read_json(out/'CLOSEOUT_SOURCE_AUDIT.json');assert source_closeout['passed']
+    independent_stop=read_json(archive/'INDEPENDENT_STOP_CHECK.json')
+    assert independent_stop['passed'] and independent_stop['provider']['id']==stop['provider']['id']
+    assert independent_stop['provider']['desiredStatus']=='EXITED' and independent_stop['provider']['runtimeStatus']=='stopped'
     for name in ['CPU_AUDIT.json','INPUT_AUDIT.json','LOCAL_READY.json','ANALYSIS_REHEARSAL.json','PARTITION_COVERAGE_AUDIT.json']:
         assert read_json(out/name)['passed'],name
     for name in ['PREFLIGHT.json','CUDA_OBJECTIVE.json','CUDA_TEMPORAL.json','CUDA_UPDATE_GEOMETRY.json','CUDA_RESUME.json']:
@@ -91,7 +98,8 @@ def finalize(archive,l_archive=None):
     base_audit=dict(R_complete=True,completed_updates=1000,one_new_scientific_arm=True,checkpoints=audits,initial_full_H_identity=FULL_INIT_SHA,
         stream_all_1000_verified=True,pass_counts=accounting(1000),writer_gradients_verified=True,
         source_initial_and_H_unchanged=True,all_active_tensors_changed=True,compatibility_scalars_unchanged=True,
-        budget=billing,pod_stopped=True,independent_exports=True,shared_volume_preserved=True)
+        budget=billing,pod_stopped=True,independent_exports=True,shared_volume_preserved=True,
+        closeout_source_audit=source_closeout,independent_stop_check=independent_stop)
     if not finished['joint_complete']:
         atomic_json(out/'R_COMPLETION_AUDIT.json',dict(passed=True,joint_complete=False,**base_audit))
         atomic_bytes(out/'INTERIM_REPORT.md',b'R complete; joint comparison awaiting L. No complete joint result or final-success tag is warranted.\n')
@@ -142,18 +150,27 @@ def finalize(archive,l_archive=None):
         for i,r in enumerate(panel['sequences']):
             values=[summaries[n]['rows'][i]['ce'] for n in CONDITIONS]
             writer.writerow([r['id'],r['canonical_group'],r['token_sha256'],*values,*contrasts([values])[0]])
-    for name in ['STOP_VERIFICATION.json','RUNTIME_ACCOUNTING.json','EXPORT_VERIFICATION.json','CAPACITY_PREFLIGHT.json','PROVIDER_BEFORE_CUDA.json','REMOTE_LAUNCH.json']:
+    for name in ['STOP_VERIFICATION.json','INDEPENDENT_STOP_CHECK.json','RUNTIME_ACCOUNTING.json','EXPORT_VERIFICATION.json','CAPACITY_PREFLIGHT.json','PROVIDER_BEFORE_CUDA.json','REMOTE_LAUNCH.json']:
         shutil.copyfile(archive/name,out/name)
     for f in raw.rglob('*'):
         if f.is_file() and f.suffix in ('.json','.jsonl'):
             target=out/'run'/f.relative_to(raw);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(f,target)
     audit=dict(passed=True,joint_complete=True,**base_audit,L_provenance=provenance,L_code_provenance=lcode,L_git_provenance=lgit,coverage=dict(rows=20480,targets=20971520),
         monitoring_targets=6553600,total_new_scientific_predictions=27525120,six_contrast_adjustment_verified=True,
+        scientific_joint_goal_met=analysis['primary']['joint_goal_met'],group_joint_goal_met=analysis['group_sensitivity']['joint_goal_met'],
         final_conditions_same_execution=True,R_training_gpu_hours=sum(r['training_seconds'] for r in metrics)/3600,
         H_training_gpu_hours=read_json(FROZEN/'H_PREFIX_VERIFIED.json')['gpu_hours'],completed_at=time.time())
     atomic_json(out/'FINAL_AUDIT.json',audit)
     primary=analysis['primary'];a=primary['contrasts']['A'];joint=primary['joint_goal_met']
     outcome='The prespecified joint goal was met.' if joint else 'The prespecified joint goal was not established.'
+    if not joint and a['flags']['material_negative']:
+        outcome='The prespecified joint goal was not met: R had materially worse ON prediction quality than H under the adjusted interval.'
+        if primary['contrasts']['I']['flags']['beyond_reference']:
+            outcome+=' R showed a larger recurrence OFF penalty, so the increased measured dependence did not satisfy the joint quality-and-dependence objective.'
+    main_readout=(f"R ON CE exceeds H by {-a['mean']:.10f} nats/target and L by {-primary['contrasts']['B']['mean']:.10f}. "
+        f"R's OFF penalty is {primary['contrasts']['G_R']['mean']:.10f}, versus {primary['contrasts']['G_H']['mean']:.10f} for H; "
+        f"the paired increase is {primary['contrasts']['I']['mean']:.10f}. "
+        f"The group sensitivity preserves all six contrast classifications and the joint-goal conclusion: {not any(analysis['changed_flags'].values()) and not analysis['changed_joint_goal']}.")
     table='\n'.join(f"| {n} | {analysis['endpoints'][n]['ce']:.10f} | {analysis['endpoints'][n]['ppl']:.8f} |" for n in CONDITIONS)
     contrast_table='\n'.join(f"| {n} | {v['mean']:.10f} | [{v['raw_95'][0]:.10f}, {v['raw_95'][1]:.10f}] | [{v['adjusted_99_1666666667'][0]:.10f}, {v['adjusted_99_1666666667'][1]:.10f}] |" for n,v in primary['contrasts'].items())
     group_table='\n'.join(f"| {n} | [{v['raw_95'][0]:.10f}, {v['raw_95'][1]:.10f}] | [{v['adjusted_99_1666666667'][0]:.10f}, {v['adjusted_99_1666666667'][1]:.10f}] |" for n,v in analysis['group_sensitivity']['contrasts'].items())
@@ -170,6 +187,8 @@ def finalize(archive,l_archive=None):
     report=f'''# Experiment 2D14 — CE1-free H at 524M targets
 
 {outcome} R noninferiority to H: {a['R_noninferior_to_H']}; R quality improvement beyond the reference versus H: {a['flags']['beyond_reference']}; versus L: {primary['contrasts']['B']['flags']['beyond_reference']}. Noninferiority without superiority is not a better-predictor finding.
+
+{main_readout}
 
 Exactly one new scientific R arm trained here from the original untrained full H tensors, including fresh 50/50 routers. H524M and independently completed L524M were reused only as comparators. R completed all 1,000 optimizer updates / 524,288,000 logical targets with the original H stream and 10B LR prefix. R used one A100 80GB, B32, 16 accumulated means, one global clip and one fused AdamW update. H used four GPUs; reduction orders differ and bitwise trajectory equality is not claimed.
 
@@ -217,9 +236,9 @@ H/R have 124,697,386 registered parameters and 124,697,382 trainable parameters;
 
 ![R training objective and diagnostics](training.png)
 
-R training-only compute: {audit['R_training_gpu_hours']:.8f} GPU-hours; historical H first 1,000 updates: 2,556.652936697 seconds on four GPUs / {audit['H_training_gpu_hours']:.9f} GPU-hours. Different hardware counts, historical evaluation grouping/software and concurrent shared-volume I/O limit speed conclusions. H/L/R differently weighted training objectives are not interchangeable curves. No R524M-versus-H10B ablation-gap comparison is used as recipe evidence.
+R training-only compute: {audit['R_training_gpu_hours']:.8f} GPU-hours; historical H first 1,000 updates: 2,556.652936697 seconds on four GPUs / {audit['H_training_gpu_hours']:.9f} GPU-hours. L's valid training-only run took {sum(r['training_seconds'] for r in lmetrics):.6f} seconds on one GPU / {sum(r['training_seconds'] for r in lmetrics)/3600:.9f} GPU-hours; its separate task's failures and billing are not charged to this run. Different hardware counts, historical evaluation grouping/software and concurrent shared-volume I/O limit speed conclusions. H/L/R differently weighted training objectives are not interchangeable curves. No R524M-versus-H10B ablation-gap comparison is used as recipe evidence.
 
-Cumulative billed compute including the user's requested reserved preparation, preflight, training, monitoring, final scoring, transfers and verified shutdown: {billing['gpu_hours']:.6f} GPU-hours / ${billing['compute_cost']:.6f} at $1.59/hour. Both ceilings were respected. Storage is separate; the shared volume was provider-verified at 200 GB. Runpod lists standard network storage at $0.07/GB/month ($14/month for 200 GB), while the exact invoice/tier rate is not available in the pod response. Source: https://docs.runpod.io/storage/network-volumes. Stage timing and residual overhead are retained in the raw resource ledger; provider invoice reconciliation is not available.
+Cumulative billed compute including the user's requested reserved preparation, preflight, training, monitoring, final scoring, transfers and verified shutdown: {billing['gpu_hours']:.6f} GPU-hours / ${billing['compute_cost']:.6f} at $1.59/hour. Both ceilings were respected. Storage is separate; the shared volume was provider-verified at 200 GB. Runpod lists standard network storage at $0.07/GB/month ($14/month for 200 GB), while the exact invoice/tier rate is not available in the pod response. [Runpod network-volume pricing](https://docs.runpod.io/storage/network-volumes). Stage timing and residual overhead are retained in the raw resource ledger; provider invoice reconciliation is not available.
 
 | Stage | Billed seconds | GPU-hours | Compute cost |
 |---|---:|---:|---:|
@@ -231,7 +250,9 @@ Checkpoints u0/u250/u500/u750/u1000 were atomically published, reopened, fully v
 
 L provenance and the complete stream were independently verified using its atomically completed checkpoint, saved initialization, frozen routers, optimizer state and local durable source copies. H and original initialization hashes were rechecked; this task wrote only its 2D14 namespace and never changed 2D13 code, checkpoints or pod. The final saved R checkpoint's evaluation ledger is reconciled with the subsequent immutable five-condition raw completion artifacts. Final audit: `FINAL_AUDIT.json`.
 
-L source archival provenance: `{json.dumps(lgit,sort_keys=True)}`.
+L source commit: `{lgit.get('source_commit','pending')}`; tag: `{lgit.get('source_tag','pending')}`. The remote tag and completed checkpoint identity were independently verified. Full source file hashes and the tag object are recorded in `L_GIT_PROVENANCE.json`.
+
+All scientific NLL values, target counts, and CE values match the raw batch artifacts exactly. Recomputing derived exp(CE) locally gave a one-ULP difference for R_ALL_OFF (7.1e−15 perplexity units) between the two hosts; the report uses the local derived value. This does not affect any CE contrast or decision. `PPL_ROUNDING_AUDIT.json` records the observation; the local audit allows at most four FP64 machine-epsilon units of relative error only for this derived quantity.
 
 Pod `{stop['provider']['id']}` is verified EXITED/stopped. Large files remain outside Git under `{archive}` and `{export['persistent_root']}` on volume yhzyb27fb5. This is one early matched trajectory, not a 10B quality determination against GPT-2. No additional training was launched.
 '''

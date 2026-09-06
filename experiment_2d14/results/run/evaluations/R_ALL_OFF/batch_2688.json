@@ -1,0 +1,1585 @@
+{
+  "binding": {
+    "batch_size": 128,
+    "checkpoint_sha256": "e472309031335253b1870d3120285e55293185e7303bd3f6000859e284bf0dd3",
+    "code_identity": "531c457d52acc8d2c8599c45d413a12d1ebe8b3082ed5aa54404db89f4fd7abe",
+    "condition": "H_ALL_OFF",
+    "configuration_identity": "11cb8bf465fcad5f468e3bbe7eaa254318c10dc92fa13d043c7c7a9da738b499",
+    "label": "R_ALL_OFF",
+    "mode": "true_incremental_bf16_fp32_ce_fp64_nll",
+    "model_tensor_identity": "fcd20132d9e9715418c6a93ee7815fb85a5623e57069ad3bb192e1598f247865",
+    "panel_identity": "1d301019ceccca0c59801bcd1aa38a28b4e0bd90b9e54ed0c28dc27a60454602"
+  },
+  "cache": {
+    "actual_unique_storage_bytes": 4261085184,
+    "b6_historical_local_kv": 1023,
+    "b7_ring_present": false,
+    "cache_lengths": [
+      1,
+      1023,
+      31,
+      1023,
+      63,
+      1023,
+      1023,
+      1023,
+      1023,
+      1023,
+      1023,
+      1023
+    ],
+    "cache_limits": [
+      1,
+      1023,
+      31,
+      1023,
+      63,
+      1023,
+      1023,
+      1023,
+      1023,
+      1023,
+      1023,
+      1023
+    ],
+    "cache_storage": [
+      {
+        "block": 1,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 196608,
+          "physical_bytes": 196608,
+          "shape": [
+            128,
+            12,
+            1,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 196608,
+          "physical_bytes": 196608,
+          "shape": [
+            128,
+            12,
+            1,
+            64
+          ]
+        }
+      },
+      {
+        "block": 2,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        }
+      },
+      {
+        "block": 3,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 6094848,
+          "physical_bytes": 6094848,
+          "shape": [
+            128,
+            12,
+            31,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 6094848,
+          "physical_bytes": 6094848,
+          "shape": [
+            128,
+            12,
+            31,
+            64
+          ]
+        }
+      },
+      {
+        "block": 4,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        }
+      },
+      {
+        "block": 5,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 12386304,
+          "physical_bytes": 12386304,
+          "shape": [
+            128,
+            12,
+            63,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 12386304,
+          "physical_bytes": 12386304,
+          "shape": [
+            128,
+            12,
+            63,
+            64
+          ]
+        }
+      },
+      {
+        "block": 6,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        }
+      },
+      {
+        "block": 7,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        }
+      },
+      {
+        "block": 8,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        }
+      },
+      {
+        "block": 9,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        }
+      },
+      {
+        "block": 10,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        }
+      },
+      {
+        "block": 11,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        }
+      },
+      {
+        "block": 12,
+        "key": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        },
+        "value": {
+          "dtype": "torch.bfloat16",
+          "exact": true,
+          "logical_bytes": 201129984,
+          "physical_bytes": 201129984,
+          "shape": [
+            128,
+            12,
+            1023,
+            64
+          ]
+        }
+      }
+    ],
+    "historical_local_kv_positions": {
+      "B1": 1,
+      "B10": 1023,
+      "B11": 1023,
+      "B12": 1023,
+      "B2": 1023,
+      "B3": 31,
+      "B4": 1023,
+      "B5": 63,
+      "B6": 1023,
+      "B7": 1023,
+      "B8": 1023,
+      "B9": 1023
+    },
+    "logical_payload_bytes": 4261085184,
+    "passed": true,
+    "physical_storage_exact": true,
+    "position": 1024,
+    "ring_lengths": {
+      "h10": 1023,
+      "h12": 1023,
+      "h8": 1023
+    },
+    "ring_storage": {
+      "h10": {
+        "dtype": "torch.bfloat16",
+        "exact": true,
+        "logical_bytes": 201129984,
+        "physical_bytes": 201129984,
+        "shape": [
+          128,
+          1023,
+          768
+        ]
+      },
+      "h12": {
+        "dtype": "torch.bfloat16",
+        "exact": true,
+        "logical_bytes": 201129984,
+        "physical_bytes": 201129984,
+        "shape": [
+          128,
+          1023,
+          768
+        ]
+      },
+      "h8": {
+        "dtype": "torch.bfloat16",
+        "exact": true,
+        "logical_bytes": 201129984,
+        "physical_bytes": 201129984,
+        "shape": [
+          128,
+          1023,
+          768
+        ]
+      }
+    }
+  },
+  "rows": [
+    {
+      "canonical_group": 42,
+      "ce": 4.087557429543438,
+      "count": 1024,
+      "id": 2688,
+      "input_start": 59375616,
+      "nll": 4185.65880785248,
+      "token_sha256": "082427beb0e37c000f18a81b1127687f29140c3016084404fe5d712602074f37"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.060133323741638,
+      "count": 1024,
+      "id": 2689,
+      "input_start": 59376640,
+      "nll": 4157.576523511438,
+      "token_sha256": "60f034fc29b08673abb598088b6dfdf7b634ab077f3ace35fbee958e435c6545"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.417035979282673,
+      "count": 1024,
+      "id": 2690,
+      "input_start": 59377664,
+      "nll": 3499.044842785457,
+      "token_sha256": "ac02c357233c3a53b6e7a6ebe5f14d68682176aebb46f1c17b997ef3f78227b5"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 2.6961671504141975,
+      "count": 1024,
+      "id": 2691,
+      "input_start": 59378688,
+      "nll": 2760.8751620241383,
+      "token_sha256": "2edc34c94cdf3cee74c0613173b62e783c44966a83519b811283782ffa910776"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.338460007624917,
+      "count": 1024,
+      "id": 2692,
+      "input_start": 59379712,
+      "nll": 3418.583047807915,
+      "token_sha256": "fbd1a2c427bb2a9fcf4f24600b2f9368e2c0b90a6be61b7d664f700e880a320e"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.5257196928098438,
+      "count": 1024,
+      "id": 2693,
+      "input_start": 59380736,
+      "nll": 3610.33696543728,
+      "token_sha256": "0ada5748db947562dcdcc567c2b51f76842bca4d12afcc0840f24c00ed4695f4"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.501419936105453,
+      "count": 1024,
+      "id": 2694,
+      "input_start": 59381760,
+      "nll": 3585.454014571984,
+      "token_sha256": "c8a771f2a04fa4f24f2714da853e199f2ed34caeb5e970975a97615ba9319604"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.202065161362498,
+      "count": 1024,
+      "id": 2695,
+      "input_start": 59382784,
+      "nll": 4302.914725235198,
+      "token_sha256": "77f3ad0374b10679db34236f4c8e358f366baa2109750e5607d82a185d63c8ca"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.169832980828659,
+      "count": 1024,
+      "id": 2696,
+      "input_start": 59383808,
+      "nll": 4269.9089723685465,
+      "token_sha256": "16a100128f78a3295ab38a5da67b9ba106560517a97f072c182a34d534c0ab84"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.715318136488918,
+      "count": 1024,
+      "id": 2697,
+      "input_start": 59384832,
+      "nll": 4828.485771764652,
+      "token_sha256": "f98d36c7c80df4c2a81baaa3bb8c6daeaf370d122cea0cf88ab22e822a0963aa"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.729168974385402,
+      "count": 1024,
+      "id": 2698,
+      "input_start": 59385856,
+      "nll": 4842.669029770652,
+      "token_sha256": "06a63102f9bbbf491d72f20b94b55d320af81e0170d46c5de3c956cc435bce3c"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.553214816538684,
+      "count": 1024,
+      "id": 2699,
+      "input_start": 59386880,
+      "nll": 4662.491972135613,
+      "token_sha256": "6484f31d3585e2861e8d8df26b3be9f92af622f8e91fefab07987946819cf8eb"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.372624295995763,
+      "count": 1024,
+      "id": 2700,
+      "input_start": 59387904,
+      "nll": 4477.567279099661,
+      "token_sha256": "9687aee4384b0bf9427315e2fb7db588cf940d72ee0cf51fe5c04fc71be1d2d6"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.148697122662725,
+      "count": 1024,
+      "id": 2701,
+      "input_start": 59388928,
+      "nll": 4248.26585360663,
+      "token_sha256": "9f5ce82b1efaa47f7b25f3ea98b3b4ee843e2d1835e708897231e9f66a62a87c"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.400989752773171,
+      "count": 1024,
+      "id": 2702,
+      "input_start": 59389952,
+      "nll": 4506.613506839727,
+      "token_sha256": "1f0fa9671b5feabac3acf6e8756ec0caa95120a351a97b400608978aace6d538"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.043650164190922,
+      "count": 1024,
+      "id": 2703,
+      "input_start": 59390976,
+      "nll": 4140.697768131504,
+      "token_sha256": "60beca5e376d0dcd894312147eadd13b04375011a50f86ace99d26d0c8f9b36c"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.135206599134094,
+      "count": 1024,
+      "id": 2704,
+      "input_start": 59392000,
+      "nll": 4234.451557513312,
+      "token_sha256": "daa25b9b74c493d1e2a77362f3380f0cf3619f90771ed8a9f8ff873b0ea954e8"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.798645648241774,
+      "count": 1024,
+      "id": 2705,
+      "input_start": 59393024,
+      "nll": 4913.813143799576,
+      "token_sha256": "a4e7da7380082780dbbeb5a8dfebe672f7da24004a181113e80af1d381bcd9fe"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.200447000279098,
+      "count": 1024,
+      "id": 2706,
+      "input_start": 59394048,
+      "nll": 4301.2577282857965,
+      "token_sha256": "4d05d9fdc16769bab0ab5eee27b0b681b4668355bc1d274e0d4b051256544eae"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.989301548491227,
+      "count": 1024,
+      "id": 2707,
+      "input_start": 59395072,
+      "nll": 4085.0447856550163,
+      "token_sha256": "72320696cf972e4a99d4b8c0c7e425bb7ed09528e64a5a3cdd4eb55feaae2952"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.460688245169706,
+      "count": 1024,
+      "id": 2708,
+      "input_start": 59396096,
+      "nll": 4567.744763053779,
+      "token_sha256": "cef9bd80c095e905afdb7a5d79570b5f06911f1344048c1a0a684c5489926da1"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.293310905351973,
+      "count": 1024,
+      "id": 2709,
+      "input_start": 59397120,
+      "nll": 4396.35036708042,
+      "token_sha256": "e7ab6784ed474452893a8ddc09ad680ef45f9bd7a055c30b4ea34f610953fc57"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.2270212092497275,
+      "count": 1024,
+      "id": 2710,
+      "input_start": 59398144,
+      "nll": 4328.469718271721,
+      "token_sha256": "b060e9f02b57dc0b81f4e9752aebc14ac2e2d759d43f5fe31fef23868e928a21"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.8834027175449677,
+      "count": 1024,
+      "id": 2711,
+      "input_start": 59399168,
+      "nll": 3976.604382766047,
+      "token_sha256": "ada24299ebf6fd74af760e033db67eb0bfd15a65f2fe74a4aa77220b66f9f765"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.8052686290036206,
+      "count": 1024,
+      "id": 2712,
+      "input_start": 59400192,
+      "nll": 3896.5950760997075,
+      "token_sha256": "e3a6bdf89e2df3b5e932888afd5d4bd341fc3f1dc688425428064477de603992"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.7555090252108556,
+      "count": 1024,
+      "id": 2713,
+      "input_start": 59401216,
+      "nll": 3845.641241815916,
+      "token_sha256": "fd4b4a88903442594eb1093e298e98cb517477614cda5343795c091c47785d68"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.8213582497257903,
+      "count": 1024,
+      "id": 2714,
+      "input_start": 59402240,
+      "nll": 3913.0708477192093,
+      "token_sha256": "7406f9c4cc673b0448282b918c1af97a7b6c510daf9b64eb106657b597bd94b0"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.4155324309197113,
+      "count": 1024,
+      "id": 2715,
+      "input_start": 59403264,
+      "nll": 3497.5052092617843,
+      "token_sha256": "aebeafc7d936dcdf4cd07ce921ec03fb9c9d8165bdf5d84b9b9638edb8fdcde1"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.5449852450900607,
+      "count": 1024,
+      "id": 2716,
+      "input_start": 59404288,
+      "nll": 3630.064890972222,
+      "token_sha256": "83c6f4775e172d3ffc024a78092dfd1b804f007cd411df15176adada9e4f7b28"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.5387580412580064,
+      "count": 1024,
+      "id": 2717,
+      "input_start": 59405312,
+      "nll": 3623.6882342481986,
+      "token_sha256": "8af7ce87ef5be51293f0f3833e228e56979ccbd59ab320b3d4f78b3a9ef13074"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.9142354502903345,
+      "count": 1024,
+      "id": 2718,
+      "input_start": 59406336,
+      "nll": 4008.1771010973025,
+      "token_sha256": "20233e90eabddf6ec9c8ff1c1d4b0125e44768235e08e15064be3cc05c7e7f04"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.277395778631671,
+      "count": 1024,
+      "id": 2719,
+      "input_start": 59407360,
+      "nll": 4380.0532773188315,
+      "token_sha256": "f25ff77498a186010a23724d13cb19f8691777d780810e15b860f2868c41eb98"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.191536595190428,
+      "count": 1024,
+      "id": 2720,
+      "input_start": 59408384,
+      "nll": 4292.133473474998,
+      "token_sha256": "476a86f2016d9896fea99ec73dae1fcfcfa602b6ed1c516601d77dc6d6eb7e49"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.016443090929556,
+      "count": 1024,
+      "id": 2721,
+      "input_start": 59409408,
+      "nll": 4112.837725111865,
+      "token_sha256": "9d1837a65367f6414ca46da0018f2220f16d9ec76852e9773ff9e96687e2d4d1"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.1802123333250165,
+      "count": 1024,
+      "id": 2722,
+      "input_start": 59410432,
+      "nll": 4280.537429324817,
+      "token_sha256": "48feab29fdd45bda1d1fb6e58b744cf253b68b81833ba4cdf2c2984791875e30"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.981158312927846,
+      "count": 1024,
+      "id": 2723,
+      "input_start": 59411456,
+      "nll": 4076.7061124381144,
+      "token_sha256": "b7f5dbd3ecf63e4b281f445372b62905e19077f15f322c1100dfaaea2b54e778"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.246257758453847,
+      "count": 1024,
+      "id": 2724,
+      "input_start": 59412480,
+      "nll": 4348.16794465674,
+      "token_sha256": "2973f09ec1ae251948b51ea1ed4f2a6cc1fc070d3b4004022f78d6b0c4994050"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.9354718484529485,
+      "count": 1024,
+      "id": 2725,
+      "input_start": 59413504,
+      "nll": 4029.9231728158193,
+      "token_sha256": "c770c249bf81e763d18878b9b694776aa123ec757e706e3a1f763029a9ed2a9a"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.663037480331923,
+      "count": 1024,
+      "id": 2726,
+      "input_start": 59414528,
+      "nll": 4774.950379859889,
+      "token_sha256": "c8b70811061787bda031fe0387a2de67e0e1c5d7b148c6b5e431a5a2f90f283a"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.06951621107919,
+      "count": 1024,
+      "id": 2727,
+      "input_start": 59415552,
+      "nll": 4167.18460014509,
+      "token_sha256": "fac533cdc5f78237190bbf770da767eaca2a69362efa2d029dadb6a1504e6b99"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.939016380842247,
+      "count": 1024,
+      "id": 2728,
+      "input_start": 59416576,
+      "nll": 4033.552773982461,
+      "token_sha256": "0a291aaff2997c6ae2e3468d913d5bffae39feae905a1fa26859017a037812fd"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.405260060196497,
+      "count": 1024,
+      "id": 2729,
+      "input_start": 59417600,
+      "nll": 4510.986301641213,
+      "token_sha256": "7b2e01673815994adbd0974b3b4457543a861385af83f3ce25e73d01961e4de7"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.9588480510528825,
+      "count": 1024,
+      "id": 2730,
+      "input_start": 59418624,
+      "nll": 4053.8604042781517,
+      "token_sha256": "56552cd0d4c519f6bd91041095e19825ea0f3d620cc33cd24d2b152b37ede665"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.125074380694059,
+      "count": 1024,
+      "id": 2731,
+      "input_start": 59419648,
+      "nll": 4224.0761658307165,
+      "token_sha256": "18b925497ec8da5f17ae899fb6d83f98e20b45b5e0b8ba6d1d10eb0a001ee52b"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.796676675913119,
+      "count": 1024,
+      "id": 2732,
+      "input_start": 59420672,
+      "nll": 3887.796916135034,
+      "token_sha256": "a842ff2123938c97889b8d945f2061091b0041875df0a624a05ff0b182725675"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.2010505341363995,
+      "count": 1024,
+      "id": 2733,
+      "input_start": 59421696,
+      "nll": 4301.875746955673,
+      "token_sha256": "466a72ebfb8d804c689447176fac3c9045ea76cc9a862c89c48b5fd517efc896"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.512785795094828,
+      "count": 1024,
+      "id": 2734,
+      "input_start": 59422720,
+      "nll": 4621.092654177104,
+      "token_sha256": "d556564f40ebf840e9cfae57ed1a781fe6f4e0b44f41d418b2a2f220a74c6169"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.685021247825944,
+      "count": 1024,
+      "id": 2735,
+      "input_start": 59423744,
+      "nll": 4797.461757773766,
+      "token_sha256": "e957c6d9620d6df1920aafd9895fa0f0bb804329f501b3d3d84606b6e6cf242e"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.117090217929402,
+      "count": 1024,
+      "id": 2736,
+      "input_start": 59424768,
+      "nll": 4215.900383159707,
+      "token_sha256": "bbda5f7e9ba2062a0f02b8bc44e8e07308afe19a5c5ced98ebf4dda95009e652"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.146943766279605,
+      "count": 1024,
+      "id": 2737,
+      "input_start": 59425792,
+      "nll": 4246.470416670316,
+      "token_sha256": "92f8980e77bc4fcf346b8704bbd6cd50dfd76b61e78cd684e2e100592d816b09"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.135711229897197,
+      "count": 1024,
+      "id": 2738,
+      "input_start": 59426816,
+      "nll": 4234.96829941473,
+      "token_sha256": "75e13614787cd0b431d2c37d21309507d62677b06e69535948213c07b70d6e70"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.9204215003209413,
+      "count": 1024,
+      "id": 2739,
+      "input_start": 59427840,
+      "nll": 4014.511616328644,
+      "token_sha256": "821d49d34dd6b6934ee9d8f86c476e16ab6d8827d7333d5aac5c14ae8627be88"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.056540497211036,
+      "count": 1024,
+      "id": 2740,
+      "input_start": 59428864,
+      "nll": 4153.897469144101,
+      "token_sha256": "96a406886aeaee54269c25e4a6702b0561b88ec026ebd1bb8870623a07bb11f9"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.3505823588500476,
+      "count": 1024,
+      "id": 2741,
+      "input_start": 59429888,
+      "nll": 3430.9963354624488,
+      "token_sha256": "f40bd594de94cfb619785dd9278d7bb76dedbcffa5374d90dcee25b9ae6593e0"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 3.9034006006008894,
+      "count": 1024,
+      "id": 2742,
+      "input_start": 59430912,
+      "nll": 3997.082215015311,
+      "token_sha256": "e0eb4c5018b201aa3881121548f82a5ce022191b5a3a27f8b9775d7636f502a4"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.253433482849118,
+      "count": 1024,
+      "id": 2743,
+      "input_start": 59431936,
+      "nll": 4355.515886437497,
+      "token_sha256": "2c3d35a0cd1a92a4c5748df66ac82add2bdd32b25b7995c41fd613fbd10cf212"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.1623244744923795,
+      "count": 1024,
+      "id": 2744,
+      "input_start": 59432960,
+      "nll": 4262.220261880197,
+      "token_sha256": "8ebcc1395b7216080a5cdba289cea2d8de17504a85e6446bd19d1bbc6f0d316d"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.012778305810457,
+      "count": 1024,
+      "id": 2745,
+      "input_start": 59433984,
+      "nll": 4109.084985149908,
+      "token_sha256": "082dc7434f447394983a0ece13f8a3a68968ff4cf7eea6a7aae68a4e99041995"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.4137639811604,
+      "count": 1024,
+      "id": 2746,
+      "input_start": 59435008,
+      "nll": 4519.69431670825,
+      "token_sha256": "4a3f63c3d132214823c5b22a84cc74c876a38b1fe7777ed255770668839ecc62"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.533613895465578,
+      "count": 1024,
+      "id": 2747,
+      "input_start": 59436032,
+      "nll": 4642.420628956752,
+      "token_sha256": "b89a8f6a520622de7d5ffe79ae88cab29f9c3579407ec0d16c232b19dd562752"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.335611398993279,
+      "count": 1024,
+      "id": 2748,
+      "input_start": 59437056,
+      "nll": 4439.666072569118,
+      "token_sha256": "2cab210a035fbb812e4679c94dd16e59cb8ad5fabd8996b77ccc2539d4b1abd4"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.482684491550231,
+      "count": 1024,
+      "id": 2749,
+      "input_start": 59438080,
+      "nll": 4590.268919347436,
+      "token_sha256": "114f97fca8644289397c2c5a98c50491c786b67b6bf92aabd7a5945bd07c1508"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.567713894719688,
+      "count": 1024,
+      "id": 2750,
+      "input_start": 59439104,
+      "nll": 4677.3390281929605,
+      "token_sha256": "f5bf2c8369f03f3c6167a4bdca295e04cf4a8be0943558d61783a9af3408a23e"
+    },
+    {
+      "canonical_group": 42,
+      "ce": 4.147609803521959,
+      "count": 1024,
+      "id": 2751,
+      "input_start": 59440128,
+      "nll": 4247.152438806486,
+      "token_sha256": "ed628cd80463bedc992f150421786f57860a8198bcb6e6c1e20ffe3e25175bd1"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.383572870769328,
+      "count": 1024,
+      "id": 2752,
+      "input_start": 24969216,
+      "nll": 3464.7786196677916,
+      "token_sha256": "9e995af0e39e68869b353364678de5e58050d310510f4b793df5ba73d8442adc"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.0510336851319195,
+      "count": 1024,
+      "id": 2753,
+      "input_start": 24970240,
+      "nll": 4148.258493575086,
+      "token_sha256": "0af949825f9cf1718e7e4fcb84770b36cd0f13d124584676565b479d50ee82b9"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.335438476713463,
+      "count": 1024,
+      "id": 2754,
+      "input_start": 24971264,
+      "nll": 4439.489000154586,
+      "token_sha256": "123d630ca4c94ecd46701ed28a0cedca69a418179c6e8b9bcbd4d6d031e38380"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.742204729931473,
+      "count": 1024,
+      "id": 2755,
+      "input_start": 24972288,
+      "nll": 4856.017643449828,
+      "token_sha256": "0c34c596868381fb6af265ae0d88739e3d8a2783018af55a4dd77828b9cf8f34"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.555249693583789,
+      "count": 1024,
+      "id": 2756,
+      "input_start": 24973312,
+      "nll": 4664.5756862298,
+      "token_sha256": "d0c70ac6891855ff5ed74cb116f12a48ea68725ef95292f8a4166c5d5e76d4f4"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.288098593456198,
+      "count": 1024,
+      "id": 2757,
+      "input_start": 24974336,
+      "nll": 4391.012959699146,
+      "token_sha256": "a40a3ec5d0bac24fdd9d671aef4881ea74cb2a4ec209bdd97c0fff883979d4e7"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.316264632100802,
+      "count": 1024,
+      "id": 2758,
+      "input_start": 24975360,
+      "nll": 4419.8549832712215,
+      "token_sha256": "f8e13badeca8ddd069b99c7d3d387a8fa87e87e71d2454f13df342c92adcd708"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.925512053227962,
+      "count": 1024,
+      "id": 2759,
+      "input_start": 24976384,
+      "nll": 4019.724342505433,
+      "token_sha256": "a85c12a1b40f8a94c7d4eee210e5d2152409da98cc0c31a654e89256ab73c056"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.55209734826218,
+      "count": 1024,
+      "id": 2760,
+      "input_start": 24977408,
+      "nll": 3637.347684620472,
+      "token_sha256": "28f19b91dbd400c99b291903287a0d941631893549817bb31e10f987ceea361e"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.80812864047895,
+      "count": 1024,
+      "id": 2761,
+      "input_start": 24978432,
+      "nll": 3899.5237278504446,
+      "token_sha256": "e220e3fdd7f7dce31d3ed7895608751e41539b94f8a7992fe56cd42db3878423"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.232167313117429,
+      "count": 1024,
+      "id": 2762,
+      "input_start": 24979456,
+      "nll": 4333.739328632248,
+      "token_sha256": "edafd9bd1ceec605be1891395714296b70d0ad92fabd661eacbacf1f6246a5f4"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.8490010179529044,
+      "count": 1024,
+      "id": 2763,
+      "input_start": 24980480,
+      "nll": 3941.377042383774,
+      "token_sha256": "243bf7ed0599df55d3043195537e8ae9c9227332eba25e45441654740ab7a310"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.9223199060485854,
+      "count": 1024,
+      "id": 2764,
+      "input_start": 24981504,
+      "nll": 4016.4555837937514,
+      "token_sha256": "99f0a96853c5647e471546a6b563d6ceeab50b651b90225ef513d87b01009b18"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.157121011101083,
+      "count": 1024,
+      "id": 2765,
+      "input_start": 24982528,
+      "nll": 4256.891915367509,
+      "token_sha256": "a27a57dd4b83823dcd3495fbbed719d6847e4b5e5d2cc9d0da5f2bf2c563712c"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.7356362588153615,
+      "count": 1024,
+      "id": 2766,
+      "input_start": 24983552,
+      "nll": 3825.29152902693,
+      "token_sha256": "8a3edaf29f67cb38d346eca321b47c56ad2533b8f8183db0782175f12bbf1a29"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.8306747557919607,
+      "count": 1024,
+      "id": 2767,
+      "input_start": 24984576,
+      "nll": 3922.6109499309678,
+      "token_sha256": "9133fdda109e0343cbdfb1628212ccbbacac29fa111a5d029b7a67dad78fe28f"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.8437675311389015,
+      "count": 1024,
+      "id": 2768,
+      "input_start": 24985600,
+      "nll": 3936.017951886235,
+      "token_sha256": "c58b7644a8535bb052cf52bc1b83bd02546e061ee2fb416bb08c5e69ca6bf29f"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.2916138684947125,
+      "count": 1024,
+      "id": 2769,
+      "input_start": 24986624,
+      "nll": 4394.612601338586,
+      "token_sha256": "0f488413781b6209047b7d23306c724d67ff55a7920e4a391a7c19b358abec6e"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.7294574759464467,
+      "count": 1024,
+      "id": 2770,
+      "input_start": 24987648,
+      "nll": 3818.9644553691614,
+      "token_sha256": "1f37f34cf5d2953fd668901ca6c802f5ccdc6b2d5969744d25caf599b18a11b8"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.188989520540872,
+      "count": 1024,
+      "id": 2771,
+      "input_start": 24988672,
+      "nll": 4289.525269033853,
+      "token_sha256": "f347b70ef455d89904bb51e5d8f165515dd3a7ff940edf222c10e734448bd6af"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.385871328241592,
+      "count": 1024,
+      "id": 2772,
+      "input_start": 24989696,
+      "nll": 4491.13224011939,
+      "token_sha256": "d4f74b30a5334cfcbda3fdc8f56231295dacd279347fb21787481320d9ac5469"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.9782975660802222,
+      "count": 1024,
+      "id": 2773,
+      "input_start": 24990720,
+      "nll": 4073.7767076661476,
+      "token_sha256": "c6ce980fcd269139ece86c7ece0ab53e6791dcc8b3416ab381f43c890e184c7b"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.166566221764871,
+      "count": 1024,
+      "id": 2774,
+      "input_start": 24991744,
+      "nll": 4266.563811087228,
+      "token_sha256": "4a3911e4ef41114196949e5e4c75aa763a3bd08d53524cf7e0f404d487f11981"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.349557894811653,
+      "count": 1024,
+      "id": 2775,
+      "input_start": 24992768,
+      "nll": 4453.947284287133,
+      "token_sha256": "917c0fd16b2a61a9965fdf0de899d6711c4635a1317afd972f5923271e82ca80"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.7314005135470723,
+      "count": 1024,
+      "id": 2776,
+      "input_start": 24993792,
+      "nll": 3820.954125872202,
+      "token_sha256": "d47ab80501ea8ea5aab5b907f6f422e48ff33f5cc904a9aadae8188025709edf"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.726414709761684,
+      "count": 1024,
+      "id": 2777,
+      "input_start": 24994816,
+      "nll": 3815.8486627959646,
+      "token_sha256": "6781867b960915bd7cce5f0a0b2ca39614693f44621e67c4fedb2b3795f7310a"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.872651898527897,
+      "count": 1024,
+      "id": 2778,
+      "input_start": 24995840,
+      "nll": 3965.5955440925663,
+      "token_sha256": "15c6b29f9fc72a037312c681532f740d0d8bf9d0ee589805cdd37a2a66a6cde6"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.036633639103178,
+      "count": 1024,
+      "id": 2779,
+      "input_start": 24996864,
+      "nll": 4133.512846441654,
+      "token_sha256": "93f411b476a8f87f13e83095cfc934e33e1c870ccb2e8e6dc526bdf37aa369e2"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.7846405322881083,
+      "count": 1024,
+      "id": 2780,
+      "input_start": 24997888,
+      "nll": 3875.471905063023,
+      "token_sha256": "9a487308b7eef2aebb122f0559fe9d3de30c0416e3dd69380905d3207411260c"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.411699026821509,
+      "count": 1024,
+      "id": 2781,
+      "input_start": 24998912,
+      "nll": 4517.579803465225,
+      "token_sha256": "d38ce629ac9e4ae548fa1cd46c4287da9ae11bd95e82ef74dd5e5ca3f8dab0a4"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.276851653840481,
+      "count": 1024,
+      "id": 2782,
+      "input_start": 24999936,
+      "nll": 4379.496093532653,
+      "token_sha256": "f7019c798ac95a1e49822bb68d4b2e1c50d745e4d6179121e5693cf62da03004"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.431220498429411,
+      "count": 1024,
+      "id": 2783,
+      "input_start": 25000960,
+      "nll": 4537.569790391717,
+      "token_sha256": "9945e3d15680e2428477c51f7c7f6149909515c5060343f5cd2e5e239737729e"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.480204360309244,
+      "count": 1024,
+      "id": 2784,
+      "input_start": 25001984,
+      "nll": 4587.729264956666,
+      "token_sha256": "093aec616cbc754e5c4b680c22982ef0ab400f68004c79f58e9ba64f34e9b974"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.263701184769445,
+      "count": 1024,
+      "id": 2785,
+      "input_start": 25003008,
+      "nll": 4366.030013203912,
+      "token_sha256": "91f5b27576fcb34286ee2232583cfce1450d115a44eb40f5774657ec0bbf1ebd"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.0923492158761885,
+      "count": 1024,
+      "id": 2786,
+      "input_start": 25004032,
+      "nll": 4190.565597057217,
+      "token_sha256": "6588760d5236bbaf886811eabaf15da2c4496b65f2231f6d1b079addae65ba8c"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.895159438297469,
+      "count": 1024,
+      "id": 2787,
+      "input_start": 25005056,
+      "nll": 3988.6432648166083,
+      "token_sha256": "825813b8626d7d6b1914e3fc42b7bbe9740834e108220514741c9b1d9bad0f89"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.7760533430491705,
+      "count": 1024,
+      "id": 2788,
+      "input_start": 25006080,
+      "nll": 3866.6786232823506,
+      "token_sha256": "bdf1724149cfe81b70da4c11a9c2e5d5d9b891f325a4be84476a714b37ec76bc"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.119095174736458,
+      "count": 1024,
+      "id": 2789,
+      "input_start": 25007104,
+      "nll": 4217.953458930133,
+      "token_sha256": "3f944a039d1e9d77e3c17b13fff06d2dad3e6efbbabae56a407d8c7ab6b71009"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.58711415946064,
+      "count": 1024,
+      "id": 2790,
+      "input_start": 25008128,
+      "nll": 3673.2048992876953,
+      "token_sha256": "82d5e1e85feaf7adcb29166f4831de1679b261714cbeb836ba6ed0e8d85c62c0"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.8269038197794885,
+      "count": 1024,
+      "id": 2791,
+      "input_start": 25009152,
+      "nll": 3918.749511454196,
+      "token_sha256": "ffe669947d8fb144336eef17cb8038fb4aed263d432b99a0d373c39256d946d9"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.749317865904871,
+      "count": 1024,
+      "id": 2792,
+      "input_start": 25010176,
+      "nll": 3839.301494686588,
+      "token_sha256": "516895bc56e910932daf08151cd9eb1abddaf6e0d83bde7837ec3dbc53cc043c"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.4935431884283332,
+      "count": 1024,
+      "id": 2793,
+      "input_start": 25011200,
+      "nll": 3577.388224950613,
+      "token_sha256": "e02de7ab5b08ecd62d502e211c3ac209d5d67df3d1b53c20d2fcca05176d40bd"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.688375798904687,
+      "count": 1024,
+      "id": 2794,
+      "input_start": 25012224,
+      "nll": 3776.8968180783995,
+      "token_sha256": "ceef3dbfa2e53502a517ae225fc6b37d55caea31d69ca77978e8997c5d0dc52e"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.2875758778048976,
+      "count": 1024,
+      "id": 2795,
+      "input_start": 25013248,
+      "nll": 3366.477698872215,
+      "token_sha256": "f81896ef09dff35fede33cbac4428c10e65a5cf6c5a52b31b0d5e0d233524f22"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 2.9456143559504824,
+      "count": 1024,
+      "id": 2796,
+      "input_start": 25014272,
+      "nll": 3016.309100493294,
+      "token_sha256": "dfde15bd8a9ed842f0674c628e5600b54a7c0110149d729a5d3a151419a2e9a4"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.017352601956321,
+      "count": 1024,
+      "id": 2797,
+      "input_start": 25015296,
+      "nll": 4113.769064403273,
+      "token_sha256": "86b7c6107acdcf14391e71706e5bdf2d3085848cad5939834b0f9e192295e24a"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.358259691355215,
+      "count": 1024,
+      "id": 2798,
+      "input_start": 25016320,
+      "nll": 4462.85792394774,
+      "token_sha256": "4b7cb42f940ada74e523465c95efcd03860252355600b251ad9836d4a7ea81a9"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.9859446369855753,
+      "count": 1024,
+      "id": 2799,
+      "input_start": 25017344,
+      "nll": 4081.607308273229,
+      "token_sha256": "eb7d4aa81348e7bb5c52a195c3728dad34bb3ef82eb5f7174104ea818d27b1d1"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.9325887777110324,
+      "count": 1024,
+      "id": 2800,
+      "input_start": 25018368,
+      "nll": 4026.970908376097,
+      "token_sha256": "6f2b3b8127bafd4eca2e0a8f518dbc5a3a1f6aa1b4fe20bb8ba1a1b0568bbc78"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.219660612726329,
+      "count": 1024,
+      "id": 2801,
+      "input_start": 25019392,
+      "nll": 4320.932467431761,
+      "token_sha256": "7966b9e1995694eef4186673da47910a5a4f6d483629496cfad8e2e5b910d044"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.315384949934469,
+      "count": 1024,
+      "id": 2802,
+      "input_start": 25020416,
+      "nll": 4418.954188732896,
+      "token_sha256": "01d858d4fea543d0a350e12cfa788b32cbb78df83c404ab9756203a0df542ca3"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.371450254632592,
+      "count": 1024,
+      "id": 2803,
+      "input_start": 25021440,
+      "nll": 4476.365060743774,
+      "token_sha256": "632fbc25e96d5ecde93033eface8e31f140d2302073e0dfe1ca2e1ba20ddc26e"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.761406653941819,
+      "count": 1024,
+      "id": 2804,
+      "input_start": 25022464,
+      "nll": 3851.6804136364226,
+      "token_sha256": "2fc2857fe7bfb3738afaf1a93971b5c99a283c5dd1666266faf1d592ea1f0280"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.5261217389808053,
+      "count": 1024,
+      "id": 2805,
+      "input_start": 25023488,
+      "nll": 3610.7486607163446,
+      "token_sha256": "6432a7a6396d07c31cb59116576dfacc8bb23812f0c5ce94950237436bc873f1"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.6494941633996802,
+      "count": 1024,
+      "id": 2806,
+      "input_start": 25024512,
+      "nll": 3737.0820233212726,
+      "token_sha256": "5edb398e24166dc2173129cf142fb147c451a32315a3adee9e14288819f895cb"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.9906233716938786,
+      "count": 1024,
+      "id": 2807,
+      "input_start": 25025536,
+      "nll": 4086.3983326145317,
+      "token_sha256": "9f32f86504f00af8faadca55cbb54a9eeecaca6adc1a2b68fde315ec7f5e86f8"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.8261608378122673,
+      "count": 1024,
+      "id": 2808,
+      "input_start": 25026560,
+      "nll": 3917.9886979197618,
+      "token_sha256": "d29c7891ffd578c2c9e4f3d6dfacf0f2b5f235f96119ac800763469a372d5617"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.233964000795055,
+      "count": 1024,
+      "id": 2809,
+      "input_start": 25027584,
+      "nll": 3311.5791368141363,
+      "token_sha256": "ab26907db911b73ad13c5929aa4ed87eb36df1be8a0b02af181ff8d35d24d515"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.687091358253273,
+      "count": 1024,
+      "id": 2810,
+      "input_start": 25028608,
+      "nll": 3775.5815508513515,
+      "token_sha256": "3318ab76e61faffbcc467ae02be95ff465728ae9383eb235f149ea3cb9d52d27"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.833717072393597,
+      "count": 1024,
+      "id": 2811,
+      "input_start": 25029632,
+      "nll": 3925.7262821310433,
+      "token_sha256": "bd3582a9e11e58209237ee3d8667825d5d3cd77445b2f4d4bd187f08f5d2a6fe"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.765262107470548,
+      "count": 1024,
+      "id": 2812,
+      "input_start": 25030656,
+      "nll": 3855.628398049841,
+      "token_sha256": "008224835aa9edb415ab1b48c4abb77c087fc48cbafc5983f09b6c67af3aee7b"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.1369475130704245,
+      "count": 1024,
+      "id": 2813,
+      "input_start": 25031680,
+      "nll": 4236.234253384115,
+      "token_sha256": "c4605b25c991c15ae217afb5349d1ab57f9c249c1c08b97cbf1aada30d1e12ee"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 3.674654057473788,
+      "count": 1024,
+      "id": 2814,
+      "input_start": 25032704,
+      "nll": 3762.8457548531587,
+      "token_sha256": "626e46ddf3dab4591a08472e3f455b1533b2c0c8e654dab297100283cae46305"
+    },
+    {
+      "canonical_group": 43,
+      "ce": 4.079855552770596,
+      "count": 1024,
+      "id": 2815,
+      "input_start": 25033728,
+      "nll": 4177.77208603709,
+      "token_sha256": "2b1c25634097a07e1d627720df8a679a8dde7ff69461e2c915637fc63d27e932"
+    }
+  ],
+  "seconds": 25.5551815032959
+}

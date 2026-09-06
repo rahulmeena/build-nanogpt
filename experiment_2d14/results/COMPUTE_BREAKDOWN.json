@@ -1,0 +1,39 @@
+{
+  "disposable": {
+    "CPU_checks_are_local_and_unbilled": true,
+    "additional_short_logit_reference_and_row_isolation_checks": true,
+    "full_production_backbone_passes": 17,
+    "full_production_ce_evaluated_targets": 8912896,
+    "full_production_diagnostic_ce1_targets": 3670016,
+    "full_production_disposable_optimizer_updates": 7,
+    "full_production_nonzero_ce_targets": 5242880,
+    "inference_ce_targets": 524288,
+    "inference_full_batches": 4,
+    "objective_fixture_ce_targets": 5600,
+    "objective_fixture_shape": [
+      2,
+      70
+    ],
+    "objective_independent_forward_and_reference_passes": 40,
+    "preflight_counters_are_not_scientific_updates": true,
+    "recovery_prefilled_optimizer_counter": 30,
+    "source": "Frozen preflight and verification implementation; excludes activation-checkpoint recomputation from pass exposure",
+    "temporal_fixture_ce_targets": 1680,
+    "temporal_fixture_forward_passes": 12
+  },
+  "gpu_count": 1,
+  "other_includes": "Reserved preparation, initial round-trip transfer, startup repair, saves, setup, residual export/shutdown time; overlapping exports are not double counted.",
+  "rate_per_hour": 1.59,
+  "seconds": {
+    "disposable_cuda_preflight": 244.80880522727966,
+    "other_billed_time": 1403.8381419181824,
+    "scientific_scoring": 6331.000377893448,
+    "scientific_training": 9475.40756392479
+  },
+  "startup_failure": {
+    "error": "KeyError",
+    "message": "'RUNPOD_POD_ID'",
+    "time": 1788713856.7785752,
+    "traceback": "Traceback (most recent call last):\n  File \"/workspace/exp2d14/ce1_free_20260906/code/experiment_2d14/runner.py\", line 120, in <module>\n    try:run(args)\n        ^^^^^^^^^\n  File \"/workspace/exp2d14/ce1_free_20260906/code/experiment_2d14/runner.py\", line 19, in run\n    assert os.environ['RUNPOD_POD_ID']==binding['pod_id']\n           ~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"<frozen os>\", line 685, in __getitem__\nKeyError: 'RUNPOD_POD_ID'\n"
+  }
+}
