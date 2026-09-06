@@ -1,0 +1,54 @@
+{
+  "all_cache_bookkeeping_retained": true,
+  "block_numbering": "zero based in code",
+  "conditions": {
+    "H_ALL_OFF": [
+      0,
+      2,
+      4
+    ],
+    "H_B1_OFF": [
+      0
+    ],
+    "H_B3_OFF": [
+      2
+    ],
+    "H_B5_OFF": [
+      4
+    ],
+    "H_ON": []
+  },
+  "off_weights": [
+    1,
+    0
+  ],
+  "read_skipped": true,
+  "recurrent_lags": {
+    "B1": [
+      1,
+      1023
+    ],
+    "B3": [
+      31,
+      1023
+    ],
+    "B5": [
+      63,
+      1023
+    ]
+  },
+  "router_bypassed": true,
+  "scientific_training_updates": 0,
+  "trajectories": "independent empty state per batch and condition",
+  "windows": {
+    "B1": 2,
+    "B3": 32,
+    "B5": 64,
+    "other": 1024
+  },
+  "writers": {
+    "B1": "B12",
+    "B3": "B10",
+    "B5": "B8"
+  }
+}
