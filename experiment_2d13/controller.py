@@ -69,9 +69,10 @@ def launch(archive,bundle):
     threading.Thread(target=tick,daemon=True).start()
     try:
         hb('STAGING');r.run(['mkdir','-p',root+'/code',root+'/inputs',run])
-        r.transfer(bundle,root+'/bundle.tar.gz')
-        assert r.run(['sha256sum',root+'/bundle.tar.gz']).decode().split()[0]==sha256(bundle)
-        r.run(['tar','--no-same-owner','--no-same-permissions','-xzf',root+'/bundle.tar.gz','-C',root+'/code'])
+        bundle_remote=root+'/bundle-'+sha256(bundle)+'.tar.gz'
+        r.transfer(bundle,bundle_remote)
+        assert r.run(['sha256sum',bundle_remote]).decode().split()[0]==sha256(bundle)
+        r.run(['tar','--no-same-owner','--no-same-permissions','-xzf',bundle_remote,'-C',root+'/code'])
         started=time.time()
         initial_path='/workspace/exp2d13/local_scratch_20260906_attempt01/inputs/local_initial.pt'
         assert r.run(['sha256sum',initial_path]).decode().split()[0]==sha256(archive/'local_initial.pt')
