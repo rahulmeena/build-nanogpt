@@ -7,6 +7,20 @@ from .checkpoints import validate
 from .model import from_state,tensor_identity
 from .analysis import analyze,NAMES
 
+def verify_evaluation(raw,label,panel,checkpoint_sha,model_identity,condition):
+    from .evaluate import collect
+    value=read_json(raw/f'evaluations/{label}_COMPLETE.json');binding=value['binding']
+    assert value['passed'] and value['checkpoint_unchanged'] and value['tensors_unchanged']
+    assert binding['checkpoint_sha256']==checkpoint_sha and binding['model_tensor_identity']==model_identity
+    assert binding['condition']==condition and binding['panel_identity']==panel['identity']
+    assert binding['code_identity']==identity(read_json(FROZEN/'CODE_IDENTITY.json'))
+    assert binding['configuration_identity']==identity(read_json(FROZEN/'EXECUTION.json'))
+    assert binding['batch_size']==128 and binding['mode']=='true_incremental_bf16_fp32_ce_fp64_nll'
+    rebuilt=collect(raw/'evaluations',label,panel,binding,128)
+    for key in ['rows','nll','count','ce','ppl']:assert rebuilt[key]==value[key],(label,key)
+    for r,ref in zip(value['rows'],panel['sequences']):assert r['canonical_group']==ref.get('canonical_group',ref['id']//64)
+    return value
+
 def figures(out,analysis,raw,metrics,lmon=None):
     import matplotlib
     matplotlib.use('Agg')
@@ -48,6 +62,10 @@ def finalize(archive,l_archive=None):
     assert stop['provider']['desiredStatus']=='EXITED' and stop['provider']['runtimeStatus']=='stopped'
     billing=read_json(archive/'RUNTIME_ACCOUNTING.json');assert billing['within_ceiling']
     raw=archive/'raw';out=PACKAGE/'results';torch.set_num_threads(4)
+    for name in ['CPU_AUDIT.json','INPUT_AUDIT.json','LOCAL_READY.json','ANALYSIS_REHEARSAL.json','PARTITION_COVERAGE_AUDIT.json']:
+        assert read_json(out/name)['passed'],name
+    for name in ['PREFLIGHT.json','CUDA_OBJECTIVE.json','CUDA_TEMPORAL.json','CUDA_UPDATE_GEOMETRY.json','CUDA_RESUME.json']:
+        assert read_json(raw/name)['passed'],name
     export=read_json(archive/'EXPORT_VERIFICATION.json');assert export['passed']
     for name,meta in export['files'].items():assert sha256(raw/name)==meta['sha256'] and (raw/name).stat().st_size==meta['bytes']
     finished=read_json(raw/'GPU_WORK_FINISHED.json');assert finished['passed'] and finished['R_complete']
@@ -62,7 +80,7 @@ def finalize(archive,l_archive=None):
     for u in SCHEDULE:
         path=raw/f'checkpoints/u{u:05d}.pt';p=torch.load(path,map_location='cpu',mmap=True,weights_only=False)
         audits[str(u)]=validate(p);assert sha256(path)==read_json(str(path)+'.manifest.json')['sha256']
-        mon=read_json(raw/f'evaluations/R_monitor_u{u:05d}_COMPLETE.json')
+        mon=verify_evaluation(raw,f'R_monitor_u{u:05d}',read_json(FROZEN/'MONITOR.json'),sha256(path),audits[str(u)]['model_tensor_identity'],'H_ON')
         assert mon['count']==1310720 and len(mon['rows'])==1280 and mon['binding']['panel_identity']==read_json(FROZEN/'MONITOR.json')['identity']
         assert mon['binding']['checkpoint_sha256']==sha256(path)
     assert audits['0']['model_tensor_identity']==FULL_INIT_SHA and p['loader']==expected[-1]['data']['after']
@@ -79,6 +97,8 @@ def finalize(archive,l_archive=None):
         atomic_bytes(out/'INTERIM_REPORT.md',b'R complete; joint comparison awaiting L. No complete joint result or final-success tag is warranted.\n')
         return
     provenance=read_json(raw/'L_PROVENANCE.json');assert provenance['passed']
+    lcode=read_json(out/'L_CODE_PROVENANCE_AUDIT.json')
+    assert lcode['passed'] and lcode['source_code_identity']==provenance['source_code_identity']
     lmon=None
     assert l_archive is not None,'local L checkpoint and source stream must be independently verified'
     lraw=l_archive/'raw'
@@ -96,8 +116,18 @@ def finalize(archive,l_archive=None):
         assert v['binding']['panel_identity']==read_json(FROZEN/'MONITOR.json')['identity']
         lmon.append(dict(update=u,ce=v['ce'],targets_million=u*524288/1e6,
             gpu_hours=sum(r['training_seconds'] for r in lmetrics if r['completed_updates']<=u)/3600))
-    summaries={label:read_json(raw/f'evaluations/{label}_COMPLETE.json') for label in CONDITIONS}
-    panel=read_json(FROZEN/'PANEL.json');analysis=analyze(summaries,panel)
+    lgit=read_json(out/'L_GIT_PROVENANCE.json') if (out/'L_GIT_PROVENANCE.json').exists() else dict(status='Final source archival not yet published by 2D13.')
+    if 'checkpoint_sha256' in lgit:assert lgit['checkpoint_sha256']==provenance['sha256']
+    panel=read_json(FROZEN/'PANEL.json');summaries={}
+    for label in CONDITIONS:
+        if label.startswith('H_'):digest,model_id=H_SHA,H_MODEL_SHA
+        elif label.startswith('R_'):digest,model_id=sha256(raw/'checkpoints/u01000.pt'),audits['1000']['model_tensor_identity']
+        else:digest,model_id=provenance['sha256'],provenance['model_tensor_identity']
+        condition='H_ALL_OFF' if label in ('H_ALL_OFF','R_ALL_OFF','L_LOCAL') else 'H_ON'
+        summaries[label]=verify_evaluation(raw,label,panel,digest,model_id,condition)
+    analysis=analyze(summaries,panel)
+    analysis['changed_noninferiority']=analysis['primary']['contrasts']['A']['R_noninferior_to_H']!=analysis['group_sensitivity']['contrasts']['A']['R_noninferior_to_H']
+    analysis['changed_joint_goal']=analysis['primary']['joint_goal_met']!=analysis['group_sensitivity']['joint_goal_met']
     assert summaries['R_ON']['binding']['checkpoint_sha256']==sha256(raw/'checkpoints/u01000.pt')
     assert summaries['L_LOCAL']['binding']['checkpoint_sha256']==provenance['sha256']
     atomic_json(out/'ANALYSIS.json',analysis);figures(out,analysis,raw,metrics,lmon)
@@ -112,7 +142,7 @@ def finalize(archive,l_archive=None):
     for f in raw.rglob('*'):
         if f.is_file() and f.suffix in ('.json','.jsonl'):
             target=out/'run'/f.relative_to(raw);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(f,target)
-    audit=dict(passed=True,joint_complete=True,**base_audit,L_provenance=provenance,coverage=dict(rows=20480,targets=20971520),
+    audit=dict(passed=True,joint_complete=True,**base_audit,L_provenance=provenance,L_code_provenance=lcode,L_git_provenance=lgit,coverage=dict(rows=20480,targets=20971520),
         monitoring_targets=6553600,total_new_scientific_predictions=27525120,six_contrast_adjustment_verified=True,
         final_conditions_same_execution=True,R_training_gpu_hours=sum(r['training_seconds'] for r in metrics)/3600,
         H_training_gpu_hours=read_json(FROZEN/'H_PREFIX_VERIFIED.json')['gpu_hours'],completed_at=time.time())
@@ -121,6 +151,17 @@ def finalize(archive,l_archive=None):
     outcome='The prespecified joint goal was met.' if joint else 'The prespecified joint goal was not established.'
     table='\n'.join(f"| {n} | {analysis['endpoints'][n]['ce']:.10f} | {analysis['endpoints'][n]['ppl']:.8f} |" for n in CONDITIONS)
     contrast_table='\n'.join(f"| {n} | {v['mean']:.10f} | [{v['raw_95'][0]:.10f}, {v['raw_95'][1]:.10f}] | [{v['adjusted_99_1666666667'][0]:.10f}, {v['adjusted_99_1666666667'][1]:.10f}] |" for n,v in primary['contrasts'].items())
+    group_table='\n'.join(f"| {n} | [{v['raw_95'][0]:.10f}, {v['raw_95'][1]:.10f}] | [{v['adjusted_99_1666666667'][0]:.10f}, {v['adjusted_99_1666666667'][1]:.10f}] |" for n,v in analysis['group_sensitivity']['contrasts'].items())
+    flag_table='\n'.join('| '+n+' | '+' | '.join(str(v['flags'][k]) for k in ('positive','beyond_reference','negative','material_negative','equivalence'))+' |' for n,v in primary['contrasts'].items())
+    win_table='\n'.join(f"| {n} | {v['positive_fraction']:.6f} | {v['negative_fraction']:.6f} | {v['tie_fraction']:.6f} |" for n,v in primary['contrasts'].items())
+    resources=finished['resources']
+    stage_seconds=dict(scientific_training=resources['training_seconds'],scientific_scoring=resources['evaluation_seconds'],disposable_cuda_preflight=resources['preflight_seconds'])
+    stage_seconds['other_billed_time']=billing['cumulative_billed_seconds']-sum(stage_seconds.values())
+    assert stage_seconds['other_billed_time']>=0
+    atomic_json(out/'COMPUTE_BREAKDOWN.json',dict(seconds=stage_seconds,gpu_count=1,rate_per_hour=1.59,
+        other_includes='Reserved preparation, initial round-trip transfer, startup repair, saves, setup, residual export/shutdown time; overlapping exports are not double counted.',
+        startup_failure=read_json(raw/'history/startup01/FAILURE.json'),disposable=read_json(out/'DISPOSABLE_ACCOUNTING.json')))
+    timing_table='\n'.join(f'| {n.replace("_"," ")} | {seconds:.3f} | {seconds/3600:.6f} | ${seconds/3600*1.59:.6f} |' for n,seconds in stage_seconds.items())
     report=f'''# Experiment 2D14 — CE1-free H at 524M targets
 
 {outcome} R noninferiority to H: {a['R_noninferior_to_H']}; R quality improvement beyond the reference versus H: {a['flags']['beyond_reference']}; versus L: {primary['contrasts']['B']['flags']['beyond_reference']}. Noninferiority without superiority is not a better-predictor finding.
@@ -141,6 +182,22 @@ Contrasts: A=H_ON−R_ON, B=L_LOCAL−R_ON, C=L_LOCAL−H_ON, G_H=H_ALL_OFF−H_
 
 Primary flags and sequence win/loss/tie fractions are retained for every contrast in `ANALYSIS.json`. Fifty thousand paired sequence resamples use NumPy default_rng(20260928), FP64 means and linear percentiles. One sampled index vector serves all six contrasts. The Bonferroni family has six contrasts. The paired 64-group sensitivity analysis uses 50,000 resamples and seed 20260929; changed flags: {json.dumps(analysis['changed_flags'])}. These intervals estimate evaluation-unit uncertainty for fixed trajectories, not training-seed replication.
 
+| Contrast | Positive | Beyond reference | Negative | Material negative | Equivalent |
+|---|---|---|---|---|---|
+{flag_table}
+
+| Contrast | Sequence win fraction (>0) | Loss fraction (<0) | Tie fraction (=0) |
+|---|---:|---:|---:|
+{win_table}
+
+Group sensitivity intervals:
+
+| Contrast | Raw 95% CI | Family-adjusted 99.1666666667% CI |
+|---|---|---|
+{group_table}
+
+Group sensitivity joint goal: {analysis['group_sensitivity']['joint_goal_met']}; noninferiority: {analysis['group_sensitivity']['contrasts']['A']['R_noninferior_to_H']}. The joint-goal conclusion changed: {analysis['changed_joint_goal']}; noninferiority changed: {analysis['changed_noninferiority']}.
+
 The inherited delta_CE=0.0001 is a small-effect reference, not a deployment-value threshold. The joint goal requires lo(A)>−delta, lo(G_R)>delta and lo(I)>delta. Failure to establish benefit does not establish equivalence. Greater OFF sensitivity can reflect coadaptation or mixture rescaling and does not uniquely prove more useful recurrent content. No architecture adoption or continuation follows automatically.
 
 H-to-R PPL reduction =100*(PPL_H_ON−PPL_R_ON)/PPL_H_ON: {analysis['relative_ppl']['H_to_R_reduction_percent']:.7f}%. L-to-R uses PPL_L_LOCAL as denominator: {analysis['relative_ppl']['L_to_R_reduction_percent']:.7f}%.
@@ -157,9 +214,17 @@ R training-only compute: {audit['R_training_gpu_hours']:.8f} GPU-hours; historic
 
 Cumulative billed compute including the user's requested reserved preparation, preflight, training, monitoring, final scoring, transfers and verified shutdown: {billing['gpu_hours']:.6f} GPU-hours / ${billing['compute_cost']:.6f} at $1.59/hour. Both ceilings were respected. Storage is separate; the shared volume was provider-verified at 200 GB. Runpod lists standard network storage at $0.07/GB/month ($14/month for 200 GB), while the exact invoice/tier rate is not available in the pod response. Source: https://docs.runpod.io/storage/network-volumes. Stage timing and residual overhead are retained in the raw resource ledger; provider invoice reconciliation is not available.
 
+| Stage | Billed seconds | GPU-hours | Compute cost |
+|---|---:|---:|---:|
+{timing_table}
+
+Other billed time includes the user's reserved preparation, transfer benchmark, startup repair, saves, setup and residual export/shutdown time. Background exports overlap useful work and are not charged twice. The first launcher failed before CUDA/scientific work because the SSH environment omitted RUNPOD_POD_ID; the repaired launcher read only that field from PID 1 and verified the assigned pod. No scientific update was replayed for this repair. The independent hard deadline remained armed. Disposable work is itemized in `DISPOSABLE_ACCOUNTING.json` and `COMPUTE_BREAKDOWN.json`.
+
 Checkpoints u0/u250/u500/u750/u1000 were atomically published, reopened, fully validated and independently hash-verified on the shared volume and local Mac. The exact initial full-H identity is `{FULL_INIT_SHA}`. Every R batch hash matched before applying its update, with terminal cursor `{p['loader']}`. All active optimizer step counters equal 1,000; compatibility scalars are unchanged. CE1 exclusion, attached writer gradients and detached-source controls, checkpointing variants, normalization, full-shape CUDA execution, u31→u32 recovery and same-shape incremental references passed. Disposable probes are distinct from the single scientific trajectory.
 
 L provenance and the complete stream were independently verified using its atomically completed checkpoint, saved initialization, frozen routers, optimizer state and local durable source copies. H and original initialization hashes were rechecked; this task wrote only its 2D14 namespace and never changed 2D13 code, checkpoints or pod. The final saved R checkpoint's evaluation ledger is reconciled with the subsequent immutable five-condition raw completion artifacts. Final audit: `FINAL_AUDIT.json`.
+
+L source archival provenance: `{json.dumps(lgit,sort_keys=True)}`.
 
 Pod `{stop['provider']['id']}` is verified EXITED/stopped. Large files remain outside Git under `{archive}` and `{export['persistent_root']}` on volume yhzyb27fb5. This is one early matched trajectory, not a 10B quality determination against GPT-2. No additional training was launched.
 '''
