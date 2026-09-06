@@ -4,7 +4,16 @@ from pathlib import Path
 from datetime import datetime,timezone
 from .common import *
 from . import provider
-from experiment_2d11.controller import Remote
+from experiment_2d11.controller import Remote as SealedRemote
+
+
+class Remote(SealedRemote):
+    def run(self,argv,timeout=60,input=None):
+        p=subprocess.run(['ssh',*self.common,'-p',str(self.port),'root@'+self.host,shlex.join(argv)],
+            input=input,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=timeout)
+        if p.returncode:
+            raise RuntimeError('remote command failed, rc='+str(p.returncode)+'; stderr='+p.stderr.decode(errors='replace')[-3000:])
+        return p.stdout
 
 
 def guard(binding_path,archive):
