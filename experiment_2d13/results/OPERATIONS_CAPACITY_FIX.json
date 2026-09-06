@@ -1,0 +1,88 @@
+{
+  "after_progress": {
+    "micro": 11,
+    "stage": "TRAIN",
+    "time": 1788713538.3201725,
+    "update": 371
+  },
+  "before_progress": {
+    "micro": 14,
+    "stage": "TRAIN",
+    "time": 1788713517.2204447,
+    "update": 366
+  },
+  "binding": {
+    "billing_start": 1788708956.0,
+    "gpu_count": 1,
+    "hard_deadline": 1788730556.0,
+    "max_dollars": 10,
+    "max_gpu_hours": 6,
+    "pod_id": "y96gntb89tzuvj",
+    "prior_gpu_hours": 0,
+    "rate": 1.59,
+    "user_authorized_hold_during_local_preparation": true,
+    "volume_id": "yhzyb27fb5"
+  },
+  "caffeinate_pid": 57064,
+  "live_mutations": "none; only local supervision processes replaced",
+  "live_status": {
+    "costPerHr": 1.59,
+    "desiredStatus": "RUNNING",
+    "gpuCount": 1,
+    "id": "y96gntb89tzuvj",
+    "imageName": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404",
+    "lastStatusChange": "Resumed by user: Sun Sep 06 2026 15:35:56 GMT+0000 (Coordinated Universal Time)",
+    "machine": {
+      "dataCenterId": "US-MD-1",
+      "diskThroughputMBps": 6503,
+      "gpuId": "NVIDIA A100-SXM4-80GB",
+      "location": "US",
+      "maxDownloadSpeedMbps": 3576,
+      "maxUploadSpeedMbps": 1921,
+      "reservedCountVersion": 49485,
+      "secureCloud": true,
+      "supportPublicIp": true
+    },
+    "name": "continental_turquoise_woodpecker",
+    "networkVolume": {
+      "dataCenterId": "US-MD-1",
+      "id": "yhzyb27fb5",
+      "name": "unlikely_lime_flamingo",
+      "size": 200
+    },
+    "networkVolumeId": "yhzyb27fb5",
+    "runtimeStatus": "running"
+  },
+  "loaded_code_verified": true,
+  "new_controller": {
+    "binding_identity": "c759550cc99403ef5500550fac601c0f460c7e61ba7bce256e67e005b0c44c50",
+    "mode": "attach",
+    "pid": 57051,
+    "provider_loaded_code": {
+      "guard": "019a4f6938ba388313c482fc85c253f4abf57eecab6ab8c9680d886a647f5e64",
+      "status": "4b5f19db70d7eb86cf72c1d461a4afda0c802d1a3c00ddaabde37c9abd2ab020",
+      "stop": "2bb01171c01f681a087c42aebdc194d4fc19261406fada7c7f84ef1313a6de66",
+      "stopped": "b6701a6b9dc17eb8d3961474951678cc2df99cddeb5dbcf732a96153b8ce0ed6"
+    },
+    "remote_pid": 3287,
+    "root": "/workspace/exp2d13/local_scratch_20260906_attempt02",
+    "time": 1788713535.123074
+  },
+  "new_guard": {
+    "binding_identity": "c759550cc99403ef5500550fac601c0f460c7e61ba7bce256e67e005b0c44c50",
+    "pid": 57047,
+    "provider_loaded_code": {
+      "guard": "019a4f6938ba388313c482fc85c253f4abf57eecab6ab8c9680d886a647f5e64",
+      "status": "4b5f19db70d7eb86cf72c1d461a4afda0c802d1a3c00ddaabde37c9abd2ab020",
+      "stop": "2bb01171c01f681a087c42aebdc194d4fc19261406fada7c7f84ef1313a6de66",
+      "stopped": "b6701a6b9dc17eb8d3961474951678cc2df99cddeb5dbcf732a96153b8ce0ed6"
+    },
+    "time": 1788713529.662943
+  },
+  "passed": true,
+  "remote_pid_unchanged": 3287,
+  "scientific_bundle_unchanged": true,
+  "tests": "python -m unittest experiment_2d13.test_provider_capacity: 4 passed",
+  "time": 1788713535.171675,
+  "verified_continuing_at": 1788713557.179894
+}

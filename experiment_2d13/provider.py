@@ -1,5 +1,5 @@
 """Exact assigned pod; independent cumulative-budget stop guard."""
-import os,sys,time
+import hashlib,marshal,os,sys,time
 from .common import *
 sys.path.insert(0,str(REPO/'scripts'))
 from experiment_2d5c_runpod_guard import RunPodClient
@@ -7,9 +7,15 @@ POD='y96gntb89tzuvj';VOLUME='yhzyb27fb5'
 def call(argv):return RunPodClient()._call(argv,'2D13 authorized assigned-resource operation')
 def status():
     p=call(['pod','get',POD,'--include-machine','--include-network-volume','-o','json'])
-    assert p['id']==POD and p['gpuCount']==1 and p['networkVolumeId']==VOLUME and p['networkVolume']['size']==190
+    # Capacity can change independently of identity. In particular it must never
+    # prevent the assigned pod from reaching the stop command.
+    assert p['id']==POD and p['gpuCount']==1
+    assert p['networkVolumeId']==VOLUME and p['networkVolume']['id']==VOLUME
     return {k:p.get(k) for k in ('id','name','desiredStatus','runtimeStatus','gpuCount','networkVolumeId','costPerHr','machine','networkVolume','lastStatusChange','imageName')}
 def stopped(p):return p['desiredStatus']=='EXITED' and p['runtimeStatus']=='stopped'
+def loaded_code_identity():
+    """Fingerprint executable objects, not merely potentially newer disk bytes."""
+    return {f.__name__:hashlib.sha256(marshal.dumps(f.__code__,2)).hexdigest() for f in (status,stopped,stop,guard)}
 def stop(path,reason):
     events=[]
     for _ in range(30):
@@ -24,7 +30,7 @@ def stop(path,reason):
     raise RuntimeError('assigned provider stop could not be verified')
 def guard(archive):
     b=read_json(archive/'binding.json')
-    atomic_json(archive/'GUARD_ARMED.json',dict(pid=os.getpid(),time=time.time(),binding_identity=identity(b)))
+    atomic_json(archive/'GUARD_ARMED.json',dict(pid=os.getpid(),time=time.time(),binding_identity=identity(b),provider_loaded_code=loaded_code_identity()))
     while True:
         if (archive/'STOP_VERIFICATION.json').exists() and read_json(archive/'STOP_VERIFICATION.json').get('passed'):return
         reason=None
