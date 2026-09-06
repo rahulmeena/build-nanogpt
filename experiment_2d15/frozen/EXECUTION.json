@@ -1,0 +1,43 @@
+{
+  "accumulation": 4,
+  "activation_checkpointing": "non_reentrant",
+  "arms": [
+    "L_nf4",
+    "R_nf4"
+  ],
+  "compile": false,
+  "context": 1024,
+  "ddp": {
+    "broadcast_buffers": false,
+    "find_unused_parameters": false,
+    "static_graph": false
+  },
+  "endpoint": 5000,
+  "evaluation_batch": 128,
+  "foreach": null,
+  "fused": false,
+  "global_targets": 524288,
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "initial_sha256": "387b8b791ced54c2f1c0da65c47d00f35e8c3d1514897bad4c70db36db6c5c94",
+  "matmul_precision": "high",
+  "microbatch": 32,
+  "milestones": [
+    1000,
+    2000,
+    5000
+  ],
+  "monitor_updates": [
+    0,
+    250,
+    500,
+    750,
+    1000,
+    2000,
+    3000,
+    4000,
+    5000
+  ],
+  "panel_identity": "7da68b4aaa6ada5c0aabed9b963376b3a5d180bfcc7339df50012575e5672a4b",
+  "torch": "2.8.0+cu128",
+  "world_size": 4
+}
