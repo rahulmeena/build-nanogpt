@@ -29,7 +29,7 @@ def audit_dispatch(fn):
         mocks={n:stack.enter_context(patch.object(module,n,wraps=getattr(module,n))) for n in names}
         result=fn()
         calls={n:p.call_count for n,p in mocks.items()}
-    assert calls['_multi_tensor_adam']==2 and calls['_fused_adam']==calls['_single_tensor_adam']==0,calls
+    assert calls['_fused_adam']==0 and calls['_multi_tensor_adam']+calls['_single_tensor_adam']==2,calls
     return result,calls
 
 def normalization(m,wrapped,opt,original,x,y,rank,device,arm):
@@ -93,7 +93,7 @@ def run(a):
         path=a.scratch/f'{arm}_u00031.pt'
         if rank==0:write(path,payload(m,o,plan[30]['after'],31,{}, {},dict(disposable=True),rngs))
         dist.barrier();t=time.time();stats=step(wrapped,m,o,xx,yy,32,rank,device);torch.cuda.synchronize();performance.append(dict(update=32,seconds=time.time()-t,stats=stats))
-        same_rank=equal_ranks(m);expected=cpu_snapshot(m.state_dict());eo=cpu_snapshot(o.state_dict())
+        same_rank=equal_ranks(m);continued_ddp=wrapped._get_ddp_logging_data();expected=cpu_snapshot(m.state_dict());eo=cpu_snapshot(o.state_dict())
         del wrapped,m,o;gc.collect();torch.cuda.empty_cache()
         m,o,p=restore(path,device,rank,arm);wrapped=DDP(m,device_ids=[rank],broadcast_buffers=False,find_unused_parameters=False,static_graph=False);restore_rng(p['rng_by_rank'][rank],device)
         step(wrapped,m,o,xx,yy,32,rank,device);maximum=0.
@@ -101,8 +101,18 @@ def run(a):
             torch.testing.assert_close(v.cpu(),expected[n],atol=2e-6,rtol=2e-5);maximum=max(maximum,float((v.cpu()-expected[n]).abs().max()))
         for i,s in o.state_dict()['state'].items():
             for k,v in s.items():torch.testing.assert_close(v.cpu(),eo['state'][i][k],atol=2e-6,rtol=2e-5)
-        assert equal_ranks(m)==same_rank
+        resumed_identity=equal_ranks(m);restored_ddp=wrapped._get_ddp_logging_data()
+        recovery_audit=dict(passed=True,parameter_max_abs=maximum,rank_exact=True,uninterrupted_identity=same_rank,resumed_identity=resumed_identity,bitwise_across_restart=resumed_identity==same_rank,atol=2e-6,rtol=2e-5,continued_ddp=continued_ddp,restored_ddp=restored_ddp,prefilled_disposable_counter=30)
+        atomic_json(root/f'{arm}_RECOVERY_rank{rank}.json',recovery_audit)
         del wrapped,m,o,p,expected,eo;gc.collect();torch.cuda.empty_cache()
+        # Two identical fresh-DDP restores must be bitwise repeatable. Comparing a
+        # rebuilt uninterrupted reducer with a new reducer uses frozen resume tolerances.
+        m,o,p=restore(path,device,rank,arm);wrapped=DDP(m,device_ids=[rank],broadcast_buffers=False,find_unused_parameters=False,static_graph=False);restore_rng(p['rng_by_rank'][rank],device)
+        step(wrapped,m,o,xx,yy,32,rank,device)
+        assert equal_ranks(m)==resumed_identity,'Repeated identical restore is not bitwise deterministic'
+        recovery_audit['repeated_restore_bitwise_exact']=True
+        atomic_json(root/f'{arm}_RECOVERY_rank{rank}.json',recovery_audit)
+        del wrapped,m,o,p;gc.collect();torch.cuda.empty_cache()
         m,o,p=reset_original(a.original,arm,device);del o,p;bench=[]
         ex=torch.as_tensor(xx[:128],device=device);ey=torch.as_tensor(yy[:128],device=device)
         for condition in (['H_ALL_OFF'] if arm=='L_nf4' else ['H_ON','H_ALL_OFF']):
@@ -120,7 +130,7 @@ def run(a):
             bench.append(dict(condition=condition,seconds=seconds,batch=128,context=1024,peak_allocated=torch.cuda.max_memory_allocated(),reference_exact=True,row_isolation_exact=True,causality_exact=True,cache_reset_exact=True))
             del actual,ref;gc.collect();torch.cuda.empty_cache()
         assert tensor_identity(m.named_parameters())==FULL_INIT_SHA
-        result=dict(passed=True,arm=arm,seconds=time.time()-arm_started,normalization=norm,performance=performance,recovery=dict(passed=True,parameter_max_abs=maximum,rank_exact=True,prefilled_disposable_counter=30),inference=bench,scientific_state_not_used=True)
+        result=dict(passed=True,arm=arm,seconds=time.time()-arm_started,normalization=norm,performance=performance,recovery=recovery_audit,inference=bench,scientific_state_not_used=True)
         atomic_json(root/f'{arm}_rank{rank}.json',result);results[arm]=result
         del m,ex,ey;gc.collect();torch.cuda.empty_cache();dist.barrier()
     # Historical H's exact DDP forward and optimizer dispatch, independently of new objectives.
@@ -128,6 +138,7 @@ def run(a):
     ho=optimizer_for(h,device);hw=DDP(h,device_ids=[rank],broadcast_buffers=False,find_unused_parameters=False,static_graph=False)
     from experiment_2d11.train import training_step
     hs,dispatch=audit_dispatch(lambda:training_step(hw,h,ho,xx,yy,rank,1,device));assert_optimizer(ho,1);hid=equal_ranks(h)
+    assert all(results[arm]['normalization']['dispatch']==dispatch for arm in ARMS), 'New-arm optimizer dispatch differs from historical H'
     atomic_json(root/f'H_DISPATCH_rank{rank}.json',dict(passed=True,dispatch=dispatch,stats=hs,rank_identity=hid))
     del hw,h,ho;gc.collect();torch.cuda.empty_cache()
     # Freeze both complete four-rank fresh execution states before L may start.

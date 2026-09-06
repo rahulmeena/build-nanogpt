@@ -52,7 +52,21 @@ class Controller:
         labels=required_labels(arm)
         for label in labels:
             summary=read_json(root/'evaluations'/(label+'_COMPLETE.json'));panel=read_json(FROZEN/('MONITOR.json' if '_monitor_' in label else 'PANEL.json'))
-            check=collect(root/'evaluations',label,panel,summary['binding'],128)
+            binding=summary['binding'];u=int(label.rsplit('_u',1)[1])
+            assert summary['passed'] and summary['checkpoint_unchanged'] and summary['tensors_unchanged']
+            assert binding['label']==label and binding['arm']==arm and binding['milestone']==u
+            assert binding['panel_identity']==panel['identity'] and binding['configuration_identity']==identity(read_json(FROZEN/'EXECUTION.json'))
+            assert binding['code_identity']==identity(read_json(FROZEN/'CODE_IDENTITY.json'))
+            assert binding['batch_size']==128 and binding['world_size']==4 and binding['partition']=='B128_group_index_modulo_4'
+            assert binding['mode']=='true_incremental_bf16_fp32_ce_fp64_nll' and binding['dataset_sha256']==VAL_SHA
+            if label.startswith('H_'):expected_sha,model_id=H_CHECKPOINTS[u]
+            else:
+                manifest=read_json(root/'checkpoints'/f'u{u:05d}.pt.manifest.json')
+                expected_sha=manifest['sha256'];model_id=manifest['audit']['model_tensor_identity']
+            assert binding['checkpoint_sha256']==expected_sha and binding['model_tensor_identity']==model_id
+            condition='H_ALL_OFF' if (label.startswith('L_') or '_ALL_OFF_' in label) else 'H_ON'
+            assert binding['condition']==condition
+            check=collect(root/'evaluations',label,panel,binding,128)
             assert check['count']==len(panel['sequences'])*1024
         for u in (0,*MILESTONES):
             f=root/'checkpoints'/f'u{u:05d}.pt';assert self.verified.get(arm+'/'+f.name)==sha256(f)

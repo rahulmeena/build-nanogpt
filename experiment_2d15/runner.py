@@ -52,6 +52,7 @@ def run(a):
         if rank==0:writer.wait()
         dist.barrier()
     def save():
+        if rank==0:progress(root,'CHECKPOINT',update=u)
         path=(root/'checkpoints' if u in (0,*MILESTONES) else rolling)/f'u{u:05d}.pt'
         with preserve_rng(device):
             wait_writer();rngs=[None]*4;dist.all_gather_object(rngs,capture_rng(device))
@@ -64,6 +65,7 @@ def run(a):
             dist.barrier()
         return path
     def score(candidate,panel,label,path):
+        if rank==0:progress(root,'EVALUATE',update=u,label=label)
         with preserve_rng(device):
             v=evaluate(candidate,panel,a.validation,root/'evaluations',label,path,128,ids['code_identity'],rank,u,a.arm)
             ledger[label]=dict(ce=v['ce'],binding=v['binding'],path=label+'_COMPLETE.json')
@@ -89,6 +91,7 @@ def run(a):
         if u==5000:break
         started=time.time();u+=1
         x,y,data=loader.next_global(plan[u-1]);assert data==expected[u-1]['data'] and expected[u-1]['lr']==learning_rate(u-1)
+        if rank==0:progress(root,'TRAIN',update=u)
         stats=step(wrapped,m,o,x,y,u,rank,device);torch.cuda.synchronize()
         elapsed=time.time()-started;elapsed_tensor=torch.tensor(elapsed,device=device);dist.all_reduce(elapsed_tensor,op=dist.ReduceOp.MAX);elapsed=float(elapsed_tensor)
         resources['training_seconds']+=elapsed
