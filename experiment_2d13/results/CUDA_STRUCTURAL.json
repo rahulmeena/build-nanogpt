@@ -1,0 +1,38 @@
+{
+  "after_tensor_sha256": "c1ad032bfc2fccd4fdabae0f0c4064f856b75ae8037e2373a1cc02f8216d6386",
+  "atol": 0.15,
+  "before_tensor_sha256": "c1ad032bfc2fccd4fdabae0f0c4064f856b75ae8037e2373a1cc02f8216d6386",
+  "bf16": true,
+  "checks": [
+    "B1: exact local mixture, one projection, bank/mask independence and router/read traps passed",
+    "B3: exact local mixture, one projection, bank/mask independence and router/read traps passed",
+    "B5: exact local mixture, one projection, bank/mask independence and router/read traps passed",
+    "H_ON: suffix causality, row isolation, fresh-state reset passed",
+    "H_B1_OFF: suffix causality, row isolation, fresh-state reset passed",
+    "H_B3_OFF: suffix causality, row isolation, fresh-state reset passed",
+    "H_B5_OFF: suffix causality, row isolation, fresh-state reset passed",
+    "H_ALL_OFF: suffix causality, row isolation, fresh-state reset passed"
+  ],
+  "device": "cuda",
+  "independent_incremental_exact": true,
+  "maxima": {
+    "B1_incremental_reference": 0.0,
+    "B1_parallel_reference": 0.0,
+    "B3_incremental_reference": 0.0,
+    "B3_parallel_reference": 0.0,
+    "B5_incremental_reference": 0.0,
+    "B5_parallel_reference": 0.0,
+    "all_off_incremental_parallel": 0.02734375,
+    "all_off_incremental_parallel_ce": 0.000863456726074574,
+    "all_off_independent_incremental": 0.0,
+    "on_sealed_logits": 0.0,
+    "on_sealed_nll": 0.0,
+    "on_sealed_parallel_logits": 0.0
+  },
+  "parallel_bf16_atol": 1.0,
+  "parallel_bf16_ce_atol": 0.05,
+  "passed": true,
+  "rtol": 0.02,
+  "scientific_updates": 0,
+  "seconds": 22.36141347885132
+}

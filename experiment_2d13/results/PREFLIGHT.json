@@ -1,0 +1,92 @@
+{
+  "batch_size": 128,
+  "cuda_version": "12.8",
+  "device": "NVIDIA A100-SXM4-80GB",
+  "disposable_complete_updates": 6,
+  "evaluators": [
+    {
+      "batch": 128,
+      "condition": "L",
+      "independent_reference_exact": true,
+      "peak_allocated": 10073994752,
+      "row_isolation_exact": true,
+      "seconds": 25.544459581375122
+    },
+    {
+      "batch": 128,
+      "condition": "H",
+      "independent_reference_exact": true,
+      "peak_allocated": 10338243072,
+      "row_isolation_exact": true,
+      "seconds": 33.63425016403198
+    }
+  ],
+  "fused_cuda_optimizer_verified": true,
+  "gpu_count": 1,
+  "numpy_version": "2.1.2",
+  "objective_probe_optimizer_steps": 17,
+  "passed": true,
+  "performance": [
+    {
+      "peak_allocated": 74864156672,
+      "seconds": 4.324358701705933,
+      "stats": {
+        "actual_ce_passes": 1,
+        "ce_pass_equivalent_updates": 1,
+        "ce_pass_targets": 524288,
+        "completed_updates": 1,
+        "grad_norm": 0.6954282522201538,
+        "logical_targets": 524288,
+        "lr": 8.39160839160839e-07,
+        "lr_index": 0,
+        "single_pass_training_loss": 10.979765892028809
+      },
+      "update": 1
+    },
+    {
+      "peak_allocated": 74864156672,
+      "seconds": 4.333014011383057,
+      "stats": {
+        "actual_ce_passes": 1,
+        "ce_pass_equivalent_updates": 2,
+        "ce_pass_targets": 1048576,
+        "completed_updates": 2,
+        "grad_norm": 0.6954885721206665,
+        "logical_targets": 1048576,
+        "lr": 1.678321678321678e-06,
+        "lr_index": 1,
+        "single_pass_training_loss": 10.976625442504883
+      },
+      "update": 2
+    },
+    {
+      "peak_allocated": 74864156672,
+      "seconds": 4.3405351638793945,
+      "stats": {
+        "actual_ce_passes": 1,
+        "ce_pass_equivalent_updates": 3,
+        "ce_pass_targets": 1572864,
+        "completed_updates": 3,
+        "grad_norm": 0.6948727369308472,
+        "logical_targets": 1572864,
+        "lr": 2.5174825174825174e-06,
+        "lr_index": 2,
+        "single_pass_training_loss": 10.970488548278809
+      },
+      "update": 3
+    }
+  ],
+  "projection": {
+    "checkpoint_export_seconds": 600,
+    "contingency_seconds": 1800,
+    "evaluation_seconds": 3963.6771136522293,
+    "fits": true,
+    "remaining_budget_seconds": 19164.23859477043,
+    "total_remaining_seconds": 11789.346068501472,
+    "training_seconds": 5425.668954849243
+  },
+  "scientific_panel_scored": false,
+  "scientific_updates": 0,
+  "seconds": 210.48692536354065,
+  "torch_version": "2.8.0+cu128"
+}

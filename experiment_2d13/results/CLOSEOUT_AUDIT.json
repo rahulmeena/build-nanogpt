@@ -1,0 +1,114 @@
+{
+  "L_optimizer_fused": true,
+  "checkpoint_serialization_seconds_overlapping_other_stages": 26.5336492061615,
+  "coverage": {
+    "H524M": {
+      "checkpoint_sha256": "559af751b9cceda5a4b08ef785d64f015cc4ce1978da7130a687f228f80a3244",
+      "model_tensor_identity": "7d0f5d3da3dcc41a5c9e83c4d3a94fa4aa3caa7be226d1d92521d3c2f0f7548a",
+      "sequences": 4096,
+      "targets": 4194304
+    },
+    "L524M": {
+      "checkpoint_sha256": "8631b67d721e7d3d8f85b6dc4b71a4ed85ac48835f8193566d9038faf768e955",
+      "model_tensor_identity": "caeac9a495cbd0fa313e8af9d339ff8d57075630ac02b1dc9dfe0586dbf6e5f5",
+      "sequences": 4096,
+      "targets": 4194304
+    },
+    "L_monitor_u00000": {
+      "checkpoint_sha256": "efa43f2932afc57f172d38e3441c2d014536f231f87bcb1c7f1d44b5ee0e695c",
+      "model_tensor_identity": "c1ad032bfc2fccd4fdabae0f0c4064f856b75ae8037e2373a1cc02f8216d6386",
+      "sequences": 1280,
+      "targets": 1310720
+    },
+    "L_monitor_u00250": {
+      "checkpoint_sha256": "b04b6e8ca39392e5274757696d751f3e61b2d6ba674f81311a7b7c526ef421a3",
+      "model_tensor_identity": "c2518d5623859e3cccf1d2c9d94a2963a683726352fe79024d5893c8174e0d13",
+      "sequences": 1280,
+      "targets": 1310720
+    },
+    "L_monitor_u00500": {
+      "checkpoint_sha256": "a8f4bfa3c2ac37bcbcd9e3090aab35aabdc26ebce4888193f789acc5066327fc",
+      "model_tensor_identity": "5b38aea220e4e5f1c877bcdc8853c30083f51a4841aaba2a42a578bbc142641b",
+      "sequences": 1280,
+      "targets": 1310720
+    },
+    "L_monitor_u00750": {
+      "checkpoint_sha256": "e49ca290837b258140eaac962d4215cbfb5eb809daf7b0763afe42052680ad41",
+      "model_tensor_identity": "c9fe2151d7f8ed705aba62ef99963ab1e618b13355370022b7ff63ef3563867a",
+      "sequences": 1280,
+      "targets": 1310720
+    },
+    "L_monitor_u01000": {
+      "checkpoint_sha256": "8631b67d721e7d3d8f85b6dc4b71a4ed85ac48835f8193566d9038faf768e955",
+      "model_tensor_identity": "caeac9a495cbd0fa313e8af9d339ff8d57075630ac02b1dc9dfe0586dbf6e5f5",
+      "sequences": 1280,
+      "targets": 1310720
+    }
+  },
+  "discarded_attempt": {
+    "completed_updates": 82,
+    "discarded_monitor_targets": 1310720,
+    "export_files": 22,
+    "logical_targets_computed": 42991616,
+    "pod_kept_running_per_user_preparation_instruction": true,
+    "reason": "CPU initialization optimizer groups changed CUDA fused flag to False before scientific update 1.",
+    "resume_source": "exact saved untrained initial, no trained weights from this attempt",
+    "scientific_updates_retained": 0,
+    "source_u0_and_raw_logs_preserved": true,
+    "status": "INVALID_DISCARDED",
+    "time": 1788710986.286474,
+    "training_seconds": 357.51985239982605
+  },
+  "evaluation_seconds": {
+    "H524M": 1079.1690316200256,
+    "L524M": 815.473286151886,
+    "L_monitor_u00000": 255.59283685684204,
+    "L_monitor_u00250": 256.7129645347595,
+    "L_monitor_u00500": 256.4917006492615,
+    "L_monitor_u00750": 256.42102813720703,
+    "L_monitor_u01000": 256.5115487575531
+  },
+  "historical_optimizer_fused_flags": {
+    "H": [
+      false,
+      false
+    ],
+    "initial": [
+      false,
+      false
+    ]
+  },
+  "operational_reload": "Controller and watchdog replaced locally with loaded-code fingerprints; remote scientific PID 3287 continued unchanged.",
+  "original_tags": {
+    "experiment-2d11-from-scratch-h-vs-gpt2-10b-final": "ca0103cd3aee5326855f4e72d1d6db93ce073550",
+    "experiment-2d12-h10b-recurrence-ablation-final": "622f34b29ec54816dcf293aef9228939c72a6dd8"
+  },
+  "original_worktrees": [
+    {
+      "head": "622f34b29ec54816dcf293aef9228939c72a6dd8",
+      "path": "/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d12_h10b_ablation",
+      "tracked_changes": false
+    },
+    {
+      "head": "ca0103cd3aee5326855f4e72d1d6db93ce073550",
+      "path": "/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d11_from_scratch",
+      "tracked_changes": false
+    }
+  ],
+  "passed": true,
+  "scientific_bundle_all_frozen_files_verified": true,
+  "scientific_bundle_sha256": "7c33a773478763b96f4ef962d4061bae826a5e3f4aa6bdc9f3a4d1a93a90981d",
+  "scientific_code_identity": "a97ce4d767b8493ddfc17d1df45fdb794c662fe91ec17c00e3726ac49ebba958",
+  "stage_seconds": {
+    "discarded_monitor": 256.5229103565216,
+    "discarded_preflight": 206.43775963783264,
+    "discarded_training": 357.51985239982605,
+    "remaining_preparation_io_idle_and_shutdown": 1519.536030292511,
+    "valid_evaluations": 3176.372396707535,
+    "valid_preflight": 210.48692536354065,
+    "valid_training": 4368.375017166138
+  },
+  "time": 1788719275.1467688,
+  "transfer_retry_telemetry": "Transport timeouts were retried by the bounded resumable controller; individual timeout counts were not persisted. Billing includes their full elapsed interval.",
+  "volume_size_GB": 200
+}

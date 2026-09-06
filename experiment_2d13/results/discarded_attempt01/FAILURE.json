@@ -1,0 +1,6 @@
+{
+  "error": "AssertionError",
+  "message": "controller requested termination",
+  "time": 1788710861.5318124,
+  "traceback": "Traceback (most recent call last):\n  File \"/workspace/exp2d13/local_scratch_20260906_attempt01/code/experiment_2d13/runner.py\", line 99, in <module>\n    try:run(a)\n        ^^^^^^\n  File \"/workspace/exp2d13/local_scratch_20260906_attempt01/code/experiment_2d13/runner.py\", line 75, in run\n    assert not cancelled and not (root/'STOP_REQUEST').exists(),'controller requested termination'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: controller requested termination\n"
+}

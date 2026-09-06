@@ -1,0 +1,33 @@
+{
+  "decision": "Follow the explicit L optimizer requirement. Disclose that historical H serialized fused=False, so this implementation detail differs from H despite matched optimizer hyperparameters, data, batch and LR. No scientific settings changed based on endpoint effects.",
+  "historical_sources": [
+    {
+      "foreach_flags": [
+        null,
+        null
+      ],
+      "fused_flags": [
+        false,
+        false
+      ],
+      "path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d11/initial.pt",
+      "sha256": "387b8b791ced54c2f1c0da65c47d00f35e8c3d1514897bad4c70db36db6c5c94"
+    },
+    {
+      "foreach_flags": [
+        null,
+        null
+      ],
+      "fused_flags": [
+        false,
+        false
+      ],
+      "path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d11/run/checkpoints/u01000.pt",
+      "sha256": "559af751b9cceda5a4b08ef785d64f015cc4ce1978da7130a687f228f80a3244"
+    }
+  ],
+  "protocol_L_requirement": "fresh fused CUDA AdamW",
+  "selected_L_fused": true,
+  "time": 1788711382.291391,
+  "verified": true
+}
