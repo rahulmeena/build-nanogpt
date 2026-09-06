@@ -68,7 +68,14 @@ def export_checkpoint(remote,remote_path,local_path,manifest,run):
     started=time.time();local_path=Path(local_path)
     local_path.parent.mkdir(parents=True,exist_ok=True)
     if not local_path.exists():
-        tmp=local_path.with_suffix('.transfer');remote.download(remote_path,tmp,timeout=900)
+        tmp=local_path.with_suffix('.transfer')
+        while True:
+            try:
+                remote.download(remote_path,tmp,timeout=max(1,int(900-(time.time()-started))))
+                break
+            except (subprocess.SubprocessError,OSError,RuntimeError):
+                if time.time()-started>=890:raise
+                time.sleep(10)
         if sha256(tmp)!=manifest['sha256']:raise ValueError('independent checkpoint SHA mismatch')
         os.replace(tmp,local_path)
     assert sha256(local_path)==manifest['sha256']
@@ -77,7 +84,13 @@ def export_checkpoint(remote,remote_path,local_path,manifest,run):
                         local_path=str(local_path),persistent_path=remote_path,time=time.time(),
                         transfer_verify_seconds=time.time()-started)
     atomic_json(str(local_path)+'.verification.json',acknowledgment)
-    remote.put_json(run+'/export_acks/'+local_path.name+'.json',acknowledgment)
+    while True:
+        try:
+            remote.put_json(run+'/export_acks/'+local_path.name+'.json',acknowledgment)
+            break
+        except (subprocess.SubprocessError,OSError,RuntimeError):
+            if time.time()-started>=890:raise
+            time.sleep(10)
     return acknowledgment
 
 
@@ -90,16 +103,26 @@ def monitor(remote,provider,binding,local,run):
         try:
             for row in inventory(remote,run):
                 name=row['path']
+                # The remote copy is an acknowledgement from the previous poll.
+                # Importing it would replace our live heartbeat with stale time,
+                # causing the independent local guard to stop a healthy job.
+                if name=='LOCAL_CONTROLLER_HEARTBEAT.json':continue
                 if known.get(name)==(row['size'],row['mtime']):continue
+                atomic_json(local/'LOCAL_CONTROLLER_HEARTBEAT.json',dict(time=time.time(),state='DOWNLOAD'))
                 path=local/name;temp=path.with_suffix(path.suffix+'.download')
                 remote.download(run+'/'+name,temp,timeout=120);temp.replace(path)
                 known[name]=(row['size'],row['mtime'])
+                last_success=time.time()
             last_success=time.time()
             remote.put_json(run+'/LOCAL_CONTROLLER_HEARTBEAT.json',dict(time=time.time()))
         except Exception as e:
             append_json(local/'controller_events.jsonl',dict(time=time.time(),event='poll_error',error_type=type(e).__name__))
-            p=provider.status()
-            if provider.stopped(p):
+            p=None
+            try:p=provider.status()
+            except Exception as status_error:
+                append_json(local/'controller_events.jsonl',dict(time=time.time(),event='status_probe_error',
+                            error_type=type(status_error).__name__))
+            if p is not None and provider.stopped(p):
                 atomic_json(local/'STOP_VERIFICATION.json',dict(passed=True,pod=p,verified_at=time.time()))
                 return
             if time.time()-last_success>300:
@@ -170,12 +193,16 @@ print(json.dumps(rows))"""
 
 def local_guard(binding_path,output):
     binding=read_json(binding_path);provider=Provider(binding);output=Path(output)
+    reason='hard_deadline';latest=None
     while time.time()<binding['hard_deadline']:
         if (output/'STOP_VERIFICATION.json').exists() and read_json(output/'STOP_VERIFICATION.json')['passed']:return
         h=output/'LOCAL_CONTROLLER_HEARTBEAT.json'
         latest=read_json(h)['time'] if h.exists() else binding['billing_start']
-        if time.time()-latest>600:break
+        if time.time()-latest>600:
+            reason='stalled_local_controller';break
         time.sleep(15)
+    atomic_json(output/'INDEPENDENT_LOCAL_STOP_REASON.json',dict(reason=reason,time=time.time(),
+                last_controller_heartbeat=latest,hard_deadline=binding['hard_deadline']))
     provider.stop_verified(output/'INDEPENDENT_LOCAL_STOP_VERIFICATION.json')
 
 

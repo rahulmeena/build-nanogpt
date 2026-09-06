@@ -68,6 +68,7 @@ class GTraining(nn.Module):
 
 
 def run(args):
+    configure_cuda_determinism()
     rank=int(os.environ['RANK']);torch.cuda.set_device(rank);device=torch.device('cuda',rank)
     assert int(os.environ['WORLD_SIZE'])==4
     torch.set_num_threads(4);torch.set_float32_matmul_precision('high')
@@ -113,6 +114,7 @@ def run(args):
             training_step(wrapped,model,optimizer,xx,yy,rank,32,device)
             errors=[(v-expected[n].to(device)).abs().max() for n,v in model.state_dict().items()]
             resume_error=torch.stack(errors).max().item()
+            atomic_json(out/f'RESUME_AUDIT_RANK{rank}.json',dict(max_parameter_error=resume_error,loader_equal=loader.state_dict()==expected_loader,tolerance=tol['resume_max_abs']))
             assert resume_error<=tol['resume_max_abs'] and loader.state_dict()==expected_loader
             for group in optimizer.state_dict()['state']:
                 for name,v in optimizer.state_dict()['state'][group].items():
@@ -135,6 +137,12 @@ def run(args):
     del gd,go;g=IncrementalG(gm.base);del gm
     model.eval();g.eval();torch.cuda.empty_cache()
     ce_times={};hs_times={};g_ce_times={};g_hs_times={}
+    def save_measurement_progress(stage):
+        atomic_json(out/f'MEASUREMENT_PROGRESS_RANK{rank}.json',dict(stage=stage,time=time.time(),
+            training_timings=timings,g_training_seconds=g_times,ce_batch_times=ce_times,
+            g_ce_batch_times=g_ce_times,hellaswag_batch_times=hs_times,g_hellaswag_batch_times=g_hs_times,
+            scientific_updates=0,disposable=True))
+    save_measurement_progress('evaluation_started')
     validation=np.load(Path(args.data)/shards['validation']['filename'],mmap_mode='r')
     vx=np.asarray(validation[:128*1024],dtype=np.int64).reshape(128,1024)
     vy=np.asarray(validation[1:128*1024+1],dtype=np.int64).reshape(128,1024)
@@ -142,6 +150,7 @@ def run(args):
         bx=torch.from_numpy(vx[:b]).to(device);by=torch.from_numpy(vy[:b]).to(device)
         sec,_=timed(device,lambda:ce_batch(model,bx,by));ce_times[b]=sec
         sec,_=timed(device,lambda:ce_batch(g,bx,by));g_ce_times[b]=sec
+        save_measurement_progress(f'ce-batch-{b}')
         heartbeat(run,rank,'CUDA_PREFLIGHT',f'ce-batch-{b}',deadline)
     best_ce=min(ce_times,key=lambda b:ce_times[b]/b)
     examples=read_json(args.hella);ordered=sorted(examples,key=lambda e:e['length'])
@@ -152,6 +161,7 @@ def run(args):
         rows=[ordered[int(i)] for i in indices];samples[b]=rows
         sec,_=timed(device,lambda:hella_batch(model,rows,device));hs_times[b]=sec
         sec,_=timed(device,lambda:hella_batch(g,rows,device));g_hs_times[b]=sec
+        save_measurement_progress(f'hella-batch-{b}')
         heartbeat(run,rank,'CUDA_PREFLIGHT',f'hella-batch-{b}',deadline)
     best_hs=min(hs_times,key=lambda b:hs_times[b]/b)
     # Batching correctness against independent serial-choice/example states.

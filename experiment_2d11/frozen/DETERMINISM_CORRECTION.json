@@ -1,0 +1,11 @@
+{
+  "algorithms": "torch.use_deterministic_algorithms(True), CUBLAS_WORKSPACE_CONFIG=:4096:8; remeasure full runtime",
+  "deterministic_repeat_max": 3.725290298461914e-09,
+  "mathematical_model_and_precision_unchanged": true,
+  "observed_nondeterministic_max": 1.1798138075391762e-06,
+  "reason": "Nondeterministic repeated CUDA backward/AdamW update exceeded frozen 1e-6 resume tolerance",
+  "repeat_after_warmup_max": 0.0,
+  "requires_complete_preflight_retest": true,
+  "scientific_updates": 0,
+  "tolerance_unchanged": 1e-06
+}

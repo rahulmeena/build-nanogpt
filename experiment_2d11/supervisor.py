@@ -88,7 +88,16 @@ def supervise(args, *, poll_seconds=5, export_seconds=900, terminate_seconds=300
         return child.returncode
 
     try:
-        state('preflight_started');rc=execute('preflight',preflight_seconds)
+        resume=getattr(args,'resume',None);attempt=getattr(args,'attempt','attempt01')
+        state('preflight_started')
+        if resume:
+            manifest=read_json(str(resume)+'.manifest.json')
+            assert manifest['audit']['passed'] and sha256(resume)==manifest['sha256']
+            assert read_json(run/'PREFLIGHT.json')['passed']
+            atomic_json(run/'PREFLIGHT_REUSED.json',dict(time=time.time(),checkpoint=str(resume),
+                        checkpoint_sha256=manifest['sha256'],preflight_sha256=sha256(run/'PREFLIGHT.json')))
+            rc=0
+        else:rc=execute('preflight',preflight_seconds)
         if rc!=0:
             state('preflight_failed',exit_code=rc)
         else:
@@ -97,7 +106,7 @@ def supervise(args, *, poll_seconds=5, export_seconds=900, terminate_seconds=300
                 state('budget_rejected')
             else:
                 state('preflight_passed');state('training_started')
-                rc=execute('train',binding['hard_deadline']-time.time()-300,['--attempt','attempt01'])
+                rc=execute('train',binding['hard_deadline']-time.time()-300,['--attempt',attempt]+(['--resume',str(resume)] if resume else []))
                 # One bounded recovery: only a fully verified complete checkpoint, no interactive debugging.
                 if rc!=0 and time.time()<binding['hard_deadline']-2400:
                     candidates=sorted((run/'checkpoints').glob('u*.pt.manifest.json'))
@@ -107,7 +116,7 @@ def supervise(args, *, poll_seconds=5, export_seconds=900, terminate_seconds=300
                             atomic_json(run/'RECOVERY.json',dict(started=time.time(),checkpoint=checkpoint,max_startup_seconds=600))
                             (run/'STOP_REQUEST').unlink(missing_ok=True)
                             rc=execute('train',binding['hard_deadline']-time.time()-300,
-                                       ['--attempt','attempt02','--resume',checkpoint])
+                                       ['--attempt',attempt+'_recovery','--resume',checkpoint])
                 if rc:
                     state('rank_failed',exit_code=rc)
                 else:
@@ -165,4 +174,5 @@ if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('mode',choices=['run','watchdog','install-watchdog'])
     p.add_argument('--run',required=True);p.add_argument('--binding',required=True)
     for name in ['data','initial','hella','baseline']:p.add_argument('--'+name)
+    p.add_argument('--resume');p.add_argument('--attempt',default='attempt01')
     args=p.parse_args();{'run':supervise,'watchdog':watchdog,'install-watchdog':install_watchdog}[args.mode](args)

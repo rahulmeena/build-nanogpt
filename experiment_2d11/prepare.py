@@ -177,7 +177,7 @@ def prepare(workspace, archive):
                     seed=1337,source_commit=SOURCE_COMMIT,torch_version=torch.__version__,
                     historical_step_zero_available=False,router_seeds=[20260916,20260918,20260920],
                     eligible_initial_mixture=[.5,.5],empty_memory_mixture=[1.,0.],interpretation=INTERPRETATION))
-    config=dict(experiment='2D11',endpoint=ENDPOINT,targets_per_update=TARGETS,ranks=4,
+    config=dict(deterministic_algorithms=True,cublas_workspace_config=':4096:8',experiment='2D11',endpoint=ENDPOINT,targets_per_update=TARGETS,ranks=4,
                 microbatch=32,accumulation=4,sequence_length=1024,ce_schedule=CE_SCHEDULE,
                 hellaswag_schedule=HELLA_SCHEDULE,preserve_updates=PRESERVE,checkpoint_interval=500,
                 max_cumulative_pod_hours=24,max_aggregate_gpu_hours=96,contingency_hours=2,

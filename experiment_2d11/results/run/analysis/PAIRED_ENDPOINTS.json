@@ -1,0 +1,56 @@
+{
+  "ce": {
+    "adjusted_lower_exceeds_reference": true,
+    "ci95": [
+      0.022851540471203843,
+      0.024474788396451088
+    ],
+    "ci97_5": [
+      0.022745424544782445,
+      0.024583506290689932
+    ],
+    "classification": "benefit",
+    "estimate": 0.0236656668398704,
+    "g_ce": 3.0386137885072637,
+    "h_ce": 3.0149481216673935,
+    "h_sequence_wins": 3377,
+    "historical_small_effect_reference": 0.0001,
+    "numpy_version": "2.5.2",
+    "percentile_method": "linear",
+    "positive_favors": "H",
+    "relative_perplexity_change_h_over_g": -0.02338783098552144,
+    "resamples": 50000,
+    "seed": 20260918,
+    "ties": 0,
+    "unit_count": 4096
+  },
+  "hellaswag": {
+    "ci95": [
+      0.00019916351324437363,
+      0.011850229038040231
+    ],
+    "ci97_5": [
+      -0.0005974905397331209,
+      0.012746464847639912
+    ],
+    "classification": "unresolved",
+    "estimate": 0.006074487153953396,
+    "g_accuracy": 0.3031268671579367,
+    "h_accuracy": 0.30920135431189005,
+    "numpy_version": "2.5.2",
+    "paired_correctness": {
+      "G0_H0": 6523,
+      "G0_H1": 475,
+      "G1_H0": 414,
+      "G1_H1": 2630
+    },
+    "percentage_points": 0.6074487153953396,
+    "percentile_method": "linear",
+    "positive_favors": "H",
+    "resamples": 50000,
+    "seed": 20260919,
+    "unit_count": 10042
+  },
+  "joint_claim_intervals": "Bonferroni 97.5% marginal",
+  "seed_replication": false
+}

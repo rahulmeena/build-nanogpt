@@ -124,3 +124,11 @@ def heartbeat(run, rank, state, progress, stage_deadline, **extra):
     atomic_json(Path(run)/f'heartbeat-rank{rank}.json', dict(
         state=state, progress=progress, last_successful_write=time.time(),
         stage_deadline=stage_deadline, pid=os.getpid(), **extra))
+
+
+def configure_cuda_determinism():
+    """Set before CUDA initialization; preserve frozen BF16/FP32 computation rules."""
+    os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'
+    import torch
+    torch.use_deterministic_algorithms(True)
+    torch.backends.cudnn.benchmark=False

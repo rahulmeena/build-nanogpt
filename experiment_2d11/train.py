@@ -44,6 +44,7 @@ def training_step(wrapped,model,optimizer,x,y,rank,u,device,world=4,micro_b=32):
 
 
 def run(args):
+    configure_cuda_determinism()
     rank=int(os.environ['RANK']);world=int(os.environ['WORLD_SIZE']);assert world==4
     torch.cuda.set_device(rank);device=torch.device('cuda',rank)
     torch.set_num_threads(4);torch.set_float32_matmul_precision('high')
@@ -57,6 +58,7 @@ def run(args):
     identities={name:sha256(FROZEN/name) for name in ['config.json','shards.json','stream_plan.jsonl',
                 'fresh_panel.json','monitor_panel.json','hellaswag_manifest.json','initial_identity.json']}
     identities['implementation_commit']=binding['implementation_commit']
+    identities['implementation_patch_sha256']=binding.get('implementation_patch_sha256')
     model=FreshH(fresh_base()).to(device);optimizer=optimizer_for(model,device)
     shards=read_json(FROZEN/'shards.json');loader=LogicalLoader(args.data,shards['train'])
     plan=[json.loads(x) for x in (FROZEN/'stream_plan.jsonl').read_text().splitlines()]

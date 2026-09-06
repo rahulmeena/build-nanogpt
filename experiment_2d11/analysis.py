@@ -32,7 +32,7 @@ def bootstrap(contrasts,seed,resamples=50000):
 def csv_file(path,rows):
     if not rows:return
     fields=list(dict.fromkeys(k for row in rows for k in row))
-    buffer=io.StringIO();writer=csv.DictWriter(buffer,fieldnames=fields);writer.writeheader();writer.writerows(rows)
+    buffer=io.StringIO();writer=csv.DictWriter(buffer,fieldnames=fields,lineterminator="\n");writer.writeheader();writer.writerows(rows)
     atomic_bytes(path,buffer.getvalue().encode())
 
 
@@ -123,13 +123,23 @@ def interim_plot(run):
                                             training_gpu_hours=table[r['updates']]*gpus/3600,gpu_count=gpus))
     axes[0].set_xlabel('Measured cumulative training hours (evaluations excluded)')
     axes[1].set_xlabel('Measured cumulative training GPU-hours')
-    h=[e for k,e in evaluations.items() if k.startswith('ce:')]
+    h=[evaluations[k] for k in sorted((k for k in evaluations if k.startswith('ce:')),key=lambda k:int(k.split(':')[1]))]
     if binding and h:
-        axes[2].plot([(e['completed_at']-binding['billing_start']+binding['prior_billed_seconds'])/3600 for e in h],
+        axes[2].plot([billed_at(run,e['completed_at'],binding)/3600 for e in h],
                      [e['score'] for e in h],'.-',label='H, evaluation-inclusive billed elapsed')
     axes[2].set_xlabel('Cumulative billed H pod-hours, all attempts')
     for ax in axes:ax.set_ylabel('Monitoring CE');ax.grid(alpha=.2);ax.legend(fontsize=7)
     figure_save(fig,out/'quality_vs_compute');csv_file(out/'quality_vs_compute.csv',points)
+
+
+def billed_at(run,timestamp,binding):
+    # A restart changes the wall-clock origin. Use the billing segment that
+    # contains each evaluation, including all prior paid attempts but no stopped gaps.
+    for p in sorted((Path(run)/'recovery_history').rglob('BILLING_ACCOUNTING.json')):
+        b=read_json(p)
+        if b['start']<=timestamp<=b['verified_stop']:
+            return timestamp-b['start']+b['prior_billed_seconds']
+    return timestamp-binding['billing_start']+binding['prior_billed_seconds']
 
 
 def paired_endpoints(evaluations):
@@ -185,6 +195,13 @@ def analyze(run):
                   quoted_pod_dollars_per_hour=6.36,estimated_compute_dollars=6.36*billing['cumulative_billed_seconds']/3600,
                   storage_cost_excluded=True,h_state_bytes_per_sequence=33289728,g_state_bytes_per_sequence=37711872,
                   h_registered_parameters=124697386,h_active_parameters=124697382,g_registered_parameters=124475904)
+    discarded=[read_json(p) for p in sorted((run/'recovery_history').rglob('ROLLED_BACK_TAIL.json'))]
+    resource['discarded_recovery_updates']=sum(r['discarded_updates'] for r in discarded)
+    resource['discarded_recovery_training_seconds']=sum(r['discarded_training_seconds'] for r in discarded)
+    resource['retained_plus_discarded_training_seconds']=training+resource['discarded_recovery_training_seconds']
+    resource['residual_excluding_discarded_training_seconds']=max(0,resource['residual_setup_save_failure_idle_seconds']-resource['discarded_recovery_training_seconds'])
+    resource['transfer_timing_limitation']='Some pre-recovery export acknowledgements were refreshed during recovery; their durations measure re-verification, so this sum does not reconstruct all historical transfer worker time.'
+    resource['final_gpu_finished_to_verified_stop_seconds']=billing['verified_stop']-read_json(run/'GPU_WORK_FINISHED.json')['time'] if (run/'GPU_WORK_FINISHED.json').exists() else None
     atomic_json(out/'RESOURCE_ACCOUNTING.json',resource)
     historical_repro=[]
     for p in sorted((run/'preflight').glob('HISTORICAL_G_MONITOR_RANK*.json')):historical_repro+=read_json(p)['losses']
