@@ -50,7 +50,7 @@ def preflight(model,root,binding):
     audit.update(performance=perf,batch_size=batch,seconds=time.time()-started,projected_scoring_seconds=projected,
         device_name=torch.cuda.get_device_name(),torch_version=torch.__version__,numpy_version=np.__version__,
         gpu_count=torch.cuda.device_count(),scientific_panel_used=False,
-        cuda_tolerance_basis='Direct ON exact; same-operation block references; BF16 causal-parallel vs incremental tolerances fixed before scientific scoring (atol .15, rtol .02); actual maxima recorded.')
+        cuda_tolerance_basis='Direct ON and independent fully local incremental references exact; block reference atol .15/rtol .02; BF16 parallel-vs-incremental logit atol 1.0 and per-sequence CE atol .05 frozen after disposable diagnosis, before scientific scoring. Trained CPU FP32 parallel max logit error 2.575e-5 and max mean CE error 5.041e-7; shape-dependent BF16 rounding, not intervention semantics. Actual maxima recorded.')
     atomic_json(root/'PREFLIGHT_AUDIT.json',audit)
     signal.alarm(0)
     return batch

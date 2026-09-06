@@ -100,7 +100,7 @@ def launch(archive,bundle,user_start=False):
     atomic_json(binding_path,binding)
     def hb(stage,last=None,timeout=600):
         atomic_json(archive/'CONTROLLER_HEARTBEAT.json',dict(time=time.time(),stage=stage,last_progress=last or time.time(),progress_timeout=timeout))
-    remote=None;root='/workspace/exp2d12/h10b_ablation_20260906';raw=root+'/raw'
+    remote=None;root=f'/workspace/exp2d12/h10b_ablation_20260906_attempt_{len(histories)+1:02d}';raw=root+'/raw'
     try:
         hb('STARTUP')
         if not user_start:provider.call(['pod','start',provider.POD,'-o','json'])

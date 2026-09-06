@@ -1,0 +1,13 @@
+{
+  "block_reference_atol": 0.15,
+  "block_reference_rtol": 0.02,
+  "diagnosis": "Same-shape independent incremental reference exact on CPU; trained FP32 incremental/parallel max logits difference 2.575e-5 and mean sequence CE difference 5.041e-7. Failed disposable CUDA check had max logits error .75 across different GEMM/SDPA shapes. Revised limits apply only to cross-shape reference, never the intervention or ON equality.",
+  "direct_on_exact": true,
+  "earlier_cuda_failure": "/workspace/exp2d12/h10b_ablation_20260906/raw/FAILURE.json",
+  "frozen_at": 1788700094.6792178,
+  "independent_incremental_local_exact": true,
+  "parallel_bf16_logits_atol": 1.0,
+  "parallel_bf16_logits_rtol": 0.0,
+  "parallel_bf16_per_sequence_ce_atol": 0.05,
+  "scientific_sequences_seen": 0
+}

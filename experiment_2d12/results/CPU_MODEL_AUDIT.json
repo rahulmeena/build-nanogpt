@@ -2114,6 +2114,7 @@
     "H_ALL_OFF: suffix causality, row isolation, fresh-state reset passed"
   ],
   "device": "cpu",
+  "independent_incremental_exact": true,
   "maxima": {
     "B1_incremental_reference": 0.0,
     "B1_parallel_reference": 5.960464477539063e-08,
@@ -2122,12 +2123,16 @@
     "B5_incremental_reference": 0.0,
     "B5_parallel_reference": 2.9802322387695312e-08,
     "all_off_incremental_parallel": 7.450580596923828e-08,
+    "all_off_incremental_parallel_ce": 3.4059794984386826e-09,
+    "all_off_independent_incremental": 0.0,
     "on_sealed_logits": 0.0,
     "on_sealed_nll": 0.0,
     "on_sealed_parallel_logits": 0.0
   },
+  "parallel_bf16_atol": 1.0,
+  "parallel_bf16_ce_atol": 0.05,
   "passed": true,
   "rtol": 2e-05,
   "scientific_updates": 0,
-  "seconds": 4.88391900062561
+  "seconds": 4.95103120803833
 }
