@@ -55,7 +55,7 @@ def export(remote,root,archive):
     return manifest
 
 
-def launch(archive,bundle):
+def launch(archive,bundle,user_start=False):
     archive.mkdir(parents=True,exist_ok=True)
     assert read_json(PACKAGE/'results/LOCAL_READY.json')['passed']
     p=provider.status();assert provider.stopped(p) and p['costPerHr']<=1.59
@@ -71,7 +71,17 @@ def launch(archive,bundle):
         if (archive/'GUARD_ARMED.json').exists():break
         time.sleep(.1)
     assert (archive/'GUARD_ARMED.json').exists()
-    start=time.time();rate=float(p['costPerHr']);seconds=min(3*3600-prior,(10-prior*rate/3600)/rate*3600)
+    if user_start:
+        atomic_json(archive/'READY_FOR_USER_START.json',dict(time=time.time(),pod_id=provider.POD,guard_armed=True))
+        last_stopped=time.time()
+        while True:
+            current=provider.status()
+            if not provider.stopped(current):break
+            last_stopped=time.time();time.sleep(3)
+        assert current['costPerHr']<=p['costPerHr']
+        start=last_stopped  # Conservative start bound, includes provider polling uncertainty.
+    else:start=time.time()
+    rate=float(p['costPerHr']);seconds=min(3*3600-prior,(10-prior*rate/3600)/rate*3600)
     binding=dict(pod_id=provider.POD,volume_id=provider.VOLUME,gpu_count=1,quoted_hourly_rate=rate,
         billing_start=start,prior_billed_seconds=prior,hard_deadline=start+seconds,scientific_deadline=start+seconds-600,
         max_gpu_hours=3,max_compute_dollars=10,initial_running_interval=[first_start,initial['verified_at']])
@@ -80,7 +90,8 @@ def launch(archive,bundle):
         atomic_json(archive/'CONTROLLER_HEARTBEAT.json',dict(time=time.time(),stage=stage,last_progress=last or time.time(),progress_timeout=timeout))
     remote=None;root='/workspace/exp2d12/h10b_ablation_20260906';raw=root+'/raw'
     try:
-        hb('STARTUP');provider.call(['pod','start',provider.POD,'-o','json'])
+        hb('STARTUP')
+        if not user_start:provider.call(['pod','start',provider.POD,'-o','json'])
         for _ in range(30):
             try:
                 remote=connect();remote.run(['true'],timeout=20);break
@@ -152,7 +163,7 @@ print(p.pid)'''
             note='Conservative request-to-verified-stop wall time including startup/transfer/stop latency; quoted-rate cost, not provider invoice. Storage excluded.'))
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('mode',choices=['guard','launch']);p.add_argument('--archive',type=Path,required=True);p.add_argument('--bundle',type=Path)
+    p=argparse.ArgumentParser();p.add_argument('mode',choices=['guard','launch']);p.add_argument('--archive',type=Path,required=True);p.add_argument('--bundle',type=Path);p.add_argument('--user-start',action='store_true')
     a=p.parse_args()
     if a.mode=='guard':guard(a.archive/'binding.json',a.archive)
-    else:launch(a.archive,a.bundle)
+    else:launch(a.archive,a.bundle,a.user_start)
