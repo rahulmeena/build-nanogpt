@@ -16,7 +16,8 @@ def run(initial,hpath,root,binding):
     t=time.time()
     def timed_out(signum,frame):raise TimeoutError('bounded CUDA preflight exceeded 600 seconds')
     signal.signal(signal.SIGALRM,timed_out);signal.alarm(600);torch.cuda.reset_peak_memory_stats()
-    m,o,p=restore(initial,'cuda');initial_tensors=tensor_identity(m.named_parameters())
+    m,o,p=restore(initial,'cuda');assert all(g['fused'] is True for g in o.param_groups) and not o.state
+    initial_tensors=tensor_identity(m.named_parameters())
     assert tensor_identity(m.base.named_parameters())==BASE_SHA
     x=((torch.arange(32*1024,device='cuda').reshape(32,1024)*17+3)%50304).long();y=(x+1)%50304
     objective=objective_suite(m,x,y,True,lambda n,c,p:progress(root,'CUDA_PREFLIGHT',part='objective',noninitial=n,checkpointing=c,passes=p))
@@ -85,7 +86,7 @@ def run(initial,hpath,root,binding):
     eval_seconds=(ltime*(5*1280+4096)+htime*4096)/selected_batch*1.25
     checkpoint_export_tail=600;contingency=1800
     projected=train_seconds+eval_seconds+checkpoint_export_tail+contingency
-    r=dict(passed=True,seconds=time.time()-t,torch_version=torch.__version__,cuda_version=torch.version.cuda,numpy_version=np.__version__,device=torch.cuda.get_device_name(),gpu_count=torch.cuda.device_count(),performance=perf,evaluators=evaluators,batch_size=selected_batch,projection=dict(training_seconds=train_seconds,evaluation_seconds=eval_seconds,checkpoint_export_seconds=checkpoint_export_tail,contingency_seconds=contingency,total_remaining_seconds=projected,remaining_budget_seconds=binding['hard_deadline']-time.time(),fits=time.time()+projected<binding['hard_deadline']-300),scientific_panel_scored=False,scientific_updates=0,disposable_complete_updates=6,objective_probe_optimizer_steps=17)
+    r=dict(passed=True,seconds=time.time()-t,torch_version=torch.__version__,cuda_version=torch.version.cuda,numpy_version=np.__version__,device=torch.cuda.get_device_name(),gpu_count=torch.cuda.device_count(),performance=perf,evaluators=evaluators,batch_size=selected_batch,projection=dict(training_seconds=train_seconds,evaluation_seconds=eval_seconds,checkpoint_export_seconds=checkpoint_export_tail,contingency_seconds=contingency,total_remaining_seconds=projected,remaining_budget_seconds=binding['hard_deadline']-time.time(),fits=time.time()+projected<binding['hard_deadline']-300),scientific_panel_scored=False,scientific_updates=0,disposable_complete_updates=6,objective_probe_optimizer_steps=17,fused_cuda_optimizer_verified=True)
     atomic_json(root/'PREFLIGHT.json',r)
     assert r['projection']['fits'],'conservative full workload does not fit remaining cumulative budget'
     signal.alarm(0);del m,h;gc.collect();torch.cuda.empty_cache();return r

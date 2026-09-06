@@ -10,13 +10,16 @@ from .model import from_state,optimizer_for,optimizer_names,tensor_identity,trai
 def validate(p,tiny=False):
     assert p['schema']=='2d13-L-complete-v1' and p['world_size']==1
     u=p['completed_updates'];assert p['accounting']==accounting(u) and p['next_lr_index']==u
+    if not tiny and (u>0 or 'code_identity' in p['identities']):
+        assert all(g['fused'] is True for g in p['optimizer']['param_groups']), 'scientific CUDA optimizer must be fused'
     assert len(p['rng_by_rank'])==1 and p['loader']['logical_batches']==8*u
     m=from_state(p['model'],tiny=tiny);a=trainability(m)
     if not tiny:assert (a['registered'],a['trainable'],a['frozen'])==(124697386,124475904,221482)
     assert frozen_identity(m)==p['frozen_identity']
     o=optimizer_for(m,'cpu');assert p['optimizer_names']==optimizer_names(m,o)
     o.load_state_dict(p['optimizer'])
-    for g in o.param_groups:
+    for group_index,g in enumerate(o.param_groups):
+        assert g['weight_decay']==(.1 if group_index==0 else 0.)
         assert g['betas']==(.9,.95) and g['eps']==1e-8
         assert g['lr']==learning_rate(max(u-1,0))
     for n,v in m.named_parameters():
@@ -62,7 +65,15 @@ def restore(path,device,expected=None,verify=True):
     if verify:validate(p)
     if expected is not None:assert p['identities']==expected
     m=from_state(p['model'],device);o=optimizer_for(m,device)
-    assert optimizer_names(m,o)==p['optimizer_names'];o.load_state_dict(p['optimizer'])
+    assert optimizer_names(m,o)==p['optimizer_names']
+    if p['completed_updates']==0:
+        # CPU u0 is a shape/RNG template with no momentum. Construct a genuinely
+        # fresh optimizer on the destination, never import CPU implementation flags.
+        assert not p['optimizer']['state'] and not o.state
+    else:
+        assert all(g['fused'] is True for g in p['optimizer']['param_groups'])
+        o.load_state_dict(p['optimizer'])
+    if torch.device(device).type=='cuda':assert all(g['fused'] is True for g in o.param_groups)
     restore_rng(p['rng_by_rank'][0],device)
     if torch.device(device).type=='cuda' and p['rng_by_rank'][0]['cuda'] is None:torch.cuda.manual_seed(p['cuda_seed'])
     return m,o,p

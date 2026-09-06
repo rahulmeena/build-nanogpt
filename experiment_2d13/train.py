@@ -11,7 +11,9 @@ def physical_batches(x,y):
 
 def step(m,opt,x,y,u,device='cuda',checkpointing=True,progress=None):
     assert 1<=u<=1000
-    device=torch.device(device);m.train();opt.zero_grad(set_to_none=True)
+    device=torch.device(device)
+    if device.type=='cuda':assert all(g['fused'] is True for g in opt.param_groups), 'CUDA optimizer fused flag lost'
+    m.train();opt.zero_grad(set_to_none=True)
     total=torch.zeros((),device=device)
     for i,(xx,yy) in enumerate(physical_batches(x,y)):
         with torch.autocast(device.type,dtype=torch.bfloat16,enabled=device.type=='cuda'):

@@ -55,7 +55,7 @@ def launch(archive,bundle):
     assert read_json(PACKAGE/'results/LOCAL_READY.json')['passed']
     assert (archive/'GUARD_ARMED.json').exists()
     atomic_json(archive/'PROVIDER_BEFORE_CUDA.json',dict(time=time.time(),provider=p))
-    r=connect();root='/workspace/exp2d13/local_scratch_20260906_attempt01';run=root+'/run'
+    r=connect();root='/workspace/exp2d13/local_scratch_20260906_attempt02';run=root+'/run'
     last_progress=time.time()
     lock=threading.Lock();alive=threading.Event();alive.set()
     def hb(stage,last=None,timeout=600):
@@ -72,7 +72,9 @@ def launch(archive,bundle):
         r.transfer(bundle,root+'/bundle.tar.gz')
         assert r.run(['sha256sum',root+'/bundle.tar.gz']).decode().split()[0]==sha256(bundle)
         r.run(['tar','--no-same-owner','--no-same-permissions','-xzf',root+'/bundle.tar.gz','-C',root+'/code'])
-        started=time.time();r.transfer(archive/'local_initial.pt',root+'/inputs/local_initial.pt');r.transfer(archive/'local_initial.pt.manifest.json',root+'/inputs/local_initial.pt.manifest.json')
+        started=time.time()
+        initial_path='/workspace/exp2d13/local_scratch_20260906_attempt01/inputs/local_initial.pt'
+        assert r.run(['sha256sum',initial_path]).decode().split()[0]==sha256(archive/'local_initial.pt')
         transfer_seconds=time.time()-started
         original_candidates=r.run(['find','/workspace/exp2d11','-maxdepth','5','-name','initial.pt']).decode().splitlines()
         original=None
@@ -86,7 +88,7 @@ def launch(archive,bundle):
         assert int(space)+8_500_000_000<190_000_000_000,'persistent volume quota headroom insufficient'
         atomic_json(archive/'STAGING.json',dict(time=time.time(),root=root,original_path=original,local_initial_transfer_seconds=transfer_seconds,persistent_used_bytes=int(space),persistent_quota_bytes=190_000_000_000))
         r.put_json(root+'/binding.json',binding)
-        cmd=['python3','-m','experiment_2d13.runner','--run',run,'--binding',root+'/binding.json','--initial',root+'/inputs/local_initial.pt','--original',original,'--h','/workspace/exp2d11/scientific_20260905_retry2/run/checkpoints/u01000.pt','--data','/workspace/build-nanogpt/edu_fineweb10B','--validation','/workspace/build-nanogpt/edu_fineweb10B/edufineweb_val_000000.npy']
+        cmd=['python3','-m','experiment_2d13.runner','--run',run,'--binding',root+'/binding.json','--initial',initial_path,'--original',original,'--h','/workspace/exp2d11/scientific_20260905_retry2/run/checkpoints/u01000.pt','--data','/workspace/build-nanogpt/edu_fineweb10B','--validation','/workspace/build-nanogpt/edu_fineweb10B/edufineweb_val_000000.npy']
         launcher='''import subprocess,os,sys
 root=sys.argv[1]
 f=open(root+'/runner.log','ab');p=subprocess.Popen(sys.argv[2:],cwd=root+'/code',stdout=f,stderr=f,start_new_session=True,env={**os.environ,'CUDA_VISIBLE_DEVICES':'0','CUBLAS_WORKSPACE_CONFIG':':4096:8'})
