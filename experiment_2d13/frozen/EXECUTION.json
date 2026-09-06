@@ -1,0 +1,11 @@
+{
+  "accumulation": 16,
+  "effective_sequences": 512,
+  "evaluation_batch": 128,
+  "evaluator_partition": "one worker, all IDs once",
+  "gpu_count": 1,
+  "microbatch": 32,
+  "reason": "Existing user-held one A100 80GB pod matches preferred mode; explicit single-GPU normalization avoids inherited four-rank assumptions.",
+  "sequence_length": 1024,
+  "user_override": "Keep existing pod running during local preparation, stop at completion or ceiling."
+}
