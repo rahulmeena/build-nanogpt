@@ -16,7 +16,10 @@ def run(args):
     torch.set_num_threads(4);torch.set_float32_matmul_precision('high')
     assert torch.cuda.device_count()==1 and torch.cuda.is_bf16_supported()
     binding=read_json(args.binding);assert time.time()<binding['hard_deadline']-1800
-    assert os.environ['RUNPOD_POD_ID']==binding['pod_id']
+    # SSH child environments omit Runpod metadata; PID 1 retains the provider value.
+    pod_ids=[entry.split(b'=',1)[1].decode() for entry in Path('/proc/1/environ').read_bytes().split(b'\0')
+             if entry.startswith(b'RUNPOD_POD_ID=')]
+    assert pod_ids==[binding['pod_id']]
     code=read_json(FROZEN/'CODE_IDENTITY.json')
     for name,digest in code['files'].items():assert sha256(REPO/name)==digest,name
     code_id=identity(code);progress(root,'VERIFYING_INPUTS')

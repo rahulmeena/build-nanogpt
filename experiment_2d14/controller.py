@@ -90,15 +90,20 @@ def launch(archive,bundle):
         assert r.run(['sha256sum',bundle_remote]).decode().split()[0]==sha256(bundle)
         r.run(['tar','--no-same-owner','--no-same-permissions','-xzf',bundle_remote,'-C',root+'/code'])
         initial='/tmp/exp2d14-'+binding['run_id']+'/local_initial.pt'
-        t=time.time();r.transfer(archive/'local_initial.pt',initial)
-        r.transfer(archive/'local_initial.pt.manifest.json',initial+'.manifest.json')
-        assert r.run(['sha256sum',initial]).decode().split()[0]==sha256(archive/'local_initial.pt')
-        upload=time.time()-t
-        t=time.time();probe=archive/'transfer_probe.pt';r.transfer(initial,probe,True)
-        elapsed=time.time()-t;assert sha256(probe)==sha256(archive/'local_initial.pt')
-        benchmark=dict(passed=True,bytes=probe.stat().st_size,upload_seconds=upload,download_seconds=elapsed,
-            download_bytes_per_second=probe.stat().st_size/elapsed,sha256=sha256(probe))
-        probe.unlink();atomic_json(archive/'TRANSFER_BENCHMARK.json',benchmark)
+        if (archive/'TRANSFER_BENCHMARK.json').exists():
+            benchmark=read_json(archive/'TRANSFER_BENCHMARK.json')
+            assert benchmark['passed'] and benchmark['sha256']==sha256(archive/'local_initial.pt')
+            assert r.run(['sha256sum',initial]).decode().split()[0]==benchmark['sha256']
+        else:
+            t=time.time();r.transfer(archive/'local_initial.pt',initial)
+            r.transfer(archive/'local_initial.pt.manifest.json',initial+'.manifest.json')
+            assert r.run(['sha256sum',initial]).decode().split()[0]==sha256(archive/'local_initial.pt')
+            upload=time.time()-t
+            t=time.time();probe=archive/'transfer_probe.pt';r.transfer(initial,probe,True)
+            elapsed=time.time()-t;assert sha256(probe)==sha256(archive/'local_initial.pt')
+            benchmark=dict(passed=True,bytes=probe.stat().st_size,upload_seconds=upload,download_seconds=elapsed,
+                download_bytes_per_second=probe.stat().st_size/elapsed,sha256=sha256(probe))
+            probe.unlink();atomic_json(archive/'TRANSFER_BENCHMARK.json',benchmark)
         r.put_json(run+'/TRANSFER_BENCHMARK.json',benchmark)
         r.put_json(root+'/binding.json',binding);r.put_json(root+'/reservation.json',space)
         original='/workspace/exp2d11/scientific_20260905/inputs/initial.pt'
