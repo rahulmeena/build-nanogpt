@@ -1,5 +1,5 @@
 """Incremental bounded transfers, raw backup verification and prompt shutdown."""
-import argparse,concurrent.futures,json,os,shlex,subprocess,sys,tarfile,time,traceback
+import argparse,concurrent.futures,json,os,shlex,subprocess,sys,tarfile,time,traceback,threading
 from .common import *
 from . import provider
 from experiment_2d12.controller import Remote as BaseRemote
@@ -11,8 +11,10 @@ class Remote(BaseRemote):
             Path(dest).parent.mkdir(parents=True,exist_ok=True);source='root@'+self.host+':'+source
         else:dest='root@'+self.host+':'+dest
         for attempt in range(3):
-            p=subprocess.run(['rsync','-a','--partial','--append','--timeout=45','-e',shell,str(source),str(dest)],stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=300)
-            if p.returncode==0:return
+            try:
+                p=subprocess.run(['rsync','-a','--partial','--append','--timeout=45','-e',shell,str(source),str(dest)],stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=300)
+                if p.returncode==0:return
+            except subprocess.TimeoutExpired:continue
         raise RuntimeError('resumable transfer failed')
 
 def connect():
@@ -55,7 +57,16 @@ def launch(archive,bundle):
     atomic_json(archive/'PROVIDER_BEFORE_CUDA.json',dict(time=time.time(),provider=p))
     r=connect();root='/workspace/exp2d13/local_scratch_20260906_attempt01';run=root+'/run'
     last_progress=time.time()
-    def hb(stage,last=None,timeout=600):atomic_json(archive/'CONTROLLER_HEARTBEAT.json',dict(time=time.time(),stage=stage,last_progress=last or time.time(),progress_timeout=timeout))
+    lock=threading.Lock();alive=threading.Event();alive.set()
+    def hb(stage,last=None,timeout=600):
+        with lock:atomic_json(archive/'CONTROLLER_HEARTBEAT.json',dict(time=time.time(),stage=stage,last_progress=last or time.time(),progress_timeout=timeout))
+    hb('STAGING')
+    def tick():
+        while alive.is_set():
+            with lock:
+                current=read_json(archive/'CONTROLLER_HEARTBEAT.json');current['time']=time.time();atomic_json(archive/'CONTROLLER_HEARTBEAT.json',current)
+            time.sleep(15)
+    threading.Thread(target=tick,daemon=True).start()
     try:
         hb('STAGING');r.run(['mkdir','-p',root+'/code',root+'/inputs',run])
         r.transfer(bundle,root+'/bundle.tar.gz')
@@ -126,6 +137,7 @@ print(json.dumps(out))'''
         raise
     finally:
         stopped=provider.stop(archive/'STOP_VERIFICATION.json','experiment finished or bounded failure; preserve volume')
+        alive.clear()
         secs=stopped['verified_at']-binding['billing_start']
         atomic_json(archive/'RUNTIME_ACCOUNTING.json',dict(cumulative_billed_seconds=secs,gpu_hours=secs/3600,rate=binding['rate'],compute_cost=secs/3600*binding['rate'],within_ceiling=secs<=21600 and secs/3600*binding['rate']<=10,billing_start=binding['billing_start'],verified_stop=stopped['verified_at'],includes_user_held_preparation=True,provider_invoice_available=False,storage_excluded=True))
 if __name__=='__main__':
