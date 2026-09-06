@@ -13,10 +13,11 @@ def run(archive):
     import matplotlib.pyplot as plt
     binding=read_json(archive/'binding.json');end=stop['time'];bill=end-binding['billing_start']
     ledger=dict(billing_start=binding['billing_start'],verified_stop=end,total_pod_hours=bill/3600,total_gpu_hours=4*bill/3600,whole_pod_dollars_per_hour=binding['whole_pod_hourly_rate'],estimated_compute_dollars=bill/3600*binding['whole_pod_hourly_rate'],includes_held_preparation_preflights_transitions_evaluation_exports=True,storage_excluded_from_compute_quote=True)
-    times={};metric_audits={}
+    times={};metric_audits={};metrics={}
     expected=[__import__('json').loads(x) for x in (FROZEN/'expected_batches.jsonl').read_text().splitlines()]
     for arm in ARMS:
         rows=[__import__('json').loads(x) for x in (archive/arm/'metrics.jsonl').read_text().splitlines()]
+        metrics[arm]=rows
         assert [r['completed_updates'] for r in rows]==list(range(1,5001))
         for r,e in zip(rows,expected):assert r['data']==e['data'] and r['lr']==e['lr'] and r['fused'] is False and r['foreach'] is None
         times[arm]=[rows[u-1]['cumulative_training_seconds']*4/3600 for u in MILESTONES]
@@ -24,6 +25,15 @@ def run(archive):
     hr=[__import__('json').loads(x) for x in (REPO/'experiment_2d11/results/run/metrics-attempt01.jsonl').read_text().splitlines()][:5000]
     times['H']=[sum(r['training_seconds'] for r in hr[:u])*4/3600 for u in MILESTONES]
     plt.rcParams.update({'font.size':10,'axes.spines.top':False,'axes.spines.right':False})
+    historical=read_json(FROZEN/'H_MONITOR.json');fig,axes=plt.subplots(1,2,figsize=(11,4.5),layout='constrained')
+    for name,color in [('H','#225ea8'),('L_nf4','#238b45'),('R_nf4','#cb181d')]:
+        ce_values=([r['ce'] for r in historical] if name=='H' else [read_json(archive/name/'evaluations'/f'{name}_monitor_u{u:05d}_COMPLETE.json')['ce'] for u in SCHEDULE])
+        hours=([sum(r['training_seconds'] for r in hr[:u])*4/3600 for u in SCHEDULE] if name=='H' else [metrics[name][u-1]['cumulative_training_seconds']*4/3600 if u else 0 for u in SCHEDULE])
+        for ax,x in zip(axes,[np.array(SCHEDULE)*524288/1e9,hours]):ax.plot(x,ce_values,'o-',label=name+(' (historical grouping)' if name=='H' else ''),color=color)
+    axes[0].set_xlabel('Logical training targets (billions)');axes[1].set_xlabel('Measured training GPU-hours')
+    for ax in axes:ax.set_ylabel('Incremental monitor CE (nats)');ax.legend(fontsize=8)
+    fig.suptitle('Original 1,280-sequence monitor — descriptive; H batch grouping differs');fig.savefig(archive/'monitoring_trajectories.png',dpi=180);plt.close(fig)
+
     fig,axes=plt.subplots(2,2,figsize=(11,8),layout='constrained');targets=np.array(MILESTONES)*524288/1e9
     colors=dict(H_ON='#225ea8',L_LOCAL='#238b45',R_ON='#cb181d',H_ALL_OFF='#9ecae1',R_ALL_OFF='#fcae91')
     for c in CONDITIONS:

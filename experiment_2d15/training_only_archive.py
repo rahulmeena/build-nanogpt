@@ -18,7 +18,10 @@ def active():
   p=root/arm/'PROGRESS.json'
   if p.exists():
    v=json.loads(p.read_text())
-   if v.get('stage')=='TRAIN' and time.time()-v['time']<15 and not (root/arm/'GPU_COMPLETE.json').exists():return True
+   if v.get('stage')=='TRAIN' and time.time()-v['time']<15 and not (root/arm/'GPU_COMPLETE.json').exists():
+    if any(f.stat().st_mtime>=v['time'] for f in (root/arm).glob('FAILURE-rank*.json')):continue
+    current=json.loads((root/'controller/ACTIVE_PROCESS.json').read_text())
+    if current['arm']==arm and pathlib.Path('/proc/'+str(current['pid'])).exists():return True
  return False
 def wait_training():
  while not active():
