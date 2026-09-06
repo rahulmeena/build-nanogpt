@@ -1,0 +1,470 @@
+{
+  "after_tensor_sha256": "07be76c9170ec6b7a92013341ab7a7142cca2bf135b065af9536ded81b4fa10f",
+  "atol": 0.15,
+  "batch_size": 128,
+  "before_tensor_sha256": "07be76c9170ec6b7a92013341ab7a7142cca2bf135b065af9536ded81b4fa10f",
+  "bf16": true,
+  "checks": [
+    "B1: exact local mixture, one projection, bank/mask independence and router/read traps passed",
+    "B3: exact local mixture, one projection, bank/mask independence and router/read traps passed",
+    "B5: exact local mixture, one projection, bank/mask independence and router/read traps passed",
+    "H_ON: suffix causality, row isolation, fresh-state reset passed",
+    "H_B1_OFF: suffix causality, row isolation, fresh-state reset passed",
+    "H_B3_OFF: suffix causality, row isolation, fresh-state reset passed",
+    "H_B5_OFF: suffix causality, row isolation, fresh-state reset passed",
+    "H_ALL_OFF: suffix causality, row isolation, fresh-state reset passed"
+  ],
+  "cuda_tolerance_basis": "Direct ON and independent fully local incremental references exact; block reference atol .15/rtol .02; BF16 parallel-vs-incremental logit atol 1.0 and per-sequence CE atol .05 frozen after disposable diagnosis, before scientific scoring. Trained CPU FP32 parallel max logit error 2.575e-5 and max mean CE error 5.041e-7; shape-dependent BF16 rounding, not intervention semantics. Actual maxima recorded.",
+  "device": "cuda",
+  "device_name": "NVIDIA A100-SXM4-80GB",
+  "gpu_count": 1,
+  "independent_incremental_exact": true,
+  "maxima": {
+    "B1_incremental_reference": 0.0,
+    "B1_parallel_reference": 0.0,
+    "B3_incremental_reference": 0.0,
+    "B3_parallel_reference": 0.0,
+    "B5_incremental_reference": 0.0,
+    "B5_parallel_reference": 0.0,
+    "all_off_incremental_parallel": 0.75,
+    "all_off_incremental_parallel_ce": 0.002457680021013431,
+    "all_off_independent_incremental": 0.0,
+    "on_sealed_logits": 0.0,
+    "on_sealed_nll": 0.0,
+    "on_sealed_parallel_logits": 0.0
+  },
+  "numpy_version": "2.1.2",
+  "parallel_bf16_atol": 1.0,
+  "parallel_bf16_ce_atol": 0.05,
+  "passed": true,
+  "performance": [
+    {
+      "batch_size": 128,
+      "cache_audit": {
+        "actual_unique_storage_bytes": 4261085184,
+        "b6_historical_local_kv": 1023,
+        "b7_ring_present": false,
+        "cache_lengths": [
+          1,
+          1023,
+          31,
+          1023,
+          63,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023
+        ],
+        "cache_limits": [
+          1,
+          1023,
+          31,
+          1023,
+          63,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023,
+          1023
+        ],
+        "cache_storage": [
+          {
+            "block": 1,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 196608,
+              "physical_bytes": 196608,
+              "shape": [
+                128,
+                12,
+                1,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 196608,
+              "physical_bytes": 196608,
+              "shape": [
+                128,
+                12,
+                1,
+                64
+              ]
+            }
+          },
+          {
+            "block": 2,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            }
+          },
+          {
+            "block": 3,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 6094848,
+              "physical_bytes": 6094848,
+              "shape": [
+                128,
+                12,
+                31,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 6094848,
+              "physical_bytes": 6094848,
+              "shape": [
+                128,
+                12,
+                31,
+                64
+              ]
+            }
+          },
+          {
+            "block": 4,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            }
+          },
+          {
+            "block": 5,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 12386304,
+              "physical_bytes": 12386304,
+              "shape": [
+                128,
+                12,
+                63,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 12386304,
+              "physical_bytes": 12386304,
+              "shape": [
+                128,
+                12,
+                63,
+                64
+              ]
+            }
+          },
+          {
+            "block": 6,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            }
+          },
+          {
+            "block": 7,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            }
+          },
+          {
+            "block": 8,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            }
+          },
+          {
+            "block": 9,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            }
+          },
+          {
+            "block": 10,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            }
+          },
+          {
+            "block": 11,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            }
+          },
+          {
+            "block": 12,
+            "key": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            },
+            "value": {
+              "dtype": "torch.bfloat16",
+              "exact": true,
+              "logical_bytes": 201129984,
+              "physical_bytes": 201129984,
+              "shape": [
+                128,
+                12,
+                1023,
+                64
+              ]
+            }
+          }
+        ],
+        "historical_local_kv_positions": {
+          "B1": 1,
+          "B10": 1023,
+          "B11": 1023,
+          "B12": 1023,
+          "B2": 1023,
+          "B3": 31,
+          "B4": 1023,
+          "B5": 63,
+          "B6": 1023,
+          "B7": 1023,
+          "B8": 1023,
+          "B9": 1023
+        },
+        "logical_payload_bytes": 4261085184,
+        "passed": true,
+        "physical_storage_exact": true,
+        "position": 1024,
+        "ring_lengths": {
+          "h10": 1023,
+          "h12": 1023,
+          "h8": 1023
+        },
+        "ring_storage": {
+          "h10": {
+            "dtype": "torch.bfloat16",
+            "exact": true,
+            "logical_bytes": 201129984,
+            "physical_bytes": 201129984,
+            "shape": [
+              128,
+              1023,
+              768
+            ]
+          },
+          "h12": {
+            "dtype": "torch.bfloat16",
+            "exact": true,
+            "logical_bytes": 201129984,
+            "physical_bytes": 201129984,
+            "shape": [
+              128,
+              1023,
+              768
+            ]
+          },
+          "h8": {
+            "dtype": "torch.bfloat16",
+            "exact": true,
+            "logical_bytes": 201129984,
+            "physical_bytes": 201129984,
+            "shape": [
+              128,
+              1023,
+              768
+            ]
+          }
+        }
+      },
+      "peak_allocated": 9476285440,
+      "seconds": 34.12726378440857
+    }
+  ],
+  "projected_scoring_seconds": 5460.362205505371,
+  "rtol": 0.02,
+  "scientific_panel_used": false,
+  "scientific_updates": 0,
+  "seconds": 57.71617078781128,
+  "torch_version": "2.8.0+cu128"
+}

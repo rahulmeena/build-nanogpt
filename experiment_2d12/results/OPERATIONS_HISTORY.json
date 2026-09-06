@@ -1,0 +1,145 @@
+[
+  {
+    "CONTROLLER_FAILURE.json": {
+      "error": "RuntimeError",
+      "message": "remote command failed, rc=2",
+      "time": 1788697497.743777,
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d12_h10b_ablation/experiment_2d12/controller.py\", line 103, in launch\n    remote.run(['tar','-xzf',root+'/bundle.tar.gz','-C',root+'/code'],timeout=60)\n  File \"/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d12_h10b_ablation/experiment_2d11/controller.py\", line 27, in run\n    if p.returncode:raise RuntimeError('remote command failed, rc='+str(p.returncode))\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: remote command failed, rc=2\n"
+    },
+    "RUNTIME_ACCOUNTING.json": {
+      "compute_cost_at_quoted_rate": 0.13374032861193022,
+      "cumulative_billed_gpu_hours": 0.08411341422133975,
+      "cumulative_billed_seconds": 302.8082911968231,
+      "evaluation_attempt_billed_seconds": 57.43071722984314,
+      "initial_billed_seconds": 245.37757396697998,
+      "intervals": [
+        [
+          1788696415.0,
+          1788696660.377574
+        ],
+        [
+          1788697452.5371368,
+          1788697509.967854
+        ]
+      ],
+      "max_compute_dollars": 10,
+      "max_gpu_hours": 3,
+      "note": "Conservative request-to-verified-stop wall time including startup/transfer/stop latency; quoted-rate cost, not provider invoice. Storage excluded.",
+      "provider_invoice_available": false,
+      "quoted_hourly_rate": 1.59,
+      "within_ceiling": true
+    },
+    "archive": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d12/attempts/attempt_01",
+    "attempt": "attempt_01",
+    "files": {
+      "CONTROLLER_FAILURE.json": "466cb24050df5ce76567f24c302f88ec2926ae242fdcbb38d953367ccfac55a2",
+      "CONTROLLER_HEARTBEAT.json": "f9e210bbcf8e87c8cdb1ec5945e8264119db1a8be727d2aee21979bffc303d5f",
+      "GUARD_ARMED.json": "4e99c107800aca7bb8a0a24f66a297ce785e088b566e900e4f2b20b9b9670ec5",
+      "ONGOING_EXPORT.json": "232c604bd4b041f6bf14d6055f9dc582c5d0e334544afcff5b9ce20432004170",
+      "PROVIDER_PREFLIGHT.json": "c0124b706c0261d14c03c78ab453c5891f8c7d02f39431be6df2f4ab205c38ce",
+      "READY_FOR_USER_START.json": "789adf0ed78ba485afa6c772e77acb27620cc2b3ba6d54195ce5218d9d4af371",
+      "RUNTIME_ACCOUNTING.json": "f60d865df89ec706bbd7a6ebb7596b7c8913182f148845f9bbe68dfbb205e415",
+      "STOP_VERIFICATION.json": "1d774048047f90c421cf6e0697ade600cf24f95946abbf71e3bd7490f64ea98a",
+      "UNEXPECTED_RESTART_STOP.json": "b1bdee35835bf0224e548fa5746c5b4b8bbd2736bd29c018e7051b1dc0e66422",
+      "adoption.log": "642205a28559ec8a493adef37f682297d7fce40971ca3ffaa28d8c645dca0d52",
+      "binding.json": "17be6e93816b9f0561c07284096460d5cd9730278136edfcd93fc16432137934",
+      "controller.log": "9085b777eb75c40413b8d0029f49997c5ec0b983c304fa42090a5d1fbb75da44",
+      "guard.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "RUNTIME_ACCOUNTING.json": {
+      "compute_cost_at_quoted_rate": 0.744660693371296,
+      "cumulative_billed_seconds": 1686.0242114067078,
+      "evaluation_attempt_billed_seconds": 1383.2159202098846,
+      "intervals": [
+        [
+          1788696415.0,
+          1788696660.377574
+        ],
+        [
+          1788697452.5371368,
+          1788697509.967854
+        ],
+        [
+          1788698355.0,
+          1788699738.2159202
+        ]
+      ],
+      "reason": "User-started retry was not adopted by controller; no GPU evaluator launched",
+      "scientific_sequences": 0
+    },
+    "archive": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d12/attempts/attempt_02",
+    "attempt": "attempt_02",
+    "files": {
+      "RUNTIME_ACCOUNTING.json": "3ca7bd6e0ef61d66d3a31981f7a4dda28618916649f4e03825150e08ff8ad932",
+      "STOP_VERIFICATION.json": "b1bdee35835bf0224e548fa5746c5b4b8bbd2736bd29c018e7051b1dc0e66422"
+    }
+  },
+  {
+    "CONTROLLER_FAILURE.json": {
+      "error": "RuntimeError",
+      "message": "GPU evaluator failed; diagnostics exported",
+      "time": 1788699959.307306,
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d12_h10b_ablation/experiment_2d12/controller.py\", line 150, in launch\n    if 'FAILURE.json' in manifest:raise RuntimeError('GPU evaluator failed; diagnostics exported')\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: GPU evaluator failed; diagnostics exported\n"
+    },
+    "RUNTIME_ACCOUNTING.json": {
+      "compute_cost_at_quoted_rate": 0.7994095670262972,
+      "cumulative_billed_gpu_hours": 0.5027733125951555,
+      "cumulative_billed_seconds": 1809.9839253425598,
+      "evaluation_attempt_billed_seconds": 123.95971393585205,
+      "initial_billed_seconds": 245.37757396697998,
+      "intervals": [
+        [
+          1788696415.0,
+          1788696660.377574
+        ],
+        [
+          1788697452.5371368,
+          1788697509.967854
+        ],
+        [
+          1788698355.0,
+          1788699738.2159202
+        ],
+        [
+          1788699847.128575,
+          1788699971.088289
+        ]
+      ],
+      "max_compute_dollars": 10,
+      "max_gpu_hours": 3,
+      "note": "Conservative request-to-verified-stop wall time including startup/transfer/stop latency; quoted-rate cost, not provider invoice. Storage excluded.",
+      "prior_attempt_billed_seconds": 1440.6466374397278,
+      "provider_invoice_available": false,
+      "quoted_hourly_rate": 1.59,
+      "scientific_retries": 0,
+      "startup_retry_attempts": 2,
+      "within_ceiling": true
+    },
+    "archive": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d12/attempts/attempt_03",
+    "attempt": "attempt_03",
+    "cuda_failure": {
+      "error": "AssertionError",
+      "message": "Tensor-likes are not close!\n\nMismatched elements: 14056 / 7042560 (0.2%)\nGreatest absolute difference: 0.75 at index (1, 0, 353) (up to 0.15 allowed)\nGreatest relative difference: 3696.0 at index (1, 0, 8172) (up to 0.02 allowed)",
+      "time": 1788699946.4845319,
+      "traceback": "Traceback (most recent call last):\n  File \"/workspace/exp2d12/h10b_ablation_20260906/code/experiment_2d12/evaluate.py\", line 122, in <module>\n    try:run(a)\n        ^^^^^^\n  File \"/workspace/exp2d12/h10b_ablation_20260906/code/experiment_2d12/evaluate.py\", line 79, in run\n    batch=preflight(model,root,binding)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/exp2d12/h10b_ablation_20260906/code/experiment_2d12/evaluate.py\", line 31, in preflight\n    audit=focused(model,device='cuda',bf16=True)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py\", line 120, in decorate_context\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/exp2d12/h10b_ablation_20260906/code/experiment_2d12/verification.py\", line 99, in focused\n    torch.testing.assert_close(a,ref,atol=atol,rtol=rtol)\n  File \"/usr/local/lib/python3.12/dist-packages/torch/testing/_comparison.py\", line 1587, in assert_close\n    raise error_metas[0].to_error(msg)\nAssertionError: Tensor-likes are not close!\n\nMismatched elements: 14056 / 7042560 (0.2%)\nGreatest absolute difference: 0.75 at index (1, 0, 353) (up to 0.15 allowed)\nGreatest relative difference: 3696.0 at index (1, 0, 8172) (up to 0.02 allowed)\n"
+    },
+    "files": {
+      "CONTROLLER_FAILURE.json": "9407512ee8f126d224dd3389d5ed64664aaa1cf7417a7be8d1439f841cf32ad8",
+      "CONTROLLER_HEARTBEAT.json": "f992906ff3d66c003896d9f8089cb41244f30473cf37cad82a5344e001d8ea2a",
+      "GUARD_ARMED.json": "d814c0ed233383b02af5466b94cd8b5b50da470e18d7a844e15fa07981481ddb",
+      "ONGOING_EXPORT.json": "ecf972b01d0748e88e2d661841b4a6c8169bb9802535e31638306844b24318f5",
+      "PROVIDER_PREFLIGHT.json": "98cf5184e65256ccc0de7b7e044ecd400a6301951afa53fce3dd35dc2cc3554e",
+      "READY_FOR_USER_START.json": "66eca4479ea3067786dc5c9bb0c59c435a9140ac9510be82a6b5dd5a655e27e3",
+      "REMOTE_INPUT_IDENTITIES.json": "696a4afa0e362ca7bdc9073e142eaec371f24be651410d74ce53fea328684248",
+      "REMOTE_LAUNCH.json": "5daf3222df24510bb7b3f7f85b792a71201441ca7acf006064df3275451395dc",
+      "RUNTIME_ACCOUNTING.json": "f74c079b96a806f10f0dab0581f160be89e8be1986527b1a259d58fd10aee080",
+      "STOP_VERIFICATION.json": "b71acf6ab85478709b0fafc0732034f4e449124860fd18461691667af244eb23",
+      "binding.json": "8e8b1e64be6dbd8efb1f578b1e00df640a59ec68554c7945e135e5a2e0170f53",
+      "controller.log": "a4bafccbe73c0b7be808da608852903fbc99cca1eb2c7fa614a1a577213ec089",
+      "guard.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw/FAILURE.json": "e98c13b2d08dfd1528c11ce920303321e9b0667ed9e43f21e72d0551646bfe9c"
+    }
+  }
+]
