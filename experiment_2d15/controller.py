@@ -17,7 +17,10 @@ class Controller:
         self.ssh('python -c '+shlex.quote(code))
     def synchronize(self):
         transport=shlex.join(self.ssh_args[:-1])
-        subprocess.run(['rsync','-a','--exclude=*.pt','--exclude=*.writing','--exclude=shared_inputs/code/','-e',transport,self.ssh_args[-1]+':'+self.b['remote_root']+'/',str(self.archive)+'/'],check=True,timeout=180)
+        # Atomic JSON writers rename these temporary files as training proceeds.
+        # Only published outputs belong in the export; racing the temporary
+        # names otherwise produces rsync exit 24 despite healthy GPU work.
+        subprocess.run(['rsync','-a','--exclude=*.pt','--exclude=*.writing','--exclude=*.tmp-*','--exclude=shared_inputs/code/','-e',transport,self.ssh_args[-1]+':'+self.b['remote_root']+'/',str(self.archive)+'/'],check=True,timeout=180)
         code='import pathlib,json; roots='+repr([self.b['remote_root'],self.b['scratch_root']])+ '; print(json.dumps([str(p) for r in roots for p in pathlib.Path(r).glob("**/u*.pt.manifest.json") if p.with_suffix("").with_suffix("").exists()]))'
         # Explicitly enumerate manifests, then transfer only fully published states.
         paths=__import__('json').loads(self.ssh('python -c '+shlex.quote(code)))
