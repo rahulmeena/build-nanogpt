@@ -15,6 +15,20 @@ class Controller:
     def put_json(self,path,value):
         code='from pathlib import Path; import json,os; p=Path('+repr(str(path))+'); p.parent.mkdir(parents=True,exist_ok=True); t=p.with_suffix(".writing"); t.write_text('+repr(__import__('json').dumps(value))+'); os.replace(t,p)'
         self.ssh('python -c '+shlex.quote(code))
+    def retired_local_rolling(self,arm,update,expected_sha):
+        # Local and remote retention run independently. A remote manifest can
+        # briefly list an already-exported state that local retention removed.
+        # Only two newer, present, verified rolling states authorize this skip.
+        if update in (0,*MILESTONES):return False
+        directory=self.archive/arm/'checkpoints';name=f'u{update:05d}.pt'
+        if (directory/name).exists() or self.verified.get(arm+'/'+name)!=expected_sha:return False
+        newer=0
+        for path in directory.glob('u*.pt'):
+            age=int(path.stem[1:])
+            if age<=update or age in MILESTONES:continue
+            if self.verified.get(arm+'/'+path.name)==sha256(path):newer+=1
+            if newer>=2:return True
+        return False
     def synchronize(self):
         transport=shlex.join(self.ssh_args[:-1])
         # Atomic JSON writers rename these temporary files as training proceeds.
@@ -30,6 +44,9 @@ class Controller:
             filename=mf['file'];assert filename==f"u{mf['completed_updates']:05d}.pt"
             dest=self.archive/arm/'checkpoints'/filename;dest.parent.mkdir(parents=True,exist_ok=True)
             key=arm+'/'+filename
+            if self.retired_local_rolling(arm,mf['completed_updates'],mf['sha256']):
+                append_json(self.archive/'RETIRED_EXPORT_SKIPS.jsonl',dict(time=time.time(),arm=arm,file=filename,sha256=mf['sha256'],reason='Already exported and retired locally with two newer verified rolling states'))
+                continue
             if self.verified.get(key)!=mf['sha256'] or not dest.exists():
                 remote=path[:-len('.manifest.json')]
                 assert remote.startswith(self.b['remote_root']+'/') or remote.startswith(self.b['scratch_root']+'/')
