@@ -155,6 +155,84 @@
           ]
         }
       }
+    },
+    "5000": {
+      "group_sensitivity": {
+        "C": {
+          "adjusted_99_7222222222": [
+            -0.001761595027084841,
+            0.0007297517490656333
+          ],
+          "flags": {
+            "beyond_reference": false,
+            "equivalence": false,
+            "material_negative": false,
+            "negative": false,
+            "positive": false
+          },
+          "mean": -0.0005424952531852059,
+          "raw_95": [
+            -0.0013558982731933743,
+            0.00029349468871940344
+          ]
+        },
+        "G_H": {
+          "adjusted_99_7222222222": [
+            0.0005948693166884766,
+            0.0007533971286350615
+          ],
+          "flags": {
+            "beyond_reference": true,
+            "equivalence": false,
+            "material_negative": false,
+            "negative": false,
+            "positive": true
+          },
+          "mean": 0.0006745094332969159,
+          "raw_95": [
+            0.0006239743198064097,
+            0.0007249006290286269
+          ]
+        }
+      },
+      "primary": {
+        "C": {
+          "adjusted_99_7222222222": [
+            -0.001688769758053332,
+            0.0005984549509187153
+          ],
+          "flags": {
+            "beyond_reference": false,
+            "equivalence": false,
+            "material_negative": false,
+            "negative": false,
+            "positive": false
+          },
+          "mean": -0.0005424952531852442,
+          "raw_95": [
+            -0.001291982261207657,
+            0.000206669022283052
+          ]
+        },
+        "G_H": {
+          "adjusted_99_7222222222": [
+            0.0006018254730515647,
+            0.0007462971242757041
+          ],
+          "flags": {
+            "beyond_reference": true,
+            "equivalence": false,
+            "material_negative": false,
+            "negative": false,
+            "positive": true
+          },
+          "mean": 0.000674509433296893,
+          "raw_95": [
+            0.0006281034700124864,
+            0.0007203919181460579
+          ]
+        }
+      }
     }
   },
   "complete_three_model_comparison": false,
@@ -284,6 +362,68 @@
         "raw_batches_independently_recollected": true,
         "summary_sha256": "d95a9121ed4d2a60136a12516fc3762116f98431e52f50acc3306fa241b8fee3"
       }
+    },
+    "5000": {
+      "H_ALL_OFF": {
+        "binding": {
+          "arm": "L_nf4",
+          "batch_size": 128,
+          "checkpoint_sha256": "fc76b6d96f8805d0462f9c801936acc1b18d18332216d3f09138329f5b11b7a2",
+          "code_identity": "c7b88673dbc7fa09b5f67ab99f10e8288a18b705af259c7754dd56998085fd31",
+          "condition": "H_ALL_OFF",
+          "configuration_identity": "418c920b0c1c6af745902c3946e7a4c321cbc3bd066ff5b167c2083a4abdde0b",
+          "dataset_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+          "label": "H_ALL_OFF_u05000",
+          "milestone": 5000,
+          "mode": "true_incremental_bf16_fp32_ce_fp64_nll",
+          "model_tensor_identity": "f949ca2a2a273144b68c7b46cfe42add2808885aa835ad9e86b3e12f4f9332ee",
+          "panel_identity": "7da68b4aaa6ada5c0aabed9b963376b3a5d180bfcc7339df50012575e5672a4b",
+          "partition": "B128_group_index_modulo_4",
+          "world_size": 4
+        },
+        "raw_batches_independently_recollected": true,
+        "summary_sha256": "32ca367b06d6d6ffa1c27bbbf2d0e1e95f8171e6783a202625919d65f568ff1f"
+      },
+      "H_ON": {
+        "binding": {
+          "arm": "L_nf4",
+          "batch_size": 128,
+          "checkpoint_sha256": "fc76b6d96f8805d0462f9c801936acc1b18d18332216d3f09138329f5b11b7a2",
+          "code_identity": "c7b88673dbc7fa09b5f67ab99f10e8288a18b705af259c7754dd56998085fd31",
+          "condition": "H_ON",
+          "configuration_identity": "418c920b0c1c6af745902c3946e7a4c321cbc3bd066ff5b167c2083a4abdde0b",
+          "dataset_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+          "label": "H_ON_u05000",
+          "milestone": 5000,
+          "mode": "true_incremental_bf16_fp32_ce_fp64_nll",
+          "model_tensor_identity": "f949ca2a2a273144b68c7b46cfe42add2808885aa835ad9e86b3e12f4f9332ee",
+          "panel_identity": "7da68b4aaa6ada5c0aabed9b963376b3a5d180bfcc7339df50012575e5672a4b",
+          "partition": "B128_group_index_modulo_4",
+          "world_size": 4
+        },
+        "raw_batches_independently_recollected": true,
+        "summary_sha256": "d7e737451df482c19ecf07ebccb88fe678c19a78663df5f703e7ce605e6e59f2"
+      },
+      "L_LOCAL": {
+        "binding": {
+          "arm": "L_nf4",
+          "batch_size": 128,
+          "checkpoint_sha256": "40a7e790d99a0e04fc1ec399f9c1e3758cfbec6b7330344ebf08a039443a1070",
+          "code_identity": "c7b88673dbc7fa09b5f67ab99f10e8288a18b705af259c7754dd56998085fd31",
+          "condition": "H_ALL_OFF",
+          "configuration_identity": "418c920b0c1c6af745902c3946e7a4c321cbc3bd066ff5b167c2083a4abdde0b",
+          "dataset_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+          "label": "L_LOCAL_u05000",
+          "milestone": 5000,
+          "mode": "true_incremental_bf16_fp32_ce_fp64_nll",
+          "model_tensor_identity": "3880c19bc44bb8ec977420bb449056afcfe61a09bbbee4f962521c82339c9972",
+          "panel_identity": "7da68b4aaa6ada5c0aabed9b963376b3a5d180bfcc7339df50012575e5672a4b",
+          "partition": "B128_group_index_modulo_4",
+          "world_size": 4
+        },
+        "raw_batches_independently_recollected": true,
+        "summary_sha256": "15ddb5eb7d7c43f439bdc5046721aa3decb969c727790b26401acacd210b5ccf"
+      }
     }
   },
   "means": {
@@ -314,6 +454,20 @@
         "ce": 3.571814429566603,
         "ppl": 35.58109400678156
       }
+    },
+    "5000": {
+      "H_ALL_OFF": {
+        "ce": 3.292779387032519,
+        "ppl": 26.91757413963947
+      },
+      "H_ON": {
+        "ce": 3.292104877599222,
+        "ppl": 26.899424103834132
+      },
+      "L_LOCAL": {
+        "ce": 3.2915623823460365,
+        "ppl": 26.884835251493744
+      }
     }
   },
   "missing_conditions": [
@@ -324,6 +478,7 @@
   "sequence_seed": 20261001,
   "updates": [
     1000,
-    2000
+    2000,
+    5000
   ]
 }
