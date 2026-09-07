@@ -1,0 +1,204 @@
+{
+  "pod_id": "l55wgmjewejiv2",
+  "time": 1788743696.102325,
+  "initial_binding": {
+    "arm": "R_nf4",
+    "batch_size": 128,
+    "checkpoint_sha256": "780a4ff68603ec7c6631d7641dafc71d0c59a6bf4dfd75024602e9533f54e579",
+    "code_identity": "c7b88673dbc7fa09b5f67ab99f10e8288a18b705af259c7754dd56998085fd31",
+    "condition": "H_ON",
+    "configuration_identity": "418c920b0c1c6af745902c3946e7a4c321cbc3bd066ff5b167c2083a4abdde0b",
+    "dataset_sha256": "8e06151653328dbbd1a225bf0ab3ea902c561564c76d9fc2dc6278be8f754c0f",
+    "label": "R_nf4_monitor_u00000",
+    "milestone": 0,
+    "mode": "true_incremental_bf16_fp32_ce_fp64_nll",
+    "model_tensor_identity": "c1ad032bfc2fccd4fdabae0f0c4064f856b75ae8037e2373a1cc02f8216d6386",
+    "panel_identity": "db6a61e95fa56a0fc3fb15c31a322d5248a7ad36f330ef25eeca96a799891381",
+    "partition": "B128_group_index_modulo_4",
+    "world_size": 4
+  },
+  "initial_monitor_passed": true,
+  "initial_tensors_unchanged": true,
+  "initial_checkpoint_unchanged": true,
+  "initial_count": 1310720,
+  "L_durable": {
+    "passed": true,
+    "time": 1788743669.185707,
+    "evidence": {
+      "updates": 5000,
+      "gpu_complete": true,
+      "evaluations": [
+        "L_nf4_monitor_u00000",
+        "L_nf4_monitor_u00250",
+        "L_nf4_monitor_u00500",
+        "L_nf4_monitor_u00750",
+        "L_nf4_monitor_u01000",
+        "L_nf4_monitor_u02000",
+        "L_nf4_monitor_u03000",
+        "L_nf4_monitor_u04000",
+        "L_nf4_monitor_u05000",
+        "L_LOCAL_u01000",
+        "H_ON_u01000",
+        "H_ALL_OFF_u01000",
+        "L_LOCAL_u02000",
+        "H_ON_u02000",
+        "H_ALL_OFF_u02000",
+        "L_LOCAL_u05000",
+        "H_ON_u05000",
+        "H_ALL_OFF_u05000"
+      ],
+      "exports_verified": true
+    }
+  },
+  "active": {
+    "arm": "R_nf4",
+    "pid": 12399,
+    "time": 1788743420.6096876
+  },
+  "passed": true,
+  "first_40_stream_and_recipe_rows_verified": true,
+  "observed_CE1_free_two_and_three_pass_objectives": true,
+  "first_update": {
+    "accumulation": 4,
+    "actual_ce_target_evaluations": 1048576,
+    "arm": "R_nf4",
+    "backbone_pass_equivalent_updates": 2,
+    "backbone_pass_targets": 1048576,
+    "completed_updates": 1,
+    "cumulative_training_seconds": 3.2615184783935547,
+    "data": {
+      "actual_token_sha256": "c658eee768f8e81c7c089b4dce0ec7c4fcfc5ffeb99172062e618a53eee205e8",
+      "after": {
+        "logical_batches": 8,
+        "position": 524288,
+        "shard": 0,
+        "wraps": 0
+      },
+      "before": {
+        "logical_batches": 0,
+        "position": 0,
+        "shard": 0,
+        "wraps": 0
+      },
+      "target_count": 524288
+    },
+    "diagnostic_only_ce1_targets": 524288,
+    "foreach": null,
+    "fused": false,
+    "grad_norm": 21.289108276367188,
+    "logical_targets": 524288,
+    "lr": 8.39160839160839e-07,
+    "lr_index": 0,
+    "mean_backbone_passes": 2.0,
+    "microbatch": 32,
+    "nonzero_weight_ce_targets": 524288,
+    "pass_count": 2,
+    "pass_losses": [
+      10.946338653564453,
+      10.947759628295898
+    ],
+    "three_pass_updates": 0,
+    "timestamp": 1788743536.2702951,
+    "training_seconds": 3.2615184783935547,
+    "two_pass_updates": 1,
+    "weighted_multipass_training_loss": 10.947759628295898,
+    "world_size": 4
+  },
+  "first_three_pass_update": {
+    "accumulation": 4,
+    "actual_ce_target_evaluations": 34078720,
+    "arm": "R_nf4",
+    "backbone_pass_equivalent_updates": 65,
+    "backbone_pass_targets": 34078720,
+    "completed_updates": 32,
+    "cumulative_training_seconds": 78.53081727027893,
+    "data": {
+      "actual_token_sha256": "7f43fa7ab8f35c767495d966c6116ca1cf3bebdb1a259dd7cd67ce7c0878f73f",
+      "after": {
+        "logical_batches": 256,
+        "position": 16777216,
+        "shard": 0,
+        "wraps": 0
+      },
+      "before": {
+        "logical_batches": 248,
+        "position": 16252928,
+        "shard": 0,
+        "wraps": 0
+      },
+      "target_count": 524288
+    },
+    "diagnostic_only_ce1_targets": 16777216,
+    "foreach": null,
+    "fused": false,
+    "grad_norm": 2.5492818355560303,
+    "logical_targets": 16777216,
+    "lr": 2.685314685314685e-05,
+    "lr_index": 31,
+    "mean_backbone_passes": 2.03125,
+    "microbatch": 32,
+    "nonzero_weight_ce_targets": 17301504,
+    "pass_count": 3,
+    "pass_losses": [
+      9.331008911132812,
+      9.304508209228516,
+      9.320955276489258
+    ],
+    "three_pass_updates": 1,
+    "timestamp": 1788743611.5453904,
+    "training_seconds": 3.6987695693969727,
+    "two_pass_updates": 31,
+    "weighted_multipass_training_loss": 9.312731742858887,
+    "world_size": 4
+  },
+  "last_checked_update": {
+    "accumulation": 4,
+    "actual_ce_target_evaluations": 42467328,
+    "arm": "R_nf4",
+    "backbone_pass_equivalent_updates": 81,
+    "backbone_pass_targets": 42467328,
+    "completed_updates": 40,
+    "cumulative_training_seconds": 97.53454518318176,
+    "data": {
+      "actual_token_sha256": "88e6c05295173781f5f21682fef0ab199ff0ac6bc26a1e21a764470bd9d3ec80",
+      "after": {
+        "logical_batches": 320,
+        "position": 20971520,
+        "shard": 0,
+        "wraps": 0
+      },
+      "before": {
+        "logical_batches": 312,
+        "position": 20447232,
+        "shard": 0,
+        "wraps": 0
+      },
+      "target_count": 524288
+    },
+    "diagnostic_only_ce1_targets": 20971520,
+    "foreach": null,
+    "fused": false,
+    "grad_norm": 4.42484712600708,
+    "logical_targets": 20971520,
+    "lr": 3.356643356643356e-05,
+    "lr_index": 39,
+    "mean_backbone_passes": 2.025,
+    "microbatch": 32,
+    "nonzero_weight_ce_targets": 21495808,
+    "pass_count": 2,
+    "pass_losses": [
+      9.074779510498047,
+      9.048255920410156
+    ],
+    "three_pass_updates": 1,
+    "timestamp": 1788743630.550621,
+    "training_seconds": 2.374053478240967,
+    "two_pass_updates": 39,
+    "weighted_multipass_training_loss": 9.048255920410156,
+    "world_size": 4
+  },
+  "prespecified_numeric_comparison_tolerance": {
+    "atol": 2e-06,
+    "rtol": 2e-05
+  }
+}
