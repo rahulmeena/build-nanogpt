@@ -1,0 +1,57 @@
+{
+  "billing_start": 1788733146.252,
+  "combined_new_logical_targets": 5242880000,
+  "estimated_compute_dollars": 44.863704545855526,
+  "evaluation_predictions": 86507520,
+  "failed_preflight_attempt_durations_separately_attributed": false,
+  "includes_held_preparation_preflights_transitions_evaluation_exports": true,
+  "measured_stage_seconds": {
+    "held_preparation_and_all_disposable_preflight_attempts": 1552.895372390747,
+    "remaining_serial_overhead_and_post_gpu_exports": 693.087751865387,
+    "required_gpu_evaluations": 5193.905480146408,
+    "scientific_training": 17954.661138534546
+  },
+  "overhead_note": "Residual includes setup, checkpoint publication, transitions and final exports. Transfers overlapping GPU work are not added again.",
+  "per_arm": {
+    "L_nf4": {
+      "actual_ce_target_evaluations": 2621440000,
+      "backbone_pass_equivalent_updates": 5000,
+      "backbone_pass_targets": 2621440000,
+      "completed_updates": 5000,
+      "diagnostic_only_ce1_targets": 0,
+      "evaluation_count": 18,
+      "evaluation_predictions": 49545216,
+      "evaluation_seconds": 2802.795301914215,
+      "logical_targets": 2621440000,
+      "nonzero_weight_ce_targets": 2621440000,
+      "three_pass_updates": 0,
+      "training_gpu_hours": 6.358411345746782,
+      "training_seconds": 5722.570211172104,
+      "two_pass_updates": 0
+    },
+    "R_nf4": {
+      "actual_ce_target_evaluations": 5324668928,
+      "backbone_pass_equivalent_updates": 10156,
+      "backbone_pass_targets": 5324668928,
+      "completed_updates": 5000,
+      "diagnostic_only_ce1_targets": 2621440000,
+      "evaluation_count": 15,
+      "evaluation_predictions": 36962304,
+      "evaluation_seconds": 2391.110178232193,
+      "logical_targets": 2621440000,
+      "nonzero_weight_ce_targets": 2703228928,
+      "three_pass_updates": 156,
+      "training_gpu_hours": 13.591212141513825,
+      "training_seconds": 12232.090927362442,
+      "two_pass_updates": 4844
+    }
+  },
+  "scientific_replay_records": [],
+  "storage_excluded_from_compute_quote": true,
+  "successful_disposable_preflight_seconds": 294.3292782306671,
+  "successful_preflight_is_subset_of_preparation": true,
+  "total_gpu_hours": 28.21616638104121,
+  "total_pod_hours": 7.054041595260302,
+  "verified_stop": 1788758540.801743,
+  "whole_pod_dollars_per_hour": 6.36
+}

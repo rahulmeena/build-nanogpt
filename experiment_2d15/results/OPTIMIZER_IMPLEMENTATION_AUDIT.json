@@ -1,0 +1,280 @@
+{
+  "actual_cuda_dispatch": "single_tensor_adam, nonfused",
+  "actual_dispatch_by_rank": [
+    {
+      "H": {
+        "_fused_adam": 0,
+        "_multi_tensor_adam": 0,
+        "_single_tensor_adam": 2
+      },
+      "arms": {
+        "L_nf4": {
+          "_fused_adam": 0,
+          "_multi_tensor_adam": 0,
+          "_single_tensor_adam": 2
+        },
+        "R_nf4": {
+          "_fused_adam": 0,
+          "_multi_tensor_adam": 0,
+          "_single_tensor_adam": 2
+        }
+      },
+      "rank": 0
+    },
+    {
+      "H": {
+        "_fused_adam": 0,
+        "_multi_tensor_adam": 0,
+        "_single_tensor_adam": 2
+      },
+      "arms": {
+        "L_nf4": {
+          "_fused_adam": 0,
+          "_multi_tensor_adam": 0,
+          "_single_tensor_adam": 2
+        },
+        "R_nf4": {
+          "_fused_adam": 0,
+          "_multi_tensor_adam": 0,
+          "_single_tensor_adam": 2
+        }
+      },
+      "rank": 1
+    },
+    {
+      "H": {
+        "_fused_adam": 0,
+        "_multi_tensor_adam": 0,
+        "_single_tensor_adam": 2
+      },
+      "arms": {
+        "L_nf4": {
+          "_fused_adam": 0,
+          "_multi_tensor_adam": 0,
+          "_single_tensor_adam": 2
+        },
+        "R_nf4": {
+          "_fused_adam": 0,
+          "_multi_tensor_adam": 0,
+          "_single_tensor_adam": 2
+        }
+      },
+      "rank": 2
+    },
+    {
+      "H": {
+        "_fused_adam": 0,
+        "_multi_tensor_adam": 0,
+        "_single_tensor_adam": 2
+      },
+      "arms": {
+        "L_nf4": {
+          "_fused_adam": 0,
+          "_multi_tensor_adam": 0,
+          "_single_tensor_adam": 2
+        },
+        "R_nf4": {
+          "_fused_adam": 0,
+          "_multi_tensor_adam": 0,
+          "_single_tensor_adam": 2
+        }
+      },
+      "rank": 3
+    }
+  ],
+  "cuda_version": "12.8",
+  "every_scientific_step_asserts_all_options": true,
+  "optimizer_source_sha256": "46296644b82ae5f2ecae17ee30ce4691f4cc2078a0e478ec2beef10ffbe8018e",
+  "passed": true,
+  "runtime_settings_reconstructed_with_identical_frozen_setup": {
+    "cudnn_benchmark": false,
+    "cudnn_sdp": true,
+    "deterministic_algorithms": true,
+    "flash_sdp": true,
+    "math_sdp": true,
+    "matmul_precision": "high",
+    "mem_efficient_sdp": true
+  },
+  "serialized_options": {
+    "dispatch_pending_cuda": true,
+    "historical_checkpoints": [
+      {
+        "all_optimizer_steps": 1000,
+        "cursor": {
+          "logical_batches": 8000,
+          "position": 24576000,
+          "shard": 5,
+          "wraps": 0
+        },
+        "file_sha256": "559af751b9cceda5a4b08ef785d64f015cc4ce1978da7130a687f228f80a3244",
+        "model_identity": "7d0f5d3da3dcc41a5c9e83c4d3a94fa4aa3caa7be226d1d92521d3c2f0f7548a",
+        "optimizer_groups": [
+          {
+            "amsgrad": false,
+            "betas": [
+              0.9,
+              0.95
+            ],
+            "capturable": false,
+            "decoupled_weight_decay": true,
+            "differentiable": false,
+            "eps": 1e-08,
+            "foreach": null,
+            "fused": false,
+            "lr": 0.0005996811885015914,
+            "maximize": false,
+            "weight_decay": 0.1
+          },
+          {
+            "amsgrad": false,
+            "betas": [
+              0.9,
+              0.95
+            ],
+            "capturable": false,
+            "decoupled_weight_decay": true,
+            "differentiable": false,
+            "eps": 1e-08,
+            "foreach": null,
+            "fused": false,
+            "lr": 0.0005996811885015914,
+            "maximize": false,
+            "weight_decay": 0.0
+          }
+        ],
+        "update": 1000,
+        "world_size": 4
+      },
+      {
+        "all_optimizer_steps": 2000,
+        "cursor": {
+          "logical_batches": 16000,
+          "position": 49152000,
+          "shard": 10,
+          "wraps": 0
+        },
+        "file_sha256": "a0a3f37aec8cbd48b74221ac9d5c1c55732f1fdb40219de5ea85fa2396b6659d",
+        "model_identity": "8438c983c793f022941c66ca656990fd491bb9717ddcd5e248ec356fc2d1238c",
+        "optimizer_groups": [
+          {
+            "amsgrad": false,
+            "betas": [
+              0.9,
+              0.95
+            ],
+            "capturable": false,
+            "decoupled_weight_decay": true,
+            "differentiable": false,
+            "eps": 1e-08,
+            "foreach": null,
+            "fused": false,
+            "lr": 0.0005935082054378978,
+            "maximize": false,
+            "weight_decay": 0.1
+          },
+          {
+            "amsgrad": false,
+            "betas": [
+              0.9,
+              0.95
+            ],
+            "capturable": false,
+            "decoupled_weight_decay": true,
+            "differentiable": false,
+            "eps": 1e-08,
+            "foreach": null,
+            "fused": false,
+            "lr": 0.0005935082054378978,
+            "maximize": false,
+            "weight_decay": 0.0
+          }
+        ],
+        "update": 2000,
+        "world_size": 4
+      },
+      {
+        "all_optimizer_steps": 5000,
+        "cursor": {
+          "logical_batches": 40000,
+          "position": 22937600,
+          "shard": 26,
+          "wraps": 0
+        },
+        "file_sha256": "fc76b6d96f8805d0462f9c801936acc1b18d18332216d3f09138329f5b11b7a2",
+        "model_identity": "f949ca2a2a273144b68c7b46cfe42add2808885aa835ad9e86b3e12f4f9332ee",
+        "optimizer_groups": [
+          {
+            "amsgrad": false,
+            "betas": [
+              0.9,
+              0.95
+            ],
+            "capturable": false,
+            "decoupled_weight_decay": true,
+            "differentiable": false,
+            "eps": 1e-08,
+            "foreach": null,
+            "fused": false,
+            "lr": 0.0005306346742452593,
+            "maximize": false,
+            "weight_decay": 0.1
+          },
+          {
+            "amsgrad": false,
+            "betas": [
+              0.9,
+              0.95
+            ],
+            "capturable": false,
+            "decoupled_weight_decay": true,
+            "differentiable": false,
+            "eps": 1e-08,
+            "foreach": null,
+            "fused": false,
+            "lr": 0.0005306346742452593,
+            "maximize": false,
+            "weight_decay": 0.0
+          }
+        ],
+        "update": 5000,
+        "world_size": 4
+      }
+    ],
+    "initial_groups": [
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": false,
+        "lr": 8.39160839160839e-07,
+        "maximize": false,
+        "weight_decay": 0.1
+      },
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": false,
+        "lr": 8.39160839160839e-07,
+        "maximize": false,
+        "weight_decay": 0.0
+      }
+    ],
+    "initial_optimizer_empty": true
+  },
+  "torch_version": "2.8.0+cu128"
+}

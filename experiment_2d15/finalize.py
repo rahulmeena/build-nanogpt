@@ -22,6 +22,8 @@ def arm_resource_details(rows,evaluations):
 
 def run(archive):
     stop=read_json(archive/'STOP_VERIFICATION.json');assert stop['passed']
+    exports=read_json(archive/'FINAL_EXPORT_VERIFICATION.json')
+    assert exports['passed'] and exports['files_checked']==701 and exports['local_and_persistent_bytes_equal']
     result=analyze(archive);assert result['complete']
     from .state import complete
     assert complete(read_json(archive/'COMBINED_STATE.json'))
@@ -83,23 +85,41 @@ def run(archive):
     for ax in axes[:,0]:ax.set_xlabel('Logical training targets (billions)')
     for ax in axes[:,1]:ax.set_xlabel('Measured training GPU-hours')
     axes[0,0].legend(fontsize=8);fig.suptitle('2D15 — same frozen panel, three ages, one trajectory per arm');fig.savefig(archive/'ce_ppl_trajectories.png',dpi=180);plt.close(fig)
+    contrast_titles=dict(A='A = H_ON − R_ON',B='B = L_LOCAL − R_ON',C='C = L_LOCAL − H_ON',G_H='G_H = H_ALL_OFF − H_ON',G_R='G_R = R_ALL_OFF − R_ON',I='I = G_R − G_H')
     fig,axes=plt.subplots(2,3,figsize=(12,7),layout='constrained')
     for ax,name in zip(axes.flat,NAMES):
         values=[a['contrasts'][name] for a in result['primary']['ages']];means=np.array([v['mean'] for v in values]);bounds=np.array([v['adjusted_99_7222222222'] for v in values])
-        ax.errorbar(targets,means,yerr=np.stack((means-bounds[:,0],bounds[:,1]-means)),fmt='o-',capsize=4,color='#225ea8');ax.axhline(0,color='gray',linewidth=.7);ax.axhspan(-.0001,.0001,color='gray',alpha=.12);ax.set_title(name);ax.set_xlabel('Logical targets (billions)');ax.set_ylabel('Paired CE difference')
+        ax.errorbar(targets,means,yerr=np.stack((means-bounds[:,0],bounds[:,1]-means)),fmt='o-',capsize=4,color='#225ea8');ax.axhline(0,color='gray',linewidth=.7);ax.axhspan(-.0001,.0001,color='gray',alpha=.12);ax.set_title(contrast_titles[name]);ax.set_xlabel('Logical targets (billions)');ax.set_ylabel('Paired CE difference (nats)')
     fig.suptitle('18-contrast family: Bonferroni-adjusted 99.7222% intervals');fig.savefig(archive/'paired_contrasts.png',dpi=180);plt.close(fig)
     fig,axes=plt.subplots(2,3,figsize=(12,7),layout='constrained');hours=np.array(times['L_nf4'])+np.array(times['R_nf4'])
     for ax,name in zip(axes.flat,NAMES):
         values=[a['contrasts'][name] for a in result['primary']['ages']];means=np.array([v['mean'] for v in values]);bounds=np.array([v['adjusted_99_7222222222'] for v in values])
-        ax.errorbar(hours,means,yerr=np.stack((means-bounds[:,0],bounds[:,1]-means)),fmt='o-',capsize=4,color='#225ea8');ax.axhline(0,color='gray',linewidth=.7);ax.axhspan(-.0001,.0001,color='gray',alpha=.12);ax.set_title(name);ax.set_xlabel('L+R training GPU-hours at matched age');ax.set_ylabel('Paired CE difference')
+        ax.errorbar(hours,means,yerr=np.stack((means-bounds[:,0],bounds[:,1]-means)),fmt='o-',capsize=4,color='#225ea8');ax.axhline(0,color='gray',linewidth=.7);ax.axhspan(-.0001,.0001,color='gray',alpha=.12);ax.set_title(contrast_titles[name]);ax.set_xlabel('L+R training GPU-hours\nat matched age');ax.set_ylabel('Paired CE difference (nats)')
     fig.suptitle('Paired contrasts versus measured new-arm training compute');fig.savefig(archive/'paired_contrasts_gpu_hours.png',dpi=180);plt.close(fig)
     atomic_json(archive/'RESOURCE_LEDGER.json',ledger);atomic_json(archive/'FINAL_STREAM_AUDIT.json',metric_audits)
-    text=['# Experiment 2D15 — final combined report','',
+    endpoint=result['primary']['ages'][-1];sensitivity=result['group_sensitivity']['ages'][-1]
+    endpoint_text=f"The prespecified update-5000 joint goal was **{'met' if endpoint['joint_goal_met'] else 'not met'}**, with the same decision in the 64-group sensitivity analysis."
+    assert endpoint['joint_goal_met']==sensitivity['joint_goal_met']
+    if endpoint['contrasts']['A']['flags']['material_negative'] and endpoint['contrasts']['B']['flags']['material_negative']:
+        endpoint_text+=f" R had higher (worse) CE than H by {-endpoint['contrasts']['A']['mean']:.9f} nats and L by {-endpoint['contrasts']['B']['mean']:.9f} nats; both adjusted intervals exclude the practical reference band."
+    if endpoint['contrasts']['G_R']['flags']['beyond_reference'] and endpoint['contrasts']['I']['flags']['beyond_reference']:
+        endpoint_text+=f" R's recurrence-OFF penalty was {endpoint['contrasts']['G_R']['mean']:.9f} nats, exceeding H's by {endpoint['contrasts']['I']['mean']:.9f}. This stronger dependence did not establish better predictive quality."
+    text=['# Experiment 2D15 — final combined report','',endpoint_text,'',
         'Fresh L_nf4 and CE1-free R_nf4 each completed 5,000 updates / 2,621,440,000 logical targets. Historical H checkpoints were reused only as comparators. All 18 monitors and 15 milestone condition evaluations passed identity/coverage verification; required checkpoints and raw outputs were independently exported before the assigned pod was stopped.','',
         'The optimizer options and four-GPU geometry matched H, including fused=False and foreach=None. This intentional fresh restart preserves the original fused=True 2D13/2D14 results as separate historical experiments. L collapses equivalent local objectives to one pass; R retains attached recurrent writer gradients with CE1 diagnostic-only. Architecture/pass differences remain, and this is one training trajectory per arm.','',
         '| Updates | H_ON CE | L_LOCAL CE | R_ON CE | H_ALL_OFF CE | R_ALL_OFF CE | CE1-free joint goal |','|---:|---:|---:|---:|---:|---:|:---|']
     for i,u in enumerate(MILESTONES):
         text.append('| '+str(u)+' | '+' | '.join(f"{result['endpoint_means'][str(u)][c]['ce']:.9f}" for c in CONDITIONS)+' | '+str(result['primary']['ages'][i]['joint_goal_met'])+' |')
+    text+=['','Final update-5000 paired contrasts (nats per target):','','| Contrast | Mean | Raw 95% interval | Adjusted 99.7222% interval |','|---|---:|---|---|']
+    for name in NAMES:
+        v=endpoint['contrasts'][name]
+        interval=lambda key: f"[{v[key][0]:+.9f}, {v[key][1]:+.9f}]"
+        text.append(f"| {contrast_titles[name]} | {v['mean']:+.9f} | {interval('raw_95')} | {interval('adjusted_99_7222222222')} |")
+    text+=['','L versus H remains inconclusive at the final endpoint: its adjusted interval crosses zero and extends outside ±0.0001, so practical equivalence is not established. Positive A/B favors R quality; positive G values favor recurrence ON; positive I means greater R OFF sensitivity.', '',
+           'Full tables, separate classification flags and group sensitivities: [update 1000](INTERIM_u01000.md), [update 2000](INTERIM_u02000.md), [update 5000](INTERIM_u05000.md).', '',
+           '![CE and perplexity trajectories](ce_ppl_trajectories.png)', '',
+           '![Paired contrasts versus logical targets](paired_contrasts.png)', '',
+           'The shaded contrast band is ±0.0001 CE. The fixed 18-contrast family includes all three ages. Additional figures: [contrasts versus measured new-arm training compute](paired_contrasts_gpu_hours.png) and [original-panel monitoring trajectories](monitoring_trajectories.png). H monitor grouping differs; decisive comparisons use the common new panel.']
     text+=['','The main endpoint is update 5000. All classifications use the fixed 18-contrast family. Paired sequence and 64-group bootstrap results use 50,000 resamples each, with common sampled indices across conditions and ages. Raw 95% and adjusted 99.7222222222% intervals, practical-equivalence flags, and R-versus-L results are in ANALYSIS.json. Larger OFF sensitivity alone does not establish better quality or isolated recurrent-content usefulness. No matched 10B/HellaSwag claim is made.','',
         f"Total allocation through verified stop: {ledger['total_pod_hours']:.4f} pod-hours / {ledger['total_gpu_hours']:.4f} GPU-hours; estimated compute ${ledger['estimated_compute_dollars']:.2f} at $6.36/pod-hour, excluding storage. This includes held preparation, every disposable/retried preflight, transitions, scoring and exports.",'',
         'Disposable preflight and failure records are preserved under controller/preflight*; discarded scientific replay records, if any, remain within each arm. Their work is excluded from the two scientific token budgets and included in total billed time. The first disposable attempt caught an incorrect dispatch-audit assertion; both new arms were subsequently required to match H’s measured dispatch without changing numerical tolerances.','',
@@ -118,6 +138,7 @@ def run(archive):
     archival=archive/'HISTORICAL_ARCHIVAL_FINAL.json'
     if archival.exists():
         moved=read_json(archival);text+=['',f"Historical archival freed {moved['bytes_freed']/1e9:.2f} GB across {moved['files']} files, with verified Mac copies and removals gated by active training. Protected inputs and completed 2D13/2D14 artifacts were preserved. The Mac archive index is HISTORICAL_ARCHIVE_INDEX.md."]
+    text+=['','The independent [export verification](FINAL_EXPORT_VERIFICATION.json) matched every byte hash and size for 8 required checkpoints, 33 evaluation summaries and 660 raw batch outputs between persistent storage and this Mac. The [combined completion state](COMBINED_STATE.json) and [provider stop evidence](STOP_VERIFICATION.json) record the final shutdown gate. [Resource ledger](RESOURCE_LEDGER.json) and [both full-stream audits](BOTH_FULL_STREAMS_VERIFIED.json) preserve execution evidence.']
     atomic_bytes(archive/'FINAL_REPORT.md',('\n'.join(text)+'\n').encode())
     return result
 if __name__=='__main__':
