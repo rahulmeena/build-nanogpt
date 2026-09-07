@@ -284,5 +284,32 @@
     "paired_across_conditions_and_ages": true,
     "resamples": 50000,
     "seed": 20261001
+  },
+  "group_reduction_diagnostic": {
+    "full_matrix_shape": [
+      4096,
+      1,
+      5
+    ],
+    "full_matrix_strides": [
+      8,
+      8,
+      32768
+    ],
+    "partial_matrix_shape": [
+      4096,
+      3,
+      5
+    ],
+    "partial_matrix_strides": [
+      120,
+      40,
+      8
+    ],
+    "underlying_H_L_sequence_columns_bitwise_identical": true,
+    "max_abs_group_C_G_H_input_difference": 2.6645352591003757e-15,
+    "differing_group_contrast_cells": 94,
+    "group_cells": 128,
+    "explanation": "The original NumPy FP64 group reductions of byte-identical H/L sequence inputs use different array strides for one versus three ages. The resulting group means differ in low floating-point bits before the unchanged bootstrap. No evaluation rows were changed."
   }
 }
