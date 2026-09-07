@@ -1,8 +1,8 @@
 {
   "complete": true,
-  "files": 33,
-  "bytes_freed": 41709528405,
-  "new_historical_download_bytes": 0,
+  "files": 36,
+  "bytes_freed": 46194140886,
+  "new_historical_download_bytes": 4484612481,
   "all_local_hashes_verified_before_and_after_removal": true,
   "round2_sources_independently_absent": true,
   "training_only_removal_evidence_verified": true,
@@ -495,7 +495,70 @@
       },
       "time": 1788737694.233883,
       "removed_at": 1788737694.359357
+    },
+    {
+      "remote_path": "/workspace/exp2d9_dynamic_gating_250m/run/checkpoints/S/recovery_continuation_0144.pt",
+      "local_verified_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/network-volume-archival-20260907/exp2d9_dynamic_gating_250m/run/checkpoints/S/recovery_continuation_0144.pt",
+      "sha256": "bbe9e6fbd315086548c1b88af56e04af5a71123c060d7cee500d9ddcfb736d8e",
+      "bytes": 1493968011,
+      "training": {
+        "arm": "R_nf4",
+        "update": 2138,
+        "progress_time": 1788750284.9109302,
+        "checked_at": 1788750286.5939455,
+        "pid": 12399
+      },
+      "time": 1788750286.5878344,
+      "removed_at": 1788750286.7736845
+    },
+    {
+      "remote_path": "/workspace/exp2d10_h_250m/run/checkpoints/H/recovery_continuation_0144.pt",
+      "local_verified_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/network-volume-archival-20260907/exp2d10_h_250m/run/checkpoints/H/recovery_continuation_0144.pt",
+      "sha256": "7cd22a2c6e029cba209fd133b0bc4b62c68af10637760125124cbc645bfc5854",
+      "bytes": 1496644683,
+      "training": {
+        "arm": "R_nf4",
+        "update": 2125,
+        "progress_time": 1788750253.50488,
+        "checked_at": 1788750255.7431161,
+        "pid": 12399
+      },
+      "time": 1788750255.7351608,
+      "removed_at": 1788750255.873801
+    },
+    {
+      "remote_path": "/workspace/exp2d9_dynamic_gating_250m/run/checkpoints/D/recovery_continuation_0144.pt",
+      "local_verified_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/network-volume-archival-20260907/exp2d9_dynamic_gating_250m/run/checkpoints/D/recovery_continuation_0144.pt",
+      "sha256": "f2da2fb1324413a61d85cb623ccc8e511d44e89e4977d1d305e9e17bedfb9390",
+      "bytes": 1493999787,
+      "training": {
+        "arm": "R_nf4",
+        "update": 2132,
+        "progress_time": 1788750270.3411632,
+        "checked_at": 1788750271.6890123,
+        "pid": 12399
+      },
+      "time": 1788750271.682109,
+      "removed_at": 1788750271.872681
     }
   ],
-  "checked_at": 1788738047.0745118
+  "checked_at": 1788750372.370859,
+  "round3_sources_independently_absent": true,
+  "round3_final_verification": {
+    "passed": true,
+    "time": 1788750372.367729,
+    "files": 3,
+    "bytes_freed": 4484612481,
+    "independent_post_removal_Mac_hashes_verified": true,
+    "independent_remote_absence": {
+      "/workspace/exp2d9_dynamic_gating_250m/run/checkpoints/S/recovery_continuation_0144.pt": false,
+      "/workspace/exp2d10_h_250m/run/checkpoints/H/recovery_continuation_0144.pt": false,
+      "/workspace/exp2d9_dynamic_gating_250m/run/checkpoints/D/recovery_continuation_0144.pt": false
+    },
+    "all_removals_during_active_R_training": true,
+    "quota_bytes": 210000000000,
+    "workspace_bytes": 158077322717,
+    "nominal_free_bytes": 51922677283,
+    "mac_free_bytes": 26295431168
+  }
 }
