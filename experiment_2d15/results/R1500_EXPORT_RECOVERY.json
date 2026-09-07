@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "time": 1788749162.6894631,
+  "original_error": {
+    "message": "Command '['rsync', '-a', '--partial', '-e', 'ssh -o BatchMode=yes -o ConnectTimeout=20 -i /Users/rahul/.ssh/id_ed25519 -p 15554', 'root@154.54.102.55:/tmp/exp2d15-lr_nf4_20260907/R_nf4/rolling/u01500.pt', '/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d15/lr_nf4_20260907/R_nf4/checkpoints/u01500.downloading']' timed out after 599.9999302921351 seconds",
+    "pod_stop_requested": false,
+    "time": 1788748886.581974,
+    "traceback": "Traceback (most recent call last):\n  File \"/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d15_lr_nonfused_serial/experiment_2d15/controller.py\", line 94, in run\n    self.synchronize();self.schedule_analysis();state={arm:self.arm_evidence(arm) for arm in ARMS}\n    ^^^^^^^^^^^^^^^^^^\n  File \"/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d15_lr_nonfused_serial/experiment_2d15/controller.py\", line 37, in synchronize\n    subprocess.run(['rsync','-a','--partial','-e',transport,self.ssh_args[-1]+':'+remote,str(temp)],check=True,timeout=600)\n  File \"/Users/rahul/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/rahul/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/rahul/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py\", line 2141, in _communicate\n    self.wait(timeout=self._remaining_time(endtime))\n  File \"/Users/rahul/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py\", line 1264, in wait\n    return self._wait(timeout=timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/rahul/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py\", line 2045, in _wait\n    raise TimeoutExpired(self.args, timeout)\nsubprocess.TimeoutExpired: Command '['rsync', '-a', '--partial', '-e', 'ssh -o BatchMode=yes -o ConnectTimeout=20 -i /Users/rahul/.ssh/id_ed25519 -p 15554', 'root@154.54.102.55:/tmp/exp2d15-lr_nf4_20260907/R_nf4/rolling/u01500.pt', '/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d15/lr_nf4_20260907/R_nf4/checkpoints/u01500.downloading']' timed out after 599.9999302921351 seconds\n",
+    "type": "TimeoutExpired"
+  },
+  "events": [
+    {
+      "time": 1788748955.9370902,
+      "action": "Recovered interrupted rsync temporary file as its retry basis",
+      "old_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d15/lr_nf4_20260907/R_nf4/checkpoints/.u01500.downloading.nmHMwfaA6M",
+      "new_path": "/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d15/lr_nf4_20260907/R_nf4/checkpoints/u01500.downloading",
+      "bytes": 1434943488,
+      "controller_temporarily_paused": true,
+      "active_checkpoint_transfer": false,
+      "required_full_sha_and_reopen_validation_unchanged": true,
+      "pod_stop_requested": false
+    }
+  ],
+  "verified_checkpoint": "R_nf4/u01500.pt",
+  "verified_sha256": "55b986c5a214b93dc33e307fca610ea6ef370f47081360da0b9950911163784e",
+  "fresh_controller_heartbeat": 1788749135.6018748,
+  "archival_priority_events": [
+    {
+      "time": 1788749042.558672,
+      "event": "RESUME",
+      "pid": 95023,
+      "reasons": [],
+      "mac_free_bytes": 30965194752,
+      "pod_stop_requested": false
+    }
+  ],
+  "remote_training_uninterrupted": true
+}
