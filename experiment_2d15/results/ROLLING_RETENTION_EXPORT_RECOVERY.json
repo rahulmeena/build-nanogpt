@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "time": 1788753443.853157,
+  "error": {
+    "message": "Command '['rsync', '-a', '--partial', '-e', 'ssh -o BatchMode=yes -o ConnectTimeout=20 -i /Users/rahul/.ssh/id_ed25519 -p 15554', 'root@154.54.102.55:/tmp/exp2d15-lr_nf4_20260907/R_nf4/rolling/u01500.pt', '/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d15/lr_nf4_20260907/R_nf4/checkpoints/u01500.downloading']' returned non-zero exit status 23.",
+    "pod_stop_requested": false,
+    "time": 1788752931.495507,
+    "traceback": "Traceback (most recent call last):\n  File \"/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d15_lr_nonfused_serial/experiment_2d15/controller.py\", line 94, in run\n    self.synchronize();self.schedule_analysis();state={arm:self.arm_evidence(arm) for arm in ARMS}\n    ^^^^^^^^^^^^^^^^^^\n  File \"/Users/rahul/Documents/GPT-2 Enhancement/parallel_2d2_master_dev/2d15_lr_nonfused_serial/experiment_2d15/controller.py\", line 37, in synchronize\n    subprocess.run(['rsync','-a','--partial','-e',transport,self.ssh_args[-1]+':'+remote,str(temp)],check=True,timeout=600)\n  File \"/Users/rahul/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['rsync', '-a', '--partial', '-e', 'ssh -o BatchMode=yes -o ConnectTimeout=20 -i /Users/rahul/.ssh/id_ed25519 -p 15554', 'root@154.54.102.55:/tmp/exp2d15-lr_nf4_20260907/R_nf4/rolling/u01500.pt', '/Users/rahul/Documents/GPT-2 Enhancement/runpod-checkpoint-archive/experiment_2d15/lr_nf4_20260907/R_nf4/checkpoints/u01500.downloading']' returned non-zero exit status 23.\n",
+    "type": "CalledProcessError"
+  },
+  "R3000_verified_sha256": "e726a18790d2c2808b211178ae8523cea68929760e2660e67ad7c27bdaff1694",
+  "actual_R1500_retired_state_recognized_from_verified_R2500_and_R3000": true,
+  "new_controller": {
+    "pid": 122,
+    "caffeinate_pid": 125,
+    "time": 1788753376.220159,
+    "previous_pid": 89469,
+    "reason": "Skip an already-exported retired rolling state only after two newer validated rolling files exist; prevents local/remote retention race",
+    "controller_source_sha256": "acb7ceba6f86e7e4e882e2475762646551cca04ebbdd3b8be4bac427ea3c41f7",
+    "last_checkpoint_verified_before_restart": "R_nf4/u03000.pt",
+    "remote_scientific_processes_untouched": true,
+    "pod_stop_requested": false
+  },
+  "GPU_processes_untouched": true,
+  "fresh_controller_heartbeat_after_restart": 1788753469.501687,
+  "no_new_controller_errors_after_restart": true
+}
