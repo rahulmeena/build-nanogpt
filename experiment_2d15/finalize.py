@@ -4,6 +4,22 @@ import numpy as np
 from .common import *
 from .analysis import run as analyze,NAMES
 
+def arm_resource_details(rows,evaluations):
+    last=rows[-1]
+    fields=('completed_updates','logical_targets','actual_ce_target_evaluations',
+            'nonzero_weight_ce_targets',
+            'backbone_pass_equivalent_updates','backbone_pass_targets')
+    value={key:last[key] for key in fields}
+    value['diagnostic_only_ce1_targets']=0 if last['arm']=='L_nf4' else last['diagnostic_only_ce1_targets']
+    value['two_pass_updates']=sum(r['pass_count']==2 for r in rows)
+    value['three_pass_updates']=sum(r['pass_count']==3 for r in rows)
+    value.update(training_seconds=last['cumulative_training_seconds'],
+                 training_gpu_hours=last['cumulative_training_seconds']*4/3600,
+                 evaluation_seconds=math.fsum(e['seconds'] for e in evaluations),
+                 evaluation_count=len(evaluations),
+                 evaluation_predictions=sum(e['count'] for e in evaluations))
+    return value
+
 def run(archive):
     stop=read_json(archive/'STOP_VERIFICATION.json');assert stop['passed']
     result=analyze(archive);assert result['complete']
@@ -13,7 +29,7 @@ def run(archive):
     import matplotlib.pyplot as plt
     binding=read_json(archive/'binding.json');end=stop['time'];bill=end-binding['billing_start']
     ledger=dict(billing_start=binding['billing_start'],verified_stop=end,total_pod_hours=bill/3600,total_gpu_hours=4*bill/3600,whole_pod_dollars_per_hour=binding['whole_pod_hourly_rate'],estimated_compute_dollars=bill/3600*binding['whole_pod_hourly_rate'],includes_held_preparation_preflights_transitions_evaluation_exports=True,storage_excluded_from_compute_quote=True)
-    times={};metric_audits={};metrics={}
+    times={};metric_audits={};metrics={};resources={}
     expected=[__import__('json').loads(x) for x in (FROZEN/'expected_batches.jsonl').read_text().splitlines()]
     for arm in ARMS:
         rows=[__import__('json').loads(x) for x in (archive/arm/'metrics.jsonl').read_text().splitlines()]
@@ -22,6 +38,27 @@ def run(archive):
         for r,e in zip(rows,expected):assert r['data']==e['data'] and r['lr']==e['lr'] and r['fused'] is False and r['foreach'] is None
         times[arm]=[rows[u-1]['cumulative_training_seconds']*4/3600 for u in MILESTONES]
         metric_audits[arm]=dict(passed=True,updates=5000,logical_targets=2621440000,terminal_cursor=rows[-1]['data']['after'],training_gpu_hours=times[arm][-1],metrics_sha256=sha256(archive/arm/'metrics.jsonl'))
+        from .state import required_labels
+        evaluations=[read_json(archive/arm/'evaluations'/(label+'_COMPLETE.json')) for label in required_labels(arm)]
+        resources[arm]=arm_resource_details(rows,evaluations)
+    serial=read_json(archive/'controller/SERIAL_LAUNCH.json')
+    preflight=read_json(archive/'controller/BOTH_ARMS_PREFLIGHT_PASSED.json')
+    prestart=serial['time']-binding['billing_start']
+    train_seconds=math.fsum(v['training_seconds'] for v in resources.values())
+    evaluation_seconds=math.fsum(v['evaluation_seconds'] for v in resources.values())
+    remaining_seconds=bill-prestart-train_seconds-evaluation_seconds
+    assert remaining_seconds>=0
+    ledger.update(per_arm=resources,combined_new_logical_targets=sum(v['logical_targets'] for v in resources.values()),
+                  evaluation_predictions=sum(v['evaluation_predictions'] for v in resources.values()),
+                  measured_stage_seconds=dict(held_preparation_and_all_disposable_preflight_attempts=prestart,
+                                             scientific_training=train_seconds,required_gpu_evaluations=evaluation_seconds,
+                                             remaining_serial_overhead_and_post_gpu_exports=remaining_seconds),
+                  successful_disposable_preflight_seconds=preflight['seconds'],
+                  successful_preflight_is_subset_of_preparation=True,
+                  failed_preflight_attempt_durations_separately_attributed=False,
+                  scientific_replay_records=[str(p.relative_to(archive)) for arm in ARMS for p in (archive/arm).glob('discarded-*.jsonl')],
+                  overhead_note='Residual includes setup, checkpoint publication, transitions and final exports. Transfers overlapping GPU work are not added again.')
+    assert ledger['combined_new_logical_targets']==5242880000 and ledger['evaluation_predictions']==86507520
     hr=[__import__('json').loads(x) for x in (REPO/'experiment_2d11/results/run/metrics-attempt01.jsonl').read_text().splitlines()][:5000]
     times['H']=[sum(r['training_seconds'] for r in hr[:u])*4/3600 for u in MILESTONES]
     plt.rcParams.update({'font.size':10,'axes.spines.top':False,'axes.spines.right':False})
@@ -67,6 +104,20 @@ def run(archive):
         f"Total allocation through verified stop: {ledger['total_pod_hours']:.4f} pod-hours / {ledger['total_gpu_hours']:.4f} GPU-hours; estimated compute ${ledger['estimated_compute_dollars']:.2f} at $6.36/pod-hour, excluding storage. This includes held preparation, every disposable/retried preflight, transitions, scoring and exports.",'',
         'Disposable preflight and failure records are preserved under controller/preflight*; discarded scientific replay records, if any, remain within each arm. Their work is excluded from the two scientific token budgets and included in total billed time. The first disposable attempt caught an incorrect dispatch-audit assertion; both new arms were subsequently required to match H’s measured dispatch without changing numerical tolerances.','',
         'Execution success and scientific goal attainment are distinct. Complete contrasts and sensitivity classifications should be consulted even where the joint-goal cell is false.']
+    text+=['','| New arm | Logical targets | Actual CE pass-target evaluations | Nonzero-weight CE targets | Diagnostic-only CE1 targets | Backbone passes | Training GPU-hours |',
+           '|---|---:|---:|---:|---:|---:|---:|']
+    for arm,value in resources.items():
+        text.append(f"| {arm} | {value['logical_targets']:,} | {value['actual_ce_target_evaluations']:,} | {value['nonzero_weight_ce_targets']:,} | {value['diagnostic_only_ce1_targets']:,} | {value['backbone_pass_equivalent_updates']:,} | {value['training_gpu_hours']:.4f} |")
+    text+=['', 'Activation-checkpoint recomputation is excluded from exposure counters and included in measured compute. Both new arms together used 5,242,880,000 logical training targets. The prescribed evaluations scored 86,507,520 target predictions.', '',
+           '| Allocated stage | Pod-hours | GPU-hours |', '|---|---:|---:|']
+    stage_names=dict(held_preparation_and_all_disposable_preflight_attempts='Held preparation and all disposable preflight attempts',scientific_training='Scientific L and R training',required_gpu_evaluations='Required GPU evaluations',remaining_serial_overhead_and_post_gpu_exports='Remaining serial overhead and final exports')
+    for name,seconds in ledger['measured_stage_seconds'].items():text.append(f"| {stage_names[name]} | {seconds/3600:.4f} | {seconds*4/3600:.4f} |")
+    text+=['',f"The successful disposable preflight took {preflight['seconds']:.3f} seconds, within the preparation row. Earlier failed-attempt durations are not separately attributed here; their work is included in that row and total allocation. All disposable checks consumed zero scientific updates. Transfers overlapping training/scoring are not double-counted.", '',
+           'Both initial GPU audits and all failure records remain preserved. The second disposable attempt exposed an extra cross-restart bitwise-identity assertion after the numerical tolerance checks had passed; the successful preflight retained the original numerical tolerances and separately checked exact within-run rank agreement and repeat restoration.']
+    if not ledger['scientific_replay_records']:text+=['','No discarded or replayed scientific updates were recorded. Export-controller recoveries did not restart either GPU training trajectory.']
+    archival=archive/'HISTORICAL_ARCHIVAL_FINAL.json'
+    if archival.exists():
+        moved=read_json(archival);text+=['',f"Historical archival freed {moved['bytes_freed']/1e9:.2f} GB across {moved['files']} files, with verified Mac copies and removals gated by active training. Protected inputs and completed 2D13/2D14 artifacts were preserved. The Mac archive index is HISTORICAL_ARCHIVE_INDEX.md."]
     atomic_bytes(archive/'FINAL_REPORT.md',('\n'.join(text)+'\n').encode())
     return result
 if __name__=='__main__':
