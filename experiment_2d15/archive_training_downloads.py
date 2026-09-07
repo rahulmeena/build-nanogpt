@@ -20,6 +20,11 @@ wait_training()
 before=signature();assert before==b['expected']['signature']
 h=hashlib.sha256();total=0;checks=0;first=None;last=None
 with p.open('rb') as f:
+ offset=b.get('offset',0)
+ while total<offset:
+  wait_training();chunk=f.read(min(1<<20,offset-total));assert chunk
+  h.update(chunk);total+=len(chunk)
+ if offset:assert h.hexdigest()==b['prefix_sha256']
  while total<before['bytes']:
   start=time.monotonic();training=wait_training()
   if first is None:first=training
@@ -55,21 +60,33 @@ def run(archive, job):
             assert dest.is_file() and sha(dest)==saved['sha256']
             continue
         assert not dest.exists()
-        remaining=sum(r['bytes'] for r in rows if not Path(r['local_candidates'][0]).exists())
+        remaining=0
+        for pending in rows:
+            path=Path(pending['local_candidates'][0]);partial=path.with_suffix('.downloading')
+            if not path.exists():remaining+=pending['bytes']-(partial.stat().st_size if partial.exists() else 0)
         assert shutil.disk_usage(archive).free-remaining>=plan['mac_reserve_bytes']+plan['remaining_scientific_export_allowance_bytes']
         payload=dict(remote_root=binding['remote_root'],path=row['path'],bytes=row['bytes'],safe_roots=sorted(SAFE_ROOTS),operation='inspect')
         expected=json.loads(subprocess.check_output(ssh+['ionice -c 3 nice -n 19 python -'],input=REMOTE.replace('PAYLOAD',repr(payload)).encode()))
-        payload.update(expected=expected,rate_limit=plan['rate_limit_bytes_per_second'])
-        source=REMOTE.split("receipts=root/")[0].replace('PAYLOAD',repr(payload))+STREAM
-        atomic(job/'PROGRESS_DOWNLOAD.json',dict(stage='DOWNLOADING',path=row['path'],time=time.time(),pod_stop_requested=False))
         dest.parent.mkdir(parents=True,exist_ok=True)
         temp=dest.with_suffix('.downloading')
-        assert not temp.exists()
-        with (records/(key+'.stderr')).open('wb') as err, temp.open('xb') as out:
+        assert not temp.is_symlink()
+        offset=temp.stat().st_size if temp.exists() else 0
+        assert 0<=offset<=row['bytes']
+        digest=hashlib.sha256()
+        if offset:
+            signature=temp.stat()
+            with temp.open('rb') as prefix:
+                for chunk in iter(lambda:prefix.read(8<<20),b''):digest.update(chunk)
+            after=temp.stat()
+            assert (after.st_size,after.st_mtime_ns,after.st_ctime_ns,after.st_ino)==(signature.st_size,signature.st_mtime_ns,signature.st_ctime_ns,signature.st_ino)
+        payload.update(expected=expected,rate_limit=plan['rate_limit_bytes_per_second'],offset=offset,prefix_sha256=digest.hexdigest())
+        source=REMOTE.split("receipts=root/")[0].replace('PAYLOAD',repr(payload))+STREAM
+        atomic(job/'PROGRESS_DOWNLOAD.json',dict(stage='DOWNLOADING',path=row['path'],resume_offset=offset,time=time.time(),pod_stop_requested=False))
+        with (records/(key+'.stderr')).open('wb') as err, temp.open('ab' if offset else 'xb') as out:
             proc=subprocess.Popen(ssh+['ionice -c 3 nice -n 19 python -'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=err)
             try:
                 proc.stdin.write(source.encode());proc.stdin.close()
-                digest=hashlib.sha256();size=0
+                size=offset
                 while True:
                     chunk=proc.stdout.read(1<<20)
                     if not chunk:break

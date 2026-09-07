@@ -12,7 +12,8 @@ import time
 def run(archive, job):
     pid=json.loads((job/'LAUNCH.json').read_text())['pid']
     assert os.getpgid(pid)==pid
-    minimum=27_250_000_000
+    plan=json.loads((job/'PLAN.json').read_text())
+    minimum=plan['mac_reserve_bytes']+plan['remaining_scientific_export_allowance_bytes']+250_000_000
     paused=None
     while True:
         rows=subprocess.check_output(['ps','-axo','pid=,ppid=,stat=,command='],text=True).splitlines()

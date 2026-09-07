@@ -3,7 +3,7 @@
   "authorized_by": "User requested further network-volume archival to this Mac, only during active training.",
   "planned_bytes": 4484612481,
   "mac_free_before": 33597853696,
-  "remaining_scientific_export_allowance_bytes": 7000000000,
+  "remaining_scientific_export_allowance_bytes": 5503384345,
   "mac_reserve_bytes": 20000000000,
   "projected_free_after_archival_and_allowance": 22113241215,
   "source_scope": [
@@ -18,5 +18,16 @@
     "2D15",
     "datasets"
   ],
-  "rate_limit_bytes_per_second": 8000000
+  "rate_limit_bytes_per_second": 8000000,
+  "allowance_revision": {
+    "time": 1788750036.5680718,
+    "reason": "R2000 required checkpoint is now locally stored and independently verified; remove its bytes from the remaining 7GB allowance.",
+    "stored_checkpoint": "R_nf4/u02000.pt",
+    "bytes": 1496615655,
+    "sha256": "52dcd0517cdbc00bd66a17942e6d25290daf133925671a86ad30eb0b06eff0c8",
+    "mac_reserve_unchanged": 20000000000,
+    "mac_free_before_resume": 26994413568,
+    "remaining_download_bytes": 714876043,
+    "projected_free_after_remaining_download_and_export_allowance": 20776153180
+  }
 }
